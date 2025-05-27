@@ -33,8 +33,10 @@ app = Server("task-orchestrator")
 
 # Initialize core components
 state_manager = StateManager()
-specialist_manager = SpecialistManager()
-orchestrator = TaskOrchestrator(state_manager, specialist_manager)
+
+# Project directory will be set per request
+default_project_dir = os.getcwd()
+logger.info(f"Default project directory: {default_project_dir}")
 
 
 @app.list_tools()
@@ -172,6 +174,13 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextCont
 async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle initialization of a new task orchestration session."""
     
+    # Get project directory from request metadata if available
+    project_dir = get_project_directory(args)
+    
+    # Create specialist manager and orchestrator with the project directory
+    specialist_manager = SpecialistManager(project_dir=project_dir)
+    orchestrator = TaskOrchestrator(state_manager, specialist_manager, project_dir=project_dir)
+    
     # Get orchestration guidance from the orchestrator
     session_context = await orchestrator.initialize_session()
     
@@ -237,6 +246,14 @@ async def handle_execute_subtask(args: Dict[str, Any]) -> List[types.TextContent
     """Handle subtask execution by providing specialist context."""
     task_id = args["task_id"]
     
+    # Get project directory from request metadata if available
+    project_dir = get_project_directory(args)
+    
+    # Create specialist manager and orchestrator with the project directory
+    specialist_manager = SpecialistManager(project_dir=project_dir)
+    orchestrator = TaskOrchestrator(state_manager, specialist_manager, project_dir=project_dir)
+    
+    # Get specialist context from the orchestrator
     specialist_context = await orchestrator.get_specialist_context(task_id)
     
     return [types.TextContent(
@@ -294,6 +311,27 @@ async def main():
             write_stream,
             app.create_initialization_options()
         )
+
+
+def get_project_directory(args: Dict[str, Any]) -> str:
+    """
+    Extract project directory from request metadata.
+    
+    The MCP client should provide the project directory in the request metadata.
+    If not available, fall back to the default project directory.
+    """
+    # Try to get project directory from request metadata
+    # This is a custom extension to the MCP protocol
+    metadata = args.get("_metadata", {})
+    project_dir = metadata.get("project_directory")
+    
+    if project_dir and os.path.isdir(project_dir):
+        logger.info(f"Using project directory from request: {project_dir}")
+        return project_dir
+    
+    # Fall back to default project directory
+    logger.info(f"Using default project directory: {default_project_dir}")
+    return default_project_dir
 
 
 if __name__ == "__main__":

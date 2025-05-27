@@ -4,6 +4,7 @@ Core orchestration logic for task management and specialist coordination.
 
 import uuid
 import json
+import os
 from datetime import datetime
 from typing import Dict, List, Optional
 
@@ -13,19 +14,38 @@ from .models import (
 )
 from .specialists import SpecialistManager
 from .state import StateManager
+from .role_loader import get_roles
 
 
 class TaskOrchestrator:
     """Main orchestrator for managing complex tasks and specialist coordination."""
     
-    def __init__(self, state_manager: StateManager, specialist_manager: SpecialistManager):
+    def __init__(self, state_manager: StateManager, specialist_manager: SpecialistManager, project_dir: str = None):
         self.state = state_manager
         self.specialists = specialist_manager
+        self.project_dir = project_dir or os.getcwd()
     
     async def initialize_session(self) -> Dict:
         """Initialize a new task orchestration session with guidance for the LLM."""
         
-        # Provide context and instructions to the LLM for effective task orchestration
+        # Load role definitions from project directory or default
+        roles = get_roles(self.project_dir)
+        
+        # If task_orchestrator role is defined in the roles, use it
+        if roles and 'task_orchestrator' in roles:
+            task_orchestrator = roles['task_orchestrator']
+            
+            # Build response from role definition
+            response = {
+                "role": "Task Orchestrator",
+                "capabilities": task_orchestrator.get('expertise', []),
+                "instructions": "\n".join(task_orchestrator.get('approach', [])),
+                "specialist_roles": task_orchestrator.get('specialist_roles', {})
+            }
+            
+            return response
+        
+        # Fall back to default task orchestrator definition
         return {
             "role": "Task Orchestrator",
             "capabilities": [
