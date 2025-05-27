@@ -4,8 +4,8 @@ Data models for the Task Orchestrator.
 
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
-from pydantic import BaseModel, Field
+from typing import Dict, List, Optional, Union, Any
+from pydantic import BaseModel, Field, validator
 
 
 class TaskStatus(str, Enum):
@@ -49,6 +49,13 @@ class SubTask(BaseModel):
     artifacts: List[str] = Field(default_factory=list, description="Created artifacts/files")
     created_at: datetime = Field(default_factory=datetime.now)
     completed_at: Optional[datetime] = None
+    
+    @validator('artifacts', pre=True)
+    def ensure_artifacts_list(cls, v):
+        """Ensure artifacts is always a list, even if a single string is provided."""
+        if isinstance(v, str):
+            return [v]
+        return v
 
 
 class TaskBreakdown(BaseModel):
@@ -68,3 +75,10 @@ class TaskResult(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     artifacts: List[str] = Field(default_factory=list, description="Created artifacts/files")
     next_action: Optional[str] = Field(None, description="Recommended next action")
+    
+    @validator('artifacts', pre=True)
+    def ensure_artifacts_list(cls, v):
+        """Ensure artifacts is always a list, even if a single string is provided."""
+        if isinstance(v, str):
+            return [v]
+        return v
