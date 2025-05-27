@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 1.1](https://img.shields.io/badge/version-1.1-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.1)
+[![Version 1.3.0](https://img.shields.io/badge/version-1.3.0-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.3.0)
 
 A Model Context Protocol server for task orchestration with specialized AI roles and automatic client configuration.
 
@@ -17,6 +17,7 @@ The MCP Task Orchestrator provides sophisticated task decomposition and speciali
 - **Auto-Detection**: Automatically finds and configures installed clients  
 - **Specialist Modes**: Role-specific prompts (Architect, Implementer, Debugger, Documenter, and more)
 - **State Management**: Tracks task progress and dependencies
+- **Task Persistence**: Prevents task loss during restarts or context resets
 - **Single Session**: Works within one conversation - no multiple LLM instances
 
 ## 🚀 Quick Start
@@ -125,6 +126,17 @@ Each specialist brings focused expertise while maintaining context across the en
 - `orchestrator_complete_subtask` - Mark tasks complete
 - `orchestrator_synthesize_results` - Combine results
 - `orchestrator_get_status` - Check progress
+
+## 📦 Task Persistence
+
+Version 1.3.0 introduces a robust task persistence mechanism to prevent task loss during restarts or context resets.
+
+- **Automatic Saving**: Task state is automatically saved after every significant change
+- **Seamless Recovery**: Interrupted tasks are automatically detected and can be resumed
+- **Role Configuration**: Role files are stored in the `.task_orchestrator/roles/` directory
+- **Concurrent Access**: File locking prevents data corruption during concurrent access
+
+For more details, see [Task Persistence Documentation](docs/persistence.md).
 
 ## 🔧 Configuration
 

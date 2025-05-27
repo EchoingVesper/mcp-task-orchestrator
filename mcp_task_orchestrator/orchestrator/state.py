@@ -1,22 +1,36 @@
 """
-State management for task orchestration using SQLite.
+State management for task orchestration with persistent storage.
+
+This module provides a StateManager class that manages the state of tasks and subtasks,
+with support for persistence to prevent task loss during restarts or context resets.
 """
 
 import sqlite3
 import json
 import asyncio
 import os
+import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from .models import TaskBreakdown, SubTask, TaskStatus, SpecialistType
+from ..persistence import PersistenceManager
 
+
+# Configure logging
+logger = logging.getLogger("mcp_task_orchestrator.state")
 
 class StateManager:
-    """Manages persistent state for tasks and orchestration data."""
+    """Manages persistent state for tasks and orchestration data.
     
-    def __init__(self, db_path: str = None):
+    This class provides methods for storing and retrieving task state,
+    with support for both in-memory and persistent storage to prevent
+    task loss during restarts or context resets.
+    """
+    
+    def __init__(self, db_path: str = None, base_dir: str = None):
+        # Initialize database path
         if db_path is None:
             # Check environment variable first
             db_path = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_PATH")
@@ -29,8 +43,22 @@ class StateManager:
         self.lock = asyncio.Lock()
         self._initialized = False
         
+        # Initialize persistence manager
+        if base_dir is None:
+            base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+            
+            if not base_dir:
+                # Default to the directory containing the package
+                base_dir = Path(__file__).parent.parent.parent
+        
+        self.persistence = PersistenceManager(base_dir)
+        logger.info(f"Initialized persistence manager with base directory: {base_dir}")
+        
         # Initialize database synchronously
         self._initialize_database_sync()
+        
+        # Attempt to recover any interrupted tasks
+        self._recover_interrupted_tasks()
     
     def _initialize_database_sync(self):
         """Initialize SQLite database with required tables (synchronous version)."""
@@ -70,9 +98,29 @@ class StateManager:
         finally:
             conn.close()
     
+    def _recover_interrupted_tasks(self):
+        """Attempt to recover any interrupted tasks from persistent storage."""
+        try:
+            # Get all active tasks from persistent storage
+            active_task_ids = self.persistence.get_all_active_tasks()
+            logger.info(f"Found {len(active_task_ids)} active tasks in persistent storage")
+            
+            # Load each task into memory
+            for task_id in active_task_ids:
+                try:
+                    # Load the task breakdown from persistent storage
+                    breakdown = self.persistence.load_task_breakdown(task_id)
+                    if breakdown:
+                        logger.info(f"Recovered task {task_id} from persistent storage")
+                except Exception as e:
+                    logger.error(f"Failed to recover task {task_id}: {str(e)}")
+        except Exception as e:
+            logger.error(f"Failed to recover interrupted tasks: {str(e)}")
+    
     async def store_task_breakdown(self, breakdown: TaskBreakdown):
         """Store a task breakdown and its subtasks."""
         async with self.lock:
+            # Store in SQLite database
             conn = sqlite3.connect(self.db_path)
             try:
                 # Store parent task
@@ -95,6 +143,14 @@ class StateManager:
                 conn.commit()
             finally:
                 conn.close()
+            
+            # Store in persistent storage
+            try:
+                self.persistence.save_task_breakdown(breakdown)
+                logger.info(f"Saved task breakdown {breakdown.parent_task_id} to persistent storage")
+            except Exception as e:
+                logger.error(f"Failed to save task breakdown to persistent storage: {str(e)}")
+                # Continue execution even if persistence fails
     
     async def _store_subtask_internal(self, conn: sqlite3.Connection, 
                                     subtask: SubTask, parent_task_id: str):
@@ -121,8 +177,12 @@ class StateManager:
         ))
     
     async def get_subtask(self, task_id: str) -> Optional[SubTask]:
-        """Retrieve a specific subtask by ID."""
+        """Retrieve a specific subtask by ID.
+        
+        First tries to retrieve from the database, then falls back to persistent storage if needed.
+        """
         async with self.lock:
+            # Try to get from SQLite database first
             conn = sqlite3.connect(self.db_path)
             try:
                 cursor = conn.execute("""
@@ -132,16 +192,33 @@ class StateManager:
                 """, (task_id,))
                 
                 row = cursor.fetchone()
-                if not row:
-                    return None
-                
-                return self._row_to_subtask(row)
+                if row:
+                    return self._row_to_subtask(row)
             finally:
                 conn.close()
+            
+            # If not found in database, try persistent storage
+            parent_task_id = await self._get_parent_task_id(task_id)
+            if parent_task_id:
+                try:
+                    breakdown = self.persistence.load_task_breakdown(parent_task_id)
+                    if breakdown:
+                        for subtask in breakdown.subtasks:
+                            if subtask.task_id == task_id:
+                                logger.info(f"Retrieved subtask {task_id} from persistent storage")
+                                return subtask
+                except Exception as e:
+                    logger.error(f"Failed to retrieve subtask {task_id} from persistent storage: {str(e)}")
+            
+            return None
     
     async def update_subtask(self, subtask: SubTask):
         """Update an existing subtask."""
         async with self.lock:
+            # Get parent task ID for persistence
+            parent_task_id = await self._get_parent_task_id(subtask.task_id)
+            
+            # Update in SQLite database
             conn = sqlite3.connect(self.db_path)
             try:
                 conn.execute("""
@@ -165,10 +242,55 @@ class StateManager:
                 conn.commit()
             finally:
                 conn.close()
+            
+            # Update in persistent storage if we have a parent task ID
+            if parent_task_id:
+                try:
+                    self.persistence.update_subtask(subtask, parent_task_id)
+                    logger.info(f"Updated subtask {subtask.task_id} in persistent storage")
+                    
+                    # If the task is completed, check if we should archive the parent task
+                    if subtask.status == TaskStatus.COMPLETED:
+                        await self._check_and_archive_parent_task(parent_task_id)
+                except Exception as e:
+                    logger.error(f"Failed to update subtask in persistent storage: {str(e)}")
+                    # Continue execution even if persistence fails
+            else:
+                logger.warning(f"Could not find parent task ID for subtask {subtask.task_id}, skipping persistence update")
+    
+    async def _get_parent_task_id(self, task_id: str) -> Optional[str]:
+        """Get the parent task ID for a subtask."""
+        conn = sqlite3.connect(self.db_path)
+        try:
+            cursor = conn.execute("""
+                SELECT parent_task_id FROM subtasks WHERE task_id = ?
+            """, (task_id,))
+            
+            row = cursor.fetchone()
+            return row[0] if row else None
+        finally:
+            conn.close()
+    
+    async def _check_and_archive_parent_task(self, parent_task_id: str) -> None:
+        """Check if all subtasks for a parent task are completed, and if so, archive the task."""
+        subtasks = await self.get_subtasks_for_parent(parent_task_id)
+        
+        # If all subtasks are completed, archive the task
+        if all(st.status == TaskStatus.COMPLETED for st in subtasks):
+            try:
+                self.persistence.archive_task(parent_task_id)
+                logger.info(f"Archived completed task {parent_task_id}")
+            except Exception as e:
+                logger.error(f"Failed to archive completed task {parent_task_id}: {str(e)}")
+                # Continue execution even if archiving fails
     
     async def get_subtasks_for_parent(self, parent_task_id: str) -> List[SubTask]:
-        """Get all subtasks for a given parent task."""
+        """Get all subtasks for a given parent task.
+        
+        First tries to retrieve from the database, then falls back to persistent storage if needed.
+        """
         async with self.lock:
+            # Try to get from SQLite database first
             conn = sqlite3.connect(self.db_path)
             try:
                 cursor = conn.execute("""
@@ -178,13 +300,34 @@ class StateManager:
                     ORDER BY created_at
                 """, (parent_task_id,))
                 
-                return [self._row_to_subtask(row) for row in cursor.fetchall()]
+                subtasks = [self._row_to_subtask(row) for row in cursor.fetchall()]
+                
+                # If we found subtasks in the database, return them
+                if subtasks:
+                    return subtasks
             finally:
                 conn.close()
+            
+            # If not found in database, try persistent storage
+            try:
+                breakdown = self.persistence.load_task_breakdown(parent_task_id)
+                if breakdown:
+                    logger.info(f"Retrieved subtasks for parent task {parent_task_id} from persistent storage")
+                    return breakdown.subtasks
+            except Exception as e:
+                logger.error(f"Failed to retrieve subtasks for parent task {parent_task_id} from persistent storage: {str(e)}")
+            
+            return []
     
     async def get_all_tasks(self) -> List[SubTask]:
-        """Get all tasks in the system."""
+        """Get all tasks in the system.
+        
+        Combines tasks from both the database and persistent storage.
+        """
         async with self.lock:
+            all_subtasks = []
+            
+            # Get tasks from SQLite database
             conn = sqlite3.connect(self.db_path)
             try:
                 cursor = conn.execute("""
@@ -194,9 +337,33 @@ class StateManager:
                     ORDER BY created_at DESC
                 """)
                 
-                return [self._row_to_subtask(row) for row in cursor.fetchall()]
+                all_subtasks.extend([self._row_to_subtask(row) for row in cursor.fetchall()])
             finally:
                 conn.close()
+            
+            # Get tasks from persistent storage
+            try:
+                # Get all active tasks from persistent storage
+                active_task_ids = self.persistence.get_all_active_tasks()
+                
+                # Load each task breakdown and extract subtasks
+                for parent_task_id in active_task_ids:
+                    try:
+                        breakdown = self.persistence.load_task_breakdown(parent_task_id)
+                        if breakdown:
+                            # Check if subtasks are already in the list (avoid duplicates)
+                            for subtask in breakdown.subtasks:
+                                if not any(st.task_id == subtask.task_id for st in all_subtasks):
+                                    all_subtasks.append(subtask)
+                    except Exception as e:
+                        logger.error(f"Failed to load task {parent_task_id} from persistent storage: {str(e)}")
+            except Exception as e:
+                logger.error(f"Failed to get tasks from persistent storage: {str(e)}")
+            
+            # Sort by created_at in descending order
+            all_subtasks.sort(key=lambda st: st.created_at, reverse=True)
+            
+            return all_subtasks
     
     def _row_to_subtask(self, row) -> SubTask:
         """Convert database row to SubTask object."""

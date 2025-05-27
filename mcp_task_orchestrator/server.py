@@ -31,10 +31,17 @@ logger = logging.getLogger("mcp_task_orchestrator")
 # Initialize the MCP server
 app = Server("task-orchestrator")
 
+# Get base directory for persistence
+base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+if not base_dir:
+    base_dir = Path(__file__).parent.parent
+
 # Initialize core components
-state_manager = StateManager()
+state_manager = StateManager(base_dir=base_dir)
 specialist_manager = SpecialistManager()
 orchestrator = TaskOrchestrator(state_manager, specialist_manager)
+
+logger.info(f"MCP Task Orchestrator initialized with persistence in {base_dir}/.task_orchestrator")
 
 
 @app.list_tools()
@@ -170,10 +177,22 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextCont
 
 
 async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle initialization of a new task orchestration session."""
+    """Handle initialization of a new task orchestration session.
     
+    Checks for interrupted tasks and offers to resume them.
+    """
     # Get orchestration guidance from the orchestrator
     session_context = await orchestrator.initialize_session()
+    
+    # Check for interrupted tasks
+    active_tasks = await state_manager.get_all_tasks()
+    active_parent_tasks = set()
+    
+    # Get unique parent task IDs
+    for task in active_tasks:
+        parent_id = await state_manager._get_parent_task_id(task.task_id)
+        if parent_id:
+            active_parent_tasks.add(parent_id)
     
     # Format the response for the LLM
     response = {
@@ -186,6 +205,16 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
             "\n\nTo proceed, use the 'orchestrator_plan_task' tool with your JSON-formatted subtasks."
         )
     }
+    
+    # Add information about interrupted tasks if any
+    if active_parent_tasks:
+        response["interrupted_tasks"] = list(active_parent_tasks)
+        response["instructions"] += (
+            "\n\nNOTE: There are interrupted tasks that can be resumed. "
+            "You can view their status with the 'orchestrator_get_status' tool and continue "
+            "working on them with the 'orchestrator_execute_subtask' tool."
+        )
+        logger.info(f"Found {len(active_parent_tasks)} interrupted tasks that can be resumed")
     
     return [types.TextContent(
         type="text",

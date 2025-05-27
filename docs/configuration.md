@@ -15,12 +15,14 @@ The MCP Task Orchestrator CLI automatically configures your MCP clients during i
 
 ### Claude Desktop
 
-**Location**: 
+**Location**:
+
 - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Linux: `~/.config/Claude/claude_desktop_config.json`
 
 **Format**:
+
 ```json
 {
   "mcpServers": {
@@ -38,6 +40,7 @@ The MCP Task Orchestrator CLI automatically configures your MCP clients during i
 **Location**: `~/.windsurf/settings.json`
 
 **Format**:
+
 ```json
 {
   "name": "Task Orchestrator",
@@ -56,7 +59,8 @@ The MCP Task Orchestrator CLI automatically configures your MCP clients during i
 
 ### VS Code
 
-**Location**: 
+**Location**:
+
 - Windows: `%APPDATA%\Code\User\settings.json`
 - macOS: `~/Library/Application Support/Code/User/settings.json`
 - Linux: `~/.config/Code/User/settings.json`
@@ -127,12 +131,14 @@ specialists:
 To customize a specialist template:
 
 1. Create a copy of the default template in your user directory:
+
    ```bash
    mkdir -p ~/.mcp_task_orchestrator
    cp mcp_task_orchestrator/config/specialists.yaml ~/.mcp_task_orchestrator/
    ```
 
 2. Edit the template to suit your needs:
+
    ```bash
    nano ~/.mcp_task_orchestrator/specialists.yaml
    ```

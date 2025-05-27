@@ -30,6 +30,13 @@ htmlcov/
 *.log
 logs/
 
+# Task Orchestrator persistence
+.task_orchestrator/
+.task_orchestrator/tasks/active/
+.task_orchestrator/tasks/archive/
+.task_orchestrator/locks/
+.task_orchestrator/logs/
+
 # Backup files
 backup_obsolete_files/
 
