@@ -1,3 +1,0 @@
-[console_scripts]
-mcp-task-orchestrator = mcp_task_orchestrator.server:main
-mcp-task-orchestrator-cli = mcp_task_orchestrator_cli.cli:main
