@@ -1,0 +1,3 @@
+installer
+mcp_task_orchestrator
+mcp_task_orchestrator_cli

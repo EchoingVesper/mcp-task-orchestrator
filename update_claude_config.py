@@ -11,20 +11,21 @@ import shutil
 import sys
 
 def main():
-    """Update the Claude Desktop configuration for the MCP Task Orchestrator."""
-    print("MCP Task Orchestrator - Claude Desktop Configuration Update")
-    print("=" * 70)
+    """Update the Claude Desktop configuration for the MCP Task Orchestrator with virtual environment."""
+    print("MCP Task Orchestrator - Claude Desktop Configuration Update (Virtual Environment)")
+    print("=" * 80)
     
     # Get the current directory
     current_dir = Path(__file__).parent.absolute()
     
-    # Define the new server path
-    new_server_path = str(current_dir / "mcp_task_orchestrator" / "server.py")
-    print(f"New server path: {new_server_path}")
+    # Define the virtual environment Python path
+    venv_python = current_dir / "venv_mcp" / "Scripts" / "python.exe"
+    print(f"Virtual environment Python: {venv_python}")
     
-    # Check if the new server path exists
-    if not Path(new_server_path).exists():
-        print(f"Error: Server script not found at {new_server_path}")
+    # Check if the virtual environment exists
+    if not venv_python.exists():
+        print(f"Error: Virtual environment Python not found at {venv_python}")
+        print("Please run 'install_venv_simple.py' first to create the virtual environment.")
         return 1
     
     # Find Claude Desktop config
@@ -66,14 +67,14 @@ def main():
     if "mcpServers" not in config:
         config["mcpServers"] = {}
     
-    # Add to mcpServers with the correct format for Claude Desktop
+    # Add to mcpServers with the correct virtual environment configuration
     config["mcpServers"]["task-orchestrator"] = {
-        "command": "python",
-        "args": [new_server_path.replace("\\", "/")],  # Use forward slashes for consistency
-        "env": {}
+        "command": str(venv_python).replace("\\", "/"),  # Use forward slashes for consistency
+        "args": ["-m", "mcp_task_orchestrator.server"],
+        "cwd": str(current_dir).replace("\\", "/")
     }
     updated = True
-    print("Added task-orchestrator to mcpServers with correct format for Claude Desktop")
+    print("Added task-orchestrator to mcpServers with virtual environment Python")
     
     # Write configuration
     if updated:
@@ -87,8 +88,9 @@ def main():
     else:
         print("No changes needed to Claude Desktop configuration")
     
-    print("\nConfiguration update complete!")
-    print("Please restart Claude Desktop to apply the changes.")
+    print("\nVirtual environment configuration update complete!")
+    print("The configuration now points to the isolated virtual environment Python.")
+    print("Please restart Claude Desktop completely to apply the changes.")
     
     return 0
 

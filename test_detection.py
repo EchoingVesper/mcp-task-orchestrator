@@ -14,7 +14,6 @@ sys.path.insert(0, str(Path(__file__).parent / "installer"))
 
 from installer.client_detector import ClientDetector
 
-
 def main():
     """Test client detection and print results."""
     print("\nMCP Task Orchestrator - Client Detection Test")

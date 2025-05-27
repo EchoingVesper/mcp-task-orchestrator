@@ -16,7 +16,6 @@ sys.path.insert(0, str(Path(__file__).parent / "installer"))
 
 from installer.client_detector import ClientDetector
 
-
 def validate_config(client_id, config_path):
     """Validate a client configuration file."""
     try:
