@@ -22,10 +22,12 @@ The MCP Task Orchestrator provides sophisticated task decomposition and speciali
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python 3.8 or higher
 - One or more supported MCP clients
 
 ### Supported Clients
+
 - **Claude Desktop** - Anthropic's desktop application
 - **Cursor IDE** - AI-powered code editor
 - **Windsurf** - Codeium's development environment  
@@ -49,7 +51,6 @@ The installer automatically:
 ✅ Configures each client  
 ✅ Cleans up obsolete files
 
-
 ### After Installation
 
 1. **Restart your MCP clients** (Claude Desktop, Cursor, etc.)
@@ -59,17 +60,20 @@ The installer automatically:
 ## 🛠️ Advanced Installation
 
 ### Specific Clients Only
+
 ```bash
 python install.py --clients claude-desktop cursor-ide
 ```
 
 ### Verify Installation
+
 ```bash
 python test_detection.py    # Check client detection
 python test_validation.py   # Validate configurations  
 ```
 
 ### Manual Configuration
+
 If you prefer manual setup, see `docs/MANUAL_INSTALLATION.md`
 
 ## 📋 How It Works
@@ -79,6 +83,7 @@ If you prefer manual setup, see `docs/MANUAL_INSTALLATION.md`
 **You:** "Create a Python web scraper for news articles with tests and documentation"
 
 **Task Orchestrator:**
+
 1. **🏗️ Architect** designs the system architecture
 2. **💻 Implementer** writes the scraper code and tests  
 3. **🐛 Debugger** tests and fixes any issues
@@ -99,6 +104,7 @@ Each specialist brings focused expertise while maintaining context across the en
 The installer handles configuration automatically, but you can customize:
 
 ### Claude Desktop
+
 ```json
 {
   "mcpServers": {
@@ -112,22 +118,25 @@ The installer handles configuration automatically, but you can customize:
 ```
 
 ### Other Clients
-Each client has slightly different configuration formats. The installer handles these differences automatically.
 
+Each client has slightly different configuration formats. The installer handles these differences automatically.
 
 ## 🆘 Troubleshooting
 
 ### Common Issues
 
-**"No MCP clients detected"**
+#### "No MCP clients detected"
+
 - Ensure Claude Desktop, Cursor, Windsurf, or VS Code is installed
 - Try running clients once before installation
 
-**"Configuration failed"**  
+#### "Configuration failed"  
+
 - Check file permissions in config directories
 - Run installer as administrator if needed
 
-**"Module not found errors"**
+#### "Module not found errors"
+
 - Virtual environment may be corrupted
 - Delete `venv_mcp` folder and reinstall
 
