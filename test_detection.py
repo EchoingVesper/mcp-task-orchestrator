@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Test client detection functionality."""
+"""
+Test script for client detection functionality.
+
+This script tests the client detection capabilities of the MCP Task Orchestrator
+installer without making any configuration changes.
+"""
 
 import sys
 from pathlib import Path
@@ -10,32 +15,45 @@ sys.path.insert(0, str(Path(__file__).parent / "installer"))
 from installer.client_detector import ClientDetector
 
 def main():
-    """Test client detection."""
-    print("Testing MCP Client Detection...")
-    print("=" * 40)
+    """Test client detection and print results."""
+    print("\nMCP Task Orchestrator - Client Detection Test")
+    print("=" * 50)
     
-    project_root = Path(__file__).parent
-    detector = ClientDetector(project_root)
+    # Initialize detector
+    detector = ClientDetector(Path(__file__).parent)
     
-    # Test detection
-    detected = detector.detect_all()
-    
-    print("Detection Results:")
-    for client_id, is_detected in detected.items():
-        client = next(c for c in detector.clients if c.client_id == client_id)
-        status = "FOUND" if is_detected else "NOT FOUND"
-        print(f"  {client.client_name}: {status}")
-    
-    # Test detailed status
-    print("\nDetailed Status:")
+    # Get status for all clients
     status = detector.get_client_status()
-    for client_id, info in status.items():
-        print(f"  {client_id}:")
-        print(f"    Name: {info['name']}")
-        print(f"    Detected: {info['detected']}")
-        print(f"    Config Path: {info.get('config_path', 'N/A')}")
-        if 'error' in info:
-            print(f"    Error: {info['error']}")
+    
+    # Print results
+    print("\nDetection Results:")
+    print("-" * 30)
+    
+    detected_count = 0
+    for client_id, client_info in status.items():
+        client_name = client_info.get('name', client_id)
+        detected = client_info.get('detected', False)
+        status_text = "FOUND" if detected else "NOT FOUND"
+        
+        if detected:
+            detected_count += 1
+            config_path = client_info.get('config_path', 'Unknown')
+            print(f"✓ {client_name}: {status_text}")
+            print(f"  Config path: {config_path}")
+        else:
+            print(f"✗ {client_name}: {status_text}")
+        
+        if 'error' in client_info:
+            print(f"  Error: {client_info['error']}")
+        
+        print()
+    
+    # Summary
+    print("\nSummary:")
+    print(f"Found {detected_count}/{len(status)} MCP clients")
+    
+    return 0 if detected_count > 0 else 1
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
