@@ -42,13 +42,26 @@ async def list_tools() -> List[types.Tool]:
     """List available orchestration tools."""
     return [
         types.Tool(
+            name="orchestrator_initialize_session",
+            description="Initialize a new task orchestration session with guidance for effective task breakdown",
+            inputSchema={
+                "type": "object",
+                "properties": {}
+            }
+        ),
+        types.Tool(
             name="orchestrator_plan_task",
-            description="Analyze a complex task and break it down into specialized subtasks",            inputSchema={
+            description="Create a task breakdown from LLM-analyzed subtasks",
+            inputSchema={
                 "type": "object",
                 "properties": {
                     "description": {
                         "type": "string",
                         "description": "The complex task to be broken down"
+                    },
+                    "subtasks_json": {
+                        "type": "string",
+                        "description": "JSON array of subtasks created by the LLM, each with title, description, specialist_type, and optional dependencies and estimated_effort"
                     },
                     "complexity_level": {
                         "type": "string", 
@@ -61,7 +74,7 @@ async def list_tools() -> List[types.Tool]:
                         "description": "Additional context about the task (optional)"
                     }
                 },
-                "required": ["description"]
+                "required": ["description", "subtasks_json"]
             }
         ),
         types.Tool(
@@ -140,7 +153,9 @@ async def list_tools() -> List[types.Tool]:
 async def call_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextContent]:
     """Handle tool calls from the LLM."""
     
-    if name == "orchestrator_plan_task":
+    if name == "orchestrator_initialize_session":
+        return await handle_initialize_session(arguments)
+    elif name == "orchestrator_plan_task":
         return await handle_plan_task(arguments)
     elif name == "orchestrator_execute_subtask":
         return await handle_execute_subtask(arguments)
@@ -154,13 +169,39 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextCont
         raise ValueError(f"Unknown tool: {name}")
 
 
+async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle initialization of a new task orchestration session."""
+    
+    # Get orchestration guidance from the orchestrator
+    session_context = await orchestrator.initialize_session()
+    
+    # Format the response for the LLM
+    response = {
+        "session_initialized": True,
+        "orchestrator_context": session_context,
+        "instructions": (
+            "You are now in Task Orchestrator mode. Your role is to break down complex tasks into "
+            "structured subtasks with appropriate specialist assignments. When you receive a task, "
+            "analyze it carefully and create a detailed breakdown following the guidelines provided. "
+            "\n\nTo proceed, use the 'orchestrator_plan_task' tool with your JSON-formatted subtasks."
+        )
+    }
+    
+    return [types.TextContent(
+        type="text",
+        text=json.dumps(response, indent=2)
+    )]
+
+
 async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle task planning and breakdown."""
+    """Handle task planning with LLM-provided subtasks."""
     description = args["description"]
+    subtasks_json = args["subtasks_json"]
     complexity = args.get("complexity_level", "moderate")
     context = args.get("context", "")
     
-    breakdown = await orchestrator.plan_task(description, complexity, context)
+    # Create task breakdown using the LLM-provided subtasks
+    breakdown = await orchestrator.plan_task(description, complexity, subtasks_json, context)
     
     response = {
         "task_breakdown": {
@@ -171,7 +212,7 @@ async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
                 {
                     "task_id": subtask.task_id,
                     "title": subtask.title,
-                    "specialist_type": subtask.specialist_type,
+                    "specialist_type": subtask.specialist_type.value,
                     "description": subtask.description,
                     "dependencies": subtask.dependencies,
                     "estimated_effort": subtask.estimated_effort
@@ -180,7 +221,7 @@ async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
             ]
         },
         "instructions": (
-            f"Task breakdown complete! {len(breakdown.subtasks)} subtasks identified. "
+            f"Task breakdown complete! {len(breakdown.subtasks)} subtasks created and stored. "
             f"Use 'orchestrator_execute_subtask' with each task_id to begin working on them. "
             f"Recommended order: {' → '.join([st.task_id for st in breakdown.subtasks])}"
         )
