@@ -1,203 +1,63 @@
-# MCP Task Orchestrator - Installation Guide
+# Installation Guide
 
-This guide provides detailed instructions for installing and configuring the MCP Task Orchestrator on different platforms.
+## Quick Start
 
-## Prerequisites
+1. **Clone repository**
 
-- Python 3.8 or higher
-- pip (Python package installer)
-- Git (for cloning the repository)
-
-## Installation Methods
-
-There are several ways to install the MCP Task Orchestrator:
-
-1. **Automated Installation Scripts** (Recommended)
-2. **Manual Installation** using pip
-3. **Development Installation** from source## Automated Installation (Recommended)
-
-The automated installation scripts will:
-- Install the MCP Task Orchestrator package
-- Detect installed MCP clients
-- Configure the clients to use the Task Orchestrator
-- Validate the installation
-
-### Windows
-
-1. Open PowerShell as Administrator
-2. Clone the repository:
-   ```powershell
-   git clone https://github.com/windsurf/mcp-task-orchestrator.git
-   cd mcp-task-orchestrator
-   ```
-3. Run the installation script:
-   ```powershell
-   .\scripts\install.ps1
-   ```
-4. Follow the on-screen instructions
-
-### macOS
-
-1. Open Terminal
-2. Clone the repository:
    ```bash
-   git clone https://github.com/windsurf/mcp-task-orchestrator.git
-   cd mcp-task-orchestrator
-   ```
-3. Make the installation script executable:
-   ```bash
-   chmod +x ./scripts/install.sh
-   ```
-4. Run the installation script:
-   ```bash
-   ./scripts/install.sh
-   ```
-5. Follow the on-screen instructions
-
-### Linux
-
-1. Open Terminal
-2. Clone the repository:
-   ```bash
-   git clone https://github.com/windsurf/mcp-task-orchestrator.git
-   cd mcp-task-orchestrator
-   ```
-3. Make the installation script executable:
-   ```bash
-   chmod +x ./scripts/install.sh
-   ```
-4. Run the installation script:
-   ```bash
-   ./scripts/install.sh
-   ```
-5. Follow the on-screen instructions## Manual Installation
-
-If the automated installation scripts don't work for your environment, you can manually install and configure the MCP Task Orchestrator.
-
-### Installing the Package
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/windsurf/mcp-task-orchestrator.git
+   git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
    cd mcp-task-orchestrator
    ```
 
-2. Install the package:
+2. **Run installer**
+
    ```bash
-   pip install -e .
+   python install.py
    ```
 
-### Configuring MCP Clients
+3. **Restart MCP clients** (Claude Desktop, Cursor, Windsurf, VS Code)
 
-After installing the package, you can use the CLI to configure your MCP clients:
+4. **Verify**: Look for "task-orchestrator" in available tools
+
+## Supported Clients
+
+- **Claude Desktop** - `%APPDATA%\Claude\claude_desktop_config.json`
+- **Cursor IDE** - `~/.cursor/mcp.json`
+- **Windsurf** - `~/.codeium/windsurf/mcp_config.json`
+- **VS Code (Cline)** - `~/.vscode/mcp.json`
+
+## Advanced Options
 
 ```bash
-# Configure all detected MCP clients
-python -m mcp_task_orchestrator_cli.cli install <path_to_server.py>
+# Specific clients only
+python install.py --clients claude-desktop
 
-# Configure specific clients
-python -m mcp_task_orchestrator_cli.cli install <path_to_server.py> --client claude_desktop
+# Test detection
+python test_detection.py
 
-# Force reconfiguration of already configured clients
-python -m mcp_task_orchestrator_cli.cli install <path_to_server.py> --force
+# Validate configurations  
+python test_validation.py
+
+# Clean obsolete files
+python installer/cleanup.py
 ```
 
-Replace `<path_to_server.py>` with the absolute path to the server.py file in your installation, for example:
-```bash
-python -m mcp_task_orchestrator_cli.cli install C:\Users\username\mcp-task-orchestrator\mcp_task_orchestrator\server.py
-```
+## What the Installer Does
 
-## Development Installation
+1. ✅ Creates isolated virtual environment (`venv_mcp/`)
+2. ✅ Installs all dependencies (mcp, psutil, etc.)
+3. ✅ Detects installed MCP clients automatically
+4. ✅ Creates correct configuration for each client
+5. ✅ Removes obsolete files from previous attempts
 
-For development purposes, you can install the package in development mode:
+## Manual Configuration
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/windsurf/mcp-task-orchestrator.git
-   cd mcp-task-orchestrator
-   ```
+If automatic installation fails, see manual configuration examples in each client's documentation.
 
-2. Install the package with development dependencies:
-   ```bash
-   pip install -e ".[dev]"
-   ```
+## Troubleshooting
 
-3. Configure MCP clients:
-   ```bash
-   python -m mcp_task_orchestrator_cli.cli install <path_to_server.py>
-   ```## Troubleshooting
+- **No clients detected**: Ensure clients are installed and run once
+- **Permission errors**: Run as administrator/sudo if needed  
+- **Module errors**: Delete `venv_mcp/` and reinstall
 
-If you encounter issues during installation or configuration, try these troubleshooting steps:
-
-### Common Issues
-
-#### Client Not Detected
-
-If the installer doesn't detect your MCP client:
-
-1. Verify the client is installed and has been run at least once
-2. Check if the client's configuration file exists at the expected location
-3. Try specifying the client explicitly:
-   ```bash
-   python -m mcp_task_orchestrator_cli.cli install <path_to_server.py> --client claude_desktop
-   ```
-
-#### Configuration Not Applied
-
-If the configuration is not applied correctly:
-
-1. Restart the MCP client completely
-2. Check if the configuration file was modified:
-   - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-   - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - Linux: `~/.config/Claude/claude_desktop_config.json`
-3. Try forcing reconfiguration:
-   ```bash
-   python -m mcp_task_orchestrator_cli.cli install <path_to_server.py> --force
-   ```
-
-#### Server Not Starting
-
-If the MCP server doesn't start:
-
-1. Check if Python 3.8+ is installed and in your PATH
-2. Verify all dependencies are installed:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Check for error messages in the client's console or logs
-
-### Getting Help
-
-If you continue to experience issues:
-
-1. Check the [GitHub Issues](https://github.com/windsurf/mcp-task-orchestrator/issues) for similar problems
-2. Create a new issue with detailed information about your problem
-3. Include your operating system, Python version, and client information
-
-## Updating
-
-To update an existing installation:
-
-```bash
-# Pull the latest changes
-git pull
-
-# Update the package
-pip install -e .
-
-# Update client configurations
-python -m mcp_task_orchestrator_cli.cli update <path_to_server.py>
-```
-
-## Uninstalling
-
-To uninstall the MCP Task Orchestrator:
-
-```bash
-# Remove client configurations
-python -m mcp_task_orchestrator_cli.cli uninstall --all
-
-# Uninstall the package
-pip uninstall mcp-task-orchestrator
-```
+For detailed troubleshooting, see `TEST_REPORT.md`.
