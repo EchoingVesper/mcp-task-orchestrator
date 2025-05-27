@@ -1,0 +1,78 @@
+{
+  "serverConfig": {
+    "command": "cmd.exe",
+    "args": [
+      "/c"
+    ]
+  },
+  "mcpServers": {
+    "desktop-commander": {
+      "command": "npx.cmd",
+      "args": [
+        "@wonderwhy-er/desktop-commander@latest"
+      ]
+    },
+    "Puppeteer": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "env": {},
+      "fromGalleryId": "modelcontextprotocol.servers_puppeteer"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "fromGalleryId": "modelcontextprotocol.servers_sequentialthinking"
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": ""
+      },
+      "fromGalleryId": "modelcontextprotocol.servers_brave-search"
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ],
+      "fromGalleryId": "upstash.context7"
+    },
+    "windows-cli": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@simonb97/server-win-cli"
+      ],
+      "fromGalleryId": "SimonB97.win-cli-mcp-server"
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+      }
+    },
+    "task-orchestrator": {
+      "command": "python",
+      "args": ["E:/My Work/Programming/MCP Task Orchestrator/src/main.py"],
+      "cwd": "E:/My Work/Programming/MCP Task Orchestrator",
+      "env": {
+        "PYTHONPATH": "E:/My Work/Programming/MCP Task Orchestrator/src"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "task-orchestrator": {
+      "command": "C:/Program Files/Python313/python.exe",
+      "args": ["E:/My Work/Programming/MCP Task Orchestrator/src/main.py"],
+      "env": {
+        "PYTHONPATH": "E:/My Work/Programming/MCP Task Orchestrator/src"
+      }
+    }
+  }
+}
