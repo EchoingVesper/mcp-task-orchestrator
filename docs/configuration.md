@@ -15,12 +15,14 @@ The MCP Task Orchestrator CLI automatically configures your MCP clients during i
 
 ### Claude Desktop
 
-**Location**: 
+**Location**:
+
 - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 - Linux: `~/.config/Claude/claude_desktop_config.json`
 
 **Format**:
+
 ```json
 {
   "mcpServers": {
@@ -38,6 +40,7 @@ The MCP Task Orchestrator CLI automatically configures your MCP clients during i
 **Location**: `~/.windsurf/settings.json`
 
 **Format**:
+
 ```json
 {
   "name": "Task Orchestrator",
@@ -56,7 +59,8 @@ The MCP Task Orchestrator CLI automatically configures your MCP clients during i
 
 ### VS Code
 
-**Location**: 
+**Location**:
+
 - Windows: `%APPDATA%\Code\User\settings.json`
 - macOS: `~/Library/Application Support/Code/User/settings.json`
 - Linux: `~/.config/Code/User/settings.json`
@@ -69,10 +73,15 @@ The MCP Task Orchestrator uses specialist templates to define the roles and prom
 
 Specialist templates are stored in the `config` directory of your installation:
 
-- Default templates: `mcp_task_orchestrator/config/specialists.yaml`
-- User templates: `~/.mcp_task_orchestrator/specialists.yaml`
+- Default templates: `mcp_task_orchestrator/config/default_roles.yaml`
+- Project-specific templates: `<project_directory>/*_roles.yaml`
 
-The user templates take precedence over the default templates if both exist.
+The MCP Task Orchestrator will look for role definition files in the following order of precedence:
+
+1. Project-specific role files (any file with a name ending in `_roles.yaml` in the project directory)
+2. Default role file (`config/default_roles.yaml`)
+
+This allows you to have different sets of specialist roles for different projects.
 
 ### Template Format
 
@@ -127,12 +136,14 @@ specialists:
 To customize a specialist template:
 
 1. Create a copy of the default template in your user directory:
+
    ```bash
    mkdir -p ~/.mcp_task_orchestrator
    cp mcp_task_orchestrator/config/specialists.yaml ~/.mcp_task_orchestrator/
    ```
 
 2. Edit the template to suit your needs:
+
    ```bash
    nano ~/.mcp_task_orchestrator/specialists.yaml
    ```
@@ -200,18 +211,80 @@ cp ~/.mcp_task_orchestrator/task_orchestrator.db.backup ~/.mcp_task_orchestrator
 
 ### Custom Specialist Types
 
-You can add your own specialist types by adding them to the `specialists.yaml` file:
+You can add your own specialist types by adding them to the `default_roles.yaml` file or creating a project-specific role file:
 
 ```yaml
-specialists:
-  my_custom_specialist:
-    name: "My Custom Specialist"
-    description: "Expert in my custom domain"
-    prompt_template: |
-      ## Role
-      You are a Custom Specialist focused on...
-      # ... rest of the template
+my_custom_specialist:
+  role_definition: "You are a Custom Specialist focused on..."
+  expertise:
+    - "Expertise area 1"
+    - "Expertise area 2"
+  approach:
+    - "Approach step 1"
+    - "Approach step 2"
+  output_format: "Expected output format description"
 ```
+
+### Project-Specific Role Files
+
+You can create project-specific role files to customize the specialist roles for a particular project. These files should be named with a suffix of `_roles.yaml` and placed in the project directory.
+
+#### Automatic Example File Creation
+
+When the MCP Task Orchestrator is run in a directory without any role definition files, it will automatically create an `example_roles.yaml` file in that directory. This file contains a commented-out version of the default roles that you can use as a template for creating your own custom roles.
+
+To use this example file:
+
+1. Rename it to have a suffix of `_roles.yaml` (e.g., `project_roles.yaml` or `custom_roles.yaml`)
+2. Uncomment and modify the sections you want to customize
+3. Restart the MCP Task Orchestrator server
+
+For example, to create a set of specialist roles for a web development project, you might create a file called `web_dev_roles.yaml` in your project directory:
+
+```yaml
+# Web Development Specialist Roles
+
+task_orchestrator:
+  role_definition: "You are a Web Development Task Orchestrator"
+  expertise:
+    - "Breaking down web development tasks into manageable subtasks"
+    - "Assigning appropriate specialist roles to each subtask"
+    - "Managing dependencies between web development components"
+    - "Tracking progress and coordinating work"
+  approach:
+    - "Analyze the web development requirements and context"
+    - "Identify logical components (frontend, backend, database, etc.)"
+    - "Create a clear dependency structure between subtasks"
+    - "Assign appropriate specialist roles to each subtask"
+    - "Estimate effort required for each component"
+  output_format: "Structured task breakdown with clear objectives, specialist assignments, effort estimation, and dependency relationships"
+  specialist_roles:
+    frontend_developer: "Building user interfaces and client-side functionality"
+    backend_developer: "Implementing server-side logic and APIs"
+    database_specialist: "Designing and optimizing database schemas"
+    ui_designer: "Creating user interface designs and assets"
+    tester: "Testing and validating web applications"
+
+frontend_developer:
+  role_definition: "You are a Senior Frontend Developer focused on building user interfaces"
+  expertise:
+    - "HTML, CSS, and JavaScript development"
+    - "Frontend frameworks (React, Vue, Angular)"
+    - "Responsive design and cross-browser compatibility"
+    - "Web accessibility standards"
+    - "Frontend performance optimization"
+  approach:
+    - "Build modular, reusable UI components"
+    - "Ensure responsive design for all screen sizes"
+    - "Optimize for performance and loading speed"
+    - "Follow accessibility best practices"
+    - "Write clean, maintainable code with proper documentation"
+  output_format: "Well-structured frontend code with component documentation and usage examples"
+
+# Additional specialist roles...
+```
+
+When the MCP Task Orchestrator is run in a directory containing this file, it will use these custom roles instead of the default roles.
 
 ### Task Planning Customization
 

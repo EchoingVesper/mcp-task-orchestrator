@@ -16,13 +16,13 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 
 setup(
     name="mcp-task-orchestrator",
-    version="0.1.0",
-    author="Windsurf Engineering Team",
+    version="1.2.0",
+    author="Echoing Vesper",
     author_email="example@example.com",
     description="A Model Context Protocol server for task orchestration",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/windsurf/mcp-task-orchestrator",
+    url="https://github.com/EchoingVesper/mcp-task-orchestrator",
     packages=find_packages(),
     include_package_data=True,
     package_data={

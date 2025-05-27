@@ -5,23 +5,26 @@ Specialist management for providing role-specific prompts and contexts.
 import os
 import yaml
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 from jinja2 import Environment, FileSystemLoader
 
 from .models import SpecialistType, SubTask
+from .role_loader import get_roles
 
 
 class SpecialistManager:
     """Manages specialist roles and their associated prompts and contexts."""
     
-    def __init__(self, config_path: str = None):
+    def __init__(self, config_path: str = None, project_dir: str = None):
+        self.project_dir = project_dir or os.getcwd()
+        
         if config_path is None:
             # Check environment variable first
             config_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_CONFIG_DIR")
             if config_dir:
-                config_path = Path(config_dir) / "specialists.yaml"
+                config_path = Path(config_dir) / "default_roles.yaml"
             else:
-                config_path = Path(__file__).parent.parent.parent / "config" / "specialists.yaml"
+                config_path = Path(__file__).parent.parent.parent / "config" / "default_roles.yaml"
         
         self.config_path = Path(config_path)
         self.specialists_config = self._load_specialists_config()
@@ -33,12 +36,24 @@ class SpecialistManager:
         )
     
     def _load_specialists_config(self) -> Dict:
-        """Load specialist configurations from YAML file."""
-        if not self.config_path.exists():
-            return self._get_default_specialists_config()
+        """
+        Load specialist configurations from role files.
+        Prioritizes project-specific role files over default role file.
+        """
+        # Try to get roles from project directory first
+        roles = get_roles(self.project_dir)
         
-        with open(self.config_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
+        # If no roles found or loading failed, fall back to default
+        if not roles and self.config_path.exists():
+            try:
+                with open(self.config_path, 'r', encoding='utf-8') as f:
+                    roles = yaml.safe_load(f)
+            except Exception:
+                roles = self._get_default_specialists_config()
+        elif not roles:
+            roles = self._get_default_specialists_config()
+            
+        return roles
     
     def _get_default_specialists_config(self) -> Dict:
         """Get default specialist configurations."""

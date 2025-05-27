@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Generated example roles file
+example_roles.yaml
+
 # Distribution / packaging
 dist/
 build/

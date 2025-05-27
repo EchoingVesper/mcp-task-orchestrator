@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 1.1](https://img.shields.io/badge/version-1.1-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.1)
+[![Version 1.2](https://img.shields.io/badge/version-1.2-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.2)
 
 A Model Context Protocol server for task orchestration with specialized AI roles and automatic client configuration.
 
@@ -15,6 +15,7 @@ The MCP Task Orchestrator provides sophisticated task decomposition and speciali
 - **LLM-Powered Task Breakdown**: Leverages the calling LLM's intelligence for flexible task decomposition
 - **Unified Installation**: One-command setup for all supported MCP clients
 - **Auto-Detection**: Automatically finds and configures installed clients  
+- **Customizable Specialist Roles**: Project-specific role definitions with automatic example file creation
 - **Specialist Modes**: Role-specific prompts (Architect, Implementer, Debugger, Documenter, and more)
 - **State Management**: Tracks task progress and dependencies
 - **Single Session**: Works within one conversation - no multiple LLM instances
