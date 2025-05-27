@@ -3,6 +3,7 @@ Core orchestration logic for task management and specialist coordination.
 """
 
 import uuid
+import json
 from datetime import datetime
 from typing import Dict, List, Optional
 
@@ -21,19 +22,71 @@ class TaskOrchestrator:
         self.state = state_manager
         self.specialists = specialist_manager
     
-    async def plan_task(self, description: str, complexity: str, context: str = "") -> TaskBreakdown:
-        """Analyze a task and break it down into specialized subtasks."""
+    async def initialize_session(self) -> Dict:
+        """Initialize a new task orchestration session with guidance for the LLM."""
+        
+        # Provide context and instructions to the LLM for effective task orchestration
+        return {
+            "role": "Task Orchestrator",
+            "capabilities": [
+                "Breaking down complex tasks into manageable subtasks",
+                "Assigning appropriate specialist roles to each subtask",
+                "Managing dependencies between subtasks",
+                "Tracking progress and coordinating work"
+            ],
+            "instructions": (
+                "As the Task Orchestrator, your role is to analyze complex tasks and break them down "
+                "into a structured set of subtasks. For each task you receive:\n\n"
+                "1. Carefully analyze the requirements and context\n"
+                "2. Identify logical components that can be worked on independently\n"
+                "3. Create a clear dependency structure between subtasks\n"
+                "4. Assign appropriate specialist roles to each subtask\n"
+                "5. Estimate effort required for each component\n\n"
+                "When creating subtasks, ensure each has:\n"
+                "- A clear, specific objective\n"
+                "- Appropriate specialist assignment (architect, implementer, debugger, etc.)\n"
+                "- Realistic effort estimation\n"
+                "- Proper dependency relationships\n\n"
+                "This structured approach ensures complex work is broken down methodically."
+            ),
+            "specialist_roles": {
+                "architect": "System design and architecture planning",
+                "implementer": "Writing code and implementing features",
+                "debugger": "Fixing issues and optimizing performance",
+                "documenter": "Creating documentation and guides",
+                "reviewer": "Code review and quality assurance",
+                "tester": "Testing and validation",
+                "researcher": "Research and information gathering"
+            }
+        }
+    
+    async def plan_task(self, description: str, complexity: str, subtasks_json: str, context: str = "") -> TaskBreakdown:
+        """Create a task breakdown from LLM-provided subtasks."""
         
         # Generate unique task ID
         parent_task_id = f"task_{uuid.uuid4().hex[:8]}"
         
-        # Analyze task and determine breakdown strategy
-        complexity_level = ComplexityLevel(complexity)
-        subtasks = await self._analyze_and_breakdown_task(
-            description, complexity_level, context
-        )
+        # Parse the subtasks JSON provided by the LLM
+        try:
+            subtasks_data = json.loads(subtasks_json)
+            subtasks = []
+            
+            for st_data in subtasks_data:
+                # Create SubTask objects from the provided JSON
+                subtask = SubTask(
+                    task_id=st_data.get("task_id", f"{st_data['specialist_type']}_{uuid.uuid4().hex[:6]}"),
+                    title=st_data["title"],
+                    description=st_data["description"],
+                    specialist_type=SpecialistType(st_data["specialist_type"]),
+                    dependencies=st_data.get("dependencies", []),
+                    estimated_effort=st_data.get("estimated_effort", "Unknown")
+                )
+                subtasks.append(subtask)
+        except (json.JSONDecodeError, KeyError) as e:
+            raise ValueError(f"Invalid subtasks JSON format: {str(e)}")
         
         # Create task breakdown
+        complexity_level = ComplexityLevel(complexity)
         breakdown = TaskBreakdown(
             parent_task_id=parent_task_id,
             description=description,
@@ -132,163 +185,14 @@ class TaskOrchestrator:
             ]
         }
     
-    async def _analyze_and_breakdown_task(self, description: str, 
-                                        complexity: ComplexityLevel, 
-                                        context: str) -> List[SubTask]:
-        """Analyze a task description and break it into appropriate subtasks."""
-        
-        # Task analysis logic - this could be enhanced with LLM analysis
-        # For now, implementing rule-based analysis
-        
-        subtasks = []
-        
-        # Common patterns for different types of tasks
-        if any(word in description.lower() for word in ['build', 'create', 'develop', 'implement']):
-            # Development task pattern
-            if any(word in description.lower() for word in ['web', 'app', 'system', 'api']):
-                subtasks.extend(self._create_development_subtasks(description))
-        
-        elif any(word in description.lower() for word in ['review', 'analyze', 'audit']):
-            # Analysis task pattern  
-            subtasks.extend(self._create_analysis_subtasks(description))
-        
-        elif any(word in description.lower() for word in ['debug', 'fix', 'troubleshoot']):
-            # Debugging task pattern
-            subtasks.extend(self._create_debugging_subtasks(description))
-        
-        else:
-            # Generic task breakdown
-            subtasks.extend(self._create_generic_subtasks(description))
-        
-        return subtasks
-    
-    def _create_development_subtasks(self, description: str) -> List[SubTask]:
-        """Create subtasks for development projects."""
-        base_id = uuid.uuid4().hex[:6]
-        
-        return [
-            SubTask(
-                task_id=f"arch_{base_id}",
-                title="Architecture & Design",
-                description=f"Design system architecture and technical approach for: {description}",
-                specialist_type=SpecialistType.ARCHITECT,
-                estimated_effort="30-60 minutes"
-            ),
-            SubTask(
-                task_id=f"impl_{base_id}",
-                title="Core Implementation", 
-                description=f"Implement core functionality for: {description}",
-                specialist_type=SpecialistType.IMPLEMENTER,
-                dependencies=[f"arch_{base_id}"],
-                estimated_effort="2-4 hours"
-            ),
-            SubTask(
-                task_id=f"test_{base_id}",
-                title="Testing & Debugging",
-                description=f"Test implementation and debug issues for: {description}",
-                specialist_type=SpecialistType.DEBUGGER,
-                dependencies=[f"impl_{base_id}"],
-                estimated_effort="1-2 hours"
-            ),
-            SubTask(
-                task_id=f"docs_{base_id}",
-                title="Documentation",
-                description=f"Create documentation for: {description}",
-                specialist_type=SpecialistType.DOCUMENTER,
-                dependencies=[f"test_{base_id}"],
-                estimated_effort="30-60 minutes"
-            )
-        ]
-    
-    def _create_analysis_subtasks(self, description: str) -> List[SubTask]:
-        """Create subtasks for analysis/review tasks."""
-        base_id = uuid.uuid4().hex[:6]
-        
-        return [
-            SubTask(
-                task_id=f"research_{base_id}",
-                title="Research & Information Gathering",
-                description=f"Gather information and context for: {description}",
-                specialist_type=SpecialistType.RESEARCHER,
-                estimated_effort="30-45 minutes"
-            ),
-            SubTask(
-                task_id=f"review_{base_id}",
-                title="Detailed Review",
-                description=f"Perform detailed analysis of: {description}",
-                specialist_type=SpecialistType.REVIEWER,
-                dependencies=[f"research_{base_id}"],
-                estimated_effort="1-2 hours"
-            ),
-            SubTask(
-                task_id=f"report_{base_id}",
-                title="Analysis Report",
-                description=f"Document findings and recommendations for: {description}",
-                specialist_type=SpecialistType.DOCUMENTER,
-                dependencies=[f"review_{base_id}"],
-                estimated_effort="30-45 minutes"
-            )
-        ]
-    
-    def _create_debugging_subtasks(self, description: str) -> List[SubTask]:
-        """Create subtasks for debugging/troubleshooting."""
-        base_id = uuid.uuid4().hex[:6]
-        
-        return [
-            SubTask(
-                task_id=f"diagnose_{base_id}",
-                title="Problem Diagnosis",
-                description=f"Diagnose the root cause of: {description}",
-                specialist_type=SpecialistType.DEBUGGER,
-                estimated_effort="45-90 minutes"
-            ),
-            SubTask(
-                task_id=f"fix_{base_id}",
-                title="Implement Fix",
-                description=f"Implement solution for: {description}",
-                specialist_type=SpecialistType.IMPLEMENTER,
-                dependencies=[f"diagnose_{base_id}"],
-                estimated_effort="1-3 hours"
-            ),
-            SubTask(
-                task_id=f"verify_{base_id}",
-                title="Verify Fix",
-                description=f"Test and verify the fix for: {description}",
-                specialist_type=SpecialistType.DEBUGGER,
-                dependencies=[f"fix_{base_id}"],
-                estimated_effort="30-60 minutes"
-            )
-        ]
-    
-    def _create_generic_subtasks(self, description: str) -> List[SubTask]:
-        """Create generic subtasks for unclear task types."""
-        base_id = uuid.uuid4().hex[:6]
-        
-        return [
-            SubTask(
-                task_id=f"research_{base_id}",
-                title="Research & Planning",
-                description=f"Research and plan approach for: {description}",
-                specialist_type=SpecialistType.RESEARCHER,
-                estimated_effort="30-45 minutes"
-            ),
-            SubTask(
-                task_id=f"execute_{base_id}",
-                title="Execute Task",
-                description=f"Execute the main work for: {description}",
-                specialist_type=SpecialistType.IMPLEMENTER,
-                dependencies=[f"research_{base_id}"],
-                estimated_effort="1-3 hours"
-            ),
-            SubTask(
-                task_id=f"review_{base_id}",
-                title="Review & Finalize",
-                description=f"Review and finalize work for: {description}",
-                specialist_type=SpecialistType.REVIEWER,
-                dependencies=[f"execute_{base_id}"],
-                estimated_effort="30-45 minutes"
-            )
-        ]
+    # The _analyze_and_breakdown_task method and the template methods are no longer needed
+    # as the LLM will now be responsible for task breakdown
+    # We're removing:
+    # - _analyze_and_breakdown_task
+    # - _create_development_subtasks
+    # - _create_analysis_subtasks
+    # - _create_debugging_subtasks
+    # - _create_generic_subtasks
     
     async def _check_parent_task_progress(self, completed_task_id: str) -> Dict:
         """Check progress of parent task when a subtask completes."""

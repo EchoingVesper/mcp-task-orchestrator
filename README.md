@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 1.0](https://img.shields.io/badge/version-1.0-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.0)
+[![Version 1.1](https://img.shields.io/badge/version-1.1-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.1)
 
 A Model Context Protocol server for task orchestration with specialized AI roles and automatic client configuration.
 
@@ -12,10 +12,10 @@ The MCP Task Orchestrator provides sophisticated task decomposition and speciali
 
 ## ✨ Key Features
 
+- **LLM-Powered Task Breakdown**: Leverages the calling LLM's intelligence for flexible task decomposition
 - **Unified Installation**: One-command setup for all supported MCP clients
 - **Auto-Detection**: Automatically finds and configures installed clients  
-- **Task Decomposition**: Breaks complex requests into manageable subtasks
-- **Specialist Modes**: Role-specific prompts (Architect, Implementer, Debugger, Documenter)
+- **Specialist Modes**: Role-specific prompts (Architect, Implementer, Debugger, Documenter, and more)
 - **State Management**: Tracks task progress and dependencies
 - **Single Session**: Works within one conversation - no multiple LLM instances
 
@@ -78,22 +78,49 @@ If you prefer manual setup, see `docs/MANUAL_INSTALLATION.md`
 
 ## 📋 How It Works
 
-### Task Orchestration Example
+### LLM-Powered Task Orchestration
 
-**You:** "Create a Python web scraper for news articles with tests and documentation"
+**Step 1:** Initialize the orchestration session to get guidance
 
-**Task Orchestrator:**
+```python
+response = await call_tool("orchestrator_initialize_session", {})
+```
 
-1. **🏗️ Architect** designs the system architecture
-2. **💻 Implementer** writes the scraper code and tests  
-3. **🐛 Debugger** tests and fixes any issues
-4. **📝 Documenter** creates comprehensive documentation
+**Step 2:** Analyze the task and create JSON-formatted subtasks
+
+```python
+subtasks_json = [
+  {
+    "title": "System Architecture Design",
+    "description": "Design the web scraper architecture",
+    "specialist_type": "architect",
+    "dependencies": [],
+    "estimated_effort": "30-45 minutes"
+  },
+  # Additional subtasks...
+]
+```
+
+**Step 3:** Submit the task with your structured subtasks
+
+```python
+response = await call_tool("orchestrator_plan_task", {
+    "description": "Create a Python web scraper for news articles",
+    "subtasks_json": json.dumps(subtasks_json),
+    "complexity_level": "moderate"
+})
+```
+
+**Step 4:** Execute each subtask with specialist context
+
+**Step 5:** Synthesize results into a comprehensive solution
 
 Each specialist brings focused expertise while maintaining context across the entire project.
 
 ### Available Tools
 
-- `orchestrator_plan_task` - Break down complex tasks
+- `orchestrator_initialize_session` - Initialize a new task orchestration session
+- `orchestrator_plan_task` - Create a task breakdown from LLM-analyzed subtasks
 - `orchestrator_execute_subtask` - Execute with specialist context
 - `orchestrator_complete_subtask` - Mark tasks complete
 - `orchestrator_synthesize_results` - Combine results

@@ -1,11 +1,229 @@
 # MCP Task Orchestrator - Usage Examples
 
-This document provides practical examples of using the MCP Task Orchestrator in different scenarios.## Example 1: Web Development Project
+This document provides practical examples of using the MCP Task Orchestrator in different scenarios.
 
-### Task Description
+## LLM-Powered Task Orchestration (New Approach)
+
+### Example 0: Complete Workflow with LLM-Powered Task Breakdown
+
+#### Task Description
+
+Build a REST API with user authentication, data validation, and comprehensive documentation.
+
+#### Step 1: Initialize Session
+
+```python
+# Initialize the task orchestration session to get guidance
+response = await call_tool("orchestrator_initialize_session", {})
+
+# Server response (simplified)
+{
+    "session_initialized": true,
+    "orchestrator_context": {
+        "role": "Task Orchestrator",
+        "capabilities": [
+            "Breaking down complex tasks into manageable subtasks",
+            "Assigning appropriate specialist roles to each subtask",
+            "Managing dependencies between subtasks",
+            "Tracking progress and coordinating work"
+        ],
+        "instructions": "As the Task Orchestrator, your role is to analyze complex tasks and break them down into a structured set of subtasks...",
+        "specialist_roles": {
+            "architect": "System design and architecture planning",
+            "implementer": "Writing code and implementing features",
+            "debugger": "Fixing issues and optimizing performance",
+            "documenter": "Creating documentation and guides",
+            "reviewer": "Code review and quality assurance",
+            "tester": "Testing and validation",
+            "researcher": "Research and information gathering"
+        }
+    },
+    "instructions": "You are now in Task Orchestrator mode. Your role is to break down complex tasks into structured subtasks with appropriate specialist assignments..."
+}
+```
+
+#### Step 2: Analyze Task and Create JSON-Formatted Subtasks
+
+```python
+# Analyze the task and create structured subtasks
+subtasks_json = [
+    {
+        "title": "API Architecture Design",
+        "description": "Design the overall API architecture, including endpoints, data models, and authentication flow",
+        "specialist_type": "architect",
+        "dependencies": [],
+        "estimated_effort": "45-60 minutes"
+    },
+    {
+        "title": "Database Schema Design",
+        "description": "Design the database schema to support the API functionality and user authentication",
+        "specialist_type": "architect",
+        "dependencies": [],
+        "estimated_effort": "30-45 minutes"
+    },
+    {
+        "title": "Core API Implementation",
+        "description": "Implement the core API endpoints and functionality",
+        "specialist_type": "implementer",
+        "dependencies": ["API Architecture Design", "Database Schema Design"],
+        "estimated_effort": "1-2 hours"
+    },
+    {
+        "title": "Authentication System",
+        "description": "Implement user authentication with secure token handling and password hashing",
+        "specialist_type": "implementer",
+        "dependencies": ["Database Schema Design"],
+        "estimated_effort": "1-1.5 hours"
+    },
+    {
+        "title": "Data Validation",
+        "description": "Implement robust data validation for all API inputs",
+        "specialist_type": "implementer",
+        "dependencies": ["Core API Implementation"],
+        "estimated_effort": "45-60 minutes"
+    },
+    {
+        "title": "API Testing",
+        "description": "Create comprehensive tests for all API endpoints and authentication",
+        "specialist_type": "tester",
+        "dependencies": ["Core API Implementation", "Authentication System", "Data Validation"],
+        "estimated_effort": "1-1.5 hours"
+    },
+    {
+        "title": "API Documentation",
+        "description": "Create detailed API documentation including endpoints, parameters, and examples",
+        "specialist_type": "documenter",
+        "dependencies": ["Core API Implementation", "Authentication System", "Data Validation"],
+        "estimated_effort": "1-1.5 hours"
+    }
+]
+```
+
+#### Step 3: Plan Task with Subtasks
+
+```python
+# Submit the task with JSON-formatted subtasks
+response = await call_tool("orchestrator_plan_task", {
+    "description": "Build a REST API with user authentication, data validation, and comprehensive documentation",
+    "subtasks_json": json.dumps(subtasks_json),
+    "complexity_level": "complex",
+    "context": "Using Node.js, Express, and MongoDB. The API will be used by a mobile application."
+})
+
+# Server response (simplified)
+{
+    "task_breakdown": {
+        "parent_task_id": "task_a1b2c3d4",
+        "total_subtasks": 7,
+        "estimated_complexity": "complex",
+        "subtasks": [
+            {
+                "task_id": "architect_e5f6g7",
+                "title": "API Architecture Design",
+                "specialist_type": "architect",
+                "description": "Design the overall API architecture, including endpoints, data models, and authentication flow",
+                "dependencies": [],
+                "estimated_effort": "45-60 minutes"
+            },
+            # ... other subtasks ...
+        ]
+    },
+    "instructions": "Task breakdown complete! 7 subtasks created and stored. Use 'orchestrator_execute_subtask' with each task_id to begin working on them. Recommended order: architect_e5f6g7 → architect_h8i9j0 → implementer_k1l2m3 → implementer_n4o5p6 → implementer_q7r8s9 → tester_t0u1v2 → documenter_w3x4y5"
+}
+```
+
+#### Step 4: Execute Subtasks
+
+```python
+# Execute the first subtask (API Architecture Design)
+response = await call_tool("orchestrator_execute_subtask", {
+    "task_id": "architect_e5f6g7"
+})
+
+# Server response (simplified)
+"""
+## Role
+You are a System Architect focused on designing robust, scalable systems
+
+## Your Expertise
+• System design patterns and best practices
+• Architectural trade-offs and decision-making
+• Technical requirements analysis
+• Component and service design
+• Integration patterns and strategies
+• Performance and scalability considerations
+• Security architecture
+
+## Current Task
+**Title:** API Architecture Design
+**Description:** Design the overall API architecture, including endpoints, data models, and authentication flow
+
+## Instructions
+You are now operating in ARCHITECT MODE. Focus entirely on this role and apply your specialized expertise to complete the task described above.
+...
+"""
+
+# Complete the subtask
+response = await call_tool("orchestrator_complete_subtask", {
+    "task_id": "architect_e5f6g7",
+    "results": "Completed API architecture design with RESTful endpoints, resource-based URL structure, and JWT-based authentication flow. Defined core resources (users, items, categories) with their relationships and operations.",
+    "artifacts": ["api_architecture.md", "endpoint_definitions.json", "auth_flow_diagram.png"],
+    "next_action": "continue"
+})
+
+# Server response (simplified)
+{
+    "task_id": "architect_e5f6g7",
+    "status": "completed",
+    "results_recorded": true,
+    "parent_task_progress": {
+        "progress": "in_progress",
+        "next_steps": "Continue with dependent tasks"
+    },
+    "next_recommended_task": "architect_h8i9j0"
+}
+
+# Continue with remaining subtasks...
+```
+
+#### Step 5: Synthesize Results
+
+```python
+# After completing all subtasks, synthesize the results
+response = await call_tool("orchestrator_synthesize_results", {
+    "parent_task_id": "task_a1b2c3d4"
+})
+
+# Server response (simplified)
+{
+    "parent_task_id": "task_a1b2c3d4",
+    "synthesis": "REST API successfully implemented with Node.js, Express, and MongoDB. The API includes secure user authentication using JWT, comprehensive data validation for all inputs, and detailed documentation. The architecture follows RESTful principles with clear endpoint structure. All endpoints have been tested and validated.",
+    "subtasks_completed": 7,
+    "total_subtasks": 7,
+    "artifacts": [
+        "api_architecture.md",
+        "endpoint_definitions.json",
+        "auth_flow_diagram.png",
+        "database_schema.json",
+        "api_implementation.js",
+        "auth_system.js",
+        "validation_middleware.js",
+        "api_tests.js",
+        "api_documentation.md"
+    ]
+}
+```
+
+## Legacy Examples (Previous Pattern-Matching Approach)
+
+### Example 1: Web Development Project (Legacy)
+
+#### Task Description (Web App)
+
 Build a responsive web application with user authentication, data visualization, and API integration.
 
-### Task Planning
+#### Task Planning
+
 ```python
 # LLM calls
 response = await call_tool("orchestrator_plan_task", {
@@ -73,7 +291,9 @@ response = await call_tool("orchestrator_plan_task", {
     },
     "instructions": "Task breakdown complete! 6 subtasks identified. Use 'orchestrator_execute_subtask' with each task_id to begin working on them. Recommended order: architecture_1 → frontend_1 → backend_1 → auth_1 → dataviz_1 → docs_1"
 }
-```### Subtask Execution - Architecture
+```
+
+#### Subtask Execution - Architecture
 
 ```python
 # LLM calls
@@ -123,7 +343,7 @@ Remember: You are the architect specialist for this task. Apply your expertise a
 """
 ```
 
-### Subtask Completion
+#### Subtask Completion
 
 ```python
 # LLM calls
@@ -145,7 +365,9 @@ response = await call_tool("orchestrator_complete_subtask", {
     },
     "next_recommended_task": "frontend_1"
 }
-```### Result Synthesis
+```
+
+#### Result Synthesis
 
 After completing all subtasks, the results can be synthesized:
 
@@ -175,12 +397,14 @@ response = await call_tool("orchestrator_synthesize_results", {
 }
 ```
 
-## Example 2: Code Review and Optimization
+### Example 2: Code Review and Optimization
 
-### Task Description
+#### Task Description (Code Review)
+
 Review a Python codebase and suggest performance improvements.
 
-### Task Planning
+#### Task Planning (Code Review)
+
 ```python
 # LLM calls
 response = await call_tool("orchestrator_plan_task", {
@@ -232,12 +456,16 @@ response = await call_tool("orchestrator_plan_task", {
     },
     "instructions": "Task breakdown complete! 4 subtasks identified. Use 'orchestrator_execute_subtask' with each task_id to begin working on them. Recommended order: analysis_1 → review_1 → performance_1 → recommendations_1"
 }
-```## Example 3: Research and Report Generation
+```
 
-### Task Description
+### Example 3: Research Project
+
+#### Task Description (Research)
+
 Research the latest advancements in quantum computing and prepare a comprehensive report.
 
-### Task Planning
+#### Task Planning (Research)
+
 ```python
 # LLM calls
 response = await call_tool("orchestrator_plan_task", {
