@@ -7,16 +7,21 @@ After installation, restart your MCP clients and look for "task-orchestrator" in
 ## Basic Usage
 
 ### Simple Task
-```
+
+```ascii
 "Create a Python script to calculate fibonacci numbers"
 ```
+
 → Single implementer specialist handles this
 
 ### Complex Task  
-```
+
+```ascii
 "Build a web scraper for news articles with tests, documentation, and error handling"
 ```
+
 → Orchestrator breaks this down:
+
 1. 🏗️ Architect: Plans system design
 2. 💻 Implementer: Writes scraper code  
 3. 🐛 Debugger: Creates and runs tests
