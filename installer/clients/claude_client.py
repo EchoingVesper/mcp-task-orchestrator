@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""Claude Desktop MCP client configuration."""
+
+import os
+import json
+import psutil
+from pathlib import Path
+from .base_client import MCPClient, MCPClientError
+
+
+class ClaudeDesktopClient(MCPClient):
+    """Claude Desktop MCP client implementation."""
+    
+    @property
+    def client_name(self) -> str:
+        return "Claude Desktop"
+    
+    @property
+    def client_id(self) -> str:
+        return "claude-desktop"
+    
+    def detect_installation(self) -> bool:
+        """Detect Claude Desktop installation."""
+        # Check for running process
+        for process in psutil.process_iter(['name']):
+            try:
+                if 'claude' in process.info['name'].lower():
+                    return True
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+        
+        # Check for config directory
+        config_dir = Path(os.environ.get("APPDATA", "")) / "Claude"
+        return config_dir.exists()
+    
+    def get_config_path(self) -> Path:
+        """Get Claude Desktop config file path."""
+        return Path(os.environ.get("APPDATA", "")) / "Claude" / "claude_desktop_config.json"
+
+    def create_configuration(self) -> bool:
+        """Create Claude Desktop configuration."""
+        config_path = self.get_config_path()
+        
+        # Ensure directory exists
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Load existing config or create new
+        config = {}
+        if config_path.exists():
+            try:
+                with open(config_path, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+            except json.JSONDecodeError:
+                config = {}
+        
+        # Ensure mcpServers exists
+        if "mcpServers" not in config:
+            config["mcpServers"] = {}
+        
+        # Add our server configuration
+        config["mcpServers"]["task-orchestrator"] = self.server_config
+        
+        # Write configuration
+        try:
+            with open(config_path, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2)
+            return True
+        except Exception as e:
+            raise MCPClientError(f"Failed to write config: {e}")

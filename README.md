@@ -2,167 +2,164 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Version 1.0](https://img.shields.io/badge/version-1.0-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.0)
 
-A Model Context Protocol (MCP) server that provides task orchestration capabilities similar to Roo Code's Orchestrator mode, but optimized for single-session LLM interactions.
+A Model Context Protocol server for task orchestration with specialized AI roles and automatic client configuration.
 
-## Overview
+## 🎯 Overview
 
-The MCP Task Orchestrator enables complex task management and specialized prompting within any MCP-compatible environment (Claude Desktop, Windsurf, Cursor, etc.). Instead of spawning multiple LLM instances like Roo Code, it uses dynamic prompt injection and state management to provide specialist capabilities within a single session.
+The MCP Task Orchestrator provides sophisticated task decomposition and specialized prompting for complex project management across multiple MCP-compatible clients.
 
-## Key Features
+## ✨ Key Features
 
-- **Task Decomposition**: Automatically breaks down complex requests into manageable subtasks
-- **Specialist Modes**: Provides role-specific prompts for different types of work:
-  - 🏗️ **Architect**: System design and architecture planning
-  - 💻 **Implementer**: Code writing and feature development
-  - 🐛 **Debugger**: Error analysis and troubleshooting
-  - 📝 **Documenter**: Documentation and explanation writing
-  - 🔍 **Reviewer**: Code review and quality assurance
-  - 🔬 **Researcher**: Information gathering and analysis
-- **State Management**: Tracks task progress, dependencies, and results
-- **Context Isolation**: Manages context switching between specialist modes
-- **Cost Optimization**: Works within flat-rate LLM subscriptions (no per-token charges)
-- **Cross-Platform Support**: Works on Windows, macOS, and Linux
-- **Automatic Configuration**: Detects and configures MCP clients automatically
+- **Unified Installation**: One-command setup for all supported MCP clients
+- **Auto-Detection**: Automatically finds and configures installed clients  
+- **Task Decomposition**: Breaks complex requests into manageable subtasks
+- **Specialist Modes**: Role-specific prompts (Architect, Implementer, Debugger, Documenter)
+- **State Management**: Tracks task progress and dependencies
+- **Single Session**: Works within one conversation - no multiple LLM instances
 
-## Installation
+## 🚀 Quick Start
 
-### Quick Install
+### Prerequisites
 
-#### Windows
-```powershell
-# Clone the repository
-git clone https://github.com/windsurf/mcp-task-orchestrator.git
-cd mcp-task-orchestrator
+- Python 3.8 or higher
+- One or more supported MCP clients
 
-# Run the installation script (requires administrator privileges)
-.\scripts\install.ps1
-```
+### Supported Clients
 
-#### macOS/Linux
-```bash
-# Clone the repository
-git clone https://github.com/windsurf/mcp-task-orchestrator.git
-cd mcp-task-orchestrator
+- **Claude Desktop** - Anthropic's desktop application
+- **Cursor IDE** - AI-powered code editor
+- **Windsurf** - Codeium's development environment  
+- **VS Code** - With Cline extension
 
-# Run the installation script
-chmod +x ./scripts/install.sh
-./scripts/install.sh
-```
-
-### Manual Installation
+### Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/windsurf/mcp-task-orchestrator.git
+# Clone and install
+git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator
 
-# Install the package
-pip install -e .
-
-# Configure MCP clients
-python -m mcp_task_orchestrator_cli.cli install ./mcp_task_orchestrator/server.py
-```## Usage
-
-Once installed, the MCP Task Orchestrator will be available in your MCP-compatible clients (Claude Desktop, Windsurf, Cursor, etc.). The following tools will be available:
-
-- `orchestrator_plan_task` - Break down complex tasks into specialized subtasks
-- `orchestrator_execute_subtask` - Get specialist context for a specific subtask
-- `orchestrator_complete_subtask` - Mark a subtask as complete and record results
-- `orchestrator_synthesize_results` - Combine results from completed subtasks
-- `orchestrator_get_status` - Check the status of all active tasks
-
-### Example: Complex Development Task
-
-```
-User: "Build a web scraper for e-commerce prices with error handling, data export, and monitoring"
-
-LLM: *calls orchestrator_plan_task*
-Server: *returns breakdown into architecture, implementation, error handling, export, and monitoring subtasks*
-
-LLM: *executes each subtask with specialist prompts*
-Result: Complete, well-architected scraper system
+# One-command installation
+python install.py
 ```
 
-### Example: Code Review and Optimization
+The installer automatically:
+✅ Creates isolated virtual environment  
+✅ Installs dependencies  
+✅ Detects your MCP clients  
+✅ Configures each client  
+✅ Cleans up obsolete files
 
-```
-User: "Review this codebase and suggest performance improvements"
+### After Installation
 
-LLM: *calls orchestrator_plan_task*
-Server: *breaks into review, analysis, and optimization subtasks*
+1. **Restart your MCP clients** (Claude Desktop, Cursor, etc.)
+2. **Look for 'task-orchestrator'** in available tools/servers
+3. **Start orchestrating!** Try: "Plan and implement a web scraper"
 
-LLM: *specialist reviewer analyzes code quality*
-LLM: *specialist debugger identifies performance issues*
-LMM: *specialist implementer suggests specific improvements*
-```
+## 🛠️ Advanced Installation
 
-## Configuration
-
-The MCP Task Orchestrator is automatically configured during installation. If you need to manually configure it or update the configuration, you can use the CLI:
+### Specific Clients Only
 
 ```bash
-# Configure all detected MCP clients
-python -m mcp_task_orchestrator_cli.cli install <path_to_server.py>
+python install.py --clients claude-desktop cursor-ide
+```
 
-# Configure specific clients
-python -m mcp_task_orchestrator_cli.cli install <path_to_server.py> --client claude_desktop --client vscode
+### Verify Installation
 
-# Update configuration with a new server path
-python -m mcp_task_orchestrator_cli.cli update <new_path_to_server.py>
+```bash
+python test_detection.py    # Check client detection
+python test_validation.py   # Validate configurations  
+```
 
-# Remove configuration
-python -m mcp_task_orchestrator_cli.cli uninstall --all
-```## Supported MCP Clients
+### Manual Configuration
 
-The MCP Task Orchestrator supports the following MCP clients:
+If you prefer manual setup, see `docs/MANUAL_INSTALLATION.md`
 
-- **Claude Desktop**: Automatically configures Claude Desktop to use the Task Orchestrator
-- **Windsurf**: Adds the Task Orchestrator to Windsurf's MCP server list
-- **Cursor**: Configures Cursor to use the Task Orchestrator
-- **VS Code**: Configures VS Code MCP extensions to use the Task Orchestrator
+## 📋 How It Works
 
-## Architecture
+### Task Orchestration Example
 
-- **MCP Server**: Python-based server implementing the Model Context Protocol
-- **State Store**: SQLite database for persistent task and progress tracking
-- **Prompt Templates**: Jinja2 templates for specialist role definitions
-- **Orchestration Engine**: Logic for task breakdown and dependency management
-- **Configuration Manager**: Cross-platform configuration for MCP clients
+**You:** "Create a Python web scraper for news articles with tests and documentation"
 
-## Comparison to Roo Code
+**Task Orchestrator:**
 
-| Feature | Roo Code | MCP Task Orchestrator |
-|---------|----------|----------------------|
-| **Cost Model** | Per-token API charges | Flat-rate subscription compatible |
-| **Context Management** | Separate LLM instances | Single session with dynamic prompting |
-| **Platform Support** | VS Code extension | Any MCP-compatible client |
-| **Customization** | Built-in + custom modes | Fully customizable specialist templates |
-| **State Persistence** | Session-based | Database-backed |
+1. **🏗️ Architect** designs the system architecture
+2. **💻 Implementer** writes the scraper code and tests  
+3. **🐛 Debugger** tests and fixes any issues
+4. **📝 Documenter** creates comprehensive documentation
 
-## Contributing
+Each specialist brings focused expertise while maintaining context across the entire project.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Available Tools
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- `orchestrator_plan_task` - Break down complex tasks
+- `orchestrator_execute_subtask` - Execute with specialist context
+- `orchestrator_complete_subtask` - Mark tasks complete
+- `orchestrator_synthesize_results` - Combine results
+- `orchestrator_get_status` - Check progress
 
-Please make sure your code follows the project's coding style and includes appropriate tests.
+## 🔧 Configuration
 
-## License
+The installer handles configuration automatically, but you can customize:
 
-Distributed under the MIT License. See `LICENSE` for more information.
+### Claude Desktop
 
-## Acknowledgements
+```json
+{
+  "mcpServers": {
+    "task-orchestrator": {
+      "command": "path/to/venv/python.exe",
+      "args": ["-m", "mcp_task_orchestrator.server"],
+      "cwd": "path/to/project"
+    }
+  }
+}
+```
 
-- [Model Context Protocol (MCP)](https://github.com/anthropics/model-context-protocol)
-- [Claude Desktop](https://claude.ai/desktop)
-- [Windsurf](https://windsurf.io)
-- [Cursor](https://cursor.sh)
+### Other Clients
+
+Each client has slightly different configuration formats. The installer handles these differences automatically.
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+#### "No MCP clients detected"
+
+- Ensure Claude Desktop, Cursor, Windsurf, or VS Code is installed
+- Try running clients once before installation
+
+#### "Configuration failed"  
+
+- Check file permissions in config directories
+- Run installer as administrator if needed
+
+#### "Module not found errors"
+
+- Virtual environment may be corrupted
+- Delete `venv_mcp` folder and reinstall
+
+### Getting Help
+
+1. Check `TEST_REPORT.md` for known issues
+2. Run diagnostic scripts in project root
+3. Open an issue with log output
+
+## 🤝 Contributing
+
+We welcome contributions! See `CONTRIBUTING.md` for guidelines.
+
+## 📄 License
+
+MIT License - Copyright (c) 2025 Echoing Vesper - see `LICENSE` file for details.
+
+## 🙏 Acknowledgments
+
+- Built for the Model Context Protocol ecosystem
+- Inspired by advanced orchestration patterns
+- Designed for single-session efficiency
 
 ---
 
-Built with ❤️ by the Windsurf Engineering Team
+**Ready to orchestrate?** `python install.py` and start building!

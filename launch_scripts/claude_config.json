@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "task-orchestrator": {
+      "command": "E:\\My Work\\Programming\\MCP Task Orchestrator\\venv_mcp\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "mcp_task_orchestrator.server"
+      ],
+      "cwd": "E:\\My Work\\Programming\\MCP Task Orchestrator"
+    }
+  }
+}
