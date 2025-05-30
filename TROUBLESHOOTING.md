@@ -24,17 +24,30 @@
 3. Use absolute paths (not relative) in configuration
 4. Check logs for specific error details
 
-### "'SpecialistManager' object has no attribute 'project_dir'"
+### ImportError: "attempted relative import with no known parent package"
 
-**Cause**: Python module caching preventing code updates
+**Cause**: Using deprecated installation method
 
 **Solution**:
-1. Restart your MCP client completely
-2. If that doesn't work, clear Python cache:
-   ```bash
-   find . -name "*.pyc" -delete  # Linux/Mac
-   del /s *.pyc  # Windows
-   ```
+1. Use the optimized installer: `python run_installer.py`
+2. For legacy compatibility: `python install.py` (redirects to optimized method)
+3. See [Migration Guide](MIGRATION_GUIDE.md) for complete transition guidance
+
+### Installation Method Issues ⚠️ RESOLVED
+
+**Previous Issue**: "'SpecialistManager' object has no attribute 'project_dir'"
+
+**Status**: ✅ **RESOLVED** - This error has been fixed in the current version
+
+**Solution**: Use the recommended installation method:
+```bash
+python run_installer.py
+```
+
+If you encounter this error, you may be using an outdated installation method or have cached files. Try:
+1. Use `python run_installer.py` instead of deprecated methods
+2. Restart your MCP client completely
+3. If persistent, delete and recreate: `rm -rf venv_mcp && python run_installer.py`
 
 ### "'StateManager' object has no attribute '_get_parent_task_id'"
 

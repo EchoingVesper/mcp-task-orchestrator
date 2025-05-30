@@ -19,9 +19,10 @@ from .role_loader import get_roles
 class SpecialistManager:
     """Manages specialist roles and their associated prompts and contexts."""
     
-    def __init__(self, config_path: str = None):
+    def __init__(self, config_path: str = None, project_dir: str = None):
         # Initialize paths
         self.base_dir = Path(__file__).parent.parent.parent
+        self.project_dir = project_dir or os.getcwd()
         self.persistence_dir = self.base_dir / ".task_orchestrator"
         self.roles_dir = self.persistence_dir / "roles"
         
