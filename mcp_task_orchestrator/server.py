@@ -53,23 +53,23 @@ def get_state_manager() -> StateManager:
     return _state_manager
 
 
-def get_specialist_manager() -> SpecialistManager:
+def get_specialist_manager(project_dir: str = None) -> SpecialistManager:
     """Get or create the SpecialistManager singleton instance."""
     global _specialist_manager
     if _specialist_manager is None:
-        _specialist_manager = SpecialistManager()
+        _specialist_manager = SpecialistManager(project_dir=project_dir)
         logger.info("Initialized SpecialistManager")
     
     return _specialist_manager
 
 
-def get_orchestrator() -> TaskOrchestrator:
+def get_orchestrator(project_dir: str = None) -> TaskOrchestrator:
     """Get or create the TaskOrchestrator singleton instance."""
     global _orchestrator
     if _orchestrator is None:
         state_mgr = get_state_manager()
-        specialist_mgr = get_specialist_manager()
-        _orchestrator = TaskOrchestrator(state_mgr, specialist_mgr)
+        specialist_mgr = get_specialist_manager(project_dir=project_dir)
+        _orchestrator = TaskOrchestrator(state_mgr, specialist_mgr, project_dir=project_dir)
         logger.info("Initialized TaskOrchestrator")
     
     return _orchestrator
@@ -215,7 +215,7 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
     orchestrator = get_orchestrator()
     state_manager = get_state_manager()
     
-    # Get project directory from request metadata if available
+    # Get project directory using our multi-strategy approach
     project_dir = get_project_directory(args)
     
     # Create specialist manager and orchestrator with the project directory
@@ -231,7 +231,7 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
     
     # Get unique parent task IDs
     for task in active_tasks:
-        parent_id = await state_manager._get_parent_task_id_from_persistence(task.task_id)
+        parent_id = await state_manager._get_parent_task_id(task.task_id)
         if parent_id:
             active_parent_tasks.add(parent_id)
     
@@ -253,7 +253,7 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
                         "status": task.status.value
                     }
                     for task in active_tasks
-                    if await state_manager._get_parent_task_id_from_persistence(task.task_id) == parent_id
+                    if await state_manager._get_parent_task_id(task.task_id) == parent_id
                 ]
             }
             for parent_id in active_parent_tasks
@@ -505,23 +505,44 @@ async def main():
 
 def get_project_directory(args: Dict[str, Any]) -> str:
     """
-    Extract project directory from request metadata.
+    Extract project directory from request metadata or environment.
     
-    The MCP client should provide the project directory in the request metadata.
-    If not available, fall back to the default project directory.
+    This function tries multiple strategies to determine the project directory:
+    1. From request metadata (VS Code/Cursor/Windsurf can provide this)
+    2. From environment variables 
+    3. From current working directory
+    4. Fall back to a default location
     """
-    # Try to get project directory from request metadata
-    # This is a custom extension to the MCP protocol
+    # Strategy 1: Try to get project directory from request metadata
+    # This is a custom extension to the MCP protocol that editors can provide
     metadata = args.get("_metadata", {})
     project_dir = metadata.get("project_directory")
     
     if project_dir and os.path.isdir(project_dir):
-        logger.info(f"Using project directory from request: {project_dir}")
+        logger.info(f"Using project directory from request metadata: {project_dir}")
         return project_dir
     
-    # Fall back to default project directory
-    logger.info(f"Using default project directory: {default_project_dir}")
-    return default_project_dir
+    # Strategy 2: Check environment variables (useful for VS Code extensions)
+    env_project_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_PROJECT_DIR")
+    if env_project_dir and os.path.isdir(env_project_dir):
+        logger.info(f"Using project directory from environment: {env_project_dir}")
+        return env_project_dir
+    
+    # Strategy 3: Check common editor environment variables
+    # VS Code sets VSCODE_CWD, others might set similar variables
+    editor_cwd = (
+        os.environ.get("VSCODE_CWD") or 
+        os.environ.get("CURSOR_CWD") or 
+        os.environ.get("WINDSURF_CWD")
+    )
+    if editor_cwd and os.path.isdir(editor_cwd):
+        logger.info(f"Using editor working directory: {editor_cwd}")
+        return editor_cwd
+    
+    # Strategy 4: Use current working directory (works for most cases)
+    current_dir = os.getcwd()
+    logger.info(f"Using current working directory: {current_dir}")
+    return current_dir
 
 
 if __name__ == "__main__":

@@ -1,5 +1,27 @@
 # MCP Task Orchestrator Release Notes
 
+## Version 1.3.1 - Critical Bug Fix Release (2025-05-30)
+
+### 🐛 Critical Bug Fixes
+- **CRITICAL**: Fixed `orchestrator_initialize_session` failure preventing tool entry
+  - Corrected method name mismatch: `_get_parent_task_id_from_persistence` → `_get_parent_task_id`
+  - Restores functionality for 100% of new users attempting to initialize orchestrator
+  - Enables parent task progress tracking and interrupted task detection
+
+### 📚 Documentation Improvements
+- **NEW**: `QUICK_START.md` - Streamlined 5-minute setup guide
+- **NEW**: `TROUBLESHOOTING.md` - Comprehensive error resolution guide  
+- **NEW**: `README_STREAMLINED.md` - Simplified project overview
+- Addresses major UX pain point of information overload in documentation
+
+### 🎯 Impact
+- Restores orchestrator entry point functionality
+- Eliminates critical barrier preventing new user adoption
+- Provides clear troubleshooting path for common setup issues
+- Reduces cognitive load for first-time users
+
+---
+
 ## Version 1.3.0 - Database Persistence Complete (2025-05-29)
 
 ### 🎯 Major Features
