@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
+      fail-fast: false  # Don't cancel other jobs if one fails
 
     steps:
     - uses: actions/checkout@v4
@@ -54,7 +55,7 @@ jobs:
             
             if [[ "$package" == "mcp" ]]; then
               echo "🔄 Trying to install MCP with fallbacks..."
-              pip install mcp==1.4.0 || pip install mcp || echo "⚠️ MCP installation failed, continuing without it"
+              pip install "mcp>=1.9.0" || pip install mcp || echo "⚠️ MCP installation failed, continuing without it"
             else
               echo "📦 Installing: $package"
               pip install "$line" || echo "⚠️ Failed to install $package, continuing..."
@@ -102,10 +103,10 @@ jobs:
         if [ -d "tests" ]; then
           echo "📁 Found tests directory, running pytest..."
           if command -v pytest &> /dev/null; then
-            pytest tests/ -v --tb=short || echo "⚠️ Some tests failed"
+            pytest tests/ -s -v --tb=short || echo "⚠️ Some tests failed"
             
             if pip list | grep -q pytest-cov; then
-              pytest tests/ --cov=mcp_task_orchestrator --cov-report=term || echo "⚠️ Coverage generation failed"
+              pytest tests/ -s --cov=mcp_task_orchestrator --cov-report=term || echo "⚠️ Coverage generation failed"
             fi
           else
             echo "⚠️ pytest not available, running basic Python test discovery"
@@ -120,40 +121,7 @@ jobs:
           done
           
           echo "📦 Testing package import..."
-          python -c >-
-            import sys
-            import os
-            import importlib.util
-
-            sys.path.insert(0, '.')
-
-            package_name = 'mcp_task_orchestrator'
-            if os.path.exists(package_name):
-                try:
-                    import mcp_task_orchestrator
-                    print(f'✅ Successfully imported {package_name}')
-                    
-                    for item in os.listdir(package_name):
-                        if item.endswith('.py') and item != '__init__.py':
-                            module_name = item[:-3]
-                            try:
-                                spec = importlib.util.spec_from_file_location(
-                                    f'{package_name}.{module_name}', 
-                                    os.path.join(package_name, item)
-                                )
-                                if spec and spec.loader:
-                                    module = importlib.util.module_from_spec(spec)
-                                    spec.loader.exec_module(module)
-                                    print(f'✅ Successfully imported {package_name}.{module_name}')
-                            except Exception as e:
-                                print(f'⚠️ Failed to import {package_name}.{module_name}: {e}')
-                                
-                except Exception as e:
-                    print(f'⚠️ Failed to import {package_name}: {e}')
-            else:
-                print(f'⚠️ Package directory {package_name} not found')
-                
-            print('✅ Basic import testing completed')
+          python -c 'import sys; import os; import importlib.util; sys.path.insert(0, "."); package_name = "mcp_task_orchestrator"; print(f"Testing import of {package_name}"); exec(open("tests/test_ci_validation.py").read()) if os.path.exists("tests/test_ci_validation.py") else print("No validation test found")' || echo "⚠️ Import test completed with warnings"
         fi
 
   security:
