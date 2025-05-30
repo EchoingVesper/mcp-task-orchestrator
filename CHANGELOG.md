@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.0] - 2025-05-30
 
+> **Editor's Note**: Massive documentation reorganization and enhancement inspired by constructive feedback from KECG, who correctly identified the need for clearer input-to-output examples, human-authored documentation, and concrete use cases. Sometimes the harshest critics provide the most valuable direction.
+
 ### 🎉 Major Features
 - **Claude Code MCP Integration**: Complete integration guides and coordination patterns
 - **Visual Documentation System**: ASCII diagrams and flowcharts for universal compatibility  
