@@ -38,28 +38,23 @@ jobs:
         pip install wheel setuptools
         echo "✅ Base dependencies installed"
     
-    - name: Install project dependencies (with fallbacks)
+    - name: Install project dependencies with fallbacks
       run: |
         echo "🔧 Installing dependencies with error handling..."
         
-        # Try to install from requirements.txt with fallbacks for problematic packages
         if [ -f requirements.txt ]; then
           echo "📋 Installing from requirements.txt..."
           
-          # Install dependencies one by one with fallbacks
           while IFS= read -r line; do
             if [[ $line =~ ^[[:space:]]*# ]] || [[ -z "${line// }" ]]; then
-              continue  # Skip comments and empty lines
+              continue
             fi
             
             package=$(echo "$line" | cut -d'=' -f1 | cut -d'>' -f1 | cut -d'<' -f1 | tr -d ' ')
             
             if [[ "$package" == "mcp" ]]; then
               echo "🔄 Trying to install MCP with fallbacks..."
-              pip install mcp==1.4.0 || \
-              pip install mcp || \
-              pip install "git+https://github.com/modelcontextprotocol/python-sdk.git" || \
-              echo "⚠️ MCP installation failed, continuing without it"
+              pip install mcp==1.4.0 || pip install mcp || echo "⚠️ MCP installation failed, continuing without it"
             else
               echo "📦 Installing: $package"
               pip install "$line" || echo "⚠️ Failed to install $package, continuing..."
@@ -69,12 +64,10 @@ jobs:
           echo "⚠️ No requirements.txt found"
         fi
         
-        # Install testing tools
         pip install pytest pytest-cov pytest-asyncio flake8 black || echo "⚠️ Some testing tools failed to install"
-        
         echo "✅ Dependency installation completed"
     
-    - name: Install project in development mode (with fallback)
+    - name: Install project in development mode
       run: |
         if [ -f setup.py ]; then
           echo "🔧 Installing project in development mode..."
@@ -83,19 +76,17 @@ jobs:
           echo "⚠️ No setup.py found, skipping development installation"
         fi
     
-    - name: Lint with flake8 (with error handling)
+    - name: Lint with flake8
       run: |
         echo "🔍 Running linting checks..."
         if command -v flake8 &> /dev/null; then
-          # Check for syntax errors and undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "⚠️ Critical linting issues found"
-          # Check for style issues (non-blocking)
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics --exclude=__pycache__,.git,build,dist,venv*
         else
           echo "⚠️ flake8 not available, skipping linting"
         fi
     
-    - name: Check code formatting with black (with error handling)
+    - name: Check code formatting with black
       run: |
         echo "🎨 Checking code formatting..."
         if command -v black &> /dev/null; then
@@ -104,17 +95,15 @@ jobs:
           echo "⚠️ black not available, skipping formatting check"
         fi
     
-    - name: Run tests (comprehensive with fallbacks)
+    - name: Run tests comprehensive
       run: |
         echo "🧪 Running test suite..."
         
-        # Check if tests directory exists
         if [ -d "tests" ]; then
           echo "📁 Found tests directory, running pytest..."
           if command -v pytest &> /dev/null; then
             pytest tests/ -v --tb=short || echo "⚠️ Some tests failed"
             
-            # Try to generate coverage if possible
             if pip list | grep -q pytest-cov; then
               pytest tests/ --cov=mcp_task_orchestrator --cov-report=term || echo "⚠️ Coverage generation failed"
             fi
@@ -125,31 +114,25 @@ jobs:
         else
           echo "📁 No tests directory found, running basic import tests..."
           
-          # Test basic Python syntax
           echo "🐍 Testing Python syntax..."
           find . -name "*.py" -not -path "./build/*" -not -path "./.git/*" -not -path "./venv*/*" | while read file; do
             python -m py_compile "$file" && echo "✅ $file" || echo "❌ $file"
           done
           
-          # Test package import
           echo "📦 Testing package import..."
           python -c "
 import sys
 import os
 import importlib.util
 
-# Add current directory to path
 sys.path.insert(0, '.')
 
-# Test if main package can be imported
 package_name = 'mcp_task_orchestrator'
 if os.path.exists(package_name):
     try:
-        # Try importing the main package
         import mcp_task_orchestrator
         print(f'✅ Successfully imported {package_name}')
         
-        # Try to find and import submodules
         for item in os.listdir(package_name):
             if item.endswith('.py') and item != '__init__.py':
                 module_name = item[:-3]
@@ -223,7 +206,6 @@ print('✅ Basic import testing completed')
       run: |
         echo "🔍 Comprehensive project structure validation..."
         
-        # Check for required files
         required_files=("README.md" "LICENSE" "setup.py" "requirements.txt")
         for file in "${required_files[@]}"; do
           if [ -f "$file" ]; then
@@ -233,7 +215,6 @@ print('✅ Basic import testing completed')
           fi
         done
         
-        # Check main package directory
         if [ -d "mcp_task_orchestrator" ]; then
           echo "✅ Found: mcp_task_orchestrator/ package directory"
           echo "📁 Package contents:"
@@ -242,7 +223,6 @@ print('✅ Basic import testing completed')
           echo "⚠️ Missing: mcp_task_orchestrator/ package directory"
         fi
         
-        # Validate Python syntax in main package
         echo "🐍 Checking Python syntax..."
         syntax_errors=0
         if [ -d "mcp_task_orchestrator" ]; then
@@ -264,7 +244,6 @@ print('✅ Basic import testing completed')
           echo "⚠️ Found $syntax_errors files with syntax issues"
         fi
         
-        # Check if setup.py is valid
         echo "📦 Validating setup.py..."
         if [ -f "setup.py" ]; then
           python setup.py check 2>/dev/null && echo "✅ setup.py validation passed" || echo "⚠️ setup.py validation completed with warnings"
@@ -272,7 +251,6 @@ print('✅ Basic import testing completed')
           echo "⚠️ setup.py not found"
         fi
         
-        # Check Git repository status
         echo "📋 Git repository status:"
         git status --porcelain || echo "⚠️ Git status check failed"
         
@@ -289,7 +267,7 @@ print('✅ Basic import testing completed')
       with:
         python-version: "3.10"
     
-    - name: Test package build (with error handling)
+    - name: Test package build
       run: |
         python -m pip install --upgrade pip
         pip install build wheel setuptools || echo "⚠️ Some build tools failed to install"
@@ -302,7 +280,6 @@ print('✅ Basic import testing completed')
             echo "📦 Build artifacts:"
             ls -la dist/
             
-            # Test installation if wheel was created
             wheel_file=$(find dist -name "*.whl" | head -1)
             if [ -n "$wheel_file" ]; then
               echo "🧪 Testing package installation..."
