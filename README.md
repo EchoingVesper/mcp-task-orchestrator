@@ -75,16 +75,18 @@ git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator
 
 # One-command installation with automatic client detection
-python install.py
+python run_installer.py
 ```
 
-**The installer automatically:**
+> **Why `run_installer.py`?** This optimized installer resolves import path issues and ensures reliable installation across all Python environments. It provides the same functionality as the previous method with improved error handling and compatibility.
+
+**The optimized installer automatically:**
 ✅ Creates isolated Python virtual environment  
-✅ Installs all required dependencies  
+✅ Installs all required dependencies with correct versions
 ✅ Detects your installed MCP clients  
 ✅ Configures each client with optimal settings  
 ✅ Cleans up any obsolete configuration files  
-✅ Validates installation integrity
+✅ Validates installation integrity and resolves import conflicts
 
 ### After Installation
 
@@ -98,10 +100,10 @@ python install.py
 
 ```bash
 # Install for specific development environments only
-python install.py --clients claude-desktop cursor-ide
+python run_installer.py --clients claude-desktop cursor-ide
 
 # Install for VS Code + Cline only  
-python install.py --clients vscode
+python run_installer.py --clients vscode
 ```
 
 ### Installation Verification
@@ -311,7 +313,7 @@ prompts:
 #### "Module not found errors"
 **Solution:**
 - Virtual environment may be corrupted
-- Delete `venv_mcp` folder and reinstall: `rm -rf venv_mcp && python install.py`
+- Delete `venv_mcp` folder and reinstall: `rm -rf venv_mcp && python run_installer.py`
 - Ensure Python 3.8+ is installed and accessible
 
 ### Performance Optimization
@@ -547,7 +549,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 ```bash
 git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator  
-python install.py
+python run_installer.py
 ```
 
 **Then try your first orchestrated workflow:**
