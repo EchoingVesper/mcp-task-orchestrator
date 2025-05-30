@@ -202,3 +202,187 @@ MIT License - Copyright (c) 2025 Echoing Vesper - see `LICENSE` file for details
 ---
 
 **Ready to orchestrate?** `python install.py` and start building!
+├── docs/                       # Documentation
+│   ├── development/           # Technical implementation guides
+│   ├── testing/              # Test guides and reports
+│   ├── troubleshooting/      # Diagnostic and issue resolution
+│   ├── prompts/              # Context prompts
+│   └── examples/             # Usage examples
+├── tests/                    # Test suite
+│   ├── integration/          # End-to-end workflow tests
+│   ├── unit/                 # Component-level tests
+│   ├── performance/          # Performance benchmarks
+│   └── fixtures/             # Test utilities and helpers
+├── scripts/                  # Utility scripts
+│   ├── diagnostics/          # System diagnostic tools
+│   ├── migrations/           # Data migration scripts
+│   ├── maintenance/          # System maintenance utilities
+│   └── deployment/           # Installation and deployment
+├── data/                     # Database and data files
+├── logs/                     # Log files (gitignored)
+└── examples/                 # Usage examples and demos
+```
+
+## 🧪 Testing
+
+The project includes a comprehensive test suite organized by purpose:
+
+### Running Tests
+
+```bash
+# Activate virtual environment
+source venv_mcp/bin/activate  # Linux/Mac
+venv_mcp\Scripts\activate     # Windows
+
+# Run all tests
+python -m pytest tests/ -v
+
+# Run specific test categories
+python -m pytest tests/unit/ -v          # Unit tests
+python -m pytest tests/integration/ -v   # Integration tests  
+python -m pytest tests/performance/ -v   # Performance benchmarks
+
+# Run with coverage
+python -m pytest tests/ --cov=mcp_task_orchestrator --cov-report=html
+```
+
+### Test Categories
+
+- **Unit Tests** (`tests/unit/`) - Isolated component testing
+- **Integration Tests** (`tests/integration/`) - Full workflow validation
+- **Performance Tests** (`tests/performance/`) - Benchmarks and load testing
+- **Test Fixtures** (`tests/fixtures/`) - Utilities and test helpers
+
+For detailed testing information, see [`docs/testing/test-suite-guide.md`](docs/testing/test-suite-guide.md).
+
+## 🔧 Development Tools
+
+### Diagnostic Scripts
+
+```bash
+# System health check
+python scripts/diagnostics/check_status.py
+
+# Database analysis
+python scripts/diagnostics/diagnose_db.py
+
+# Server diagnostics
+python scripts/diagnostics/diagnose_server.py
+
+# Verify installation
+python scripts/diagnostics/verify_tools.py
+```
+
+### Maintenance Utilities
+
+```bash
+# Run development server
+python scripts/maintenance/simple_server.py
+
+# Run with database optimization
+python scripts/maintenance/run_with_db.py
+
+# Performance-optimized server
+python scripts/maintenance/run_optimized_server.py
+```
+
+For complete diagnostic guide, see [`docs/troubleshooting/diagnostic-tools.md`](docs/troubleshooting/diagnostic-tools.md).
+
+## 📚 Documentation
+
+### User Guides
+- [`docs/installation.md`](docs/installation.md) - Detailed installation instructions
+- [`docs/usage.md`](docs/usage.md) - Usage examples and workflows
+- [`docs/configuration.md`](docs/configuration.md) - Configuration options
+
+### Developer Documentation  
+- [`docs/development/`](docs/development/) - Technical implementation details
+- [`docs/testing/`](docs/testing/) - Testing guides and procedures
+- [`docs/troubleshooting/`](docs/troubleshooting/) - Diagnostic and troubleshooting
+
+### API Reference
+- [`docs/DEVELOPER.md`](docs/DEVELOPER.md) - Developer API reference
+- [`docs/database_persistence.md`](docs/database_persistence.md) - Database architecture
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+#### Database Problems
+```bash
+# Check database health
+python scripts/diagnostics/diagnose_db.py
+
+# Clean up stale locks
+python scripts/diagnostics/check_status.py --cleanup-locks
+```
+
+#### Performance Issues
+```bash
+# Run performance benchmark
+python tests/performance/performance_benchmark.py
+
+# Monitor system status
+python scripts/diagnostics/check_status.py --monitor
+```
+
+#### Installation Problems
+```bash
+# Verify installation
+python scripts/diagnostics/verify_tools.py
+
+# Re-run installation
+python scripts/deployment/install.py --force
+```
+
+For comprehensive troubleshooting, see [`docs/troubleshooting/`](docs/troubleshooting/).
+
+## 🚀 Advanced Usage
+
+### Custom Configurations
+```bash
+# Custom database location
+export DB_PATH="/path/to/custom/database.db"
+
+# Enable debug logging
+export DEBUG=true
+
+# Custom timeout settings
+export TASK_TIMEOUT=300
+```
+
+### Performance Optimization
+```bash
+# Run optimized server
+python scripts/maintenance/run_optimized_server.py
+
+# Database optimization
+python scripts/migrations/migrate_artifacts.py --optimize
+```
+
+## 🤝 Contributing
+
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`  
+3. **Test** your changes: `python -m pytest tests/ -v`
+4. **Document** your changes in appropriate `docs/` files
+5. **Commit** your changes: `git commit -m 'Add amazing feature'`
+6. **Push** to branch: `git push origin feature/amazing-feature`
+7. **Submit** a Pull Request
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for detailed guidelines.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [`LICENSE`](LICENSE) file for details.
+
+## 🔗 Links
+
+- **GitHub Repository**: [https://github.com/EchoingVesper/mcp-task-orchestrator](https://github.com/EchoingVesper/mcp-task-orchestrator)
+- **Issue Tracker**: [https://github.com/EchoingVesper/mcp-task-orchestrator/issues](https://github.com/EchoingVesper/mcp-task-orchestrator/issues)
+- **Documentation**: [`docs/`](docs/)
+- **Release Notes**: [`RELEASE_NOTES.md`](RELEASE_NOTES.md)
+
+---
+
+🎯 **Ready to orchestrate complex tasks with AI-powered precision!**

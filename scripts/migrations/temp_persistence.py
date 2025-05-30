@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Any, Union
 from pathlib import Path
 
 # Import the database persistence manager for direct use
-from .db.persistence import DatabasePersistenceManager as PersistenceManager
+from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager as PersistenceManager
 
 # Configure logging
 logger = logging.getLogger("mcp_task_orchestrator.persistence")
