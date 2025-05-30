@@ -4,6 +4,7 @@
 import os
 import json
 import psutil
+import platform
 from pathlib import Path
 from .base_client import MCPClient, MCPClientError
 
@@ -29,11 +30,27 @@ class CursorIDEClient(MCPClient):
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
         
-        # Check for common installation paths
-        common_paths = [
-            Path.home() / ".cursor",
-            Path("C:/Users") / os.getenv("USERNAME", "") / "AppData/Local/Programs/cursor"
-        ]
+        # Check for common installation paths based on platform
+        system = platform.system()
+        common_paths = [Path.home() / ".cursor"]  # Common config directory
+        
+        if system == "Windows":
+            username = os.getenv("USERNAME", "")
+            if username:
+                common_paths.extend([
+                    Path("C:/Users") / username / "AppData/Local/Programs/cursor",
+                    Path("C:/Users") / username / "AppData/Local/Cursor"
+                ])
+        elif system == "Darwin":  # macOS
+            common_paths.extend([
+                Path("/Applications/Cursor.app"),
+                Path.home() / "Applications/Cursor.app"
+            ])
+        else:  # Linux
+            common_paths.extend([
+                Path("/opt/Cursor"),
+                Path.home() / ".local/share/applications/cursor.desktop"
+            ])
         
         return any(path.exists() for path in common_paths)
     
@@ -62,11 +79,12 @@ class CursorIDEClient(MCPClient):
             config["mcpServers"] = {}
         
         # Add our server configuration (Cursor format)
-        cursor_config = {
-            "command": str(self.venv_python),
-            "args": ["-m", "mcp_task_orchestrator.server"],
-            "env": {}
-        }
+        # Use the base class config which includes the universal launcher
+        cursor_config = self.server_config.copy()
+        # Cursor expects an env field but not cwd
+        cursor_config["env"] = {}
+        # Remove cwd if present (Cursor doesn't use it)
+        cursor_config.pop("cwd", None)
         config["mcpServers"]["task-orchestrator"] = cursor_config
         
         # Write configuration

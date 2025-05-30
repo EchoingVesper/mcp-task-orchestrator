@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "mcp__windows-cli__execute_command",
+      "mcp__brave-search__brave_web_search",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(ls:*)",
+      "Bash(./venv_mcp/Scripts/python.exe --version)",
+      "Bash(grep:*)",
+      "Bash(chmod:*)",
+      "Bash(python3:*)",
+      "Bash(./venv_mcp/Scripts/python.exe test_client_configs.py)",
+      "Bash(./venv_mcp/Scripts/python.exe run_installer.py --clients \"claude-desktop cursor-ide windsurf vscode-cline\")",
+      "Bash(rm:*)",
+      "Bash(pip3 install:*)",
+      "Bash(source:*)",
+      "Bash(python:*)",
+      "Bash(./venv_mcp/Scripts/python.exe run_installer.py)",
+      "Bash(\"./venv_mcp/Scripts/python.exe\" run_installer.py)",
+      "Bash(\"./venv_mcp/Scripts/python.exe\" -m mcp_task_orchestrator.server)",
+      "Bash(\"./venv_mcp/Scripts/python.exe\" scripts/diagnostics/check_status.py)"
+    ],
+    "deny": []
+  }
+}

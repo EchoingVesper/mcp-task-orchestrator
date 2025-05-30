@@ -39,7 +39,7 @@ def main():
         # Run the installation
         if args.clients:
             client_list = args.clients.split()
-            installer.run_installation(target_clients=client_list)
+            installer.run_installation(selected_clients=client_list)
         else:
             installer.run_installation()
             

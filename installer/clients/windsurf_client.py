@@ -58,12 +58,10 @@ class WindsurfClient(MCPClient):
             config["mcpServers"] = {}
         
         # Add our server configuration (Windsurf format)
-        windsurf_config = {
-            "command": str(self.venv_python),
-            "args": ["-m", "mcp_task_orchestrator.server"],
-            "cwd": str(self.project_root),
-            "env": {}
-        }
+        # Use the base class config which includes the universal launcher
+        windsurf_config = self.server_config.copy()
+        # Windsurf expects an env field
+        windsurf_config["env"] = {}
         config["mcpServers"]["task-orchestrator"] = windsurf_config
         
         # Write configuration

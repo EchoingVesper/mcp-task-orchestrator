@@ -23,7 +23,7 @@ class SpecialistManager:
         # Initialize paths
         self.base_dir = Path(__file__).parent.parent.parent
         self.project_dir = project_dir or os.getcwd()
-        self.persistence_dir = self.base_dir / ".task_orchestrator"
+        self.persistence_dir = Path(self.project_dir) / ".task_orchestrator"
         self.roles_dir = self.persistence_dir / "roles"
         
         # Check if the persistence directory exists, create if not
