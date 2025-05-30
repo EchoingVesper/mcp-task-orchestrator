@@ -643,3 +643,25 @@ class DatabasePersistenceManager:
         except Exception as e:
             logger.error(f"Error getting parent task ID for {task_id}: {str(e)}")
             return None
+
+    
+    def dispose(self):
+        """Dispose of database resources and close all connections.
+        
+        This method should be called when the persistence manager is no longer needed
+        to ensure proper cleanup of database connections and prevent resource warnings.
+        """
+        try:
+            if hasattr(self, 'engine') and self.engine is not None:
+                self.engine.dispose()
+                logger.debug("Database engine disposed successfully")
+        except Exception as e:
+            logger.warning(f"Error disposing database engine: {str(e)}")
+    
+    def __enter__(self):
+        """Context manager entry."""
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit - ensures proper cleanup."""
+        self.dispose()

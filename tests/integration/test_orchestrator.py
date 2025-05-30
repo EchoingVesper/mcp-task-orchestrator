@@ -68,6 +68,89 @@ async def test_task_orchestrator():
     base_dir = Path(__file__).parent
     persistence = PersistenceManager(base_dir)
     state_manager = StateManager(base_dir=base_dir)
+    
+    try:
+        # Rest of the test logic will remain the same...
+        # (I'll preserve the existing test logic and just add cleanup at the end)
+        
+        # Initialize orchestrator
+        orchestrator = TaskOrchestrator(
+            persistence=persistence,
+            state_manager=state_manager,
+            specialist_manager=SpecialistManager()
+        )
+        
+        # Create a test task
+        task_breakdown = TaskBreakdown(
+            title="Test Task for Orchestrator",
+            description="A test task to verify orchestrator functionality",
+            complexity=ComplexityLevel.MODERATE,
+            subtasks=[
+                SubTask(
+                    task_id="test_subtask_001",
+                    title="Test Subtask",
+                    description="A test subtask",
+                    specialist_type=SpecialistType.IMPLEMENTER,
+                    status=TaskStatus.PENDING
+                )
+            ]
+        )
+        
+        # Test task planning
+        logger.info("Testing plan_task...")
+        parent_task_id = await orchestrator.plan_task(task_breakdown)
+        logger.info(f"✅ Task planned successfully with ID: {parent_task_id}")
+        
+        # Test subtask execution
+        subtask_id = task_breakdown.subtasks[0].task_id
+        logger.info(f"Testing execute_subtask for {subtask_id}...")
+        execution_context = await orchestrator.execute_subtask(subtask_id)
+        logger.info("✅ Subtask execution context provided")
+        logger.info(f"Context length: {len(execution_context)}")
+        
+        # Test subtask completion
+        logger.info(f"Testing complete_subtask for {subtask_id}...")
+        result = await orchestrator.complete_subtask(
+            task_id=subtask_id,
+            results="Test completion results",
+            artifacts=["test_artifact.txt"],
+            next_action="complete"
+        )
+        logger.info("✅ Subtask completed successfully")
+        logger.info(f"Result status: {result.get('status')}")
+        
+        # Verify subtask status
+        subtask = await state_manager.get_subtask(subtask_id)
+        if subtask and subtask.status == TaskStatus.COMPLETED:
+            logger.info("✅ Subtask status correctly updated to COMPLETED")
+        else:
+            logger.warning(f"⚠️ Unexpected subtask status: {subtask.status if subtask else 'None'}")
+    
+        # Test synthesize_results
+        try:
+            logger.info(f"Testing synthesize_results for task {parent_task_id}...")
+            synthesis = await orchestrator.synthesize_results(parent_task_id)
+            logger.info("✅ Results synthesized successfully")
+            logger.info(f"Synthesis length: {len(synthesis)}")
+        except Exception as e:
+            logger.error(f"❌ Failed to synthesize results: {str(e)}")
+            
+    except Exception as e:
+        logger.error(f"❌ Test failed with error: {str(e)}")
+        raise
+    finally:
+        # Cleanup database connections
+        try:
+            if hasattr(persistence, 'dispose') and callable(getattr(persistence, 'dispose')):
+                persistence.dispose()
+                logger.info("✅ Persistence manager disposed")
+            elif hasattr(persistence, 'engine') and persistence.engine is not None:
+                persistence.engine.dispose()
+                logger.info("✅ Persistence engine disposed manually")
+        except Exception as e:
+            logger.warning(f"⚠️ Error disposing persistence manager: {str(e)}")
+    
+    logger.info("=== Task Orchestrator Test Completed ===")
     specialist_manager = SpecialistManager()
     orchestrator = TaskOrchestrator(state_manager, specialist_manager)
     
@@ -179,6 +262,17 @@ async def test_task_orchestrator():
         logger.info(f"Synthesis length: {len(synthesis)}")
     except Exception as e:
         logger.error(f"❌ Failed to synthesize results: {str(e)}")
+    
+    # Cleanup database connections
+    try:
+        if hasattr(persistence, 'dispose') and callable(getattr(persistence, 'dispose')):
+            persistence.dispose()
+            logger.info("✅ Persistence manager disposed")
+        elif hasattr(persistence, 'engine') and persistence.engine is not None:
+            persistence.engine.dispose()
+            logger.info("✅ Persistence engine disposed manually")
+    except Exception as e:
+        logger.warning(f"⚠️ Error disposing persistence manager: {str(e)}")
     
     logger.info("=== Task Orchestrator Test Completed ===")
 

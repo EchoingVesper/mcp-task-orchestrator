@@ -4,6 +4,7 @@
 import os
 import json
 import psutil
+import platform
 from pathlib import Path
 from .base_client import MCPClient, MCPClientError
 
@@ -30,12 +31,31 @@ class VSCodeClient(MCPClient):
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
         
-        # Check for common installation paths
-        common_paths = [
-            Path("C:/Program Files/Microsoft VS Code"),
-            Path("C:/Program Files (x86)/Microsoft VS Code"),
-            Path.home() / ".vscode"
-        ]
+        # Check for common installation paths based on platform
+        system = platform.system()
+        common_paths = []
+        
+        if system == "Windows":
+            common_paths.extend([
+                Path("C:/Program Files/Microsoft VS Code"),
+                Path("C:/Program Files (x86)/Microsoft VS Code"),
+                Path.home() / "AppData/Local/Programs/Microsoft VS Code"
+            ])
+        elif system == "Darwin":  # macOS
+            common_paths.extend([
+                Path("/Applications/Visual Studio Code.app"),
+                Path.home() / "Applications/Visual Studio Code.app"
+            ])
+        else:  # Linux
+            common_paths.extend([
+                Path("/usr/share/code"),
+                Path("/usr/bin/code"),
+                Path("/opt/visual-studio-code"),
+                Path.home() / ".local/share/applications/code.desktop"
+            ])
+        
+        # Also check for .vscode config directory
+        common_paths.append(Path.home() / ".vscode")
         
         return any(path.exists() for path in common_paths)
     
@@ -64,9 +84,11 @@ class VSCodeClient(MCPClient):
             config["mcpServers"] = {}
         
         # Add our server configuration (VS Code format)
+        # Use the base class config which includes the universal launcher
+        # VS Code uses a simplified format without cwd or env
         vscode_config = {
-            "command": str(self.venv_python),
-            "args": ["-m", "mcp_task_orchestrator.server"]
+            "command": self.server_config["command"],
+            "args": self.server_config["args"]
         }
         config["mcpServers"]["task-orchestrator"] = vscode_config
         

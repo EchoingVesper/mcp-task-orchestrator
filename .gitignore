@@ -79,3 +79,4 @@ site/
 htmlcov/
 .coverage.*
 .benchmark_results/
+.temp_cleanup/

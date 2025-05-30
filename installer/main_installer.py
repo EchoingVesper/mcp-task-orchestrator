@@ -15,8 +15,28 @@ class UnifiedInstaller:
     def __init__(self, project_root: Path = None):
         self.project_root = project_root or Path(__file__).parent.parent
         self.venv_path = self.project_root / "venv_mcp"
-        self.python_exe = self.venv_path / "Scripts" / "python.exe"
+        self.python_exe = self._find_python_exe()
         self.detector = ClientDetector(self.project_root)
+    
+    def _find_python_exe(self):
+        """Find the Python executable in the virtual environment."""
+        # Check for Windows-style Scripts directory
+        windows_python = self.venv_path / "Scripts" / "python.exe"
+        if windows_python.exists():
+            return windows_python
+            
+        # Check for Unix-style bin directory
+        unix_python = self.venv_path / "bin" / "python"
+        if unix_python.exists():
+            return unix_python
+            
+        # Check for Unix-style with python3
+        unix_python3 = self.venv_path / "bin" / "python3"
+        if unix_python3.exists():
+            return unix_python3
+            
+        # Default to Windows style if venv doesn't exist yet
+        return windows_python
     
     def print_header(self, title: str):
         """Print a formatted header."""

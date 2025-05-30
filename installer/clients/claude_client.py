@@ -4,6 +4,7 @@
 import os
 import json
 import psutil
+import platform
 from pathlib import Path
 from .base_client import MCPClient, MCPClientError
 
@@ -30,12 +31,22 @@ class ClaudeDesktopClient(MCPClient):
                 continue
         
         # Check for config directory
-        config_dir = Path(os.environ.get("APPDATA", "")) / "Claude"
+        config_dir = self._get_config_dir()
         return config_dir.exists()
+    
+    def _get_config_dir(self) -> Path:
+        """Get Claude Desktop config directory based on platform."""
+        system = platform.system()
+        if system == "Windows":
+            return Path(os.environ.get("APPDATA", "")) / "Claude"
+        elif system == "Darwin":  # macOS
+            return Path.home() / "Library" / "Application Support" / "Claude"
+        else:  # Linux
+            return Path.home() / ".config" / "Claude"
     
     def get_config_path(self) -> Path:
         """Get Claude Desktop config file path."""
-        return Path(os.environ.get("APPDATA", "")) / "Claude" / "claude_desktop_config.json"
+        return self._get_config_dir() / "claude_desktop_config.json"
 
     def create_configuration(self) -> bool:
         """Create Claude Desktop configuration."""
