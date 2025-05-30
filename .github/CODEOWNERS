@@ -1,0 +1,25 @@
+# Global code owners
+* @EchoingVesper
+
+# Documentation
+*.md @EchoingVesper
+docs/ @EchoingVesper
+
+# Core application
+mcp_task_orchestrator/ @EchoingVesper
+
+# Installation and configuration
+*.py @EchoingVesper
+scripts/ @EchoingVesper
+
+# Testing and validation
+tests/ @EchoingVesper
+pytest.ini @EchoingVesper
+
+# Configuration files
+*.json @EchoingVesper
+*.yaml @EchoingVesper
+*.yml @EchoingVesper
+
+# GitHub workflows (when added)
+.github/ @EchoingVesper
