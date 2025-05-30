@@ -120,41 +120,40 @@ jobs:
           done
           
           echo "📦 Testing package import..."
-          python -c "
-import sys
-import os
-import importlib.util
+          python -c >-
+            import sys
+            import os
+            import importlib.util
 
-sys.path.insert(0, '.')
+            sys.path.insert(0, '.')
 
-package_name = 'mcp_task_orchestrator'
-if os.path.exists(package_name):
-    try:
-        import mcp_task_orchestrator
-        print(f'✅ Successfully imported {package_name}')
-        
-        for item in os.listdir(package_name):
-            if item.endswith('.py') and item != '__init__.py':
-                module_name = item[:-3]
+            package_name = 'mcp_task_orchestrator'
+            if os.path.exists(package_name):
                 try:
-                    spec = importlib.util.spec_from_file_location(
-                        f'{package_name}.{module_name}', 
-                        os.path.join(package_name, item)
-                    )
-                    if spec and spec.loader:
-                        module = importlib.util.module_from_spec(spec)
-                        spec.loader.exec_module(module)
-                        print(f'✅ Successfully imported {package_name}.{module_name}')
-                except Exception as e:
-                    print(f'⚠️ Failed to import {package_name}.{module_name}: {e}')
+                    import mcp_task_orchestrator
+                    print(f'✅ Successfully imported {package_name}')
                     
-    except Exception as e:
-        print(f'⚠️ Failed to import {package_name}: {e}')
-else:
-    print(f'⚠️ Package directory {package_name} not found')
-    
-print('✅ Basic import testing completed')
-"
+                    for item in os.listdir(package_name):
+                        if item.endswith('.py') and item != '__init__.py':
+                            module_name = item[:-3]
+                            try:
+                                spec = importlib.util.spec_from_file_location(
+                                    f'{package_name}.{module_name}', 
+                                    os.path.join(package_name, item)
+                                )
+                                if spec and spec.loader:
+                                    module = importlib.util.module_from_spec(spec)
+                                    spec.loader.exec_module(module)
+                                    print(f'✅ Successfully imported {package_name}.{module_name}')
+                            except Exception as e:
+                                print(f'⚠️ Failed to import {package_name}.{module_name}: {e}')
+                                
+                except Exception as e:
+                    print(f'⚠️ Failed to import {package_name}: {e}')
+            else:
+                print(f'⚠️ Package directory {package_name} not found')
+                
+            print('✅ Basic import testing completed')
         fi
 
   security:
