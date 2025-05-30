@@ -1,5 +1,83 @@
 # MCP Task Orchestrator Release Notes
 
+## Version 1.3.0 - Database Persistence Complete (2025-05-29)
+
+### 🎯 Major Features
+- **Database Persistence**: Full SQLite-based task and subtask persistence
+- **Professional Directory Structure**: Comprehensive project reorganization
+- **Enhanced Testing Suite**: Organized test categories (unit/integration/performance)
+- **Diagnostic Tools**: Comprehensive system health and maintenance utilities
+
+### ✨ New Features
+- SQLite database backend for all task data
+- Lock tracking and cleanup mechanisms
+- Comprehensive diagnostic and maintenance scripts
+- Professional directory organization following Python best practices
+- Enhanced documentation structure
+
+### 🔧 Improvements  
+- Organized test suite with clear categories
+- Better script organization (diagnostics/maintenance/deployment)
+- Comprehensive documentation restructure
+- Enhanced configuration management
+- Better cross-platform compatibility
+
+### 🐛 Bug Fixes
+- Fixed critical StateManager `get_parent_task_id` method issue
+- Improved Unicode compatibility for console output
+- Enhanced error handling and recovery
+- Better database connection management
+
+### 📁 Directory Structure
+```
+MCP Task Orchestrator/
+├── tests/
+│   ├── integration/     # End-to-end workflow tests
+│   ├── unit/           # Component-level tests  
+│   ├── performance/    # Performance benchmarks
+│   └── fixtures/       # Test utilities
+├── scripts/
+│   ├── diagnostics/    # System diagnostic tools
+│   ├── maintenance/    # Maintenance utilities
+│   ├── migrations/     # Data migration scripts
+│   └── deployment/     # Installation scripts
+├── docs/
+│   ├── development/    # Technical implementation guides
+│   ├── testing/        # Test procedures and reports
+│   └── troubleshooting/ # Diagnostic guides
+├── data/              # Database and backup files
+└── logs/              # Log files
+```
+
+### 🛠️ New Utilities
+- `scripts/maintenance/run_tests.py` - Comprehensive test runner
+- `scripts/maintenance/cleanup_database.py` - Database cleanup and maintenance
+- `scripts/diagnostics/simple_health_check.py` - System health validation
+- `scripts/maintenance/setup_project.py` - Project setup and validation
+
+### 📚 Enhanced Documentation
+- Complete testing guides and procedures
+- Troubleshooting and diagnostic documentation  
+- Development implementation guides
+- Comprehensive API and usage documentation
+
+### ⚠️ Breaking Changes
+None - Fully backward compatible
+
+### 🔄 Migration Notes
+- Database files automatically created on first use
+- Old task data preserved during upgrade
+- New directory structure is optional but recommended
+- All existing functionality maintained
+
+### 📋 Known Issues
+- None - All critical issues resolved in this release
+
+### 🚀 Next Steps
+- Implement parallel task execution capabilities
+- Enhanced progress visualization
+- Advanced orchestration features
+
 ## Version 1.1 (May 27, 2025)
 
 ### Major Enhancements

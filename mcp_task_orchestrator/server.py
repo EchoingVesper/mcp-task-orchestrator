@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
-MCP Task Orchestrator Server
+Optimized MCP Task Orchestrator Server
 
 A Model Context Protocol server that provides task orchestration capabilities
-for AI assistants. This server allows complex tasks to be broken down into
-specialized subtasks, each with appropriate context and prompts.
+for AI assistants with improved synchronization, timeout handling, and error recovery.
 """
 
 import asyncio
@@ -18,7 +17,9 @@ from mcp import types
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 
-from .orchestrator import TaskOrchestrator, StateManager, SpecialistManager
+from .orchestrator.core import TaskOrchestrator
+from .orchestrator.state import StateManager
+from .orchestrator.specialists import SpecialistManager
 
 # Configure logging
 log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
@@ -31,12 +32,47 @@ logger = logging.getLogger("mcp_task_orchestrator")
 # Initialize the MCP server
 app = Server("task-orchestrator")
 
-# Initialize core components
-state_manager = StateManager()
+# Global instances - initialized on demand to prevent startup conflicts
+_state_manager: Optional[StateManager] = None
+_specialist_manager: Optional[SpecialistManager] = None
+_orchestrator: Optional[TaskOrchestrator] = None
 
-# Project directory will be set per request
-default_project_dir = os.getcwd()
-logger.info(f"Default project directory: {default_project_dir}")
+
+def get_state_manager() -> StateManager:
+    """Get or create the StateManager singleton instance."""
+    global _state_manager
+    if _state_manager is None:
+        # Get base directory for persistence
+        base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+        if not base_dir:
+            base_dir = Path(__file__).parent.parent
+        
+        _state_manager = StateManager(base_dir=base_dir)
+        logger.info(f"Initialized StateManager with persistence in {base_dir}/.task_orchestrator")
+    
+    return _state_manager
+
+
+def get_specialist_manager() -> SpecialistManager:
+    """Get or create the SpecialistManager singleton instance."""
+    global _specialist_manager
+    if _specialist_manager is None:
+        _specialist_manager = SpecialistManager()
+        logger.info("Initialized SpecialistManager")
+    
+    return _specialist_manager
+
+
+def get_orchestrator() -> TaskOrchestrator:
+    """Get or create the TaskOrchestrator singleton instance."""
+    global _orchestrator
+    if _orchestrator is None:
+        state_mgr = get_state_manager()
+        specialist_mgr = get_specialist_manager()
+        _orchestrator = TaskOrchestrator(state_mgr, specialist_mgr)
+        logger.info("Initialized TaskOrchestrator")
+    
+    return _orchestrator
 
 
 @app.list_tools()
@@ -172,7 +208,12 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextCont
 
 
 async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle initialization of a new task orchestration session."""
+    """Handle initialization of a new task orchestration session.
+    
+    Checks for interrupted tasks and offers to resume them.
+    """
+    orchestrator = get_orchestrator()
+    state_manager = get_state_manager()
     
     # Get project directory from request metadata if available
     project_dir = get_project_directory(args)
@@ -184,16 +225,39 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
     # Get orchestration guidance from the orchestrator
     session_context = await orchestrator.initialize_session()
     
+    # Check for interrupted tasks
+    active_tasks = await state_manager.get_all_tasks()
+    active_parent_tasks = set()
+    
+    # Get unique parent task IDs
+    for task in active_tasks:
+        parent_id = await state_manager._get_parent_task_id_from_persistence(task.task_id)
+        if parent_id:
+            active_parent_tasks.add(parent_id)
+    
     # Format the response for the LLM
     response = {
         "session_initialized": True,
         "orchestrator_context": session_context,
         "instructions": (
-            "You are now in Task Orchestrator mode. Your role is to break down complex tasks into "
-            "structured subtasks with appropriate specialist assignments. When you receive a task, "
-            "analyze it carefully and create a detailed breakdown following the guidelines provided. "
-            "\n\nTo proceed, use the 'orchestrator_plan_task' tool with your JSON-formatted subtasks."
-        )
+            "I'll help you break down complex tasks into manageable subtasks. "
+            "Each subtask will be assigned to a specialist role with appropriate context and guidance."
+        ),
+        "active_tasks": [
+            {
+                "parent_task_id": parent_id,
+                "subtasks": [
+                    {
+                        "task_id": task.task_id,
+                        "title": task.title,
+                        "status": task.status.value
+                    }
+                    for task in active_tasks
+                    if await state_manager._get_parent_task_id_from_persistence(task.task_id) == parent_id
+                ]
+            }
+            for parent_id in active_parent_tasks
+        ]
     }
     
     return [types.TextContent(
@@ -204,37 +268,49 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
 
 async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle task planning with LLM-provided subtasks."""
+    orchestrator = get_orchestrator()
+    
     description = args["description"]
     subtasks_json = args["subtasks_json"]
     complexity = args.get("complexity_level", "moderate")
     context = args.get("context", "")
     
-    # Create task breakdown using the LLM-provided subtasks
-    breakdown = await orchestrator.plan_task(description, complexity, subtasks_json, context)
-    
-    response = {
-        "task_breakdown": {
+    try:
+        # Use a longer timeout for task planning
+        breakdown = await asyncio.wait_for(
+            orchestrator.plan_task(description, complexity, subtasks_json, context),
+            timeout=30  # 30 seconds timeout
+        )
+        
+        response = {
+            "task_created": True,
             "parent_task_id": breakdown.parent_task_id,
-            "total_subtasks": len(breakdown.subtasks),
-            "estimated_complexity": breakdown.complexity,
+            "description": breakdown.description,
+            "complexity": breakdown.complexity.value,
             "subtasks": [
                 {
                     "task_id": subtask.task_id,
                     "title": subtask.title,
                     "specialist_type": subtask.specialist_type.value,
-                    "description": subtask.description,
-                    "dependencies": subtask.dependencies,
-                    "estimated_effort": subtask.estimated_effort
+                    "dependencies": subtask.dependencies
                 }
                 for subtask in breakdown.subtasks
-            ]
-        },
-        "instructions": (
-            f"Task breakdown complete! {len(breakdown.subtasks)} subtasks created and stored. "
-            f"Use 'orchestrator_execute_subtask' with each task_id to begin working on them. "
-            f"Recommended order: {' → '.join([st.task_id for st in breakdown.subtasks])}"
-        )
-    }
+            ],
+            "next_steps": "Use orchestrator_execute_subtask to start working on individual subtasks"
+        }
+    except asyncio.TimeoutError:
+        logger.error("Timeout while planning task")
+        response = {
+            "task_created": False,
+            "error": "Operation timed out",
+            "suggestions": "Try breaking the task into smaller pieces or reducing complexity"
+        }
+    except Exception as e:
+        logger.error(f"Error planning task: {str(e)}")
+        response = {
+            "task_created": False,
+            "error": str(e)
+        }
     
     return [types.TextContent(
         type="text",
@@ -244,34 +320,85 @@ async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
 
 async def handle_execute_subtask(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle subtask execution by providing specialist context."""
+    orchestrator = get_orchestrator()
     task_id = args["task_id"]
     
-    # Get project directory from request metadata if available
-    project_dir = get_project_directory(args)
-    
-    # Create specialist manager and orchestrator with the project directory
-    specialist_manager = SpecialistManager(project_dir=project_dir)
-    orchestrator = TaskOrchestrator(state_manager, specialist_manager, project_dir=project_dir)
-    
-    # Get specialist context from the orchestrator
-    specialist_context = await orchestrator.get_specialist_context(task_id)
-    
-    return [types.TextContent(
-        type="text", 
-        text=specialist_context
-    )]
+    try:
+        # Use a longer timeout for getting specialist context
+        specialist_context = await asyncio.wait_for(
+            orchestrator.get_specialist_context(task_id),
+            timeout=20  # 20 seconds timeout
+        )
+        
+        return [types.TextContent(
+            type="text",
+            text=specialist_context
+        )]
+    except asyncio.TimeoutError:
+        logger.error(f"Timeout while getting specialist context for task {task_id}")
+        error_response = {
+            "error": "Operation timed out",
+            "task_id": task_id,
+            "suggestions": "Try again in a few moments or choose a different subtask"
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+    except Exception as e:
+        logger.error(f"Error getting specialist context for task {task_id}: {str(e)}")
+        error_response = {
+            "error": str(e),
+            "task_id": task_id
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
 
 
 async def handle_complete_subtask(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle subtask completion."""
+    """Handle subtask completion with improved timeout handling."""
+    orchestrator = get_orchestrator()
+    
     task_id = args["task_id"]
     results = args["results"]
+    
+    # Ensure artifacts is always a list
     artifacts = args.get("artifacts", [])
+    if not isinstance(artifacts, list):
+        artifacts = [artifacts] if artifacts else []
+    
     next_action = args["next_action"]
     
-    completion_result = await orchestrator.complete_subtask(
-        task_id, results, artifacts, next_action
-    )
+    try:
+        # Set a longer timeout for the operation
+        completion_result = await asyncio.wait_for(
+            orchestrator.complete_subtask(task_id, results, artifacts, next_action),
+            timeout=30.0  # Increased from 10 to 30 seconds
+        )
+    except asyncio.TimeoutError:
+        logger.error(f"Timeout while completing subtask {task_id}")
+        # Provide more helpful error information
+        completion_result = {
+            "task_id": task_id,
+            "status": "error",
+            "error": "Operation timed out - the system is still processing your request",
+            "results_recorded": False,
+            "recovery_suggestions": [
+                "Wait a few moments and check the task status",
+                "The results may still be recorded asynchronously",
+                "If the issue persists, try completing the task again"
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error completing subtask {task_id}: {str(e)}")
+        completion_result = {
+            "task_id": task_id,
+            "status": "error",
+            "error": str(e),
+            "results_recorded": False
+        }
     
     return [types.TextContent(
         type="text",
@@ -281,36 +408,99 @@ async def handle_complete_subtask(args: Dict[str, Any]) -> List[types.TextConten
 
 async def handle_synthesize_results(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle result synthesis."""
+    orchestrator = get_orchestrator()
     parent_task_id = args["parent_task_id"]
     
-    synthesis = await orchestrator.synthesize_results(parent_task_id)
-    
-    return [types.TextContent(
-        type="text",
-        text=synthesis
-    )]
+    try:
+        # Use a longer timeout for synthesis
+        synthesis = await asyncio.wait_for(
+            orchestrator.synthesize_results(parent_task_id),
+            timeout=30  # 30 seconds timeout
+        )
+        
+        return [types.TextContent(
+            type="text",
+            text=synthesis
+        )]
+    except asyncio.TimeoutError:
+        logger.error(f"Timeout while synthesizing results for task {parent_task_id}")
+        error_response = {
+            "error": "Operation timed out",
+            "parent_task_id": parent_task_id,
+            "suggestions": "Try again in a few moments or synthesize the results manually"
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+    except Exception as e:
+        logger.error(f"Error synthesizing results for task {parent_task_id}: {str(e)}")
+        error_response = {
+            "error": str(e),
+            "parent_task_id": parent_task_id
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
 
 
 async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle status requests."""
+    orchestrator = get_orchestrator()
     include_completed = args.get("include_completed", False)
     
-    status = await orchestrator.get_status(include_completed)
-    
-    return [types.TextContent(
-        type="text",
-        text=json.dumps(status, indent=2)
-    )]
+    try:
+        # Use a longer timeout for getting status
+        status = await asyncio.wait_for(
+            orchestrator.get_status(include_completed),
+            timeout=20  # 20 seconds timeout
+        )
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(status, indent=2)
+        )]
+    except asyncio.TimeoutError:
+        logger.error("Timeout while getting status")
+        error_response = {
+            "error": "Operation timed out",
+            "suggestions": "Try again in a few moments with fewer tasks (set include_completed=False)"
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+    except Exception as e:
+        logger.error(f"Error getting status: {str(e)}")
+        error_response = {
+            "error": str(e)
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
 
 
 async def main():
     """Main entry point for the MCP server."""
-    async with stdio_server() as (read_stream, write_stream):
-        await app.run(
-            read_stream, 
-            write_stream,
-            app.create_initialization_options()
-        )
+    try:
+        # Log server initialization
+        logger.info("Starting MCP Task Orchestrator server...")
+        
+        # Use the original implementation pattern with async context manager
+        async with stdio_server() as (read_stream, write_stream):
+            await app.run(
+                read_stream, 
+                write_stream,
+                app.create_initialization_options()
+            )
+        
+        # This line will only be reached if the server exits normally
+        logger.info("MCP Task Orchestrator server shutdown gracefully")
+    except Exception as e:
+        logger.error(f"Error in MCP Task Orchestrator server: {e}", exc_info=True)
+        raise
 
 
 def get_project_directory(args: Dict[str, Any]) -> str:

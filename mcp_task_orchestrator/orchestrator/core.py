@@ -1,12 +1,16 @@
 """
-Core orchestration logic for task management and specialist coordination.
+Optimized core orchestration logic for task management and specialist coordination.
+
+This module provides an optimized TaskOrchestrator class that addresses timeout issues
+by implementing more efficient transaction handling and error recovery.
 """
 
 import uuid
 import json
-import os
+import asyncio
+import logging
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from .models import (
     TaskBreakdown, SubTask, TaskStatus, SpecialistType, 
@@ -17,8 +21,19 @@ from .state import StateManager
 from .role_loader import get_roles
 
 
+# Configure logging
+logger = logging.getLogger("mcp_task_orchestrator.core")
+
+
 class TaskOrchestrator:
-    """Main orchestrator for managing complex tasks and specialist coordination."""
+    """Main orchestrator for managing complex tasks and specialist coordination.
+    
+    This optimized version addresses timeout issues by:
+    - Using more efficient transaction handling
+    - Implementing better error recovery
+    - Adding retry mechanisms with exponential backoff
+    - Increasing timeout thresholds where appropriate
+    """
     
     def __init__(self, state_manager: StateManager, specialist_manager: SpecialistManager, project_dir: str = None):
         self.state = state_manager
@@ -115,111 +130,401 @@ class TaskOrchestrator:
             context=context
         )
         
-        # Store in state manager
-        await self.state.store_task_breakdown(breakdown)
+        # Store in state manager with optimized retry logic for fast database operations
+        max_retries = 2  # Reduced from 3
+        retry_delay = 0.1  # Reduced from 0.5s
+        
+        for attempt in range(max_retries):
+            try:
+                await asyncio.wait_for(
+                    self.state.store_task_breakdown(breakdown),
+                    timeout=5  # Reduced from 15s to 5s since DB operations are fast
+                )
+                break  # Success, exit the retry loop
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout storing task breakdown (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced multiplier from 2 to 1.5
+                else:
+                    # Last attempt, re-raise the exception
+                    raise ValueError(f"Failed to store task breakdown after {max_retries} attempts: {str(e)}")
+            except Exception as e:
+                logger.error(f"Error storing task breakdown (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced multiplier from 2 to 1.5
+                else:
+                    # Last attempt, re-raise the exception
+                    raise
         
         return breakdown
     
     async def get_specialist_context(self, task_id: str) -> str:
         """Get specialist context and prompts for a specific subtask."""
         
-        # Retrieve task from state
-        subtask = await self.state.get_subtask(task_id)
-        if not subtask:
-            raise ValueError(f"Task {task_id} not found")
+        # Optimized retry logic for fast database operations
+        max_retries = 2  # Reduced from 3
+        retry_delay = 0.1  # Reduced from 0.5s
         
-        # Mark task as active
-        subtask.status = TaskStatus.ACTIVE
-        await self.state.update_subtask(subtask)
-        
-        # Get specialist prompt and context - using the method that exists
-        specialist_context = await self.specialists.get_specialist_prompt(
-            subtask.specialist_type, subtask
-        )
-        
-        return specialist_context
+        for attempt in range(max_retries):
+            try:
+                # Retrieve task from state with reduced timeout
+                subtask = await asyncio.wait_for(
+                    self.state.get_subtask(task_id),
+                    timeout=5  # Reduced from 15s to 5s
+                )
+                
+                if not subtask:
+                    raise ValueError(f"Task {task_id} not found")
+                
+                # Mark task as active
+                subtask.status = TaskStatus.ACTIVE
+                await asyncio.wait_for(
+                    self.state.update_subtask(subtask),
+                    timeout=5  # Reduced from 15s to 5s
+                )
+                
+                # Get specialist prompt and context with reduced timeout
+                specialist_context = await asyncio.wait_for(
+                    self.specialists.get_specialist_prompt(
+                        subtask.specialist_type, subtask
+                    ),
+                    timeout=5  # Reduced from 15s to 5s
+                )
+                
+                return specialist_context
+                
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout getting specialist context for task {task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced from 2 to 1.5
+                else:
+                    # Last attempt, revert task status if possible and raise exception
+                    try:
+                        subtask = await self.state.get_subtask(task_id)
+                        if subtask and subtask.status == TaskStatus.ACTIVE:
+                            subtask.status = TaskStatus.PENDING
+                            await self.state.update_subtask(subtask)
+                    except Exception as revert_error:
+                        logger.error(f"Failed to revert task status: {str(revert_error)}")
+                    
+                    raise ValueError(f"Timeout getting specialist context for task {task_id} after {max_retries} attempts")
+                
+            except Exception as e:
+                logger.error(f"Error getting specialist context for task {task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced from 2 to 1.5
+                else:
+                    # Last attempt, revert task status if possible and raise exception
+                    try:
+                        subtask = await self.state.get_subtask(task_id)
+                        if subtask and subtask.status == TaskStatus.ACTIVE:
+                            subtask.status = TaskStatus.PENDING
+                            await self.state.update_subtask(subtask)
+                    except Exception as revert_error:
+                        logger.error(f"Failed to revert task status: {str(revert_error)}")
+                    
+                    raise
     
     async def complete_subtask(self, task_id: str, results: str, 
                              artifacts: List[str], next_action: str) -> Dict:
-        """Mark a subtask as complete and record its results."""
+        """Mark a subtask as complete and record its results.
         
-        # Retrieve and update task
-        subtask = await self.state.get_subtask(task_id)
-        if not subtask:
-            raise ValueError(f"Task {task_id} not found")
+        This optimized version:
+        - Uses a retry mechanism with exponential backoff
+        - Combines related operations to reduce lock acquisitions
+        - Implements better error handling and recovery
+        """
         
-        subtask.status = TaskStatus.COMPLETED
-        subtask.results = results
-        subtask.artifacts = artifacts
-        subtask.completed_at = datetime.utcnow()
+        # Ensure artifacts is properly formatted
+        if artifacts is None:
+            artifacts = []
+        elif not isinstance(artifacts, list):
+            artifacts = [artifacts] if artifacts else []
         
-        await self.state.update_subtask(subtask)
+        # Optimized retry logic - reduced timeouts since database operations are now fast
+        max_retries = 2  # Reduced from 3 to 2
+        retry_delay = 0.1  # Reduced from 0.5s to 0.1s
         
-        # Check if parent task can be progressed
-        parent_progress = await self._check_parent_task_progress(task_id)
-        
-        return {
-            "task_id": task_id,
-            "status": "completed",
-            "results_recorded": True,
-            "parent_task_progress": parent_progress,
-            "next_recommended_task": await self._get_next_recommended_task(task_id)
-        }
+        for attempt in range(max_retries):
+            try:
+                # Retrieve task with reduced timeout (database operations are fast now)
+                subtask = await asyncio.wait_for(
+                    self.state.get_subtask(task_id),
+                    timeout=5  # Reduced from 15s to 5s
+                )
+                
+                if not subtask:
+                    raise ValueError(f"Task {task_id} not found")
+                
+                # Update task status and data
+                subtask.status = TaskStatus.COMPLETED
+                subtask.results = results
+                subtask.artifacts = artifacts
+                subtask.completed_at = datetime.utcnow()
+                
+                # Update the subtask with reduced timeout
+                await asyncio.wait_for(
+                    self.state.update_subtask(subtask),
+                    timeout=5  # Reduced from 15s to 5s
+                )
+                
+                # Check if parent task can be progressed and get next recommended task
+                # Combine these operations to reduce the number of lock acquisitions
+                parent_progress, next_task = await asyncio.gather(
+                    self._check_parent_task_progress(task_id),
+                    self._get_next_recommended_task(task_id)
+                )
+                
+                return {
+                    "task_id": task_id,
+                    "status": "completed",
+                    "results_recorded": True,
+                    "parent_task_progress": parent_progress,
+                    "next_recommended_task": next_task
+                }
+                
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout completing subtask {task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced exponential backoff multiplier from 2 to 1.5
+                else:
+                    # Last attempt, return a partial result to avoid hanging
+                    return {
+                        "task_id": task_id,
+                        "status": "timeout",
+                        "error": f"Operation timed out after {max_retries} attempts: {str(e)}",
+                        "results_recorded": False,
+                        "parent_task_progress": {"progress": "unknown", "error": f"Timeout: {str(e)}"},
+                        "next_recommended_task": None
+                    }
+                    
+            except Exception as e:
+                logger.error(f"Error completing subtask {task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced exponential backoff multiplier from 2 to 1.5
+                else:
+                    # Last attempt, return a partial result to avoid hanging
+                    return {
+                        "task_id": task_id,
+                        "status": "error",
+                        "error": str(e),
+                        "results_recorded": False,
+                        "parent_task_progress": {"progress": "unknown", "error": str(e)},
+                        "next_recommended_task": None
+                    }
     
     async def synthesize_results(self, parent_task_id: str) -> str:
         """Combine completed subtasks into a comprehensive final result."""
         
-        # Get all subtasks for parent
-        subtasks = await self.state.get_subtasks_for_parent(parent_task_id)
-        completed_subtasks = [st for st in subtasks if st.status == TaskStatus.COMPLETED]
+        # Optimized retry logic for fast database operations
+        max_retries = 2  # Reduced from 3
+        retry_delay = 0.1  # Reduced from 0.5s
         
-        # Generate synthesis using specialist manager
-        synthesis = await self.specialists.synthesize_task_results(
-            parent_task_id, completed_subtasks
-        )
-        
-        return synthesis
+        for attempt in range(max_retries):
+            try:
+                # Get all subtasks for parent with reduced timeout
+                subtasks = await asyncio.wait_for(
+                    self.state.get_subtasks_for_parent(parent_task_id),
+                    timeout=5  # Reduced from 15s to 5s
+                )
+                
+                completed_subtasks = [st for st in subtasks if st.status == TaskStatus.COMPLETED]
+                
+                # Generate synthesis using specialist manager with reduced timeout
+                synthesis = await asyncio.wait_for(
+                    self.specialists.synthesize_task_results(
+                        parent_task_id, completed_subtasks
+                    ),
+                    timeout=10  # Reduced from 20s to 10s
+                )
+                
+                return synthesis
+                
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout synthesizing results for task {parent_task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced from 2 to 1.5
+                else:
+                    # Last attempt, raise exception
+                    raise ValueError(f"Timeout synthesizing results for task {parent_task_id} after {max_retries} attempts")
+                    
+            except Exception as e:
+                logger.error(f"Error synthesizing results for task {parent_task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced from 2 to 1.5
+                else:
+                    # Last attempt, raise exception
+                    raise
     
     async def get_status(self, include_completed: bool = False) -> Dict:
         """Get current status of all tasks."""
         
-        all_tasks = await self.state.get_all_tasks()
+        # Optimized retry logic for fast database operations
+        max_retries = 2  # Reduced from 3
+        retry_delay = 0.1  # Reduced from 0.5s
         
-        if not include_completed:
-            all_tasks = [task for task in all_tasks 
-                        if task.status != TaskStatus.COMPLETED]
-        
-        return {
-            "active_tasks": len([t for t in all_tasks if t.status == TaskStatus.ACTIVE]),
-            "pending_tasks": len([t for t in all_tasks if t.status == TaskStatus.PENDING]),
-            "completed_tasks": len([t for t in all_tasks if t.status == TaskStatus.COMPLETED]),
-            "tasks": [
-                {
-                    "task_id": task.task_id,
-                    "title": task.title,
-                    "status": task.status.value,
-                    "specialist_type": task.specialist_type.value,
-                    "created_at": task.created_at.isoformat()
+        for attempt in range(max_retries):
+            try:
+                all_tasks = await asyncio.wait_for(
+                    self.state.get_all_tasks(),
+                    timeout=5  # Reduced from 15s to 5s
+                )
+                
+                if not include_completed:
+                    all_tasks = [task for task in all_tasks 
+                                if task.status != TaskStatus.COMPLETED]
+                
+                return {
+                    "active_tasks": len([t for t in all_tasks if t.status == TaskStatus.ACTIVE]),
+                    "pending_tasks": len([t for t in all_tasks if t.status == TaskStatus.PENDING]),
+                    "completed_tasks": len([t for t in all_tasks if t.status == TaskStatus.COMPLETED]),
+                    "tasks": [
+                        {
+                            "task_id": task.task_id,
+                            "title": task.title,
+                            "status": task.status.value,
+                            "specialist_type": task.specialist_type.value,
+                            "created_at": task.created_at.isoformat()
+                        }
+                        for task in all_tasks
+                    ]
                 }
-                for task in all_tasks
-            ]
-        }
-    
-    # The _analyze_and_breakdown_task method and the template methods are no longer needed
-    # as the LLM will now be responsible for task breakdown
-    # We're removing:
-    # - _analyze_and_breakdown_task
-    # - _create_development_subtasks
-    # - _create_analysis_subtasks
-    # - _create_debugging_subtasks
-    # - _create_generic_subtasks
+                
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout getting status (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced from 2 to 1.5
+                else:
+                    # Last attempt, return a partial result
+                    return {
+                        "error": f"Timeout getting status after {max_retries} attempts",
+                        "active_tasks": 0,
+                        "pending_tasks": 0,
+                        "completed_tasks": 0,
+                        "tasks": []
+                    }
+                    
+            except Exception as e:
+                logger.error(f"Error getting status (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5  # Reduced from 2 to 1.5
+                else:
+                    # Last attempt, return a partial result
+                    return {
+                        "error": str(e),
+                        "active_tasks": 0,
+                        "pending_tasks": 0,
+                        "completed_tasks": 0,
+                        "tasks": []
+                    }
     
     async def _check_parent_task_progress(self, completed_task_id: str) -> Dict:
         """Check progress of parent task when a subtask completes."""
-        # This would check if all dependencies are met and suggest next steps
-        return {"progress": "in_progress", "next_steps": "Continue with dependent tasks"}
+        try:
+            # Get parent task ID with timeout protection
+            parent_task_id = await asyncio.wait_for(
+                self.state._get_parent_task_id(completed_task_id),
+                timeout=3  # Quick timeout since DB operations are fast
+            )
+            if not parent_task_id:
+                return {"progress": "unknown", "error": "Parent task not found"}
+            
+            # Get all subtasks for parent with timeout protection
+            subtasks = await asyncio.wait_for(
+                self.state.get_subtasks_for_parent(parent_task_id),
+                timeout=3  # Quick timeout since DB operations are fast
+            )
+            total = len(subtasks)
+            completed = len([st for st in subtasks if st.status == TaskStatus.COMPLETED])
+            
+            # Calculate progress percentage
+            progress_pct = (completed / total) * 100 if total > 0 else 0
+            
+            return {
+                "progress": "in_progress" if completed < total else "completed",
+                "parent_task_id": parent_task_id,
+                "completed_subtasks": completed,
+                "total_subtasks": total,
+                "progress_percentage": progress_pct
+            }
+        except asyncio.TimeoutError:
+            logger.error(f"Timeout checking parent task progress for {completed_task_id}")
+            return {"progress": "unknown", "error": "Operation timed out"}
+        except Exception as e:
+            logger.error(f"Error checking parent task progress: {str(e)}")
+            return {"progress": "unknown", "error": str(e)}
     
-    async def _get_next_recommended_task(self, completed_task_id: str) -> Optional[str]:
+    async def _get_next_recommended_task(self, completed_task_id: str) -> Optional[Dict]:
         """Get the next recommended task based on dependencies."""
-        # This would analyze task dependencies and suggest the next logical task
-        return None
+        try:
+            # Get parent task ID with timeout protection
+            parent_task_id = await asyncio.wait_for(
+                self.state._get_parent_task_id(completed_task_id),
+                timeout=3  # Quick timeout since DB operations are fast
+            )
+            if not parent_task_id:
+                return None
+            
+            # Get all subtasks for parent with timeout protection
+            subtasks = await asyncio.wait_for(
+                self.state.get_subtasks_for_parent(parent_task_id),
+                timeout=3  # Quick timeout since DB operations are fast
+            )
+            
+            # Find subtasks that depend on the completed task
+            dependent_tasks = []
+            for subtask in subtasks:
+                if completed_task_id in subtask.dependencies:
+                    dependent_tasks.append(subtask)
+            
+            # Check if all dependencies are met for each dependent task
+            for task in dependent_tasks:
+                all_deps_met = True
+                for dep_id in task.dependencies:
+                    dep_task = next((st for st in subtasks if st.task_id == dep_id), None)
+                    if not dep_task or dep_task.status != TaskStatus.COMPLETED:
+                        all_deps_met = False
+                        break
+                
+                if all_deps_met and task.status == TaskStatus.PENDING:
+                    # Found a task with all dependencies met
+                    return {
+                        "task_id": task.task_id,
+                        "title": task.title,
+                        "specialist_type": task.specialist_type.value
+                    }
+            
+            # If no dependent tasks are ready, find any pending task
+            for task in subtasks:
+                if task.status == TaskStatus.PENDING:
+                    all_deps_met = True
+                    for dep_id in task.dependencies:
+                        dep_task = next((st for st in subtasks if st.task_id == dep_id), None)
+                        if not dep_task or dep_task.status != TaskStatus.COMPLETED:
+                            all_deps_met = False
+                            break
+                    
+                    if all_deps_met:
+                        return {
+                            "task_id": task.task_id,
+                            "title": task.title,
+                            "specialist_type": task.specialist_type.value
+                        }
+            
+            return None
+        except asyncio.TimeoutError:
+            logger.error(f"Timeout getting next recommended task for {completed_task_id}")
+            return None
+        except Exception as e:
+            logger.error(f"Error getting next recommended task: {str(e)}")
+            return None

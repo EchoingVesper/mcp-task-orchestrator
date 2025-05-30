@@ -5,6 +5,7 @@ This module provides the core task orchestration functionality, including
 task planning, specialist context management, and state tracking.
 """
 
+# Import from the renamed optimized files
 from .core import TaskOrchestrator
 from .state import StateManager
 from .specialists import SpecialistManager

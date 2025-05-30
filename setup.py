@@ -16,7 +16,7 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 
 setup(
     name="mcp-task-orchestrator",
-    version="1.2.0",
+    version="1.3.0",
     author="Echoing Vesper",
     author_email="example@example.com",
     description="A Model Context Protocol server for task orchestration",

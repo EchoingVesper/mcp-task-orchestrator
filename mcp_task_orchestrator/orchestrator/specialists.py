@@ -4,9 +4,13 @@ Specialist management for providing role-specific prompts and contexts.
 
 import os
 import yaml
+import shutil
+import logging
 from pathlib import Path
 from typing import Dict, List, Optional
 from jinja2 import Environment, FileSystemLoader
+
+logger = logging.getLogger("mcp_task_orchestrator.specialists")
 
 from .models import SpecialistType, SubTask
 from .role_loader import get_roles
@@ -15,25 +19,65 @@ from .role_loader import get_roles
 class SpecialistManager:
     """Manages specialist roles and their associated prompts and contexts."""
     
-    def __init__(self, config_path: str = None, project_dir: str = None):
-        self.project_dir = project_dir or os.getcwd()
+    def __init__(self, config_path: str = None):
+        # Initialize paths
+        self.base_dir = Path(__file__).parent.parent.parent
+        self.persistence_dir = self.base_dir / ".task_orchestrator"
+        self.roles_dir = self.persistence_dir / "roles"
         
+        # Check if the persistence directory exists, create if not
+        self.roles_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Determine config path
         if config_path is None:
             # Check environment variable first
             config_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_CONFIG_DIR")
             if config_dir:
                 config_path = Path(config_dir) / "default_roles.yaml"
             else:
-                config_path = Path(__file__).parent.parent.parent / "config" / "default_roles.yaml"
+                # First check in the .task_orchestrator/roles directory
+                persistence_config = self.roles_dir / "default_roles.yaml"
+                if persistence_config.exists():
+                    config_path = persistence_config
+                else:
+                    # Fall back to the original config directory
+                    config_path = self.base_dir / "config" / "specialists.yaml"
+                    
+                    # If the original config exists but not in persistence, migrate it
+                    if config_path.exists() and not persistence_config.exists():
+                        self._migrate_config_to_persistence(config_path, persistence_config)
         
         self.config_path = Path(config_path)
         self.specialists_config = self._load_specialists_config()
         
         # Initialize Jinja2 environment for template rendering
-        template_dir = self.config_path.parent / "templates"
+        template_dir = self.roles_dir / "templates"
+        if not template_dir.exists() and self.config_path.parent.exists():
+            # Check if templates exist in the original location
+            orig_template_dir = self.config_path.parent / "templates"
+            if orig_template_dir.exists():
+                # Migrate templates to the new location
+                template_dir.mkdir(exist_ok=True)
+                for template_file in orig_template_dir.glob("*"):
+                    shutil.copy(template_file, template_dir / template_file.name)
+        
         self.jinja_env = Environment(
             loader=FileSystemLoader(str(template_dir)) if template_dir.exists() else None
         )
+    
+    def _migrate_config_to_persistence(self, source_path: Path, target_path: Path) -> None:
+        """Migrate configuration from the original location to the persistence directory.
+        
+        Args:
+            source_path: Path to the original configuration file
+            target_path: Path to the target configuration file in the persistence directory
+        """
+        try:
+            # Copy the file
+            shutil.copy(source_path, target_path)
+            logger.info(f"Migrated configuration from {source_path} to {target_path}")
+        except Exception as e:
+            logger.error(f"Failed to migrate configuration: {str(e)}")
     
     def _load_specialists_config(self) -> Dict:
         """

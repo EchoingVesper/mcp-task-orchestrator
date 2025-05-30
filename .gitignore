@@ -24,17 +24,31 @@ ENV/
 htmlcov/
 .pytest_cache/
 .tox/
+test_results/
+performance_reports/
 
 # Databases
 *.db
 *.sqlite3
+*.db-shm
+*.db-wal
+data/*.db
+data/*.db-*
 
 # Logs
 *.log
 logs/
 
+# Task Orchestrator persistence
+.task_orchestrator/
+.task_orchestrator/tasks/active/
+.task_orchestrator/tasks/archive/
+.task_orchestrator/locks/
+.task_orchestrator/logs/
+
 # Backup files
 backup_obsolete_files/
+data/backups/*.bak*
 
 # IDE specific files
 .idea/
@@ -57,3 +71,11 @@ site/
 # Cache directories
 .cache/
 .pytest_cache/
+
+# Development artifacts
+*.tmp
+*.temp
+.pytest_cache/
+htmlcov/
+.coverage.*
+.benchmark_results/
