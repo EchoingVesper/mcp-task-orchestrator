@@ -21,8 +21,10 @@ node --version    # Should be 16+
 ```bash
 git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator
-python install.py
+python run_installer.py
 ```
+
+> **Reliable Installation**: This optimized installer automatically detects your MCP clients and handles all configuration with improved error handling.
 
 ### Step 3: Restart Your MCP Client
 - **Claude Desktop**: Restart the entire app
@@ -41,7 +43,7 @@ Open your MCP client and look for `task-orchestrator` in tools/servers. Try sayi
    - [VS Code](https://code.visualstudio.com/) + [Cline extension](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)
 
 2. Run the client once before installing
-3. Re-run `python install.py`
+3. Re-run `python run_installer.py`
 
 ### "Could not connect" or "Server failed to start"
 1. **Restart your MCP client completely** (most common fix)
@@ -66,7 +68,7 @@ Open your MCP client and look for `task-orchestrator` in tools/servers. Try sayi
    ```bash
    rm -rf venv_mcp  # Linux/Mac
    rmdir /s venv_mcp  # Windows
-   python install.py
+   python run_installer.py
    ```
 
 ### Windows-Specific Issues
