@@ -16,6 +16,12 @@
 3. **[Real-World Examples](./user-guide/real-world-examples/)** - Production-ready patterns
 4. **[Advanced Techniques](./user-guide/advanced-techniques/)** - Enterprise-scale coordination
 
+### Architects & Planners → System Design
+1. **[A2A Framework Integration](./architecture/a2a-framework-integration.md)** - Agent-to-agent coordination architecture
+2. **[Database Schema Enhancements](./architecture/database-schema-enhancements.md)** - Persistence layer improvements
+3. **[Feature Specifications](./planning/feature-specifications.md)** - Upcoming feature requirements
+4. **[Version Progression Plan](./planning/version-progression-plan.md)** - Development roadmap
+
 ### LLM Agents → Optimized References
 1. **[Quick Reference](./llm-agents/quick-reference/)** - Character-optimized commands (1200-2000 chars)
 2. **[Workflow Contexts](./llm-agents/workflow-contexts/)** - Project-specific guidance
@@ -87,6 +93,15 @@ docs/
 ├── DEVELOPER.md                  # Development setup
 ├── MIGRATION.md                  # Version migration guide
 ├── database_persistence.md       # Data persistence layer
+├── architecture/                 # System architecture & design
+│   ├── a2a-framework-integration.md    # Agent-to-Agent framework
+│   ├── database-schema-enhancements.md # Database design improvements
+│   └── nested-task-architecture.md     # Hierarchical task design
+├── planning/                     # Development planning & roadmaps
+│   ├── development-cycle-planning.md   # Release cycle planning
+│   ├── feature-specifications.md       # Feature requirements & specs
+│   ├── testing-strategy.md            # Testing approach & standards
+│   └── version-progression-plan.md     # Version roadmap & timeline
 ├── testing/                      # Test frameworks & strategies
 ├── troubleshooting/              # System-level troubleshooting
 └── development/                  # Development resources
@@ -106,6 +121,12 @@ docs/
 ### "I'm building an LLM integration"
 → [LLM Quick Reference](./llm-agents/quick-reference/) → [Integration Patterns](./llm-agents/integration-patterns/) → [Workflow Contexts](./llm-agents/workflow-contexts/)
 
+### "I need architecture and planning information"
+→ [A2A Framework](./architecture/a2a-framework-integration.md) → [Database Enhancements](./architecture/database-schema-enhancements.md) → [Feature Specifications](./planning/feature-specifications.md)
+
+### "I want to understand future development"
+→ [Version Progression Plan](./planning/version-progression-plan.md) → [Development Cycle Planning](./planning/development-cycle-planning.md) → [Testing Strategy](./planning/testing-strategy.md)
+
 ### "Something isn't working"
 → [Troubleshooting Tree](./user-guide/visual-guides/troubleshooting-tree.md) → [LLM Troubleshooting](./llm-agents/troubleshooting/) → [System Troubleshooting](./troubleshooting/)
 
@@ -121,17 +142,29 @@ docs/
 - **Configuration**: [Advanced Config](./configuration.md) | [Integration Setup](./user-guide/integration-guides/claude-code-mcp.md#configuration)
 - **Troubleshooting**: [Visual Tree](./user-guide/visual-guides/troubleshooting-tree.md) | [LLM Guide](./llm-agents/troubleshooting/) | [System Issues](./troubleshooting/)
 
+### Architecture & Planning
+- **A2A Framework**: [Integration Design](./architecture/a2a-framework-integration.md) | [Feature Specifications](./planning/feature-specifications.md) | [Development Planning](./planning/development-cycle-planning.md)
+- **Database Enhancements**: [Schema Design](./architecture/database-schema-enhancements.md) | [Version Planning](./planning/version-progression-plan.md) | [Testing Strategy](./planning/testing-strategy.md)
+- **Nested Task Architecture**: [Design Document](./architecture/nested-task-architecture.md) | [Feature Requirements](./planning/feature-specifications.md#nested-task-management)
+
 ## 📚 Documentation Maintenance
 
 **Last Updated**: 2025-05-30  
-**Version**: 1.0 (Complete Documentation Restructure)  
+**Version**: 1.1 (Architecture & Planning Documentation Added)  
 **Maintainers**: Task Orchestrator Documentation Team  
+
+**Recent Updates**:
+- Added Architecture section with A2A Framework, Database Enhancements, and Nested Task designs
+- Added Planning section with Development Cycle, Feature Specifications, Testing Strategy, and Version Planning
+- Updated Quick Navigation with new architect and planner workflows
+- Enhanced Cross-References for architecture and planning documents
 
 **Update Process**:
 1. All documentation follows the Sequential Coordination Pattern
 2. Visual assets use ASCII art for universal compatibility
 3. LLM documentation maintains 1200-2000 character limits
 4. Cross-references updated with each major change
+5. Architecture and planning documents maintained for development continuity
 
 ---
 *📖 Complete documentation index for MCP Task Orchestrator + Claude Code integration. Start with your use case above, or browse the full structure.*
