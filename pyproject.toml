@@ -14,3 +14,26 @@ multi_line_output = 3
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+# Disable output capture to prevent truncation and show verbose output
+addopts = "-s -v --tb=short"
+# Alternative configuration options (comment/uncomment as needed):
+# addopts = "--capture=no -v --tb=short"                    # Alternative no-capture method
+# addopts = "--show-capture=all -v --tb=short"              # Show all captured output  
+# addopts = "-s -v --tb=short --maxfail=1"                  # Stop on first failure
+# addopts = "-s -v --tb=short -p no:anyio -p no:asyncio"    # Disable async plugins
+minversion = "7.0"
+# Markers for test categorization
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "migration: marks tests as migration-related tests"
+]
+# Timeout settings to prevent hanging
+timeout = 300
+# Filter warnings to reduce noise
+filterwarnings = [
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning",
+    "error::ResourceWarning"  # Make ResourceWarnings fail tests to catch connection leaks
+]

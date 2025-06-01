@@ -1,23 +1,23 @@
 # Core MCP dependencies
 mcp>=1.9.0
-pydantic>=2.0.0
+pydantic>=2.0.0  # Data validation and settings management
 
 # Template engine for specialist prompts
 jinja2>=3.1.0
 
-# Configuration management
+# YAML parser for configuration files
 pyyaml>=6.0.0
 
 # Async file operations
 aiofiles>=23.0.0
 
-# Client detection
+# System and process utilities (client detection, monitoring)
 psutil>=5.9.0
 
 # File locking for task persistence
 filelock>=3.12.0
 
-# Database persistence
+# Database persistence (SQLAlchemy ORM + migrations)
 sqlalchemy>=2.0.0
 alembic>=1.10.0
 

@@ -1,9 +1,13 @@
-# 📋 Features Index
+# 📋 Features Index - SUPERSEDED
 
+**Status**: [ARCHIVED] - Superseded by enhanced features index  
 **Last Updated**: 2025-05-30  
 **Total Features**: 7 (5 individual + 1 bundle + 1 index)  
 
-## 🚀 Proposed Features
+**⚠️ NOTICE**: This file has been superseded by the enhanced features index with status tracking.  
+**New Location**: `[IN-PROGRESS]_enhanced_features_index_with_status_tracking.md`
+
+## 🚀 Original Proposed Features (NOW APPROVED)
 
 ### 1. **Automation & Maintenance Enhancement** ⭐ Core
 - **File**: `automation-maintenance-enhancement.md`

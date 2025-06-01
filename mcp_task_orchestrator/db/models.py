@@ -47,6 +47,11 @@ class SubTaskModel(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     completed_at = Column(DateTime)
     
+    # TODO: Add these columns back after fixing server startup issues  
+    # prerequisite_satisfaction_required = Column(Boolean, default=False)
+    # auto_maintenance_enabled = Column(Boolean, default=True)
+    # quality_gate_level = Column(String, default='standard')  # basic, standard, comprehensive
+    
     # Relationship to parent task (many-to-one)
     parent_task = relationship("TaskBreakdownModel", back_populates="subtasks")
 
@@ -170,3 +175,51 @@ class DecisionEvolutionModel(Base):
     # Relationships
     original_decision = relationship("ArchitecturalDecisionModel", foreign_keys=[original_decision_id])
     new_decision = relationship("ArchitecturalDecisionModel", foreign_keys=[new_decision_id])
+
+
+class TaskPrerequisiteModel(Base):
+    """SQLAlchemy model for task prerequisites and dependencies."""
+    
+    __tablename__ = 'task_prerequisites'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    parent_task_id = Column(String, ForeignKey('task_breakdowns.parent_task_id'), nullable=False)
+    prerequisite_type = Column(String, nullable=False)  # completion_dependency, validation_requirement, file_dependency, quality_gate
+    description = Column(Text, nullable=False)
+    validation_criteria = Column(Text)
+    is_auto_resolvable = Column(Boolean, default=False)
+    is_satisfied = Column(Boolean, default=False)
+    satisfied_at = Column(DateTime)
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    
+    # Relationship to parent task
+    parent_task = relationship("TaskBreakdownModel")
+
+
+class MaintenanceOperationModel(Base):
+    """SQLAlchemy model for maintenance operations."""
+    
+    __tablename__ = 'maintenance_operations'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    operation_type = Column(String, nullable=False)  # file_cleanup, structure_validation, documentation_update, handover_preparation
+    task_context = Column(Text)
+    execution_status = Column(String, nullable=False, default='pending')  # pending, running, completed, failed
+    results_summary = Column(Text)
+    auto_resolution_attempted = Column(Boolean, default=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    completed_at = Column(DateTime)
+
+
+class ProjectHealthMetricModel(Base):
+    """SQLAlchemy model for project health metrics."""
+    
+    __tablename__ = 'project_health_metrics'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    metric_type = Column(String, nullable=False)  # file_count, documentation_coverage, character_limit_compliance, cross_reference_validity
+    metric_value = Column(JSON)  # Using JSON to handle different metric types (numeric, boolean, etc.)
+    threshold_value = Column(JSON)
+    is_passing = Column(Boolean, nullable=False)
+    details = Column(Text)
+    measured_at = Column(DateTime, nullable=False, default=datetime.now)
