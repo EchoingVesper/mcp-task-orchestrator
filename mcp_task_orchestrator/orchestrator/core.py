@@ -230,6 +230,122 @@ class TaskOrchestrator:
                     
                     raise
     
+    async def complete_subtask_with_artifacts(self, 
+                                            task_id: str, 
+                                            summary: str, 
+                                            artifacts: List[str], 
+                                            next_action: str,
+                                            artifact_info: Dict[str, Any]) -> Dict:
+        """Complete a subtask with enhanced artifact information.
+        
+        This method extends the standard complete_subtask to include artifact metadata
+        and enhanced tracking for the new artifact system.
+        
+        Args:
+            task_id: Task ID
+            summary: Brief summary for database storage
+            artifacts: List of artifact references (includes file paths)
+            next_action: Next action to take
+            artifact_info: Metadata about the created artifact
+            
+        Returns:
+            Completion result dictionary with artifact information
+        """
+        # Ensure artifacts is properly formatted
+        if artifacts is None:
+            artifacts = []
+        elif not isinstance(artifacts, list):
+            artifacts = [artifacts] if artifacts else []
+        
+        # Use the standard completion method with optimized retry logic
+        max_retries = 2
+        retry_delay = 0.1
+        
+        for attempt in range(max_retries):
+            try:
+                # Retrieve task with reduced timeout
+                subtask = await asyncio.wait_for(
+                    self.state.get_subtask(task_id),
+                    timeout=5
+                )
+                
+                if not subtask:
+                    raise ValueError(f"Task {task_id} not found")
+                
+                # Update task status and data with artifact information
+                subtask.status = TaskStatus.COMPLETED
+                subtask.results = summary
+                subtask.artifacts = artifacts
+                subtask.completed_at = datetime.utcnow()
+                
+                # Update the subtask with reduced timeout
+                await asyncio.wait_for(
+                    self.state.update_subtask(subtask),
+                    timeout=5
+                )
+                
+                # Check if parent task can be progressed and get next recommended task
+                parent_progress, next_task = await asyncio.gather(
+                    self._check_parent_task_progress(task_id),
+                    self._get_next_recommended_task(task_id)
+                )
+                
+                return {
+                    "task_id": task_id,
+                    "status": "completed",
+                    "results_recorded": True,
+                    "parent_task_progress": parent_progress,
+                    "next_recommended_task": next_task,
+                    "artifact_integration": {
+                        "artifact_id": artifact_info.get("artifact_id"),
+                        "artifact_type": artifact_info.get("artifact_type"),
+                        "stored_successfully": True,
+                        "accessible_via": artifact_info.get("accessible_via")
+                    }
+                }
+                
+            except asyncio.TimeoutError as e:
+                logger.error(f"Timeout completing subtask with artifacts {task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5
+                else:
+                    return {
+                        "task_id": task_id,
+                        "status": "timeout",
+                        "error": f"Operation timed out after {max_retries} attempts: {str(e)}",
+                        "results_recorded": False,
+                        "parent_task_progress": {"progress": "unknown", "error": f"Timeout: {str(e)}"},
+                        "next_recommended_task": None,
+                        "artifact_integration": {
+                            "artifact_id": artifact_info.get("artifact_id"),
+                            "stored_successfully": True,
+                            "accessible_via": artifact_info.get("accessible_via"),
+                            "warning": "Task completion timed out but artifact was stored"
+                        }
+                    }
+                    
+            except Exception as e:
+                logger.error(f"Error completing subtask with artifacts {task_id} (attempt {attempt+1}/{max_retries}): {str(e)}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(retry_delay)
+                    retry_delay *= 1.5
+                else:
+                    return {
+                        "task_id": task_id,
+                        "status": "error",
+                        "error": str(e),
+                        "results_recorded": False,
+                        "parent_task_progress": {"progress": "unknown", "error": str(e)},
+                        "next_recommended_task": None,
+                        "artifact_integration": {
+                            "artifact_id": artifact_info.get("artifact_id"),
+                            "stored_successfully": True,
+                            "accessible_via": artifact_info.get("accessible_via"),
+                            "warning": "Task completion failed but artifact was stored"
+                        }
+                    }
+    
     async def complete_subtask(self, task_id: str, results: str, 
                              artifacts: List[str], next_action: str) -> Dict:
         """Mark a subtask as complete and record its results.

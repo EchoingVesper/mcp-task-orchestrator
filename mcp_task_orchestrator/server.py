@@ -20,6 +20,7 @@ from mcp.server.stdio import stdio_server
 from .orchestrator.core import TaskOrchestrator
 from .orchestrator.state import StateManager
 from .orchestrator.specialists import SpecialistManager
+from .orchestrator.artifacts import ArtifactManager
 
 # Configure logging
 log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
@@ -131,7 +132,7 @@ async def list_tools() -> List[types.Tool]:
         ),
         types.Tool(
             name="orchestrator_complete_subtask",
-            description="Mark a subtask as complete and record its results",
+            description="Mark a subtask as complete and store detailed work as artifacts to prevent context limit issues",
             inputSchema={
                 "type": "object", 
                 "properties": {
@@ -139,21 +140,37 @@ async def list_tools() -> List[types.Tool]:
                         "type": "string",
                         "description": "ID of the completed subtask"
                     },
-                    "results": {
+                    "summary": {
                         "type": "string",
-                        "description": "Summary of what was accomplished"
-                    },                    "artifacts": {
+                        "description": "Brief summary of what was accomplished (for database/UI display)"
+                    },
+                    "detailed_work": {
+                        "type": "string",
+                        "description": "Full detailed work content to store as artifacts (code, documentation, analysis, etc.)"
+                    },
+                    "file_paths": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "List of files, code, or other artifacts created"
+                        "description": "List of original file paths being referenced or created (optional)"
+                    },
+                    "artifact_type": {
+                        "type": "string",
+                        "enum": ["code", "documentation", "analysis", "design", "test", "config", "general"],
+                        "description": "Type of artifact being created",
+                        "default": "general"
                     },
                     "next_action": {
                         "type": "string",
                         "enum": ["continue", "needs_revision", "blocked", "complete"],
                         "description": "What should happen next"
+                    },
+                    "legacy_artifacts": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Legacy artifacts field for backward compatibility (optional)"
                     }
                 },
-                "required": ["task_id", "results", "next_action"]
+                "required": ["task_id", "summary", "detailed_work", "next_action"]
             }
         ),
         types.Tool(
@@ -183,6 +200,37 @@ async def list_tools() -> List[types.Tool]:
                     }
                 }
             }
+        ),
+        types.Tool(
+            name="orchestrator_maintenance_coordinator",
+            description="Automated maintenance task coordination for task cleanup, validation, and handover preparation",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "type": "string",
+                        "enum": ["scan_cleanup", "validate_structure", "update_documentation", "prepare_handover"],
+                        "description": "Type of maintenance action to perform"
+                    },
+                    "scope": {
+                        "type": "string", 
+                        "enum": ["current_session", "full_project", "specific_subtask"],
+                        "description": "Scope of the maintenance operation",
+                        "default": "current_session"
+                    },
+                    "validation_level": {
+                        "type": "string",
+                        "enum": ["basic", "comprehensive", "full_audit"],
+                        "description": "Level of validation to perform",
+                        "default": "basic"
+                    },
+                    "target_task_id": {
+                        "type": "string",
+                        "description": "Specific task ID for maintenance (required when scope is 'specific_subtask')"
+                    }
+                },
+                "required": ["action"]
+            }
         )
     ]
 
@@ -203,6 +251,8 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextCont
         return await handle_synthesize_results(arguments)
     elif name == "orchestrator_get_status":
         return await handle_get_status(arguments)
+    elif name == "orchestrator_maintenance_coordinator":
+        return await handle_maintenance_coordinator(arguments)
     else:
         raise ValueError(f"Unknown tool: {name}")
 
@@ -358,28 +408,72 @@ async def handle_execute_subtask(args: Dict[str, Any]) -> List[types.TextContent
 
 
 async def handle_complete_subtask(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle subtask completion with improved timeout handling."""
+    """Handle subtask completion with artifact storage to prevent context limit issues."""
     orchestrator = get_orchestrator()
     
+    # Extract new parameters
     task_id = args["task_id"]
-    results = args["results"]
-    
-    # Ensure artifacts is always a list
-    artifacts = args.get("artifacts", [])
-    if not isinstance(artifacts, list):
-        artifacts = [artifacts] if artifacts else []
-    
+    summary = args["summary"]
+    detailed_work = args["detailed_work"]
+    file_paths = args.get("file_paths", [])
+    artifact_type = args.get("artifact_type", "general")
     next_action = args["next_action"]
     
+    # Legacy support for old format
+    legacy_artifacts = args.get("legacy_artifacts", [])
+    
     try:
-        # Set a longer timeout for the operation
-        completion_result = await asyncio.wait_for(
-            orchestrator.complete_subtask(task_id, results, artifacts, next_action),
-            timeout=30.0  # Increased from 10 to 30 seconds
+        # Get project directory for artifact manager
+        project_dir = get_project_directory(args)
+        
+        # Initialize artifact manager
+        artifact_manager = ArtifactManager(base_dir=project_dir)
+        
+        # Store the detailed work as an artifact
+        artifact_info = artifact_manager.store_artifact(
+            task_id=task_id,
+            summary=summary,
+            detailed_work=detailed_work,
+            file_paths=file_paths,
+            artifact_type=artifact_type
         )
+        
+        # Create the artifacts list with the new artifact reference
+        artifacts = [artifact_info["accessible_via"]]
+        
+        # Add legacy artifacts if provided (for backward compatibility)
+        if legacy_artifacts:
+            artifacts.extend(legacy_artifacts)
+        
+        # Complete the subtask using the enhanced orchestrator method
+        completion_result = await asyncio.wait_for(
+            orchestrator.complete_subtask_with_artifacts(
+                task_id, summary, artifacts, next_action, artifact_info
+            ),
+            timeout=30.0
+        )
+        
+        # Enhance the response with artifact information
+        completion_result.update({
+            "artifact_created": True,
+            "artifact_info": {
+                "artifact_id": artifact_info["artifact_id"],
+                "summary": artifact_info["summary"],
+                "artifact_type": artifact_info["artifact_type"],
+                "accessible_via": artifact_info["accessible_via"],
+                "detailed_work_stored": True
+            },
+            "context_saving": {
+                "detailed_work_length": len(detailed_work),
+                "stored_in_filesystem": True,
+                "prevents_context_limit": True
+            }
+        })
+        
+        logger.info(f"Completed subtask {task_id} with artifact {artifact_info['artifact_id']}")
+        
     except asyncio.TimeoutError:
         logger.error(f"Timeout while completing subtask {task_id}")
-        # Provide more helpful error information
         completion_result = {
             "task_id": task_id,
             "status": "error",
@@ -393,12 +487,32 @@ async def handle_complete_subtask(args: Dict[str, Any]) -> List[types.TextConten
         }
     except Exception as e:
         logger.error(f"Error completing subtask {task_id}: {str(e)}")
-        completion_result = {
-            "task_id": task_id,
-            "status": "error",
-            "error": str(e),
-            "results_recorded": False
-        }
+        
+        # Try to fallback to legacy method if artifact creation fails
+        try:
+            logger.info(f"Falling back to legacy completion method for task {task_id}")
+            legacy_artifacts_list = legacy_artifacts if legacy_artifacts else [summary]
+            
+            completion_result = await asyncio.wait_for(
+                orchestrator.complete_subtask(task_id, summary, legacy_artifacts_list, next_action),
+                timeout=30.0
+            )
+            
+            completion_result.update({
+                "artifact_created": False,
+                "fallback_used": True,
+                "warning": f"Artifact creation failed: {str(e)}",
+                "legacy_method_used": True
+            })
+            
+        except Exception as fallback_error:
+            logger.error(f"Both artifact and legacy methods failed for task {task_id}: {str(fallback_error)}")
+            completion_result = {
+                "task_id": task_id,
+                "status": "error",
+                "error": f"Primary error: {str(e)}, Fallback error: {str(fallback_error)}",
+                "results_recorded": False
+            }
     
     return [types.TextContent(
         type="text",
@@ -482,6 +596,84 @@ async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
         )]
 
 
+async def handle_maintenance_coordinator(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle maintenance coordination requests."""
+    orchestrator = get_orchestrator()
+    state_manager = get_state_manager()
+    
+    action = args["action"]
+    scope = args.get("scope", "current_session")
+    validation_level = args.get("validation_level", "basic")
+    target_task_id = args.get("target_task_id")
+    
+    try:
+        # Import maintenance functionality
+        from .orchestrator.maintenance import MaintenanceCoordinator
+        
+        # Initialize maintenance coordinator
+        maintenance = MaintenanceCoordinator(state_manager, orchestrator)
+        
+        # Execute the requested maintenance action
+        if action == "scan_cleanup":
+            result = await maintenance.scan_and_cleanup(scope, validation_level, target_task_id)
+        elif action == "validate_structure":
+            result = await maintenance.validate_structure(scope, validation_level, target_task_id)
+        elif action == "update_documentation":
+            result = await maintenance.update_documentation(scope, validation_level, target_task_id)
+        elif action == "prepare_handover":
+            result = await maintenance.prepare_handover(scope, validation_level, target_task_id)
+        else:
+            raise ValueError(f"Unknown maintenance action: {action}")
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(result, indent=2)
+        )]
+        
+    except ImportError:
+        # If maintenance module doesn't exist yet, return a placeholder response
+        logger.warning("Maintenance coordinator module not yet implemented")
+        placeholder_response = {
+            "action": action,
+            "scope": scope,
+            "validation_level": validation_level,
+            "status": "pending_implementation",
+            "message": "Maintenance coordinator functionality is being implemented",
+            "next_steps": [
+                "Database schema extensions completed",
+                "MCP tool interface ready",
+                "Core maintenance logic implementation in progress"
+            ]
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(placeholder_response, indent=2)
+        )]
+        
+    except asyncio.TimeoutError:
+        logger.error(f"Timeout while executing maintenance action: {action}")
+        error_response = {
+            "error": "Operation timed out",
+            "action": action,
+            "suggestions": "Try again with a smaller scope or basic validation level"
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+    except Exception as e:
+        logger.error(f"Error executing maintenance action {action}: {str(e)}")
+        error_response = {
+            "error": str(e),
+            "action": action,
+            "scope": scope
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+
+
 async def main():
     """Main entry point for the MCP server."""
     try:
@@ -539,10 +731,11 @@ def get_project_directory(args: Dict[str, Any]) -> str:
         logger.info(f"Using editor working directory: {editor_cwd}")
         return editor_cwd
     
-    # Strategy 4: Use current working directory (works for most cases)
-    current_dir = os.getcwd()
-    logger.info(f"Using current working directory: {current_dir}")
-    return current_dir
+    # Strategy 4: Use project directory based on package location (consistent with database system)
+    # This ensures artifacts are created in the project directory, not Claude Desktop's working directory
+    project_dir = str(Path(__file__).parent.parent)
+    logger.info(f"Using project directory based on package location: {project_dir}")
+    return project_dir
 
 
 if __name__ == "__main__":

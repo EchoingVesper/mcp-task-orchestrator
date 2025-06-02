@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "task-orchestrator": {
-      "command": "/mnt/e/My Work/Programming/MCP Servers/mcp-task-orchestrator/venv_mcp/bin/python",
+      "command": "/mnt/e/My Work/Programming/MCP Servers/mcp-task-orchestrator/venv_mcp/Scripts/python.exe",
       "args": [
         "-m",
         "mcp_task_orchestrator.server"

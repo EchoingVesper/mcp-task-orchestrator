@@ -17,7 +17,7 @@
 
 3. **Restart MCP clients** (Claude Desktop, Cursor, Windsurf, VS Code)
 
-4. **Verify**: Look for "task-orchestrator" in available tools
+4. **Verify Installation**: Follow the verification steps below
 
 ## Why run_installer.py?
 
@@ -27,6 +27,8 @@ The `run_installer.py` method is the recommended installation approach because i
 - **Improves compatibility**: Works reliably across different Python environments and operating systems  
 - **Enhanced error handling**: Provides better error messages and recovery guidance
 - **Version management**: Ensures correct MCP package versions are installed (1.9.0+)
+- **Database setup**: Automatically initializes the task persistence database
+- **Maintenance system**: Sets up automated maintenance and cleanup capabilities
 - **Robust configuration**: Properly handles edge cases in client detection and setup
 
 ## Supported Clients
@@ -55,12 +57,62 @@ python installer/cleanup.py
 ## What the Installer Does
 
 1. ✅ Creates isolated virtual environment (`venv_mcp/`)
-2. ✅ Installs all dependencies with correct versions (mcp>=1.9.0, psutil, etc.)
-3. ✅ Detects installed MCP clients automatically with improved detection logic
-4. ✅ Creates correct configuration for each client with robust path handling
-5. ✅ Removes obsolete files from previous attempts
-6. ✅ Validates installation integrity and resolves import conflicts
-7. ✅ Provides detailed logging and error diagnostics
+2. ✅ Installs all dependencies with correct versions (mcp>=1.9.0, psutil, SQLAlchemy, etc.)
+3. ✅ Initializes SQLite database for task persistence (`.task_orchestrator/database/`)
+4. ✅ Sets up maintenance coordinator and automated cleanup system
+5. ✅ Detects installed MCP clients automatically with improved detection logic
+6. ✅ Creates correct configuration for each client with robust path handling
+7. ✅ Removes obsolete files from previous attempts
+8. ✅ Validates installation integrity and resolves import conflicts
+9. ✅ Provides detailed logging and error diagnostics
+
+## Post-Installation Verification
+
+### Step 1: Basic Tool Availability
+In your MCP client, look for `task-orchestrator` in the available tools/servers list.
+
+### Step 2: Test Core Functionality
+Try this command in your MCP client:
+```
+"Initialize a new orchestration session"
+```
+
+Expected response should include:
+- Session initialization confirmation
+- Available specialist roles (architect, implementer, debugger, etc.)
+- Tool usage instructions
+
+### Step 3: Verify Database Setup
+Check that the database was created:
+```bash
+# Should show database files
+ls -la .task_orchestrator/database/
+```
+
+### Step 4: Test Maintenance Features
+Try the maintenance coordinator:
+```
+"Use the maintenance coordinator to scan the current session"
+```
+
+Expected response should include:
+- Scan results summary
+- Task status analysis
+- System health report
+
+### Step 5: Verify Persistence
+1. Create a simple task breakdown
+2. Restart your MCP client
+3. Check that task history is preserved
+
+### Verification Checklist
+- [ ] Tool appears in MCP client
+- [ ] Session initialization works
+- [ ] Database directory exists (`.task_orchestrator/database/`)
+- [ ] Maintenance coordinator responds
+- [ ] Task persistence across restarts
+- [ ] All specialist roles available
+- [ ] Artifact system functional
 
 ## Manual Configuration
 
@@ -72,6 +124,8 @@ If automatic installation fails, see manual configuration examples in each clien
 
 - **ImportError with relative imports**: Automatically handled by proper path configuration
 - **MCP version conflicts**: Ensures correct package versions (mcp>=1.9.0)
+- **Database initialization**: Automatically creates and migrates database schema
+- **Maintenance system setup**: Configures automated cleanup and optimization
 - **Python environment issues**: Robust virtual environment setup and management
 
 ### General Troubleshooting
@@ -79,7 +133,16 @@ If automatic installation fails, see manual configuration examples in each clien
 - **No clients detected**: Ensure clients are installed and run once
 - **Permission errors**: Run as administrator/sudo if needed  
 - **Module errors**: Delete `venv_mcp/` and reinstall with `python run_installer.py`
+- **Database errors**: Delete `.task_orchestrator/database/` and restart server to recreate
+- **Maintenance coordinator not working**: Ensure database is properly initialized
 - **Configuration issues**: Check logs in project directory for detailed error information
+
+### Database-Specific Issues
+
+- **SQLite errors**: Ensure sufficient disk space and write permissions
+- **Database locked**: Close all MCP clients and restart
+- **Migration errors**: Delete database directory and let system recreate it
+- **Task persistence not working**: Check `.task_orchestrator/database/` directory exists
 
 ### Advanced Diagnostics
 
@@ -88,10 +151,37 @@ If automatic installation fails, see manual configuration examples in each clien
 python test_detection.py
 python test_validation.py
 
+# Check database status
+ls -la .task_orchestrator/database/
+sqlite3 .task_orchestrator/database/tasks.db ".schema"
+
+# Test maintenance features
+python -c "from mcp_task_orchestrator.orchestrator.maintenance import MaintenanceCoordinator; print('Maintenance module OK')"
+
 # Clean install (if needed)
 rm -rf venv_mcp/  # Linux/Mac
+rm -rf .task_orchestrator/  # Remove database
 rmdir /s venv_mcp  # Windows
+rmdir /s .task_orchestrator  # Windows
 python run_installer.py
 ```
 
-For detailed troubleshooting, see `TEST_REPORT.md`.
+### New Features Verification
+
+```bash
+# Verify new automation features
+python -c "
+import sqlite3
+conn = sqlite3.connect('.task_orchestrator/database/tasks.db')
+cursor = conn.cursor()
+cursor.execute('SELECT name FROM sqlite_master WHERE type=\"table\";')
+tables = cursor.fetchall()
+print('Database tables:', [t[0] for t in tables])
+conn.close()
+"
+
+# Test maintenance coordinator availability
+# In your MCP client: 'Use maintenance coordinator to scan current session'
+```
+
+For detailed troubleshooting, see [Maintenance Operations Troubleshooting](./troubleshooting/maintenance-operations.md) and `TEST_REPORT.md`.

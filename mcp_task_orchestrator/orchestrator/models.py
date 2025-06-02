@@ -15,6 +15,7 @@ class TaskStatus(str, Enum):
     COMPLETED = "completed"
     BLOCKED = "blocked"
     FAILED = "failed"
+    ARCHIVED = "archived"
 
 
 class SpecialistType(str, Enum):

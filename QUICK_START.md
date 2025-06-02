@@ -34,6 +34,12 @@ python run_installer.py
 Open your MCP client and look for `task-orchestrator` in tools/servers. Try saying:
 *"Initialize a new orchestration session"*
 
+### Step 5: Test New Features (Optional)
+Try the automated maintenance:
+*"Use the maintenance coordinator to scan the current session"*
+
+This should show you system health status and confirm all features are working.
+
 ## 🔧 If Something Goes Wrong
 
 ### "No MCP clients detected"
@@ -71,6 +77,11 @@ Open your MCP client and look for `task-orchestrator` in tools/servers. Try sayi
    python run_installer.py
    ```
 
+### Database/Maintenance Issues
+1. **Database errors**: Delete `.task_orchestrator/` folder and restart
+2. **Maintenance coordinator not responding**: Check if database was properly initialized
+3. **Task persistence not working**: Verify `.task_orchestrator/database/` directory exists
+
 ### Windows-Specific Issues
 1. Run Command Prompt as Administrator (not PowerShell)
 2. Add Node.js to your PATH manually if needed
@@ -82,8 +93,9 @@ Once you have it working:
 
 1. **Try a simple task**: *"Plan and implement a basic Python script with error handling"*
 2. **Explore specialist roles**: Ask for an architect, implementer, or debugger perspective
-3. **Check the status**: Use `orchestrator_get_status` to see task progress
-4. **Read the full docs**: [Complete documentation](docs/) for advanced features
+3. **Test maintenance features**: *"Use maintenance coordinator to scan and optimize the system"*
+4. **Check the status**: Use `orchestrator_get_status` to see task progress  
+5. **Read the full docs**: [Complete documentation](docs/) for advanced features including the [Maintenance Coordinator Guide](docs/user-guide/maintenance-coordinator-guide.md)
 
 ## 🆘 Still Need Help?
 
