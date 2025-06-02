@@ -60,6 +60,8 @@ data/backups/*.bak*
 # Local configuration
 .local/
 local_settings.py
+.claude/
+.tools/
 
 # Jupyter Notebook
 .ipynb_checkpoints
