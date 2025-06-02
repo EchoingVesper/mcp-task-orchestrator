@@ -52,9 +52,11 @@ Each step provides specialist context and expertise rather than generic response
 
 - **LLM-powered task decomposition**: Automatically breaks complex projects into logical subtasks
 - **Specialist AI roles**: Architect, Implementer, Debugger, Documenter with domain-specific expertise
+- **Automated maintenance**: Built-in cleanup, optimization, and health monitoring
+- **Task persistence**: SQLite database with automatic recovery and archival
+- **Artifact management**: Prevents context limits with intelligent file storage
 - **Customizable roles**: Edit `.task_orchestrator/roles/project_roles.yaml` to adapt roles for your project
 - **Universal MCP compatibility**: Works across Claude Desktop, Cursor, Windsurf, VS Code + Cline
-- **Task persistence**: Recovers interrupted workflows automatically
 - **Single-session completion**: Finish complex projects in one conversation
 
 ## Quick Start
@@ -94,9 +96,24 @@ The orchestrator uses a five-step process:
 | `orchestrator_initialize_session` | Start new workflow |
 | `orchestrator_plan_task` | Create task breakdown |
 | `orchestrator_execute_subtask` | Execute with specialist context |
-| `orchestrator_complete_subtask` | Mark tasks complete |
+| `orchestrator_complete_subtask` | Mark tasks complete with artifacts |
 | `orchestrator_synthesize_results` | Combine results |
 | `orchestrator_get_status` | Check progress |
+| `orchestrator_maintenance_coordinator` | **NEW**: Automated cleanup and optimization |
+
+### Maintenance & Automation Features
+
+The orchestrator includes intelligent maintenance capabilities:
+
+- **Automatic Cleanup**: Detects and archives stale tasks (>24 hours)
+- **Performance Optimization**: Prevents database bloat and maintains responsiveness  
+- **Structure Validation**: Ensures task hierarchies remain consistent
+- **Handover Preparation**: Streamlines context transitions and project handoffs
+- **Health Monitoring**: Provides system status and optimization recommendations
+
+**Quick maintenance**: `"Use the maintenance coordinator to scan and cleanup the current session"`
+
+For detailed guidance, see the [Maintenance Coordinator Guide](docs/user-guide/maintenance-coordinator-guide.md).
 
 ## Supported Environments
 

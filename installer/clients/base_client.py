@@ -12,6 +12,7 @@ class MCPClient(ABC):
     def __init__(self, project_root: Path):
         self.project_root = project_root
         self.venv_python = self._find_venv_python()
+        self.platform_system = platform.system()
         
         # Use universal launcher if available
         launcher_py = project_root / "launch_orchestrator.py"
@@ -24,11 +25,13 @@ class MCPClient(ABC):
                 "cwd": str(project_root)
             }
         elif self.venv_python:
-            # Fallback to direct venv Python
+            # For Claude Code on WSL/Linux, we need to use the absolute path
+            # without trying to execute it as a single command string
             self.server_config = {
                 "command": str(self.venv_python),
                 "args": ["-m", "mcp_task_orchestrator.server"],
-                "cwd": str(project_root)
+                "cwd": str(project_root),
+                "env": {}
             }
         else:
             # Last resort - use system Python with module
@@ -36,7 +39,8 @@ class MCPClient(ABC):
             self.server_config = {
                 "command": python_cmd,
                 "args": ["-m", "mcp_task_orchestrator.server"],
-                "cwd": str(project_root)
+                "cwd": str(project_root),
+                "env": {}
             }
     
     def _find_venv_python(self) -> Path:

@@ -1,0 +1,222 @@
+{
+  "analysis_timestamp": "2025-06-01T19:41:13.449696",
+  "summary": {
+    "total_tasks_analyzed": 29,
+    "stale_tasks_found": 10,
+    "priority_stale_tasks": 3,
+    "stale_by_status": {
+      "pending": 5,
+      "active": 5
+    },
+    "stale_by_specialist": {
+      "debugger": 3,
+      "reviewer": 3,
+      "documenter": 1,
+      "tester": 2,
+      "researcher": 1
+    },
+    "specialist_thresholds": {
+      "researcher": 24,
+      "architect": 48,
+      "implementer": 72,
+      "documenter": 36,
+      "tester": 24,
+      "reviewer": 12,
+      "debugger": 6,
+      "default": 48
+    }
+  },
+  "stale_tasks": [
+    {
+      "task_id": "debugger_cf0ecc",
+      "title": "Analyze Database Operations and Persistence Issues",
+      "status": "pending",
+      "specialist_type": "debugger",
+      "created_at": "2025-06-01T09:27:12.806497",
+      "age_hours": 10.233511999722221,
+      "threshold_hours": 6,
+      "stale_reasons": [
+        "pending for 10.2 hours (>6h threshold)"
+      ],
+      "is_priority": true
+    },
+    {
+      "task_id": "debugger_ebb70f",
+      "title": "Trace Artifact Creation Process and Identify Failure Points",
+      "status": "pending",
+      "specialist_type": "debugger",
+      "created_at": "2025-06-01T09:27:12.806488",
+      "age_hours": 10.233512002222223,
+      "threshold_hours": 6,
+      "stale_reasons": [
+        "pending for 10.2 hours (>6h threshold)"
+      ],
+      "is_priority": true
+    },
+    {
+      "task_id": "reviewer_1d0d7d",
+      "title": "Visual Assets and Documentation Quality Review",
+      "status": "active",
+      "specialist_type": "reviewer",
+      "created_at": "2025-06-01T05:49:22.539038",
+      "age_hours": 13.864141849444445,
+      "threshold_hours": 12,
+      "stale_reasons": [
+        "active for 13.9 hours (>12h threshold)"
+      ],
+      "is_priority": false
+    },
+    {
+      "task_id": "debugger_7694e7",
+      "title": "Critical Debugging Task - Orchestrator Issue Resolution",
+      "status": "pending",
+      "specialist_type": "debugger",
+      "created_at": "2025-06-01T05:49:22.538986",
+      "age_hours": 13.864141863888888,
+      "threshold_hours": 6,
+      "stale_reasons": [
+        "pending for 13.9 hours (>6h threshold)"
+      ],
+      "is_priority": true
+    },
+    {
+      "task_id": "reviewer_398e44",
+      "title": "Documentation Quality Review and Testing",
+      "status": "active",
+      "specialist_type": "reviewer",
+      "created_at": "2025-05-30T09:07:58.557559",
+      "age_hours": 58.55413670472222,
+      "threshold_hours": 12,
+      "stale_reasons": [
+        "active for 58.6 hours (>12h threshold)"
+      ],
+      "is_priority": false
+    },
+    {
+      "task_id": "documenter_ffbc88",
+      "title": "LLM-Optimized Reference Documentation",
+      "status": "active",
+      "specialist_type": "documenter",
+      "created_at": "2025-05-30T09:07:58.557541",
+      "age_hours": 58.55413670972222,
+      "threshold_hours": 36,
+      "stale_reasons": [
+        "active for 58.6 hours (>36h threshold)"
+      ],
+      "is_priority": false
+    },
+    {
+      "task_id": "reviewer_74f538",
+      "title": "Analyze Test Results",
+      "status": "active",
+      "specialist_type": "reviewer",
+      "created_at": "2025-05-30T06:26:03.273508",
+      "age_hours": 61.25282671888889,
+      "threshold_hours": 12,
+      "stale_reasons": [
+        "active for 61.3 hours (>12h threshold)"
+      ],
+      "is_priority": false
+    },
+    {
+      "task_id": "tester_0519bf",
+      "title": "Run All Tests",
+      "status": "pending",
+      "specialist_type": "tester",
+      "created_at": "2025-05-30T06:26:03.273502",
+      "age_hours": 61.252826720555554,
+      "threshold_hours": 24,
+      "stale_reasons": [
+        "pending for 61.3 hours (>24h threshold)"
+      ],
+      "is_priority": false
+    },
+    {
+      "task_id": "tester_aa7599",
+      "title": "Run Migration Test",
+      "status": "pending",
+      "specialist_type": "tester",
+      "created_at": "2025-05-30T06:26:03.273494",
+      "age_hours": 61.252826722777776,
+      "threshold_hours": 24,
+      "stale_reasons": [
+        "pending for 61.3 hours (>24h threshold)"
+      ],
+      "is_priority": false
+    },
+    {
+      "task_id": "researcher_f77035",
+      "title": "Examine Migration Test Structure",
+      "status": "active",
+      "specialist_type": "researcher",
+      "created_at": "2025-05-30T06:26:03.273486",
+      "age_hours": 61.252826725,
+      "threshold_hours": 24,
+      "stale_reasons": [
+        "active for 61.3 hours (>24h threshold)"
+      ],
+      "is_priority": false
+    }
+  ],
+  "priority_stale_tasks": [
+    {
+      "task_id": "debugger_cf0ecc",
+      "title": "Analyze Database Operations and Persistence Issues",
+      "status": "pending",
+      "specialist_type": "debugger",
+      "created_at": "2025-06-01T09:27:12.806497",
+      "age_hours": 10.233511999722221,
+      "threshold_hours": 6,
+      "stale_reasons": [
+        "pending for 10.2 hours (>6h threshold)"
+      ],
+      "is_priority": true
+    },
+    {
+      "task_id": "debugger_ebb70f",
+      "title": "Trace Artifact Creation Process and Identify Failure Points",
+      "status": "pending",
+      "specialist_type": "debugger",
+      "created_at": "2025-06-01T09:27:12.806488",
+      "age_hours": 10.233512002222223,
+      "threshold_hours": 6,
+      "stale_reasons": [
+        "pending for 10.2 hours (>6h threshold)"
+      ],
+      "is_priority": true
+    },
+    {
+      "task_id": "debugger_7694e7",
+      "title": "Critical Debugging Task - Orchestrator Issue Resolution",
+      "status": "pending",
+      "specialist_type": "debugger",
+      "created_at": "2025-06-01T05:49:22.538986",
+      "age_hours": 13.864141863888888,
+      "threshold_hours": 6,
+      "stale_reasons": [
+        "pending for 13.9 hours (>6h threshold)"
+      ],
+      "is_priority": true
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "CRITICAL",
+      "action": "Immediately address 3 stale debugger tasks",
+      "task_ids": [
+        "debugger_cf0ecc",
+        "debugger_ebb70f",
+        "debugger_7694e7"
+      ]
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Complete 3 stale reviewer tasks",
+      "task_ids": [
+        "reviewer_1d0d7d",
+        "reviewer_398e44",
+        "reviewer_74f538"
+      ]
+    }
+  ]
+}

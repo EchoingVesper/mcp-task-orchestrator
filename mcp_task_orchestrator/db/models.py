@@ -47,10 +47,10 @@ class SubTaskModel(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     completed_at = Column(DateTime)
     
-    # TODO: Add these columns back after fixing server startup issues  
-    # prerequisite_satisfaction_required = Column(Boolean, default=False)
-    # auto_maintenance_enabled = Column(Boolean, default=True)
-    # quality_gate_level = Column(String, default='standard')  # basic, standard, comprehensive
+    # Automation maintenance columns
+    prerequisite_satisfaction_required = Column(Boolean, default=False)
+    auto_maintenance_enabled = Column(Boolean, default=True)
+    quality_gate_level = Column(String, default='standard')  # basic, standard, comprehensive
     
     # Relationship to parent task (many-to-one)
     parent_task = relationship("TaskBreakdownModel", back_populates="subtasks")
@@ -223,3 +223,49 @@ class ProjectHealthMetricModel(Base):
     is_passing = Column(Boolean, nullable=False)
     details = Column(Text)
     measured_at = Column(DateTime, nullable=False, default=datetime.now)
+
+
+class TaskArchiveModel(Base):
+    """SQLAlchemy model for archived tasks."""
+    
+    __tablename__ = 'task_archives'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    original_task_id = Column(String, nullable=False)
+    parent_task_id = Column(String, nullable=False)
+    archive_reason = Column(String, nullable=False)  # stale, orphaned, completed, failed, etc.
+    archived_data = Column(JSON, nullable=False)  # Complete task data as JSON
+    artifacts_preserved = Column(Boolean, default=False)
+    artifact_references = Column(JSON, default=list)
+    expires_at = Column(DateTime, nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+
+
+class StaleTaskTrackingModel(Base):
+    """SQLAlchemy model for tracking stale tasks."""
+    
+    __tablename__ = 'stale_task_tracking'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    task_id = Column(String, nullable=False, unique=True)
+    last_activity_at = Column(DateTime, nullable=False)
+    stale_indicators = Column(JSON, default=list)  # List of reasons why task is stale
+    auto_cleanup_eligible = Column(Boolean, default=False)
+    detection_metadata = Column(JSON, default=dict)
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)
+
+
+class TaskLifecycleModel(Base):
+    """SQLAlchemy model for tracking task lifecycle transitions."""
+    
+    __tablename__ = 'task_lifecycle'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    task_id = Column(String, nullable=False)
+    lifecycle_stage = Column(String, nullable=False)  # created, active, completed, stale, archived, failed
+    previous_stage = Column(String)
+    transition_reason = Column(Text)
+    automated_transition = Column(Boolean, default=False)
+    transition_metadata = Column(JSON, default=dict)
+    created_at = Column(DateTime, nullable=False, default=datetime.now)

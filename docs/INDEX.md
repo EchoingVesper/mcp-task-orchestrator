@@ -38,6 +38,7 @@ user-guide/
 ├── 📋 getting-started.md          # 15-minute setup + first workflow
 ├── 🔧 quick-reference.md          # Essential commands reference  
 ├── 📊 core-concepts.md            # Fundamental concepts
+├── 🛠️  maintenance-coordinator-guide.md # Automated maintenance system
 ├── integration-guides/            # Detailed integration patterns
 │   ├── claude-code-mcp.md         # Primary integration guide
 │   ├── mcp-aggregators.md         # Proxy patterns
@@ -63,6 +64,7 @@ Character-optimized references (1200-2000 chars) for MCP tool integration.
 llm-agents/
 ├── quick-reference/               # Fast command lookup
 │   ├── core-commands.md           # Essential orchestrator commands
+│   ├── maintenance-coordinator.md # Automated maintenance reference
 │   ├── integration-cheatsheet.md  # Quick pattern reference
 │   ├── troubleshooting-guide.md   # Common issue solutions
 │   └── specialist-contexts.md     # Role-specific guidance
@@ -104,6 +106,7 @@ docs/
 │   └── version-progression-plan.md     # Version roadmap & timeline
 ├── testing/                      # Test frameworks & strategies
 ├── troubleshooting/              # System-level troubleshooting
+│   └── maintenance-operations.md # Maintenance troubleshooting
 └── development/                  # Development resources
 ```
 
@@ -127,6 +130,9 @@ docs/
 ### "I want to understand future development"
 → [Version Progression Plan](./planning/version-progression-plan.md) → [Development Cycle Planning](./planning/development-cycle-planning.md) → [Testing Strategy](./planning/testing-strategy.md)
 
+### "I need to optimize or maintain my system"
+→ [Maintenance Coordinator Guide](./user-guide/maintenance-coordinator-guide.md) → [LLM Quick Reference](./llm-agents/quick-reference/maintenance-coordinator.md) → [Maintenance Troubleshooting](./troubleshooting/maintenance-operations.md)
+
 ### "Something isn't working"
 → [Troubleshooting Tree](./user-guide/visual-guides/troubleshooting-tree.md) → [LLM Troubleshooting](./llm-agents/troubleshooting/) → [System Troubleshooting](./troubleshooting/)
 
@@ -146,6 +152,11 @@ docs/
 - **A2A Framework**: [Integration Design](./architecture/a2a-framework-integration.md) | [Feature Specifications](./planning/feature-specifications.md) | [Development Planning](./planning/development-cycle-planning.md)
 - **Database Enhancements**: [Schema Design](./architecture/database-schema-enhancements.md) | [Version Planning](./planning/version-progression-plan.md) | [Testing Strategy](./planning/testing-strategy.md)
 - **Nested Task Architecture**: [Design Document](./architecture/nested-task-architecture.md) | [Feature Requirements](./planning/feature-specifications.md#nested-task-management)
+
+### Maintenance & Optimization
+- **Maintenance Coordinator**: [User Guide](./user-guide/maintenance-coordinator-guide.md) | [LLM Reference](./llm-agents/quick-reference/maintenance-coordinator.md) | [Troubleshooting](./troubleshooting/maintenance-operations.md)
+- **Performance Optimization**: [Maintenance Guide](./user-guide/maintenance-coordinator-guide.md#performance-optimization) | [Best Practices](./user-guide/maintenance-coordinator-guide.md#best-practices)
+- **System Health**: [Diagnostic Procedures](./troubleshooting/maintenance-operations.md#diagnostic-procedures) | [Monitoring Guidelines](./troubleshooting/maintenance-operations.md#prevention-strategies)
 
 ## 📚 Documentation Maintenance
 

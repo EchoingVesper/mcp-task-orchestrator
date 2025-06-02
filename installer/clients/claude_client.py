@@ -21,7 +21,12 @@ class ClaudeDesktopClient(MCPClient):
         return "claude-desktop"
     
     def detect_installation(self) -> bool:
-        """Detect Claude Desktop installation."""
+        """Detect Claude Desktop/Code installation."""
+        # Check for Claude Code config file
+        config_path = Path.home() / ".claude.json"
+        if config_path.exists():
+            return True
+            
         # Check for running process
         for process in psutil.process_iter(['name']):
             try:
@@ -30,7 +35,7 @@ class ClaudeDesktopClient(MCPClient):
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
         
-        # Check for config directory
+        # Check for config directory (legacy)
         config_dir = self._get_config_dir()
         return config_dir.exists()
     
@@ -45,8 +50,9 @@ class ClaudeDesktopClient(MCPClient):
             return Path.home() / ".config" / "Claude"
     
     def get_config_path(self) -> Path:
-        """Get Claude Desktop config file path."""
-        return self._get_config_dir() / "claude_desktop_config.json"
+        """Get Claude Desktop/Code config file path."""
+        # Claude Code uses ~/.claude.json
+        return Path.home() / ".claude.json"
 
     def create_configuration(self) -> bool:
         """Create Claude Desktop configuration."""
@@ -64,12 +70,27 @@ class ClaudeDesktopClient(MCPClient):
             except json.JSONDecodeError:
                 config = {}
         
-        # Ensure mcpServers exists
-        if "mcpServers" not in config:
-            config["mcpServers"] = {}
+        # Claude Code specific config structure
+        if "experimental" not in config:
+            config["experimental"] = {}
+        if "codebaseContext" not in config["experimental"]:
+            config["experimental"]["codebaseContext"] = {
+                "enabled": True,
+                "includeDocumentation": True,
+                "includeTests": True
+            }
+        if "mcpServers" not in config["experimental"]:
+            config["experimental"]["mcpServers"] = {}
         
-        # Add our server configuration
-        config["mcpServers"]["task-orchestrator"] = self.server_config
+        # Add our server configuration with proper structure
+        server_config = {
+            "type": "stdio",
+            "command": self.server_config["command"],
+            "args": self.server_config.get("args", []),
+            "env": self.server_config.get("env", {})
+        }
+        
+        config["experimental"]["mcpServers"]["task-orchestrator"] = server_config
         
         # Write configuration
         try:
