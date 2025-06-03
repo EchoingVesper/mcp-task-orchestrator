@@ -1,0 +1,20 @@
+{
+  "cleanup_timestamp": "2025-06-01T19:38:42.351324",
+  "dry_run": true,
+  "summary": {
+    "total_stale_tasks": 0,
+    "archived_tasks": 0,
+    "specialist_thresholds": {
+      "researcher": 24,
+      "architect": 48,
+      "implementer": 72,
+      "documenter": 36,
+      "tester": 24,
+      "reviewer": 12,
+      "debugger": 6,
+      "default": 48
+    }
+  },
+  "stale_tasks": [],
+  "archived_task_ids": []
+}
