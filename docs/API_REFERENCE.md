@@ -8,12 +8,19 @@ The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, 
 
 ## Tool Categories
 
-### Workflow Management
+### Legacy Workflow Management (v1.x)
 - [`orchestrator_initialize_session`](#orchestrator_initialize_session) - Start orchestration workflow
 - [`orchestrator_plan_task`](#orchestrator_plan_task) - Create structured task breakdown
 - [`orchestrator_execute_subtask`](#orchestrator_execute_subtask) - Get specialist context
 - [`orchestrator_complete_subtask`](#orchestrator_complete_subtask) - Complete tasks with artifacts
 - [`orchestrator_synthesize_results`](#orchestrator_synthesize_results) - Combine results
+
+### Generic Task API (v2.0+) 🚀
+- [`orchestrator_create_generic_task`](#orchestrator_create_generic_task) - Create flexible tasks
+- [`orchestrator_create_from_template`](#orchestrator_create_from_template) - Instantiate task templates
+- [`orchestrator_manage_dependencies`](#orchestrator_manage_dependencies) - Configure task dependencies
+- [`orchestrator_manage_lifecycle`](#orchestrator_manage_lifecycle) - Control task lifecycle stages
+- [`orchestrator_query_tasks`](#orchestrator_query_tasks) - Query tasks with flexible filters
 
 ### Status & Maintenance  
 - [`orchestrator_get_status`](#orchestrator_get_status) - Check workflow progress
@@ -520,6 +527,299 @@ Prepares comprehensive handover documentation.
 
 // Health check
 {"tool": "orchestrator_maintenance_coordinator", "arguments": {"action": "validate_structure", "scope": "full_project"}}
+```
+
+## Generic Task API (v2.0+)
+
+The new Generic Task API provides unified task management with templates, dependencies, and flexible attributes.
+
+### orchestrator_create_generic_task
+
+**Purpose**: Create a new generic task with flexible attributes and optional template instantiation.
+
+```json
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "feature_epic",
+    "parent_task_id": "task_123",
+    "template_id": "feature_development_v1",
+    "attributes": {
+      "title": "Implement user authentication",
+      "priority": "high",
+      "estimated_effort": "3 weeks",
+      "assigned_team": "backend"
+    }
+  }
+}
+```
+
+**Parameters**:
+- `task_type` (string, required): Type of task being created
+- `parent_task_id` (string, optional): Parent task for hierarchical structure
+- `template_id` (string, optional): Template to instantiate from
+- `attributes` (object, optional): Flexible attributes specific to task type
+
+**Returns**:
+```json
+{
+  "task_created": true,
+  "task_id": "task_456",
+  "task_type": "feature_epic",
+  "parent_task_id": "task_123",
+  "template_id": "feature_development_v1",
+  "attributes": {
+    "title": "Implement user authentication",
+    "priority": "high",
+    "estimated_effort": "3 weeks",
+    "assigned_team": "backend"
+  },
+  "created_at": "2025-06-03T10:30:00Z",
+  "status": "pending",
+  "lifecycle_stage": "draft"
+}
+```
+
+### orchestrator_create_from_template
+
+**Purpose**: Instantiate a task hierarchy from a predefined template with parameters.
+
+```json
+{
+  "tool": "orchestrator_create_from_template",
+  "arguments": {
+    "template_id": "feature_development_v1",
+    "parameters": {
+      "feature_name": "user_authentication",
+      "complexity": "complex",
+      "team": "backend",
+      "deadline": "2025-07-01"
+    },
+    "parent_task_id": "epic_123"
+  }
+}
+```
+
+**Parameters**:
+- `template_id` (string, required): ID of the template to instantiate
+- `parameters` (object, required): Template parameters for customization
+- `parent_task_id` (string, optional): Parent task for the instantiated hierarchy
+
+**Returns**:
+```json
+{
+  "template_instantiated": true,
+  "root_task_id": "task_789",
+  "template_id": "feature_development_v1",
+  "tasks_created": [
+    {
+      "task_id": "task_789",
+      "task_type": "feature_epic",
+      "title": "Implement user_authentication feature"
+    },
+    {
+      "task_id": "architect_790",
+      "task_type": "specialist_task",
+      "title": "Design user_authentication architecture",
+      "specialist_type": "architect",
+      "parent_task_id": "task_789"
+    },
+    {
+      "task_id": "implementer_791",
+      "task_type": "specialist_task", 
+      "title": "Implement user_authentication",
+      "specialist_type": "implementer",
+      "parent_task_id": "task_789",
+      "dependencies": ["architect_790"]
+    }
+  ],
+  "parameters_applied": {
+    "feature_name": "user_authentication",
+    "complexity": "complex",
+    "team": "backend",
+    "deadline": "2025-07-01"
+  }
+}
+```
+
+### orchestrator_manage_dependencies
+
+**Purpose**: Add, update, or remove dependencies between tasks.
+
+```json
+{
+  "tool": "orchestrator_manage_dependencies",
+  "arguments": {
+    "task_id": "implementer_791",
+    "dependencies": [
+      {
+        "dependency_task_id": "architect_790",
+        "dependency_type": "completion",
+        "description": "Architecture must be complete before implementation"
+      },
+      {
+        "dependency_task_id": "approval_792",
+        "dependency_type": "approval",
+        "description": "Security review approval required"
+      }
+    ],
+    "operation": "add"
+  }
+}
+```
+
+**Parameters**:
+- `task_id` (string, required): Task to modify dependencies for
+- `dependencies` (array, required): List of dependency specifications
+  - `dependency_task_id` (string): Task this depends on
+  - `dependency_type` (string): Type of dependency ("completion", "data", "approval")
+  - `description` (string, optional): Human-readable dependency description
+- `operation` (string, optional): Operation to perform ("add", "remove", "replace")
+
+**Returns**:
+```json
+{
+  "dependencies_updated": true,
+  "task_id": "implementer_791",
+  "operation": "add",
+  "dependencies": [
+    {
+      "dependency_task_id": "architect_790",
+      "dependency_type": "completion",
+      "description": "Architecture must be complete before implementation",
+      "status": "pending"
+    },
+    {
+      "dependency_task_id": "approval_792", 
+      "dependency_type": "approval",
+      "description": "Security review approval required",
+      "status": "pending"
+    }
+  ],
+  "dependency_validation": {
+    "cycles_detected": false,
+    "all_dependencies_valid": true
+  }
+}
+```
+
+### orchestrator_manage_lifecycle
+
+**Purpose**: Transition tasks through lifecycle stages with validation.
+
+```json
+{
+  "tool": "orchestrator_manage_lifecycle",
+  "arguments": {
+    "task_id": "implementer_791",
+    "lifecycle_stage": "active",
+    "validation_checks": true,
+    "notes": "Starting implementation after architecture approval"
+  }
+}
+```
+
+**Parameters**:
+- `task_id` (string, required): Task to transition
+- `lifecycle_stage` (string, required): Target stage ("draft", "ready", "active", "blocked", "review", "completed", "archived", "superseded")
+- `validation_checks` (boolean, optional): Whether to validate transition prerequisites
+- `notes` (string, optional): Notes about the transition
+
+**Returns**:
+```json
+{
+  "lifecycle_updated": true,
+  "task_id": "implementer_791",
+  "previous_stage": "ready",
+  "current_stage": "active",
+  "transition_valid": true,
+  "prerequisites_met": [
+    "All dependencies satisfied",
+    "Required approvals obtained"
+  ],
+  "events_emitted": [
+    "task.lifecycle_changed",
+    "task.status_changed"
+  ],
+  "timestamp": "2025-06-03T10:45:00Z"
+}
+```
+
+### orchestrator_query_tasks
+
+**Purpose**: Query tasks with flexible filtering and sorting options.
+
+```json
+{
+  "tool": "orchestrator_query_tasks",
+  "arguments": {
+    "filters": {
+      "task_type": "specialist_task",
+      "status": ["pending", "active"],
+      "parent_task_id": "task_123",
+      "attributes": {
+        "priority": "high",
+        "team": "backend"
+      }
+    },
+    "sort": {
+      "field": "created_at",
+      "direction": "desc"
+    },
+    "limit": 50,
+    "include_hierarchy": true
+  }
+}
+```
+
+**Parameters**:
+- `filters` (object, optional): Filter criteria
+  - `task_type` (string/array): Task type(s) to include
+  - `status` (string/array): Status(es) to include
+  - `lifecycle_stage` (string/array): Lifecycle stage(s) to include
+  - `parent_task_id` (string): Parent task ID
+  - `template_id` (string): Template ID
+  - `attributes` (object): Attribute-based filters
+- `sort` (object, optional): Sorting configuration
+  - `field` (string): Field to sort by
+  - `direction` (string): "asc" or "desc"
+- `limit` (number, optional): Maximum results to return
+- `include_hierarchy` (boolean, optional): Include child tasks
+
+**Returns**:
+```json
+{
+  "query_executed": true,
+  "total_results": 23,
+  "returned_results": 23,
+  "tasks": [
+    {
+      "task_id": "implementer_791",
+      "task_type": "specialist_task",
+      "parent_task_id": "task_123",
+      "status": "active",
+      "lifecycle_stage": "active",
+      "attributes": {
+        "title": "Implement user authentication",
+        "specialist_type": "implementer",
+        "priority": "high",
+        "team": "backend"
+      },
+      "dependencies": ["architect_790"],
+      "children": [],
+      "created_at": "2025-06-03T10:30:00Z",
+      "updated_at": "2025-06-03T10:45:00Z"
+    }
+  ],
+  "query_metadata": {
+    "execution_time_ms": 45,
+    "filters_applied": {
+      "task_type": "specialist_task",
+      "status": ["pending", "active"],
+      "parent_task_id": "task_123"
+    }
+  }
+}
 ```
 
 ## Tool Name Migration

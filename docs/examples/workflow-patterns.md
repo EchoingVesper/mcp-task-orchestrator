@@ -1,546 +1,568 @@
-# Common Workflow Patterns
+# Generic Task Model Workflow Patterns
 
-*Proven templates for different types of projects*
+> **Audience**: Development Teams, Project Managers, DevOps Engineers  
+> **Version**: 2.0  
+> **Created**: 2025-06-03  
+> **Focus**: Practical workflow patterns using Generic Task Model
 
-## Development Project Patterns
+## Overview
 
-### Pattern 1: Full-Stack Web Application
+This document provides proven workflow patterns using the Generic Task Model. Each pattern includes MCP tool usage, task hierarchies, and dependency management for real-world scenarios.
 
-**Use Case**: Building complete web applications with frontend, backend, and database components.
+## Development Workflow Patterns
 
-**Template Structure:**
-```python
-# Initialize with comprehensive scope
-initialization_command = """
-Initialize orchestration and plan a full-stack web application:
-- Frontend: [React/Vue/Angular] with responsive design
-- Backend: [Node.js/Python/Java] REST API
-- Database: [PostgreSQL/MongoDB] with proper schema
-- Authentication: User management and security
-- Testing: Unit, integration, and e2e testing
-- Deployment: CI/CD pipeline and hosting setup
-"""
+### Pattern 1: Agile Sprint Planning
 
-# Expected task breakdown (8-12 subtasks)
-typical_breakdown = [
-    "architect: System architecture and technology stack decisions",
-    "architect: Database schema design and API specification", 
-    "implementer: Backend API development with authentication",
-    "implementer: Frontend application with routing and state management",
-    "implementer: Database integration and data layer",
-    "implementer: User interface components and styling",
-    "tester: Backend API testing and validation",
-    "tester: Frontend testing and user experience validation",
-    "implementer: CI/CD pipeline and deployment automation",
-    "documenter: API documentation and deployment guide"
-]
-```
+#### Sprint Setup with Generic Tasks
+```json
+// Create sprint epic
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "sprint",
+    "attributes": {
+      "title": "Sprint 23 - User Management Features",
+      "sprint_number": 23,
+      "start_date": "2025-06-16",
+      "end_date": "2025-06-30", 
+      "team": "backend_team",
+      "sprint_goal": "Complete user authentication and profile management",
+      "capacity": "80 story_points",
+      "scrum_master": "alice_johnson"
+    }
+  }
+}
 
-**Execution Pattern with Maintenance:**
-```python
-# Phase 1: Architecture and Planning (Days 1-2)
-architecture_phase = [
-    "Execute architect subtask for system design",
-    "Execute architect subtask for database and API design",
-    "Run maintenance scan after architecture phase completion"
-]
+// Add user stories to sprint
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "user_story",
+    "parent_task_id": "sprint_23_backend",
+    "attributes": {
+      "title": "As a user, I want to reset my password",
+      "story_points": 8,
+      "priority": "high",
+      "acceptance_criteria": [
+        "User receives reset email within 2 minutes",
+        "Reset link expires after 24 hours", 
+        "New password meets security requirements"
+      ],
+      "definition_of_done": [
+        "Feature implemented and tested",
+        "Code reviewed and approved",
+        "Documentation updated"
+      ]
+    }
+  }
+}
 
-# Phase 2: Backend Development (Days 3-5)
-backend_phase = [
-    "Execute implementer subtask for API development",
-    "Execute implementer subtask for database integration",
-    "Execute tester subtask for backend testing",
-    "Run comprehensive maintenance scan after backend completion"
-]
-
-# Phase 3: Frontend Development (Days 6-8)
-frontend_phase = [
-    "Execute implementer subtask for frontend application",
-    "Execute implementer subtask for UI components",
-    "Execute tester subtask for frontend testing",
-    "Run maintenance validation before integration"
-]
-
-# Phase 4: Integration and Deployment (Days 9-10)
-integration_phase = [
-    "Execute implementer subtask for CI/CD setup",
-    "Execute documenter subtask for documentation",
-    "Synthesize complete application",
-    "Run final maintenance and prepare handover"
-]
-```
-
-**Maintenance Schedule:**
-```python
-fullstack_maintenance = {
-    "daily": "Basic cleanup after each major component",
-    "phase_end": "Comprehensive scan before moving to next phase",
-    "weekly": "Full project health check and optimization",
-    "completion": "Archive workflow and prepare deployment handover"
+// Break story into tasks
+{
+  "tool": "orchestrator_create_from_template",
+  "arguments": {
+    "template_id": "user_story_breakdown_v1",
+    "parameters": {
+      "story_title": "password_reset",
+      "complexity": "moderate",
+      "backend_effort": "6 points",
+      "frontend_effort": "2 points"
+    },
+    "parent_task_id": "story_password_reset"
+  }
 }
 ```
 
-### Pattern 2: API Development and Documentation
+### Pattern 2: Feature Flag Deployment
 
-**Use Case**: Building RESTful APIs with comprehensive documentation and testing.
+#### Progressive Feature Rollout with MCP Tools
+```json
+// Create feature flag deployment task
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "feature_flag_deployment",
+    "attributes": {
+      "title": "Advanced Search Feature Rollout",
+      "feature_flag": "advanced_search_v2",
+      "rollout_strategy": "progressive",
+      "success_metrics": [
+        "search_performance < 200ms",
+        "user_satisfaction > 4.5/5",
+        "error_rate < 0.1%"
+      ],
+      "rollback_triggers": [
+        "error_rate > 1%",
+        "performance_degradation > 20%"
+      ]
+    }
+  }
+}
 
-**Template:**
-```python
-api_project_template = """
-Initialize orchestration and plan REST API development:
-- API design: OpenAPI specification and endpoint planning
-- Implementation: [Framework] with middleware and validation
-- Database: Schema design and ORM integration
-- Security: Authentication, authorization, and rate limiting
-- Testing: Unit tests, integration tests, and load testing
-- Documentation: Interactive API docs and usage guides
-- Deployment: Containerization and cloud deployment
-"""
+// Add rollout stages with dependencies
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "deployment_stage",
+    "parent_task_id": "feature_advanced_search_rollout",
+    "attributes": {
+      "title": "Beta User Rollout (10%)",
+      "stage": "beta",
+      "rollout_percentage": 10,
+      "monitoring_dashboard": "feature_flag_metrics_beta"
+    }
+  }
+}
 
-# Specialized task breakdown
-api_breakdown = [
-    "architect: API design and OpenAPI specification",
-    "architect: Database schema and data modeling",
-    "implementer: Core API endpoints and business logic", 
-    "implementer: Authentication and security middleware",
-    "implementer: Database integration and ORM setup",
-    "tester: Comprehensive API testing suite",
-    "tester: Performance and load testing",
-    "documenter: Interactive API documentation",
-    "implementer: Containerization and deployment setup"
-]
-```
-
-**API-Specific Workflow:**
-```python
-# Design-first approach
-api_workflow = [
-    # Phase 1: Design (20% of time)
-    "Focus on architecture tasks first",
-    "Create comprehensive API specification", 
-    "Design database schema with relationships",
-    "Run validation before implementation starts",
-    
-    # Phase 2: Core Implementation (40% of time) 
-    "Implement core endpoints with business logic",
-    "Add authentication and security layers",
-    "Integrate database with proper error handling",
-    "Continuous testing during implementation",
-    
-    # Phase 3: Testing and Documentation (25% of time)
-    "Comprehensive test suite with edge cases",
-    "Performance testing and optimization",
-    "Interactive documentation with examples",
-    
-    # Phase 4: Deployment (15% of time)
-    "Containerization and cloud setup",
-    "CI/CD pipeline with automated testing",
-    "Monitoring and logging implementation"
-]
-```
-
-### Pattern 3: Data Processing Pipeline
-
-**Use Case**: ETL pipelines, data analysis, and automated reporting systems.
-
-**Template:**
-```python
-data_pipeline_template = """
-Initialize orchestration and plan data processing pipeline:
-- Data sources: API integration, file processing, database connections
-- Extraction: Robust data collection with error handling
-- Transformation: Data cleaning, validation, and enrichment
-- Loading: Data warehouse integration and optimization
-- Monitoring: Pipeline health, error tracking, and alerting
-- Reporting: Automated report generation and distribution
-- Scheduling: Cron jobs and workflow orchestration
-"""
-
-# Data-focused task breakdown
-data_breakdown = [
-    "architect: Data pipeline architecture and flow design",
-    "architect: Data warehouse schema and optimization strategy",
-    "implementer: Data extraction modules with error handling",
-    "implementer: Data transformation and validation logic",
-    "implementer: Data loading and warehouse integration",
-    "implementer: Pipeline monitoring and alerting system",
-    "tester: Data validation and pipeline testing",
-    "documenter: Operations guide and troubleshooting manual"
-]
-```
-
-**Data Pipeline Execution:**
-```python
-# Data pipeline workflow with validation points
-pipeline_execution = [
-    # Phase 1: Architecture (15% of time)
-    "Design end-to-end data flow",
-    "Plan data warehouse schema",
-    "Run architecture validation",
-    
-    # Phase 2: Extraction (25% of time)
-    "Build robust data extraction modules",
-    "Implement error handling and retry logic",
-    "Test with real data sources",
-    "Validate extraction accuracy",
-    
-    # Phase 3: Transformation (35% of time) 
-    "Implement data cleaning and validation",
-    "Add data enrichment and business logic",
-    "Optimize transformation performance",
-    "Test with edge cases and bad data",
-    
-    # Phase 4: Loading and Monitoring (25% of time)
-    "Implement efficient data loading",
-    "Add monitoring and alerting",
-    "Create operational documentation",
-    "Run full pipeline testing"
-]
-
-# Pipeline-specific maintenance
-pipeline_maintenance = {
-    "after_extraction": "Validate data quality and source connections",
-    "after_transformation": "Check performance and optimization",
-    "after_loading": "Verify warehouse integration and monitoring",
-    "weekly": "Full pipeline health check and optimization"
+{
+  "tool": "orchestrator_manage_dependencies",
+  "arguments": {
+    "task_id": "beta_rollout_stage",
+    "dependencies": [
+      {
+        "dependency_task_id": "internal_testing_stage",
+        "dependency_type": "completion",
+        "description": "Internal testing must pass before beta rollout"
+      }
+    ]
+  }
 }
 ```
-
----
-
-## Documentation Project Patterns
-
-### Pattern 4: Comprehensive Documentation Overhaul
-
-**Use Case**: Creating or updating documentation for existing systems.
-
-**Template:**
-```python
-documentation_project = """
-Initialize orchestration and plan documentation overhaul:
-- Content audit: Analyze existing documentation and identify gaps
-- Information architecture: Organize content structure and navigation
-- User guides: Create tutorials and getting-started materials
-- API documentation: Generate reference docs and interactive examples
-- Visual assets: Diagrams, flowcharts, and screenshots
-- Search and navigation: Implement content discovery features
-- Maintenance: Establish update processes and automation
-"""
-
-# Documentation-focused breakdown
-docs_breakdown = [
-    "researcher: Content audit and gap analysis",
-    "architect: Information architecture and site structure",
-    "documenter: User guide creation and tutorial development",
-    "documenter: API reference documentation",
-    "implementer: Interactive examples and code samples",
-    "implementer: Documentation site setup and navigation",
-    "reviewer: Content quality review and consistency check"
-]
-```
-
-**Documentation Workflow:**
-```python
-# Content-first approach
-docs_workflow = [
-    # Phase 1: Research and Planning (20%)
-    "Analyze existing content and user needs",
-    "Design information architecture",
-    "Plan content creation strategy",
-    
-    # Phase 2: Content Creation (50%)
-    "Write user guides and tutorials",
-    "Create API reference documentation", 
-    "Develop interactive examples",
-    "Design visual assets and diagrams",
-    
-    # Phase 3: Implementation (20%)
-    "Build documentation site",
-    "Implement search and navigation",
-    "Set up content management system",
-    
-    # Phase 4: Review and Launch (10%)
-    "Quality review and editing",
-    "User testing and feedback",
-    "Launch and maintenance setup"
-]
-```
-
-### Pattern 5: Migration Documentation
-
-**Use Case**: Documenting system migrations, upgrades, or transitions.
-
-**Template:**
-```python
-migration_docs_template = """
-Initialize orchestration and plan migration documentation:
-- Current state analysis: Document existing system architecture
-- Migration strategy: Plan transition approach and timeline
-- Step-by-step guides: Create detailed migration procedures
-- Risk assessment: Document potential issues and mitigation
-- Testing procedures: Create validation and rollback plans
-- Communication materials: User notifications and training
-- Post-migration support: Troubleshooting and maintenance guides
-"""
-```
-
----
 
 ## DevOps and Infrastructure Patterns
 
-### Pattern 6: CI/CD Pipeline Implementation
+### Pattern 3: Multi-Environment Deployment Pipeline
 
-**Use Case**: Setting up automated testing, building, and deployment.
+```json
+// Infrastructure deployment across environments
+{
+  "tool": "orchestrator_create_from_template",
+  "arguments": {
+    "template_id": "multi_env_deployment_v1",
+    "parameters": {
+      "change_description": "Kubernetes cluster upgrade to v1.28",
+      "environments": ["dev", "staging", "production"],
+      "risk_level": "high",
+      "maintenance_window": "2025-06-15T02:00:00Z"
+    }
+  }
+}
 
-**Template:**
-```python
-cicd_pipeline_template = """
-Initialize orchestration and plan CI/CD pipeline implementation:
-- Repository setup: Branch strategy and workflow configuration
-- Automated testing: Unit, integration, and deployment testing
-- Build automation: Code compilation and artifact creation
-- Deployment automation: Staging and production deployment
-- Monitoring integration: Health checks and performance tracking
-- Security scanning: Vulnerability assessment and compliance
-- Documentation: Operations runbooks and troubleshooting guides
-"""
-
-# DevOps-focused breakdown
-cicd_breakdown = [
-    "architect: CI/CD pipeline design and tool selection",
-    "implementer: Repository and branch workflow setup",
-    "implementer: Automated testing pipeline configuration",
-    "implementer: Build and artifact management automation",
-    "implementer: Deployment automation and environment management",
-    "implementer: Monitoring and alerting integration",
-    "tester: Pipeline testing and validation procedures",
-    "documenter: Operations documentation and runbooks"
-]
+// This creates:
+// Infrastructure Change: Kubernetes Upgrade
+// ├── Dev Environment Deployment
+// │   ├── Pre-deployment validation
+// │   ├── Upgrade execution
+// │   └── Post-deployment testing
+// ├── Staging Environment Deployment (depends on dev)
+// │   ├── Pre-deployment validation  
+// │   ├── Upgrade execution
+// │   └── Post-deployment testing
+// └── Production Environment Deployment (depends on staging)
+//     ├── Pre-deployment validation
+//     ├── Upgrade execution
+//     └── Post-deployment testing
 ```
 
-**CI/CD Execution Pattern:**
-```python
-# Infrastructure-as-code approach
-cicd_execution = [
-    # Phase 1: Planning and Design (15%)
-    "Design pipeline architecture",
-    "Select tools and integration points",
-    "Plan security and compliance measures",
-    
-    # Phase 2: Core Pipeline (40%)
-    "Implement automated testing",
-    "Set up build automation",
-    "Configure deployment processes",
-    
-    # Phase 3: Integration and Security (30%)
-    "Add monitoring and alerting",
-    "Implement security scanning",
-    "Set up environment management",
-    
-    # Phase 4: Documentation and Training (15%)
-    "Create operations runbooks",
-    "Document troubleshooting procedures",
-    "Train team on new processes"
-]
-```
+### Pattern 4: Incident Response Workflow
 
-### Pattern 7: Infrastructure Modernization
+```json
+// Critical security incident
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "security_incident",
+    "attributes": {
+      "title": "CRITICAL: Potential Data Breach Detected",
+      "severity": "critical",
+      "incident_id": "SEC-2025-0603-001",
+      "affected_systems": ["user_database", "auth_service"],
+      "incident_commander": "security_team_lead",
+      "stakeholders": ["ciso", "cto", "legal_team"]
+    },
+    "lifecycle_stage": "active"
+  }
+}
 
-**Use Case**: Migrating legacy infrastructure to modern platforms.
-
-**Template:**
-```python
-infrastructure_modernization = """
-Initialize orchestration and plan infrastructure modernization:
-- Current state assessment: Inventory existing infrastructure
-- Target architecture design: Plan modern infrastructure setup
-- Migration strategy: Phased approach with minimal downtime
-- Containerization: Application containerization and orchestration
-- Cloud migration: Cloud platform setup and configuration
-- Security enhancement: Modern security practices and compliance
-- Monitoring and observability: Comprehensive system monitoring
-- Documentation and training: Knowledge transfer and procedures
-"""
-```
-
----
-
-## Research and Analysis Patterns
-
-### Pattern 8: Technology Evaluation and Selection
-
-**Use Case**: Researching and selecting technologies for new projects.
-
-**Template:**
-```python
-tech_evaluation_template = """
-Initialize orchestration and plan technology evaluation:
-- Requirements analysis: Define technical and business requirements
-- Market research: Survey available technologies and solutions
-- Proof of concept: Build prototypes with candidate technologies
-- Performance testing: Benchmark and compare alternatives
-- Risk assessment: Evaluate adoption risks and mitigation strategies
-- Cost analysis: Calculate total cost of ownership and ROI
-- Recommendation report: Provide decision framework and guidance
-"""
-
-# Research-focused breakdown
-research_breakdown = [
-    "researcher: Requirements gathering and analysis",
-    "researcher: Market research and technology survey",
-    "architect: Evaluation criteria and testing framework",
-    "implementer: Proof of concept development",
-    "tester: Performance testing and benchmarking",
-    "researcher: Risk assessment and cost analysis",
-    "documenter: Recommendation report and decision framework"
-]
-```
-
-### Pattern 9: Competitive Analysis
-
-**Use Case**: Analyzing competitors and market positioning.
-
-**Template:**
-```python
-competitive_analysis_template = """
-Initialize orchestration and plan competitive analysis:
-- Market landscape: Identify key competitors and market segments
-- Feature comparison: Analyze competing products and capabilities
-- Pricing analysis: Compare pricing models and value propositions
-- User experience evaluation: Assess competitor UX and design
-- Technology assessment: Evaluate competitor technology stacks
-- Market positioning: Analyze messaging and brand positioning
-- Opportunity identification: Find market gaps and opportunities
-"""
-```
-
----
-
-## Advanced Project Patterns
-
-### Pattern 10: Multi-Phase Enterprise Project
-
-**Use Case**: Large-scale projects spanning multiple months with multiple teams.
-
-**Template Structure:**
-```python
-enterprise_project_template = """
-Initialize orchestration and plan enterprise-scale project:
-- Phase 1: Discovery and planning (Month 1)
-- Phase 2: Foundation and architecture (Months 2-3)
-- Phase 3: Core implementation (Months 4-6)
-- Phase 4: Integration and testing (Months 7-8)
-- Phase 5: Deployment and launch (Month 9)
-- Phase 6: Post-launch optimization (Month 10+)
-"""
-
-# Enterprise workflow management
-enterprise_workflow = [
-    # Monthly planning cycles
-    "Plan each phase as separate orchestration workflow",
-    "Use comprehensive handovers between phases",
-    "Maintain artifact organization across phases",
-    "Regular architecture reviews and validation",
-    
-    # Cross-phase coordination
-    "Establish consistent naming conventions",
-    "Use shared artifact repositories",
-    "Maintain project-wide documentation",
-    "Regular system health checks and optimization"
-]
-
-# Enterprise maintenance schedule
-enterprise_maintenance = {
-    "daily": "Basic cleanup within active phase",
-    "weekly": "Comprehensive phase health check",
-    "monthly": "Cross-phase validation and optimization",
-    "phase_transition": "Complete handover and archive preparation",
-    "quarterly": "Full project audit and performance review"
+// Immediate response tasks
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "incident_response_task",
+    "parent_task_id": "sec_incident_001",
+    "attributes": {
+      "title": "Immediate Containment",
+      "sla": "15 minutes",
+      "actions": [
+        "Isolate affected systems",
+        "Revoke potentially compromised credentials",
+        "Enable enhanced monitoring"
+      ]
+    }
+  }
 }
 ```
 
-### Pattern 11: Open Source Project Development
+## Quality Assurance Patterns
 
-**Use Case**: Developing open source projects with community considerations.
+### Pattern 5: Comprehensive Testing Strategy
 
-**Template:**
-```python
-opensource_template = """
-Initialize orchestration and plan open source project:
-- Project foundation: Repository setup and community guidelines
-- Core functionality: Implement essential features and APIs
-- Documentation: Comprehensive docs for contributors and users
-- Testing and quality: Automated testing and code quality tools
-- Community building: Contribution guidelines and issue templates
-- Release management: Versioning, packaging, and distribution
-- Governance: Maintainer guidelines and decision processes
-"""
+```json
+// Multi-level testing for payment feature
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "testing_epic",
+    "attributes": {
+      "title": "Payment Processing Feature Testing",
+      "feature_under_test": "payment_processing_v2",
+      "compliance_testing": ["pci_dss", "sox_compliance"],
+      "performance_targets": {
+        "response_time": "< 500ms",
+        "throughput": "> 1000 tps",
+        "availability": "99.99%"
+      }
+    }
+  }
+}
 
-# Community-focused breakdown
-opensource_breakdown = [
-    "architect: Project architecture and contribution framework",
-    "implementer: Core functionality and API development",
-    "documenter: User documentation and contributor guides",
-    "documenter: Code documentation and API references",
-    "implementer: Testing framework and CI/CD setup",
-    "implementer: Packaging and distribution automation",
-    "reviewer: Code review processes and quality standards"
-]
-```
+// Testing phases with proper sequencing
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "testing_phase",
+    "parent_task_id": "testing_payment_processing",
+    "attributes": {
+      "title": "Unit Testing Phase",
+      "coverage_target": "90%",
+      "test_frameworks": ["jest", "pytest"]
+    }
+  }
+}
 
----
-
-## Pattern Selection Guide
-
-### Choosing the Right Pattern
-
-**Project Complexity Assessment:**
-```python
-complexity_factors = {
-    "simple": "Single developer, <2 weeks, well-defined scope",
-    "moderate": "Small team, 2-8 weeks, some unknowns",
-    "complex": "Multiple developers, 2-6 months, significant integration",
-    "enterprise": "Multiple teams, 6+ months, high coordination needs"
+{
+  "tool": "orchestrator_manage_dependencies",
+  "arguments": {
+    "task_id": "integration_testing_phase",
+    "dependencies": [
+      {
+        "dependency_task_id": "unit_testing_phase",
+        "dependency_type": "completion",
+        "description": "Unit tests must pass before integration testing"
+      }
+    ]
+  }
 }
 ```
 
-**Pattern Matching:**
-```python
-pattern_selection = {
-    "web_application": "Use full-stack pattern for complete applications",
-    "api_only": "Use API pattern for backend-focused projects", 
-    "data_heavy": "Use data pipeline pattern for ETL/analytics",
-    "docs_focus": "Use documentation patterns for content projects",
-    "infrastructure": "Use DevOps patterns for deployment/operations",
-    "research": "Use analysis patterns for evaluation projects",
-    "enterprise": "Use multi-phase patterns for large initiatives"
+## Data Pipeline Patterns
+
+### Pattern 6: ETL Pipeline with Quality Gates
+
+```json
+// Customer analytics pipeline
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "data_pipeline",
+    "attributes": {
+      "title": "Customer Analytics ETL Pipeline",
+      "schedule": "daily_at_2am",
+      "data_sources": ["orders_db", "customer_db"],
+      "compliance_requirements": ["gdpr", "ccpa"]
+    }
+  }
+}
+
+// Pipeline stages with data quality checks
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "data_extraction",
+    "parent_task_id": "pipeline_customer_analytics",
+    "attributes": {
+      "title": "Extract Customer Data",
+      "quality_checks": [
+        "row_count_validation",
+        "schema_validation",
+        "data_freshness_check"
+      ]
+    }
+  }
+}
+
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "data_transformation",
+    "parent_task_id": "pipeline_customer_analytics",
+    "attributes": {
+      "title": "Transform Customer Data",
+      "data_quality_rules": [
+        "completeness > 95%",
+        "validity > 98%"
+      ]
+    }
+  }
+}
+
+{
+  "tool": "orchestrator_manage_dependencies",
+  "arguments": {
+    "task_id": "data_transformation_task",
+    "dependencies": [
+      {
+        "dependency_task_id": "data_extraction_task",
+        "dependency_type": "completion",
+        "description": "Extraction must complete before transformation"
+      }
+    ]
+  }
 }
 ```
 
-### Customizing Patterns
+## Template Creation Examples
 
-**Adaptation Guidelines:**
-```python
-customization_approach = [
-    "Start with closest matching pattern",
-    "Modify specialist assignments based on project needs",
-    "Adjust phase timing based on team size and complexity",
-    "Add project-specific validation and maintenance points",
-    "Customize artifact types and organization for domain"
-]
-```
+### Pattern 7: Domain-Specific Templates
 
-**Pattern Combination:**
 ```python
-# Many projects benefit from combining patterns
-combined_patterns = {
-    "api_with_docs": "Combine API and documentation patterns",
-    "research_to_implementation": "Research pattern followed by development pattern",
-    "infrastructure_with_migration": "Combine DevOps and migration patterns",
-    "enterprise_multi_component": "Multiple development patterns within enterprise framework"
+# E-commerce feature template
+ecommerce_template = {
+    "template_id": "ecommerce_feature_v1",
+    "name": "E-commerce Feature Development",
+    "parameters_schema": {
+        "type": "object",
+        "properties": {
+            "feature_name": {"type": "string"},
+            "business_impact": {"type": "string"},
+            "customer_segment": {
+                "type": "string",
+                "enum": ["b2b", "b2c", "marketplace"]
+            },
+            "revenue_impact": {"type": "string"}
+        },
+        "required": ["feature_name", "business_impact"]
+    },
+    "task_structure": {
+        "root_task": {
+            "task_type": "ecommerce_feature",
+            "attributes": {
+                "title": "E-commerce Feature: {feature_name}",
+                "business_impact": "{business_impact}",
+                "target_segment": "{customer_segment}"
+            },
+            "children": [
+                {
+                    "task_type": "business_validation",
+                    "attributes": {
+                        "title": "Business Case Validation",
+                        "validation_criteria": [
+                            "Market research completed",
+                            "ROI projection validated"
+                        ]
+                    }
+                },
+                {
+                    "task_type": "technical_design",
+                    "attributes": {
+                        "title": "Technical Design & Architecture"
+                    },
+                    "dependencies": ["business_validation"]
+                },
+                {
+                    "task_type": "implementation_phase",
+                    "attributes": {
+                        "title": "Feature Implementation"
+                    },
+                    "dependencies": ["technical_design"]
+                }
+            ]
+        }
+    }
+}
+
+# Usage example
+{
+  "tool": "orchestrator_create_from_template",
+  "arguments": {
+    "template_id": "ecommerce_feature_v1",
+    "parameters": {
+      "feature_name": "one_click_checkout",
+      "business_impact": "Reduce cart abandonment by 25%",
+      "customer_segment": "b2c",
+      "revenue_impact": "$2M annual increase"
+    }
+  }
 }
 ```
 
----
+## Advanced Query Patterns
 
-*These workflow patterns provide proven templates for common project types. Start with the pattern that most closely matches your project, then customize the specialist assignments and phase timing based on your specific needs and constraints.*
+### Pattern 8: Performance Analytics and Reporting
+
+```json
+// Query overdue tasks for management dashboard
+{
+  "tool": "orchestrator_query_tasks",
+  "arguments": {
+    "filters": {
+      "status": ["active", "blocked"],
+      "lifecycle_stage": ["active", "review"]
+    },
+    "custom_filter": "created_at < DATE_SUB(NOW(), INTERVAL 2 WEEK)",
+    "sort": {
+      "field": "created_at",
+      "direction": "asc"
+    },
+    "include_hierarchy": true
+  }
+}
+
+// Team performance analysis
+{
+  "tool": "orchestrator_query_tasks",
+  "arguments": {
+    "filters": {
+      "attributes": {
+        "assigned_team": "backend_team"
+      },
+      "status": "completed"
+    },
+    "date_range": {
+      "start": "2025-05-01", 
+      "end": "2025-05-31"
+    },
+    "include_metrics": true
+  }
+}
+
+// Find tasks blocked by dependencies
+{
+  "tool": "orchestrator_query_tasks",
+  "arguments": {
+    "filters": {
+      "status": "blocked",
+      "has_dependencies": true
+    },
+    "include_dependency_status": true,
+    "sort": {
+      "field": "updated_at",
+      "direction": "asc"
+    }
+  }
+}
+```
+
+## Maintenance and Operations Patterns
+
+### Pattern 9: Scheduled Maintenance Workflow
+
+```json
+// Database maintenance with coordination
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "scheduled_maintenance",
+    "attributes": {
+      "title": "Q2 2025 Database Maintenance",
+      "maintenance_window": {
+        "start": "2025-06-29T02:00:00Z",
+        "end": "2025-06-29T06:00:00Z"
+      },
+      "business_impact": "minimal - read-only mode",
+      "rollback_time_limit": "30_minutes"
+    }
+  }
+}
+
+// Pre-maintenance preparation
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "maintenance_preparation",
+    "parent_task_id": "db_maintenance_q2_2025",
+    "attributes": {
+      "title": "Verify Database Backups",
+      "completion_deadline": "24_hours_before_maintenance"
+    }
+  }
+}
+
+// Maintenance execution with dependencies
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "maintenance_execution",
+    "parent_task_id": "db_maintenance_q2_2025",
+    "attributes": {
+      "title": "Execute Database Optimization",
+      "estimated_duration": "2_hours"
+    }
+  }
+}
+
+{
+  "tool": "orchestrator_manage_dependencies",
+  "arguments": {
+    "task_id": "execute_db_optimization",
+    "dependencies": [
+      {
+        "dependency_task_id": "verify_db_backups",
+        "dependency_type": "completion",
+        "description": "Backup verification required before optimization"
+      }
+    ]
+  }
+}
+```
+
+## Integration Patterns
+
+### Pattern 10: External System Integration
+
+```json
+// GitHub integration workflow
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "github_integration",
+    "attributes": {
+      "title": "Sync with GitHub Repository",
+      "repository": "company/main-product",
+      "sync_direction": "bidirectional",
+      "github_labels": ["orchestrator-managed"],
+      "auto_create_issues": true
+    }
+  }
+}
+
+// JIRA integration for enterprise workflows  
+{
+  "tool": "orchestrator_create_generic_task",
+  "arguments": {
+    "task_type": "jira_integration",
+    "attributes": {
+      "title": "Enterprise Project Management Sync",
+      "jira_project": "PROJ",
+      "field_mappings": {
+        "priority": "jira_priority",
+        "assigned_team": "jira_component"
+      },
+      "sync_frequency": "real_time"
+    }
+  }
+}
+
+// Slack notification integration
+{
+  "tool": "orchestrator_manage_lifecycle",
+  "arguments": {
+    "task_id": "critical_bug_fix_123",
+    "lifecycle_stage": "completed",
+    "notes": "Bug fix deployed and verified",
+    "notify_channels": ["#dev-team", "#stakeholders"]
+  }
+}
+```
+
+These workflow patterns demonstrate the power and flexibility of the Generic Task Model across various domains and use cases. Each pattern can be customized and extended based on specific organizational needs while maintaining consistency and best practices.

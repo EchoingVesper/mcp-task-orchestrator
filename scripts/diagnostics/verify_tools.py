@@ -12,8 +12,11 @@ async def verify_tools():
     print("=" * 50)
     
     try:
-        # Get the list of tools from the server
-        tools = await app.list_tools()
+        # Import the list_tools function directly from server module
+        from mcp_task_orchestrator.server import list_tools
+        
+        # Call the async function directly
+        tools = await list_tools()
         
         expected_tools = [
             "orchestrator_plan_task",

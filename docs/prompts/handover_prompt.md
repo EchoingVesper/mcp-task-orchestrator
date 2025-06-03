@@ -119,6 +119,20 @@ While all development tasks are complete, the `orchestrator_maintenance_coordina
    - **Status**: ✅ ALL SUBTASKS COMPLETE - Ready for deployment activation
    - **Performance**: 40% improvement in database operations
 
+### 🚨 Critical Infrastructure Features (2 Features) - URGENT
+
+1. **🔄 Automatic Database Migration System** [CRITICAL PRIORITY]
+   - **Goal**: Eliminate manual schema fixes and prevent orchestrator breakage
+   - **Status**: Specification complete (`[CRITICAL]_automatic_database_migration_system.md`)
+   - **Impact**: Zero-downtime schema updates, 50% reduction in database-related delays
+   - **Urgency**: Current database lock issue demonstrates immediate need
+
+2. **🔁 In-Context Server Reboot Mechanism** [CRITICAL PRIORITY]
+   - **Goal**: Restart orchestrator without closing client applications
+   - **Status**: Specification complete (`[CRITICAL]_in_context_server_reboot.md`)
+   - **Impact**: Apply migrations and updates without losing work context
+   - **Urgency**: Required for seamless development workflow
+
 ### 📋 High-Priority Research (1 Feature)
 
 1. **🚀 Subtask Isolation with Claude Code** [RESEARCH PHASE]
@@ -171,28 +185,35 @@ While all development tasks are complete, the `orchestrator_maintenance_coordina
 
 ## 🎯 Recommended Next Actions
 
-### 1. Deploy Maintenance Features (IMMEDIATE)
+### 1. Implement Critical Infrastructure (HIGHEST PRIORITY)
+**Database migration and server reboot mechanisms are blocking development velocity**:
+- **Automatic Database Migration**: Prevents the current database lock/schema mismatch issues
+- **In-Context Server Reboot**: Enables applying fixes without closing development environment
+- **Timeline**: 2-3 days each, can be developed in parallel
+- **Impact**: Eliminates major development friction points
+
+### 2. Deploy Maintenance Features (AFTER INFRASTRUCTURE)
 **Activate the completed automation maintenance enhancement**:
 - Run database migration: `python run_automation_migration.py`
 - Verify deployment with: `python run_automation_migration.py --verify-only`
 - Test maintenance coordinator activation
 - Monitor for any deployment issues
 
-### 2. Subtask Isolation Research (NEW HIGH PRIORITY)
+### 3. Subtask Isolation Research (STRATEGIC PRIORITY)
 **Begin empirical testing of subtask isolation concept**:
 - **Proof of concept**: File-based communication with Claude Code spawning
 - **Context testing**: Compare context efficiency between Desktop and Code
 - **Scale testing**: Test with progressively larger projects  
 - **Decision point**: Empirical validation will determine 2.0 roadmap priority
 
-### 3. Validate Streaming System Integration
+### 4. Validate Streaming System Integration
 **Test the streaming system** with various content types to ensure robustness:
 - Large code implementations
 - Comprehensive documentation  
 - Complex analysis and research outputs
 - Multi-file project structures
 
-### 4. Use Cleanup Capabilities
+### 5. Use Cleanup Capabilities
 **After deployment activation**, use the new tools to:
 - Clean up remaining 7 non-critical stale tasks
 - Establish ongoing maintenance schedules
@@ -257,11 +278,12 @@ While all development tasks are complete, the `orchestrator_maintenance_coordina
 ---
 
 **🔥 Bottom Line**: 
-1. **✅ COMPLETE**: Automation maintenance enhancement 100% done - ready for deployment
-2. **🎉 PROVEN**: Streaming system achieves context limit immunity with 12KB+ artifacts
-3. **📈 PERFORMANCE**: 40% database operation improvement validated in testing
-4. **🚀 NEXT**: Subtask isolation research is the strategic priority for 2.0
-5. **🔧 DEPLOYMENT**: Run `python run_automation_migration.py` to activate features
-6. **💡 POTENTIAL**: Isolation could enable 5-10x project scale increase
+1. **🚨 CRITICAL NEED**: Database migration & server reboot features blocking development
+2. **✅ COMPLETE**: Automation maintenance enhancement 100% done - ready for deployment
+3. **🎉 PROVEN**: Streaming system achieves context limit immunity with 12KB+ artifacts
+4. **📈 PERFORMANCE**: 40% database operation improvement validated in testing
+5. **🚀 INFRASTRUCTURE**: Automatic migration + in-context reboot = development velocity
+6. **🔧 DEPLOYMENT**: Run `python run_automation_migration.py` to activate features
+7. **💡 POTENTIAL**: Isolation could enable 5-10x project scale increase
 
-*Last Updated: June 1, 2025 - Automation maintenance complete, ready for isolation research.*
+*Last Updated: June 2, 2025 - Critical infrastructure features identified and specified.*
