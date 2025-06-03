@@ -7,6 +7,35 @@ The MCP Task Orchestrator consists of two main components:
 1. **Unified Installation System**: A modular plugin architecture for client configuration
 2. **Task Orchestration System**: An LLM-powered task breakdown and specialist coordination system
 
+### Task Model Architecture (v2.0+)
+
+The Generic Task Model provides a unified, flexible approach to task management:
+
+```python
+# Unified task model replaces TaskBreakdown + SubTask
+from mcp_task_orchestrator.models import GenericTask, TaskDependency
+
+# Create any type of task with flexible attributes
+task = GenericTask(
+    task_id="feature_123",
+    task_type="feature_epic",
+    attributes={
+        "title": "User Authentication System",
+        "priority": "high",
+        "team": "backend",
+        "estimated_effort": "3 weeks"
+    }
+)
+
+# Add dependencies between tasks
+dependency = TaskDependency(
+    dependency_task_id="architecture_456", 
+    dependency_type="completion",
+    description="Architecture must be complete before implementation"
+)
+task.dependencies.append(dependency)
+```
+
 ### Installation Architecture
 
 The unified MCP Task Orchestrator uses a modular plugin architecture for client configuration:

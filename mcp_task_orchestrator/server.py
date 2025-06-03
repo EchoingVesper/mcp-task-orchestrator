@@ -610,8 +610,16 @@ async def handle_maintenance_coordinator(args: Dict[str, Any]) -> List[types.Tex
         # Import maintenance functionality
         from .orchestrator.maintenance import MaintenanceCoordinator
         
-        # Initialize maintenance coordinator
-        maintenance = MaintenanceCoordinator(state_manager, orchestrator)
+        # Validate that we have the correct types before proceeding
+        if not hasattr(state_manager, 'persistence'):
+            raise TypeError(f"StateManager object missing 'persistence' attribute. Got type: {type(state_manager)}")
+        
+        persistence_manager = state_manager.persistence
+        if not hasattr(persistence_manager, 'session_scope'):
+            raise TypeError(f"Persistence manager missing 'session_scope' method. Got type: {type(persistence_manager)}")
+        
+        # Initialize maintenance coordinator with the persistence manager
+        maintenance = MaintenanceCoordinator(persistence_manager, orchestrator)
         
         # Execute the requested maintenance action
         if action == "scan_cleanup":
@@ -661,10 +669,24 @@ async def handle_maintenance_coordinator(args: Dict[str, Any]) -> List[types.Tex
             type="text",
             text=json.dumps(error_response, indent=2)
         )]
+    except TypeError as e:
+        logger.error(f"Type error in maintenance coordinator: {str(e)}")
+        error_response = {
+            "error": f"Configuration error: {str(e)}",
+            "error_type": "TypeError",
+            "action": action,
+            "scope": scope,
+            "troubleshooting": "This indicates a mismatch between expected and actual object types. Server restart may be required."
+        }
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
     except Exception as e:
         logger.error(f"Error executing maintenance action {action}: {str(e)}")
         error_response = {
             "error": str(e),
+            "error_type": type(e).__name__,
             "action": action,
             "scope": scope
         }

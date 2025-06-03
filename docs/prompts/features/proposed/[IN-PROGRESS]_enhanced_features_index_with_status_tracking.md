@@ -1,24 +1,59 @@
 # 📋 Enhanced Features Index with Status Tracking
 
-**Last Updated**: 2025-06-01  
-**Total Features**: 12 (6 existing + 4 new session management + 2 new system features)  
-**Status**: [IN-PROGRESS] - Enhanced with new session management features and status tracking  
-**Organization**: Status-based with priority matrix and lifecycle tracking
+**Last Updated**: 2025-06-03  
+**Total Features**: 15 (6 existing + 5 new session management + 2 new system features + 2 critical infrastructure)  
+**Status**: [IN-PROGRESS] - Updated with generic task model promotion to CRITICAL  
+**Organization**: Status-based with priority matrix and lifecycle tracking  
+**Major Update**: Generic Task Model promoted to foundational CRITICAL status
+
+---
+
+## 🚨 Critical Infrastructure Features (URGENT)
+
+### 1. **Generic Task Model Design** 🏗️ FOUNDATIONAL CRITICAL
+- **File**: `proposed/[RESEARCH]_generic_task_model_design.md`
+- **Status**: [CRITICAL] ⭐⭐⭐ - Implementation ready, foundational for v2.0
+- **Priority**: CRITICAL ⭐⭐⭐ - Core architectural redesign enabling all v2.0 features
+- **Effort**: 8-10 weeks (Phase 1-4 implementation)
+- **Focus**: Unified task model (no subtasks), task chaining, templates, prerequisites, lifecycle management
+- **Key Components**: Nestable tasks, dependency system, template tasks, supersession detection, event system
+- **Dependencies**: None - foundational change that other features build upon
+- **Implementation**: Complete specifications ready, migration strategy defined
+- **API Impact**: New v2.0 Generic Task API tools, legacy compatibility maintained
+
+### 2. **Automatic Database Migration System** 🔄 CRITICAL
+- **File**: `proposed/[CRITICAL]_automatic_database_migration_system.md`
+- **Status**: [CRITICAL] - Specification complete, blocking development
+- **Priority**: CRITICAL ⭐⭐⭐ - Currently blocking development velocity
+- **Effort**: 2-3 days
+- **Focus**: Zero-downtime schema updates, automatic migration on startup
+- **Key Components**: Migration detection, safe SQL generation, rollback capability
+- **Impact**: Eliminates manual schema fixes and database lock issues
+- **Dependencies**: Generic Task Model for new schema requirements
+
+### 3. **In-Context Server Reboot Mechanism** 🔁 CRITICAL  
+- **File**: `proposed/[CRITICAL]_in_context_server_reboot.md`
+- **Status**: [CRITICAL] - Specification complete, blocking development
+- **Priority**: CRITICAL ⭐⭐⭐ - Required for seamless development
+- **Effort**: 2-3 days
+- **Focus**: Restart server without closing client applications
+- **Key Components**: Graceful shutdown, state preservation, auto-reconnection
+- **Impact**: Apply updates without losing work context
 
 ---
 
 ## 🎯 New Session Management Features (v2.0 Core)
 
-### 1. **Enhanced Session Management Architecture** 🏗️ NEW FOUNDATION
+### 4. **Enhanced Session Management Architecture** 🏗️ NEW FOUNDATION
 - **File**: `proposed/[RESEARCH]_enhanced_session_management_architecture.md`
 - **Status**: [RESEARCH] - Architecture design complete
-- **Priority**: HIGH ⭐ - Foundation for all other enhancements
+- **Priority**: HIGH ⭐ - Foundation for all other session enhancements
 - **Effort**: 3-4 weeks
 - **Focus**: Session-first architecture, single active session, dual persistence
 - **Key Components**: Session state machine, enhanced database schema, bi-directional markdown sync
-- **Dependencies**: None - can start immediately
+- **Dependencies**: Generic Task Model for proper task structure
 
-### 2. **Mode/Role System Enhancement** 🔧 NEW CORE
+### 5. **Mode/Role System Enhancement** 🔧 NEW CORE
 - **File**: `proposed/[RESEARCH]_mode_role_system_enhancement.md` (TO BE CREATED)
 - **Status**: [RESEARCH] - Specification needed
 - **Priority**: HIGH ⭐ - Critical for session-mode binding
@@ -27,16 +62,17 @@
 - **Key Tools**: `orchestrator_mode_select`, role copying automation, recovery systems
 - **Dependencies**: Session management architecture
 
-### 3. **MCP Tools Suite Expansion** 🛠️ NEW TOOLS
+### 6. **MCP Tools Suite Expansion** 🛠️ NEW TOOLS
 - **File**: `proposed/[RESEARCH]_mcp_tools_suite_expansion.md` (TO BE CREATED)
 - **Status**: [RESEARCH] - Specification needed
 - **Priority**: HIGH ⭐ - Core functionality extension
 - **Effort**: 3-4 weeks
 - **Focus**: Session management tools, task organization tools, search and archive tools
 - **Key Tools**: 10+ new MCP tools for comprehensive session/task management
-- **Dependencies**: Session architecture, mode system
+- **Dependencies**: Generic Task Model (v2.0 API), Session architecture, mode system
+- **Implementation Note**: Will leverage new Generic Task API tools as foundation
 
-### 4. **Bi-directional Persistence System** 📄 NEW PERSISTENCE
+### 7. **Bi-directional Persistence System** 📄 NEW PERSISTENCE
 - **File**: `proposed/[RESEARCH]_bidirectional_persistence_system.md` (TO BE CREATED)
 - **Status**: [RESEARCH] - Specification needed
 - **Priority**: HIGH ⭐ - Human-readable project organization
@@ -49,7 +85,7 @@
 
 ## 🚀 Existing Approved Features (v1.5+ Ready)
 
-### 5. **Automation & Maintenance Enhancement** ⭐ Core Infrastructure
+### 8. **Automation & Maintenance Enhancement** ⭐ Core Infrastructure
 - **File**: `approved/[APPROVED]_automation_maintenance_enhancement.md`
 - **Status**: [APPROVED] - Ready for implementation
 - **Priority**: High  
@@ -57,7 +93,7 @@
 - **Focus**: Automated maintenance, enhanced task completion with prerequisites, quality gates
 - **Key Tools**: `maintenance_coordinator`, `complete_subtask_with_prerequisites`, `task_dependency_manager`
 
-### 6. **Smart Task Routing & Specialist Intelligence** 🧠 Intelligence
+### 9. **Smart Task Routing & Specialist Intelligence** 🧠 Intelligence
 - **File**: `approved/[APPROVED]_smart_task_routing.md`
 - **Status**: [APPROVED] - Ready for implementation
 - **Priority**: High
@@ -66,7 +102,7 @@
 - **Key Tools**: `specialist_intelligence`, `workload_manager`
 - **Synergy**: Builds on automation database infrastructure
 
-### 7. **Template & Pattern Library System** 📚 Knowledge  
+### 10. **Template & Pattern Library System** 📚 Knowledge  
 - **File**: `approved/[APPROVED]_template_pattern_library.md`
 - **Status**: [APPROVED] - Ready for implementation
 - **Priority**: Medium-High
@@ -75,7 +111,7 @@
 - **Key Tools**: `template_manager`, `pattern_extractor`, `context_library`
 - **Synergy**: Leverages automation infrastructure for pattern detection
 
-### 8. **Integration Health Monitoring & Recovery** 🔍 Reliability
+### 11. **Integration Health Monitoring & Recovery** 🔍 Reliability
 - **File**: `approved/[APPROVED]_integration_health_monitoring.md`
 - **Status**: [APPROVED] - Ready for implementation
 - **Priority**: High
@@ -84,7 +120,7 @@
 - **Key Tools**: `integration_monitor`, `failover_manager`, `performance_optimizer`  
 - **Synergy**: Extends project health monitoring from automation feature
 
-### 9. **Git Integration & Issue Management** 🔗 Collaboration (OPTIONAL)
+### 12. **Git Integration & Issue Management** 🔗 Collaboration (OPTIONAL)
 - **File**: `approved/[APPROVED]_git_integration_issue_management.md`
 - **Status**: [APPROVED] - Ready for implementation
 - **Priority**: Medium (High for teams)
@@ -93,7 +129,7 @@
 - **Key Tools**: `git_integration`, `project_board_manager`, `release_coordinator`
 - **Synergy**: Optional collaboration layer, disabled by default, fine-grained settings
 
-### 10. **Orchestrator Intelligence Suite Bundle** 🎯 Complete Package
+### 13. **Orchestrator Intelligence Suite Bundle** 🎯 Complete Package
 - **File**: `approved/[APPROVED]_orchestrator_intelligence_suite_bundle.md`
 - **Status**: [APPROVED] - Ready for implementation
 - **Priority**: High
@@ -105,7 +141,7 @@
 
 ## 🏗️ System Infrastructure Features
 
-### 11. **Filename Key and Organization System** 📋 Foundation
+### 14. **Filename Key and Organization System** 📋 Foundation
 - **File**: `features/[COMPLETED]_filename_key_and_organization_system.md`
 - **Status**: [COMPLETED] - System implemented
 - **Priority**: HIGH ⭐ - Documentation foundation
@@ -113,7 +149,7 @@
 - **Focus**: Status-based file organization, priority matrix, automated maintenance
 - **Components**: Status tags, directory structure, validation tools, migration scripts
 
-### 12. **Documentation Analysis and Planning** 📊 Foundation
+### 15. **Documentation Analysis and Planning** 📊 Foundation
 - **File**: `prompts/[RESEARCH]_documentation_analysis_and_plan.md`
 - **Status**: [COMPLETED] - Analysis complete
 - **Priority**: HIGH ⭐ - Planning foundation

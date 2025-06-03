@@ -1,11 +1,13 @@
 # Version Progression Plan
 
 > **Document Type**: Release Planning  
-> **Version**: 1.0.0  
+> **Version**: 2.0.0 (Updated)  
 > **Created**: 2025-05-30  
-> **Current Version**: 1.4.0  
+> **Last Updated**: 2025-06-03  
+> **Current Version**: 1.4.1  
 > **Planning Horizon**: v1.5.0 - v2.0.0  
-> **Status**: Active Planning
+> **Status**: Active Planning - Generic Task Model Integrated  
+> **Major Update**: Generic Task Model promoted to v2.0 foundation
 
 ## Current State Analysis
 
@@ -163,25 +165,97 @@ mcp-task-orchestrator cluster --join <federation-endpoint>
 **Community Edition**: Core orchestration features (free, open source)  
 **Enterprise Edition**: Advanced ML, security, and compliance features (commercial)
 
-## Version 2.0.0: Next Generation
+## Version 2.0.0: Generic Task Foundation
 
 ### Target Timeframe
-**Q3-Q4 2026**
+**Q2-Q3 2026 (Accelerated due to foundational importance)**
 
 ### Strategic Vision
-"Platform Evolution - MCP Orchestration Ecosystem"
+"Unified Task Model Revolution - Foundational Architecture Redesign"
 
-### Potential Breaking Changes
-- Modern API design (GraphQL or enhanced REST)
-- Plugin architecture for extensibility
-- Cloud-native deployment options
-- Advanced workflow definition language
+### Core Breaking Changes - Generic Task Model
+**Primary Change**: Complete migration from dual-model (TaskBreakdown + SubTask) to unified GenericTask model
 
-### Migration Strategy
-- 18+ month migration timeline from v1.x
-- Comprehensive migration tooling
-- Side-by-side operation during transition
-- Community-driven feedback integration
+#### 1. **Unified Task Architecture** 🏗️
+- **Breaking Change**: Elimination of separate task/subtask concepts
+- **New Model**: Single GenericTask model with hierarchical nesting capability
+- **Benefit**: Unlimited task complexity and nesting depth
+- **Migration**: Automated conversion with zero data loss guaranteed
+
+#### 2. **Enhanced API (v2.0 Generic Task API)** 🚀
+**New MCP Tools**:
+- `orchestrator_create_generic_task` - Flexible task creation with attributes
+- `orchestrator_create_from_template` - Template-based task instantiation
+- `orchestrator_manage_dependencies` - Rich dependency configuration
+- `orchestrator_manage_lifecycle` - Advanced lifecycle management
+- `orchestrator_query_tasks` - Powerful filtering and search
+
+**Legacy Compatibility**: All v1.x tools maintained with compatibility layer
+
+#### 3. **Template System** 📋
+- **Feature**: Reusable task templates with parameter substitution
+- **Use Cases**: Feature development workflows, deployment pipelines, review processes
+- **Storage**: Database-backed with versioning support
+- **Integration**: Direct integration with new Generic Task API
+
+#### 4. **Event-Driven Architecture** ⚡
+- **Plugin System**: Extensible event hooks for task lifecycle
+- **Events**: task.created, task.status_changed, task.dependency_satisfied
+- **Integration**: External system integration (GitHub, JIRA, etc.)
+- **Performance**: Async event processing with non-blocking architecture
+
+### Implementation Timeline (8-10 weeks)
+
+#### Phase 1: Foundation (Weeks 1-2)
+- Generic Task model implementation
+- Database schema migration system
+- Basic CRUD operations
+
+#### Phase 2: Advanced Features (Weeks 3-4)  
+- Template system implementation
+- Dependency and chaining support
+- Event system architecture
+
+#### Phase 3: API and Integration (Weeks 5-6)
+- New v2.0 MCP tools implementation
+- Legacy compatibility layer
+- Plugin architecture foundation
+
+#### Phase 4: Migration and Polish (Weeks 7-8)
+- Data migration tools
+- Performance optimization
+- Comprehensive testing and validation
+
+### Migration Strategy - Zero Disruption
+```bash
+# Automatic migration on server startup
+mcp-task-orchestrator upgrade --to 2.0.0
+# ✅ Analyzes existing data structure
+# ✅ Creates new generic_tasks schema alongside existing
+# ✅ Migrates all task_breakdowns -> generic tasks (parent tasks)
+# ✅ Migrates all subtasks -> generic tasks (child tasks)
+# ✅ Preserves all relationships and dependencies
+# ✅ Maintains legacy API compatibility during transition
+# ✅ Validates successful migration before schema cleanup
+
+# Legacy API support maintained for 12 months
+orchestrator_plan_task(...) # Still works via compatibility layer
+orchestrator_create_generic_task(...) # New v2.0 API available
+```
+
+### Backward Compatibility Guarantee
+- **Legacy APIs**: All v1.x MCP tools maintained through compatibility layer
+- **Data Preservation**: 100% data migration with comprehensive validation
+- **Gradual Transition**: 12-month overlap period for migration planning
+- **Rollback Support**: Full rollback capability if migration issues occur
+
+### Post-2.0 Foundation Benefits
+**Enables Future Features**:
+- Enhanced Session Management (v2.1)
+- Advanced Template Library (v2.2)  
+- Multi-server Coordination (v2.3)
+- Machine Learning Task Optimization (v2.4)
+- Enterprise Security and Compliance (v2.5)
 
 ## Release Process Framework
 
