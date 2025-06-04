@@ -1,6 +1,38 @@
 # MCP Task Orchestrator - Claude Code Development Guide
 
-This file provides context and guidance for Claude Code development sessions in the MCP Task Orchestrator project.
+<critical_file_size_warning>
+⚠️ **CRITICAL: FILE SIZE LIMITS FOR CLAUDE CODE STABILITY** ⚠️
+
+**Maximum File Size**: 500 lines (300-400 lines recommended)
+**Risk**: Files exceeding 500 lines can cause Claude Code to crash or become unresponsive
+
+**Current Status**: Multiple files in this codebase exceed safe limits:
+- `generic_repository.py` (1180 lines) - CRITICAL
+- `task_lifecycle.py` (1132 lines) - CRITICAL  
+- `server.py` (764 lines) - HIGH RISK
+- See full analysis in `.task_orchestrator/artifacts/researcher_3629b7/`
+
+**Best Practices**:
+1. Keep all files under 500 lines (ideally 300-400)
+2. Split large files into focused modules
+3. Use subdirectories for logical grouping
+4. Maintain clear module interfaces
+5. Update imports after refactoring
+
+**If Working with Large Files**:
+- Consider reading specific sections with offset/limit
+- Refactor before making major changes
+- Use the Task Orchestrator to plan modularization
+</critical_file_size_warning>
+
+<context_analysis>
+You are working with the MCP Task Orchestrator project, a production-ready Python-based MCP server with advanced orchestration capabilities. Before taking any action, analyze the current situation:
+
+1. What type of development task are you being asked to perform?
+2. Which project area(s) will be affected?
+3. What is the current git status and any recent changes?
+4. Are there any critical system health indicators to check first?
+</context_analysis>
 
 ## Project Overview
 
@@ -8,192 +40,98 @@ This file provides context and guidance for Claude Code development sessions in 
 **Architecture**: Python-based MCP server with SQLite persistence and enhanced features  
 **Location**: `E:\My Work\Programming\MCP Servers\mcp-task-orchestrator`
 
-### Key Capabilities
+<key_capabilities>
 - **Task Orchestration**: Intelligent breakdown with specialized AI roles
 - **Artifact Storage**: Context limit prevention for complex workflows
 - **Maintenance Coordination**: Automated task lifecycle management
 - **Enhanced Testing**: Advanced infrastructure with alternative runners
 - **Feature Management**: 8 approved features with implementation roadmap
+</key_capabilities>
 
-## Quick Commands
+## Pre-Development System Check
 
-### System Diagnostics
+<reasoning_framework>
+Before making any changes, follow this systematic approach:
+
+1. **Health Assessment**: Run diagnostic check to understand current system state
+2. **Git Status Review**: Ensure repository is clean and up-to-date
+3. **Context Selection**: Choose appropriate directory context for your task
+4. **Resource Validation**: Verify system resources and dependencies
+</reasoning_framework>
+
+### Critical System Diagnostics
 ```bash
-# Comprehensive health check
+# Step 1: Comprehensive health check (ALWAYS run first)
 python scripts/diagnostics/check_status.py
 
-# Installation verification  
+# Step 2: Installation verification if issues found
 python scripts/diagnostics/verify_tools.py
 
-# Database optimization
+# Step 3: Database optimization for performance issues
 python scripts/diagnostics/diagnose_db.py
 ```
+<example_diagnostic_workflow>
+**Scenario**: Starting a new development session
 
-### Enhanced Testing
+**Input**: "I want to add a new feature to the orchestrator"
+
+**Reasoning Process**:
+1. Check system health: `python scripts/diagnostics/check_status.py`
+2. Review git status: `git status && git pull origin main`
+3. Identify affected components: Core orchestrator? Database? Testing?
+4. Choose context: `cd mcp_task_orchestrator` for core changes
+5. Validate prerequisites: Dependencies, database schema, test status
+
+**Output**: Ready to proceed with guided development in appropriate context
+</example_diagnostic_workflow>
+
+## Enhanced Development Workflows
+
+<workflow_selection>
+Choose your development context based on the task type:
+
+**Universal Project Tasks** → Stay in root directory
+- Project-wide changes, documentation updates, git operations
+- Cross-component integration, release management
+
+**Core Implementation** → `cd mcp_task_orchestrator && claude`
+- Orchestrator logic, database operations, MCP protocol
+- Performance optimization, new API endpoints
+
+**Testing Development** → `cd tests && claude`
+- Test infrastructure, validation suites, resource management
+- Test debugging, performance benchmarking
+
+**Documentation Work** → `cd docs && claude`
+- Multi-audience documentation, API docs, user guides
+- Architecture decisions, troubleshooting guides
+
+**System Administration** → `cd scripts && claude`
+- Diagnostic tools, maintenance scripts, deployment
+- Database migrations, system health monitoring
+</workflow_selection>
+
+### Enhanced Testing Infrastructure
+<testing_strategy>
+**Preferred Approach**: Use enhanced test runners for reliability
+
+**Primary Runners** (Use these first):
 ```bash
-# Enhanced test runners (preferred)
+# Enhanced test runner with improved reliability
 python simple_test_runner.py
+
+# Comprehensive validation with detailed output
 python test_validation_runner.py
 
-# Resource management validation
+# Resource management validation (prevents warnings)
 python tests/test_resource_cleanup.py
+```
 
-# Traditional pytest (still supported)
+**Traditional Fallback** (If enhanced runners fail):
+```bash
+# Standard pytest (may have truncation issues)
 python -m pytest tests/ -v
 ```
 
-### Development Server
-```bash
-# Launch orchestrator
-python -m mcp_task_orchestrator.server
-python launch_orchestrator.py
-
-# CLI interface
-python launch_cli.py
-```
-
-## Claude Code Integration
-
-### Context-Specific Development
-- **Root Context**: Universal project guidance (current directory)
-- **Documentation**: `cd docs && claude` for multi-audience documentation workflows
-- **Testing**: `cd tests && claude` for enhanced testing procedures  
-- **Core Implementation**: `cd mcp_task_orchestrator && claude` for orchestrator development
-- **Diagnostics**: `cd scripts && claude` for system tools and troubleshooting
-
-### Enhanced Orchestrator Workflows
-- **Artifact System**: Seamless integration with Claude Code file operations
-- **Maintenance Coordination**: Automated task lifecycle and cleanup
-- **Testing Infrastructure**: Optimized for Claude Code development patterns
-- **Feature Management**: Strategic planning and implementation tracking
-
-## Architecture
-
-### Core Components
-- **Orchestrator Core** (`orchestrator/`): Task breakdown and specialist management
-- **Database Persistence** (`db/`): SQLAlchemy ORM with SQLite backend  
-- **Testing Infrastructure** (`testing/`): Enhanced framework with alternative runners
-- **Monitoring Systems** (`monitoring/`): Diagnostics and health checking
-
-### Development Patterns
-- **Async Safety**: All database operations with proper timeout handling
-- **Singleton Management**: Lazy initialization for core components
-- **Error Recovery**: Retry mechanisms with exponential backoff
-- **Type Safety**: Pydantic models for data validation
-
-## Git Workflow
-
-### Repository Sync (CRITICAL)
-**NEVER make individual file changes without considering full repository state.**
-
-```bash
-# Before any changes
-git status
-git pull origin main
-
-# After making changes  
-git status
-git add [related-files]
-git commit -m "feat: descriptive message"
-git push origin main
-```
-
-### Atomic Development
-- Group related changes in single commits
-- Test thoroughly before committing
-- Push only complete, working features
-- Use descriptive commit messages with scope
-
-## Enhanced Features (v1.4.1)
-
-### Artifact Storage System
-- **Context Limit Prevention**: Detailed work stored as filesystem artifacts
-- **Cross-Session Continuity**: Complete history preservation across contexts
-- **Professional Handovers**: Comprehensive documentation for team transitions
-- **File Integration**: Works with all MCP file operation tools
-
-### Maintenance Coordinator
-- **Automated Management**: `orchestrator_maintenance_coordinator` tool
-- **Cleanup Operations**: Smart removal of stale tasks with artifact preservation
-- **Structure Validation**: Task hierarchy and data integrity analysis
-- **Handover Preparation**: Complete transition documentation generation
-
-### Advanced Testing Infrastructure  
-- **Enhanced Runners**: Alternative to pytest with improved reliability
-- **File-Based Output**: Complete result capture without truncation
-- **Hang Detection**: Timeout mechanisms and process monitoring
-- **Resource Management**: Automatic cleanup of connections and resources
-
-## Development Guidelines
-
-### Code Quality Standards
-- Use `black` for formatting: `black mcp_task_orchestrator/ tests/`
-- Organize imports with `isort`: `isort mcp_task_orchestrator/ tests/`
-- Type checking with `mypy` when available
-- Comprehensive error handling and input validation
-
-### Testing Best Practices
-- Prefer enhanced test runners over standard pytest
-- Use file-based output for complex test scenarios
-- Include timeout mechanisms for all operations
-- Validate resource cleanup in database tests
-
-### Database Operations
-- Use managed connections with proper cleanup
-- Implement retry logic with exponential backoff
-- Leverage WAL mode for better concurrency
-- Monitor connection health and performance
-
-## Project Structure
-
-```
-mcp-task-orchestrator/
-├── .task_orchestrator/           # Runtime state and custom roles
-├── docs/                        # Multi-audience documentation
-│   ├── llm-agents/              # AI-optimized documentation
-│   ├── user-guide/              # Human-readable guides
-│   ├── architecture/            # System design records
-│   ├── testing/                 # Testing documentation
-│   ├── troubleshooting/         # Issue resolution guides
-│   └── prompts/features/        # Feature lifecycle management
-├── mcp_task_orchestrator/       # Main Python package
-│   ├── orchestrator/           # Core orchestration logic
-│   ├── db/                     # Database persistence layer
-│   ├── testing/                # Enhanced testing infrastructure
-│   └── monitoring/             # Diagnostics and monitoring
-├── tests/                      # Test suite with alternative runners
-├── scripts/diagnostics/        # System diagnostic tools
-└── architecture/               # Architectural documentation
-```
-
-## Troubleshooting
-
-### Common Issues
-- **Database Schema**: Run `python scripts/diagnostics/diagnose_db.py` for analysis
-- **Installation**: Use `python scripts/diagnostics/verify_tools.py` for validation
-- **Testing Failures**: Try enhanced runners: `python simple_test_runner.py`
-- **Resource Warnings**: Use resource cleanup validation tests
-
-### Emergency Procedures
-- **Database Issues**: Emergency schema fix scripts available in project root
-- **Test Hanging**: Enhanced infrastructure includes hang detection and timeouts
-- **Context Limits**: Artifact storage system prevents work loss in complex sessions
-
-## Performance Optimization
-
-### Development Workflow
-1. **Health Check**: Run diagnostics before major work
-2. **Git Sync**: Always pull latest changes before development
-3. **Feature Development**: Make logical, atomic changes
-4. **Enhanced Testing**: Use improved test infrastructure
-5. **Validation**: Verify system health after changes
-
-### Resource Management
-- Close resource-intensive tools when done
-- Use enhanced testing for reliable validation
-- Monitor database performance with diagnostic tools
-- Leverage artifact storage for complex workflows
-
----
-
-**For specialized contexts**: Use `cd <directory> && claude` to access area-specific guidance and workflows.
+**Reasoning**: Enhanced runners prevent output truncation, include hang detection, and provide better resource management than standard pytest.
+</testing_strategy>
