@@ -30,8 +30,13 @@ You'll need one of these MCP clients:
 
 ### Task Orchestrator Setup
 
-The easiest way is using our smart installer:
+#### Option 1: From PyPI (Recommended)
+```bash
+pip install mcp-task-orchestrator
+mcp-task-orchestrator-cli install
+```
 
+#### Option 2: From Source
 ```bash
 git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator

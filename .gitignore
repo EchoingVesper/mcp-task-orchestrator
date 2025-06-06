@@ -15,9 +15,17 @@ build/
 # Virtual environments
 venv/
 venv_mcp/
+venv_test/
 env/
 ENV/
+
+# Environment variables and secrets
 .env
+.env.local
+.env.*.local
+*.pem
+*.key
+.pypirc
 
 # Testing
 .coverage
@@ -82,3 +90,26 @@ htmlcov/
 .coverage.*
 .benchmark_results/
 .temp_cleanup/
+
+# Backup files
+*.bak
+*.old
+*.orig
+*~
+*.swn
+
+# OS-specific files
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Python type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Session/temporary files
+*-session.md
+files-created-this-session.md
