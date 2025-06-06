@@ -10,7 +10,7 @@
 - **FIXED**: Artifact path resolution issue causing artifacts to be written to MCP server directory
   - **Problem**: Artifacts were stored in server's working directory instead of user's project directory
   - **Solution**: Artifacts now correctly stored in `.task_orchestrator/artifacts/` within user's current working directory
-  - **Impact**: Restores functionality for 100% of users using artifact features
+  - **Impact**: Resolves functionality issues for users experiencing artifact access problems
   - **User Experience**: Users can now access all generated documentation, analysis, and code artifacts
 
 ### 🔧 Infrastructure Improvements
@@ -34,7 +34,7 @@
 ### 🐛 Critical Bug Fixes
 - **CRITICAL**: Fixed `orchestrator_initialize_session` failure preventing tool entry
   - Corrected method name mismatch: `_get_parent_task_id_from_persistence` → `_get_parent_task_id`
-  - Restores functionality for 100% of new users attempting to initialize orchestrator
+  - Resolves initialization issues for new users attempting to use the orchestrator
   - Enables parent task progress tracking and interrupted task detection
 
 ### 📚 Documentation Improvements
