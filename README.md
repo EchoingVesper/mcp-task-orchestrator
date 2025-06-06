@@ -66,6 +66,15 @@ Each step provides specialist context and expertise rather than generic response
 - One or more MCP clients (Claude Desktop, Cursor IDE, Windsurf, or VS Code with Cline extension)
 
 ### Installation
+
+#### Option 1: Install from PyPI (Recommended)
+```bash
+pip install mcp-task-orchestrator
+mcp-task-orchestrator-cli install
+# Restart your MCP client and look for 'task-orchestrator' in available tools
+```
+
+#### Option 2: Install from Source
 ```bash
 git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator

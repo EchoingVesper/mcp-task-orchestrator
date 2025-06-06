@@ -19,6 +19,13 @@
                     ┌─────────────────────────────┐
                     │   Task Orchestrator Setup   │
                     │                             │
+                    │ Option 1 (PyPI):            │
+                    │ 1. pip install              │
+                    │    mcp-task-orchestrator    │
+                    │ 2. mcp-task-orchestrator-cli│
+                    │    install                  │
+                    │                             │
+                    │ Option 2 (Source):          │
                     │ 1. git clone repository     │
                     │ 2. cd mcp-task-orchestrator │
                     │ 3. python run_installer.py  │

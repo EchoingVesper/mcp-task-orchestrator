@@ -18,6 +18,14 @@ node --version    # Should be 16+
 ```
 
 ### Step 2: One-Command Install
+
+#### From PyPI (Recommended)
+```bash
+pip install mcp-task-orchestrator
+mcp-task-orchestrator-cli install
+```
+
+#### From Source
 ```bash
 git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator

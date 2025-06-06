@@ -26,7 +26,11 @@ There are many ways to contribute to the MCP Task Orchestrator:
    ```
 3. Install development dependencies:
    ```bash
+   # Install package in development mode with dev extras
    pip install -e ".[dev]"
+   
+   # Or if working from PyPI release
+   pip install mcp-task-orchestrator[dev]
    ```
 4. Create a branch for your changes:
    ```bash

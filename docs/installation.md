@@ -2,6 +2,15 @@
 
 ## Quick Start
 
+### Option 1: Install from PyPI (Recommended)
+
+```bash
+pip install mcp-task-orchestrator
+mcp-task-orchestrator-cli install
+```
+
+### Option 2: Install from Source
+
 1. **Clone repository**
 
    ```bash
@@ -19,7 +28,16 @@
 
 4. **Verify Installation**: Follow the verification steps below
 
-## Why run_installer.py?
+## Installation Methods Explained
+
+### PyPI Installation (Recommended)
+The `pip install` method is recommended for most users because it:
+- **Simplified process**: Single command installation
+- **Automatic dependencies**: All requirements handled by pip
+- **Version management**: Easy updates with `pip install --upgrade`
+- **Standard Python workflow**: Familiar to Python developers
+
+### Source Installation (run_installer.py)
 
 The `run_installer.py` method is the recommended installation approach because it:
 
