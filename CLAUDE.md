@@ -204,3 +204,65 @@ python -m pytest tests/ -v
 - [ ] Version/environment context provided
 - [ ] Failure scenarios acknowledged where relevant
 </safe_documentation_patterns>
+
+## PyPI Release Management
+
+<pypi_release_workflow>
+⚠️ **CRITICAL: PyPI Release Process** ⚠️
+
+**Package Status**: This project is published to PyPI as `mcp-task-orchestrator`
+**Current Version**: Check `setup.py` line 9 for current version
+
+### Development Workflow (Unchanged)
+- **Continue developing in this directory** - this is your source repository
+- **Git operations remain the same** - commit, push, pull requests, branches
+- **All development and testing happens here first**
+
+### Release Process (NEW - Required for Version Updates)
+
+**Before Creating Pull Requests for Version Releases:**
+
+1. **Version Management** - Update version numbers in these files:
+   ```bash
+   # Update these files with new version (e.g., 1.5.2)
+   setup.py                           # Line 9: version="X.Y.Z"
+   pyproject.toml                     # version field
+   mcp_task_orchestrator/__init__.py  # __version__ (if present)
+   ```
+
+2. **Build and Test Process:**
+   ```bash
+   # Activate PyPI virtual environment
+   source venv_pypi/bin/activate
+   
+   # Build package distributions
+   python setup.py sdist bdist_wheel
+   
+   # Test upload to TestPyPI first
+   python scripts/release/upload.py --test
+   
+   # If test successful, upload to production PyPI
+   python scripts/release/upload.py
+   ```
+
+3. **Git Release Tagging:**
+   ```bash
+   # After successful PyPI upload, tag the release
+   git tag v1.5.2
+   git push origin v1.5.2
+   ```
+
+### When to Trigger PyPI Release
+- **Bug fixes requiring user updates**
+- **New features ready for public use**
+- **Security patches**
+- **Major milestone releases**
+
+### What NOT to Upload
+- **Development/experimental changes**
+- **Documentation-only updates**
+- **Internal refactoring without user impact**
+- **Work-in-progress features**
+
+**Important**: PyPI uploads are permanent and cannot be deleted. Only upload stable, tested versions.
+</pypi_release_workflow>
