@@ -697,7 +697,7 @@ async def handle_maintenance_coordinator(args: Dict[str, Any]) -> List[types.Tex
 
 
 async def main():
-    """Main entry point for the MCP server."""
+    """Async main entry point for the MCP server."""
     try:
         # Log server initialization
         logger.info("Starting MCP Task Orchestrator server...")
@@ -715,6 +715,11 @@ async def main():
     except Exception as e:
         logger.error(f"Error in MCP Task Orchestrator server: {e}", exc_info=True)
         raise
+
+
+def main_sync():
+    """Synchronous wrapper for console script entry point."""
+    asyncio.run(main())
 
 
 def get_project_directory(args: Dict[str, Any]) -> str:

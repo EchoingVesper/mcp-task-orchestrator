@@ -16,7 +16,7 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 
 setup(
     name="mcp-task-orchestrator",
-    version="1.5.1",
+    version="1.5.2",
     author="Echoing Vesper",
     author_email="noreply@github.com",
     description="A Model Context Protocol server for task orchestration",
@@ -57,7 +57,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "mcp-task-orchestrator=mcp_task_orchestrator.server:main",
+            "mcp-task-orchestrator=mcp_task_orchestrator.server:main_sync",
             "mcp-task-orchestrator-cli=mcp_task_orchestrator_cli.cli:main",
         ],
     },
