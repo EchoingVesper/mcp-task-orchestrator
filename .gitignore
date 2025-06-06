@@ -16,6 +16,7 @@ build/
 venv/
 venv_mcp/
 venv_test/
+venv_pypi/
 env/
 ENV/
 
