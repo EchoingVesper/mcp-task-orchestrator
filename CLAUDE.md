@@ -135,3 +135,72 @@ python -m pytest tests/ -v
 
 **Reasoning**: Enhanced runners prevent output truncation, include hang detection, and provide better resource management than standard pytest.
 </testing_strategy>
+
+## Legal Protection Documentation Standards
+
+<legal_liability_protection>
+⚠️ **CRITICAL: DOCUMENTATION LEGAL RISK MANAGEMENT** ⚠️
+
+**Legal Liability Score**: Current project documents score **7.5/10 HIGH RISK** for potential legal exposure in commercial environments.
+
+**Problem**: Documentation contains warranty language that could trigger lawsuits if tools fail in high-stakes commercial environments where significant financial losses occur.
+
+**Required Standards for ALL Documentation**:
+
+### Prohibited Language (NEVER USE):
+- **Absolute Claims**: "always", "never fails", "guaranteed", "100%", "eliminates", "prevents"
+- **Completeness Warranties**: "complete reference", "comprehensive coverage", "total solution"
+- **Performance Guarantees**: "optimal performance", "seamless integration", "robust handling"
+- **Reliability Assertions**: "production-ready", "enterprise-grade" (without qualification)
+- **Specification Compliance**: "follows all standards", "fully compliant" (without version/scope)
+
+### Required Protective Language:
+- **Qualifiers**: "designed to", "intended for", "typical conditions", "under normal use"
+- **Scope Limitations**: "available features", "current implementation", "documented capabilities"
+- **Conditional Performance**: "when properly configured", "in supported environments"
+- **Version-Specific**: "as of version X.Y.Z", "subject to change"
+
+### Mandatory Disclaimers for Documentation Categories:
+
+**API Documentation**: "This documentation describes available functionality as implemented. Performance and compatibility may vary based on environment and usage patterns."
+
+**User Guides**: "This software is provided 'as is' without warranties. Users should evaluate suitability for their specific use cases."
+
+**Technical Specifications**: "Specifications subject to change. Verify current behavior through testing in your environment."
+
+**Installation/Setup**: "Installation success depends on system configuration. Troubleshooting may be required for specific environments."
+</legal_liability_protection>
+
+### Documentation Writing Framework
+
+<safe_documentation_patterns>
+**Before Writing ANY Documentation**:
+
+1. **Legal Risk Check**: Does this create warranties, guarantees, or absolute claims?
+2. **Scope Definition**: Are we clearly limiting what we promise?
+3. **User Context**: Could this be used in high-stakes commercial environments?
+4. **Failure Scenarios**: What happens if this claim proves false?
+
+**Safe Language Patterns**:
+```
+❌ RISKY: "This system prevents data loss"
+✅ SAFE: "This system is designed to reduce risk of data loss"
+
+❌ RISKY: "Complete API reference covering all features"  
+✅ SAFE: "API reference for available features in version X.Y.Z"
+
+❌ RISKY: "Guaranteed seamless integration"
+✅ SAFE: "Designed for integration with supported MCP clients"
+
+❌ RISKY: "Production-ready, enterprise-grade solution"
+✅ SAFE: "Suitable for development and testing environments"
+```
+
+**Documentation Review Checklist**:
+- [ ] No absolute language ("always", "never", "guaranteed")
+- [ ] No unqualified performance claims
+- [ ] Scope clearly defined and limited
+- [ ] Appropriate disclaimers included
+- [ ] Version/environment context provided
+- [ ] Failure scenarios acknowledged where relevant
+</safe_documentation_patterns>

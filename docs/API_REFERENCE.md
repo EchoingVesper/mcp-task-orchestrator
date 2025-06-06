@@ -1,10 +1,12 @@
 # MCP Task Orchestrator API Reference
 
-*Complete reference for all orchestrator tools and parameters*
+*Reference guide for available orchestrator tools and parameters*
+
+> **Documentation Notice**: This documentation describes available functionality as implemented in the current version. Performance and compatibility may vary based on environment and usage patterns. Specifications are subject to change.
 
 ## Overview
 
-The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, execution, and maintenance. All tools follow the Model Context Protocol (MCP) specification and are designed for seamless integration with Claude, Cursor, Windsurf, and VS Code.
+The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, execution, and maintenance. Tools are designed to follow the Model Context Protocol (MCP) specification and are intended for integration with supported MCP clients including Claude, Cursor, Windsurf, and VS Code.
 
 ## Tool Categories
 
@@ -132,7 +134,7 @@ The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, 
 ```
 
 **Best Practices**:
-- Break tasks into 3-8 subtasks for optimal management
+- Recommended: Break tasks into 3-8 subtasks for effective management
 - Ensure each subtask is independently executable
 - Use appropriate specialist types for each subtask
 - Include dependencies only when necessary
@@ -487,7 +489,7 @@ Prepares comprehensive handover documentation.
 
 ### Maintenance & Performance
 1. **Run regular maintenance** - daily basic cleanup recommended
-2. **Monitor task counts** - keep active tasks under 100 for optimal performance
+2. **Monitor task counts** - recommended to keep active tasks under 100 for best performance
 3. **Use handover preparation** before context transitions
 4. **Archive completed workflows** to maintain system health
 

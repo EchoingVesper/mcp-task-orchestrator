@@ -1,6 +1,6 @@
 # MCP Task Orchestrator - Quick Start Guide
 
-*Get up and running with AI-powered task orchestration in under 5 minutes*
+*Get up and running with AI-powered task orchestration*
 
 ## 🎯 What This Does
 
@@ -8,7 +8,7 @@ Transform Claude (or other MCP clients) into an intelligent project manager that
 
 **Example:** Ask Claude to *"Build a Python web scraper with testing and documentation"* → Get a structured plan with architect, implementer, and tester specialists working together.
 
-## ⚡ 30-Second Start
+## ⚡ Quick Start
 
 ### Step 1: Prerequisites Check
 ```bash
@@ -24,7 +24,7 @@ cd mcp-task-orchestrator
 python run_installer.py
 ```
 
-> **Reliable Installation**: This optimized installer automatically detects your MCP clients and handles all configuration with improved error handling.
+> **Installation Notice**: This installer is designed to detect common MCP clients and configure them automatically. Troubleshooting may be required for specific system configurations.
 
 ### Step 3: Restart Your MCP Client
 - **Claude Desktop**: Restart the entire app
