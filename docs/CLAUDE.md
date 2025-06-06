@@ -1,6 +1,68 @@
 # Documentation Development - Claude Code Guide
 
+<critical_file_size_warning>
+⚠️ **CRITICAL: FILE SIZE LIMITS FOR CLAUDE CODE STABILITY** ⚠️
+
+**Maximum File Size**: 500 lines (300-400 lines recommended)
+**Risk**: Files exceeding 500 lines can cause Claude Code to crash
+
+**Documentation Files in THIS Directory Exceeding Limits**:
+- `examples/generic-task-usage-guide.md` (1172 lines) - CRITICAL
+- `prompts/features/proposed/[RESEARCH]_mcp_tools_suite_expansion.md` (1065 lines) - CRITICAL
+- `prompts/features/proposed/[RESEARCH]_bidirectional_persistence_system.md` (877 lines) - HIGH RISK
+- `examples/migration-examples.md` (853 lines) - HIGH RISK
+- `API_REFERENCE.md` (838 lines) - HIGH RISK
+- Multiple other files 500-800 lines
+
+**Documentation Refactoring Guidelines**:
+1. Split large guides into topic-focused sections
+2. Create subdirectories for multi-part documentation
+3. Use index files for navigation
+4. Keep individual doc files under 400 lines
+5. Consider separate files for code examples
+</critical_file_size_warning>
+
+<documentation_context_analysis>
+You are working within the multi-audience documentation system. Before proceeding with documentation work:
+
+1. **Identify Target Audience**: Human users, LLM agents, or technical developers?
+2. **Determine Documentation Type**: User guides, API docs, architecture decisions, or troubleshooting?
+3. **Check Content Requirements**: Character limits for LLM docs, format standards, cross-references?
+4. **Validate Current Structure**: How does this fit with existing documentation architecture?
+5. **Consider Integration**: How will this documentation be discovered and used?
+</documentation_context_analysis>
+
 Documentation-specific guidance for the MCP Task Orchestrator project's comprehensive documentation system.
+
+## Documentation Strategy Framework
+
+<documentation_decision_framework>
+**Choose Documentation Approach Based on Purpose**:
+
+**Human-Readable Documentation** (`user-guide/`):
+- **When**: End-user facing content, tutorials, getting started guides
+- **Style**: Clear structure, progressive disclosure, practical examples
+- **Length**: No strict limits, optimize for clarity and completeness
+- **Format**: Descriptive headings, visual aids, step-by-step workflows
+
+**LLM-Optimized Documentation** (`llm-agents/`):
+- **When**: AI assistant integration, Claude Code contexts, tool documentation
+- **Style**: Dense information, maximum utility per character
+- **Length**: 1200-2000 characters per file (strict requirement)
+- **Format**: Structured sections, consistent formatting, tool integration focus
+
+**Architecture Documentation** (`architecture/`):
+- **When**: Design decisions, technical specifications, system design
+- **Style**: Decision records with context, alternatives, and consequences
+- **Length**: Comprehensive but focused, document the "why" not just "what"
+- **Format**: Problem/solution/rationale structure
+
+**Decision Process**:
+1. **Identify Primary Users**: Who will consume this documentation?
+2. **Determine Access Pattern**: How will users discover and use this content?
+3. **Assess Update Frequency**: How often will this need maintenance?
+4. **Consider Integration Needs**: Does this link to other documentation?
+</documentation_decision_framework>
 
 ## Documentation Architecture
 

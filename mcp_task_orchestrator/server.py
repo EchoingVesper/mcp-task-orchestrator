@@ -46,7 +46,7 @@ def get_state_manager() -> StateManager:
         # Get base directory for persistence
         base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
         if not base_dir:
-            base_dir = Path(__file__).parent.parent
+            base_dir = os.getcwd()
         
         _state_manager = StateManager(base_dir=base_dir)
         logger.info(f"Initialized StateManager with persistence in {base_dir}/.task_orchestrator")
@@ -753,10 +753,10 @@ def get_project_directory(args: Dict[str, Any]) -> str:
         logger.info(f"Using editor working directory: {editor_cwd}")
         return editor_cwd
     
-    # Strategy 4: Use project directory based on package location (consistent with database system)
-    # This ensures artifacts are created in the project directory, not Claude Desktop's working directory
-    project_dir = str(Path(__file__).parent.parent)
-    logger.info(f"Using project directory based on package location: {project_dir}")
+    # Strategy 4: Use current working directory as fallback
+    # This ensures artifacts are created where the orchestrator is being run from
+    project_dir = os.getcwd()
+    logger.info(f"Using current working directory as project directory: {project_dir}")
     return project_dir
 
 
