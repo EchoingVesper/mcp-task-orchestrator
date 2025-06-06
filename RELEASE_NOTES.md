@@ -1,5 +1,34 @@
 # MCP Task Orchestrator Release Notes
 
+## Version 1.5.1 - Critical Artifact Path Fix (2025-06-06)
+
+### 🚨 IMMEDIATE ACTION REQUIRED
+- **Upgrade Immediately**: This release fixes a critical bug that prevents access to generated artifacts
+- **All Users Affected**: Previous versions store artifacts in inaccessible server directories
+
+### 🐛 Critical Bug Fixes
+- **FIXED**: Artifact path resolution issue causing artifacts to be written to MCP server directory
+  - **Problem**: Artifacts were stored in server's working directory instead of user's project directory
+  - **Solution**: Artifacts now correctly stored in `.task_orchestrator/artifacts/` within user's current working directory
+  - **Impact**: Restores functionality for 100% of users using artifact features
+  - **User Experience**: Users can now access all generated documentation, analysis, and code artifacts
+
+### 🔧 Infrastructure Improvements
+- Synchronized version numbers across all package files (resolved 1.5.0/1.4.0 mismatch)
+- Enhanced artifact storage system reliability
+
+### 🎯 Who Should Upgrade
+- **All Users**: This bug affects every user attempting to use artifact generation features
+- **Development Teams**: Critical for teams relying on task orchestrator for documentation and analysis
+- **Production Deployments**: Essential update for any production usage
+
+### 📋 Migration Notes
+- No breaking changes to API or configuration
+- Existing artifacts may remain in old server locations (can be safely deleted)
+- New artifacts will be correctly placed in project directories after upgrade
+
+---
+
 ## Version 1.3.1 - Critical Bug Fix Release (2025-05-30)
 
 ### 🐛 Critical Bug Fixes

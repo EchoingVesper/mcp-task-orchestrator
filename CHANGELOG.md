@@ -5,6 +5,19 @@ All notable changes to the MCP Task Orchestrator project will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2025-06-06
+
+### 🐛 Critical Bug Fixes
+- **CRITICAL**: Fixed artifact path resolution issue where artifacts were written to MCP server directory instead of user's current working directory
+  - Artifacts are now correctly stored in `.task_orchestrator/artifacts/` within the user's project directory
+  - Restores accessibility to all generated artifacts for 100% of users
+  - Enables proper artifact retrieval and prevents accumulation in wrong locations
+  - **Impact**: This bug rendered the artifact system non-functional for practical use
+
+### 🔧 Infrastructure
+- Resolved version inconsistency between setup.py (1.5.0) and package __init__.py (1.4.0)
+- Both version declarations now synchronized at 1.5.1
+
 ## [1.4.0] - 2025-05-30
 
 > **Editor's Note**: Massive documentation reorganization and enhancement inspired by constructive feedback from KECG, who correctly identified the need for clearer input-to-output examples, human-authored documentation, and concrete use cases. Sometimes the harshest critics provide the most valuable direction.

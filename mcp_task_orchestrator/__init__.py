@@ -5,6 +5,6 @@ This package provides a Model Context Protocol (MCP) server that enables complex
 management and specialized prompting within any MCP-compatible environment.
 """
 
-__version__ = "1.4.0"
+__version__ = "1.5.1"
 
 # Simplified imports to avoid circular dependencies

@@ -51,8 +51,8 @@ class DatabasePersistenceManager:
             base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
             
             if not base_dir:
-                # Default to the directory containing the package
-                base_dir = Path(__file__).parent.parent.parent
+                # Default to current working directory (project being worked on)
+                base_dir = os.getcwd()
         
         self.base_dir = Path(base_dir)
         self.persistence_dir = self.base_dir / self.PERSISTENCE_DIR

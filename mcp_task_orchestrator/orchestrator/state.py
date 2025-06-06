@@ -39,8 +39,8 @@ class StateManager:
             db_path = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_PATH")
             
             if not db_path:
-                # Default to a local database file
-                db_path = Path(__file__).parent.parent.parent / "task_orchestrator.db"
+                # Default to a local database file in current working directory
+                db_path = os.getcwd() + "/.task_orchestrator/task_orchestrator.db"
         
         self.db_path = str(db_path)
         self.lock = asyncio.Lock()  # For coordinating async operations only
@@ -51,8 +51,8 @@ class StateManager:
             base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
             
             if not base_dir:
-                # Default to the directory containing the package
-                base_dir = Path(__file__).parent.parent.parent
+                # Default to current working directory (project being worked on)
+                base_dir = os.getcwd()
         
         # Create the database persistence manager using the factory
         db_url = f"sqlite:///{self.db_path}"
