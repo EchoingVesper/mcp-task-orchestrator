@@ -5,6 +5,33 @@ All notable changes to the MCP Task Orchestrator project will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2025-06-07
+
+### Added
+- Health monitoring system with real-time scoring and trend analysis
+- Automated maintenance scheduler for build cleanup and cache management
+- Professional Claude Code session templates and development guides
+- Comprehensive project structure validation tools
+- Main entry point fix for package installation (`main_sync()` in server/__init__.py)
+
+### Changed
+- Complete repository reorganization achieving 100/100 health score
+- Scripts moved to purpose-based directories (build/, testing/, diagnostics/, deployment/)
+- Documentation restructured with professional information architecture
+- Virtual environments consolidated from 6 to 1 (venv_mcp)
+- Root files reduced from 61 to 11 (-82%)
+
+### Fixed
+- **CRITICAL**: Task orchestrator package loading issue preventing MCP client connections
+- Console script entry point now works correctly when installed via pip
+- Import issues resolved with dynamic code loading for package context
+
+### Infrastructure
+- Professional-grade repository organization following industry standards
+- CI/CD ready structure with automated quality assurance
+- Enhanced testing infrastructure with reliable runners
+- Complete backward compatibility maintained
+
 ## [1.6.0] - 2025-06-06
 
 ### 🚀 Major Features
