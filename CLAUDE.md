@@ -44,7 +44,7 @@ You are working with the MCP Task Orchestrator project, a production-ready Pytho
 
 ## Project Overview
 
-**Version**: 1.4.1 (stable, production-ready)  
+**Version**: 1.6.0 (stable, production-ready)  
 **Architecture**: Python-based MCP server with SQLite persistence and enhanced features  
 **Location**: `E:\My Work\Programming\MCP Servers\mcp-task-orchestrator`
 

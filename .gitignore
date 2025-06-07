@@ -17,6 +17,9 @@ venv/
 venv_mcp/
 venv_test/
 venv_pypi/
+venv_pr_test/
+venv_pypi_test/
+venv_pypi_validation/
 env/
 ENV/
 
