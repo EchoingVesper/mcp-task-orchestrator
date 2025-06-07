@@ -1,6 +1,7 @@
 # Python bytecode
 __pycache__/
 *.py[cod]
+*.pyc
 *$py.class
 
 # Generated example roles file
