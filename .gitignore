@@ -14,12 +14,7 @@ build/
 
 # Virtual environments
 venv/
-venv_mcp/
-venv_test/
-venv_pypi/
-venv_pr_test/
-venv_pypi_test/
-venv_pypi_validation/
+venv_*/
 env/
 ENV/
 
@@ -117,3 +112,16 @@ dmypy.json
 # Session/temporary files
 *-session.md
 files-created-this-session.md
+
+# Claude Code specific patterns
+temp/
+.claude-temp/
+.claude-session/
+*-claude-session.md
+claude-work-session-*.md
+.claude-cache/
+
+# Temporary development artifacts
+dev-temp/
+scratch/
+.working/
