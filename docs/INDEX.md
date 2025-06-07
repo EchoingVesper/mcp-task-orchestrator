@@ -105,9 +105,23 @@ docs/
 │   ├── testing-strategy.md            # Testing approach & standards
 │   └── version-progression-plan.md     # Version roadmap & timeline
 ├── testing/                      # Test frameworks & strategies
+│   ├── TESTING_GUIDELINES.md         # Testing best practices
+│   ├── COMPREHENSIVE_MIGRATION_TEST_REPORT.md # Migration test results
+│   ├── COMPREHENSIVE_REBOOT_TEST_REPORT.md    # Reboot test results
+│   └── VALIDATION_REPORT.md          # System validation results
+├── releases/                     # Release documentation & changelogs
+│   ├── RELEASE_NOTES.md              # Current release notes
+│   ├── RELEASE_CHECKLIST.md          # Release process checklist
+│   ├── PyPI_Release_1.6.0_Summary.md # v1.6.0 release documentation
+│   └── SERVER_REBOOT_CHANGELOG.md    # Server reboot feature changelog
 ├── troubleshooting/              # System-level troubleshooting
-│   └── maintenance-operations.md # Maintenance troubleshooting
+│   ├── TROUBLESHOOTING.md            # General troubleshooting guide
+│   └── maintenance-operations.md     # Maintenance troubleshooting
 └── development/                  # Development resources
+    ├── IMPLEMENTATION_SUMMARY.md        # Implementation documentation
+    ├── MIGRATION_SYSTEM_IMPLEMENTATION_SUMMARY.md # Migration system docs
+    ├── WORKTREE_SETUP.md               # Git worktree development guide
+    └── CLEANUP_SAFETY_FRAMEWORK.md     # Project cleanup documentation
 ```
 
 ## 🎯 Quick Navigation by Use Case
@@ -133,8 +147,14 @@ docs/
 ### "I need to optimize or maintain my system"
 → [Maintenance Coordinator Guide](./user-guide/maintenance-coordinator-guide.md) → [LLM Quick Reference](./llm-agents/quick-reference/maintenance-coordinator.md) → [Maintenance Troubleshooting](./troubleshooting/maintenance-operations.md)
 
+### "I need release or testing information"
+→ [Release Notes](./releases/RELEASE_NOTES.md) → [Testing Guidelines](./testing/TESTING_GUIDELINES.md) → [Test Reports](./testing/)
+
+### "I'm developing or contributing to the project"
+→ [Development Resources](./development/) → [Implementation Summary](./development/IMPLEMENTATION_SUMMARY.md) → [Worktree Setup](./development/WORKTREE_SETUP.md)
+
 ### "Something isn't working"
-→ [Troubleshooting Tree](./user-guide/visual-guides/troubleshooting-tree.md) → [LLM Troubleshooting](./llm-agents/troubleshooting/) → [System Troubleshooting](./troubleshooting/)
+→ [Troubleshooting Guide](./troubleshooting/TROUBLESHOOTING.md) → [LLM Troubleshooting](./llm-agents/troubleshooting/) → [System Troubleshooting](./troubleshooting/)
 
 ## 🔗 Cross-References & Related Topics
 
