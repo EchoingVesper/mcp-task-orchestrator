@@ -1,11 +1,11 @@
-# Database Migration System - Claude Code Development Guide
+# In-Context Server Reboot - Claude Code Development Guide
 
 <worktree_context>
-**Worktree Purpose**: Automatic Database Migration System Implementation
-**Branch**: feature/automatic-database-migration  
-**Task ID**: task_0b13127d
-**Priority**: CRITICAL - Development Velocity Blocker
-**Timeline**: 2-3 days implementation
+**Worktree Purpose**: In-Context Server Reboot Mechanism Implementation
+**Branch**: feature/in-context-server-reboot
+**Task ID**: task_2f047d36
+**Priority**: CRITICAL - Development Velocity Blocker  
+**Timeline**: 3 days implementation
 </worktree_context>
 
 <critical_file_size_warning>
@@ -49,28 +49,29 @@ You are working with the MCP Task Orchestrator project, a production-ready Pytho
 **Location**: `E:\My Work\Programming\MCP Servers\mcp-task-orchestrator`
 
 <worktree_focus>
-- **Migration Engine**: SQLAlchemy introspection for schema detection
-- **Safety Mechanisms**: Rollback capability and migration locking
-- **Server Integration**: Startup sequence modification for automatic migrations
-- **History Tracking**: Version management and migration audit trail
-- **Error Recovery**: Comprehensive rollback and validation systems
+- **Graceful Shutdown**: State serialization and task suspension
+- **Connection Preservation**: MCP client connection maintenance during reboot
+- **State Restoration**: Seamless server restart with preserved state
+- **Reboot Coordination**: Safe reboot triggers and confirmation mechanisms
+- **Integration Support**: Coordination with migration system for automatic reboots
 </worktree_focus>
 
 ## Active Task Status
 
 **Current Subtasks** (ready to execute):
-1. **architect_f74a18**: Design and implement core migration detection engine (8 hours)
-2. **implementer_8cf1b2**: Implement migration execution and safety mechanisms (6 hours)  
-3. **implementer_ade9c3**: Integrate migration system with server startup (4 hours)
-4. **tester_2e6081**: Create comprehensive testing and validation suite (6 hours)
-5. **documenter_e868b9**: Document migration system and operational procedures (3 hours)
+1. **architect_9e06a9**: Design server state serialization and graceful shutdown (6 hours)
+2. **implementer_a8b5f3**: Implement graceful shutdown and state preservation (8 hours)
+3. **implementer_dd2297**: Implement restart mechanism and state restoration (8 hours)
+4. **implementer_9d9414**: Create reboot coordination and trigger mechanisms (4 hours)
+5. **tester_953f91**: Test reboot scenarios and validate client preservation (6 hours)
+6. **documenter_b80ca2**: Document reboot system and operational procedures (3 hours)
 
 ## Quick Start Commands
 
 ```bash
-# Execute first architect task
+# Execute first architect task  
 # Use MCP tool: mcp__task-orchestrator__orchestrator_execute_subtask
-# Task ID: architect_f74a18
+# Task ID: architect_9e06a9
 
 # Check system health before starting
 python scripts/diagnostics/check_status.py
