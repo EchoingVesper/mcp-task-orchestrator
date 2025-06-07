@@ -27,6 +27,42 @@ You are working within the core MCP Task Orchestrator implementation package. Be
 4. **Consider Async Safety**: Will your changes introduce race conditions or resource leaks?
 </implementation_context_analysis>
 
+## Git Worktree Context
+
+<worktree_context_awareness>
+**You are working in a Git Worktree**: This directory is part of a git worktree system that allows parallel development.
+
+**Current Worktree Status**:
+- **Working Directory**: `worktrees/db-migration/`
+- **Branch**: `feature/automatic-database-migration` 
+- **Purpose**: Database migration system implementation
+- **Isolation**: Complete file isolation from other worktrees
+
+**Worktree Development Guidelines**:
+1. **Focus on Feature**: Stay focused on the current feature (database migration)
+2. **Independent Commits**: Commit and push independently of other worktrees
+3. **File Isolation**: Changes here don't affect other concurrent development
+4. **Testing Independence**: Test this feature without worrying about other work
+
+**Git Operations in Worktrees**:
+```bash
+# Normal git operations work exactly the same
+git status          # Shows only this worktree's changes
+git add .           # Stages only this worktree's files
+git commit -m "..."  # Commits only this worktree's changes
+git push            # Pushes this worktree's branch
+
+# View all worktrees
+git worktree list
+```
+
+**Cross-Worktree Considerations**:
+- Changes made here are isolated until merge
+- Other worktrees may have different versions of shared files
+- Integration testing should happen after individual features are complete
+- Each worktree can create its own PR independently
+</worktree_context_awareness>
+
 ## Core Architecture Overview
 
 **Orchestration Engine**: Core MCP server with SQLite persistence, async operations, and enhanced features.
