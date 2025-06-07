@@ -21,7 +21,7 @@ addopts = "-s -v --tb=short"
 # addopts = "--show-capture=all -v --tb=short"              # Show all captured output  
 # addopts = "-s -v --tb=short --maxfail=1"                  # Stop on first failure
 # addopts = "-s -v --tb=short -p no:anyio -p no:asyncio"    # Disable async plugins
-minversion = "7.0"
+minversion = "1.7.0"
 # Markers for test categorization
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
