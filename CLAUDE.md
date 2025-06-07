@@ -374,9 +374,45 @@ python -m pytest tests/ -v
 - **Git operations remain the same** - commit, push, pull requests, branches
 - **All development and testing happens here first**
 
-### Release Process (NEW - Required for Version Updates)
+### Automated Release Process (RECOMMENDED)
 
-**Before Creating Pull Requests for Version Releases:**
+**After Merging PRs to Main:**
+
+1. **Automated Release (Single Command):**
+   ```bash
+   # Standard patch release (bug fixes)
+   python scripts/release/pypi_release_automation.py
+   
+   # Minor release (new features)
+   python scripts/release/pypi_release_automation.py --version minor
+   
+   # Major release (breaking changes)
+   python scripts/release/pypi_release_automation.py --version major
+   
+   # Test release (upload to TestPyPI)
+   python scripts/release/pypi_release_automation.py --test
+   ```
+
+2. **Automation Includes:**
+   - ✅ Safety checks (branch validation, uncommitted changes, upstream sync)
+   - ✅ Version number updates (setup.py, pyproject.toml, __init__.py)
+   - ✅ Test suite execution
+   - ✅ Package building and validation
+   - ✅ PyPI upload with proper authentication
+   - ✅ Git tagging and pushing
+   - ✅ GitHub release creation
+   - ✅ Cleanup of build artifacts
+
+3. **Safety Features:**
+   - Must be on main branch
+   - No uncommitted changes allowed
+   - Local main must be up-to-date with remote
+   - Build verification before upload
+   - Confirmation prompts for critical steps
+
+### Manual Release Process (Fallback)
+
+**If automation fails, use manual process:**
 
 1. **Version Management** - Update version numbers in these files:
    ```bash
@@ -408,6 +444,16 @@ python -m pytest tests/ -v
    git push origin v1.5.2
    ```
 
+### Prerequisites for Automation
+```bash
+# Install required packages
+pip install rich python-dotenv twine build
+
+# Configure .env with PyPI tokens
+cp .env.example .env
+# Edit .env with your PyPI API tokens
+```
+
 ### When to Trigger PyPI Release
 - **Bug fixes requiring user updates**
 - **New features ready for public use**
@@ -421,4 +467,9 @@ python -m pytest tests/ -v
 - **Work-in-progress features**
 
 **Important**: PyPI uploads are permanent and cannot be deleted. Only upload stable, tested versions.
+
+### Documentation
+See detailed automation documentation:
+- [PyPI Release Automation Guide](docs/development/PYPI_RELEASE_AUTOMATION.md)
+- [Workflow Integration](docs/development/PYPI_WORKFLOW_INTEGRATION.md)
 </pypi_release_workflow>
