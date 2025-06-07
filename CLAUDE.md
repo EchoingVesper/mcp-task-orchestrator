@@ -1,4 +1,12 @@
-# MCP Task Orchestrator - Claude Code Development Guide
+# Database Migration System - Claude Code Development Guide
+
+<worktree_context>
+**Worktree Purpose**: Automatic Database Migration System Implementation
+**Branch**: feature/automatic-database-migration  
+**Task ID**: task_0b13127d
+**Priority**: CRITICAL - Development Velocity Blocker
+**Timeline**: 2-3 days implementation
+</worktree_context>
 
 <critical_file_size_warning>
 ⚠️ **CRITICAL: FILE SIZE LIMITS FOR CLAUDE CODE STABILITY** ⚠️
@@ -40,13 +48,36 @@ You are working with the MCP Task Orchestrator project, a production-ready Pytho
 **Architecture**: Python-based MCP server with SQLite persistence and enhanced features  
 **Location**: `E:\My Work\Programming\MCP Servers\mcp-task-orchestrator`
 
-<key_capabilities>
-- **Task Orchestration**: Intelligent breakdown with specialized AI roles
-- **Artifact Storage**: Context limit prevention for complex workflows
-- **Maintenance Coordination**: Automated task lifecycle management
-- **Enhanced Testing**: Advanced infrastructure with alternative runners
-- **Feature Management**: 8 approved features with implementation roadmap
-</key_capabilities>
+<worktree_focus>
+- **Migration Engine**: SQLAlchemy introspection for schema detection
+- **Safety Mechanisms**: Rollback capability and migration locking
+- **Server Integration**: Startup sequence modification for automatic migrations
+- **History Tracking**: Version management and migration audit trail
+- **Error Recovery**: Comprehensive rollback and validation systems
+</worktree_focus>
+
+## Active Task Status
+
+**Current Subtasks** (ready to execute):
+1. **architect_f74a18**: Design and implement core migration detection engine (8 hours)
+2. **implementer_8cf1b2**: Implement migration execution and safety mechanisms (6 hours)  
+3. **implementer_ade9c3**: Integrate migration system with server startup (4 hours)
+4. **tester_2e6081**: Create comprehensive testing and validation suite (6 hours)
+5. **documenter_e868b9**: Document migration system and operational procedures (3 hours)
+
+## Quick Start Commands
+
+```bash
+# Execute first architect task
+# Use MCP tool: mcp__task-orchestrator__orchestrator_execute_subtask
+# Task ID: architect_f74a18
+
+# Check system health before starting
+python scripts/diagnostics/check_status.py
+
+# Test current server functionality
+python -m mcp_task_orchestrator.server
+```
 
 ## Pre-Development System Check
 
