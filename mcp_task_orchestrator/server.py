@@ -22,6 +22,8 @@ from .orchestrator.state import StateManager
 from .orchestrator.specialists import SpecialistManager
 from .orchestrator.artifacts import ArtifactManager
 from .db.auto_migration import execute_startup_migration
+from .server.reboot_tools import REBOOT_TOOLS, REBOOT_TOOL_HANDLERS
+from .server.reboot_integration import initialize_reboot_system
 
 # Configure logging
 log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
@@ -300,7 +302,7 @@ async def list_tools() -> List[types.Tool]:
                 "required": ["action"]
             }
         )
-    ]
+    ] + REBOOT_TOOLS
 
 
 @app.call_tool()
@@ -321,6 +323,8 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[types.TextCont
         return await handle_get_status(arguments)
     elif name == "orchestrator_maintenance_coordinator":
         return await handle_maintenance_coordinator(arguments)
+    elif name in REBOOT_TOOL_HANDLERS:
+        return await REBOOT_TOOL_HANDLERS[name](arguments)
     else:
         raise ValueError(f"Unknown tool: {name}")
 
@@ -769,6 +773,14 @@ async def main():
     try:
         # Log server initialization
         logger.info("Starting MCP Task Orchestrator server...")
+        
+        # Initialize reboot system
+        try:
+            state_manager = get_state_manager()
+            await initialize_reboot_system(state_manager)
+            logger.info("Reboot system initialized successfully")
+        except Exception as e:
+            logger.warning(f"Failed to initialize reboot system: {e}")
         
         # Use the original implementation pattern with async context manager
         async with stdio_server() as (read_stream, write_stream):
