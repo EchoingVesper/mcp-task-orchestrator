@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 1.5.1](https://img.shields.io/badge/version-1.5.1-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.5.1)
+[![Version 1.7.0](https://img.shields.io/badge/version-1.5.1-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.7.0)
 
 A Model Context Protocol server that breaks down complex tasks into structured workflows with specialized AI roles. Works with Claude Desktop, Cursor IDE, Windsurf, and VS Code.
 
