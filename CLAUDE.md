@@ -1,4 +1,12 @@
-# MCP Task Orchestrator - Claude Code Development Guide
+# Database Migration System - Claude Code Development Guide
+
+<worktree_context>
+**Worktree Purpose**: Automatic Database Migration System Implementation
+**Branch**: feature/automatic-database-migration  
+**Task ID**: task_0b13127d
+**Priority**: CRITICAL - Development Velocity Blocker
+**Timeline**: 2-3 days implementation
+</worktree_context>
 
 <critical_file_size_warning>
 ⚠️ **CRITICAL: FILE SIZE LIMITS FOR CLAUDE CODE STABILITY** ⚠️
@@ -40,13 +48,36 @@ You are working with the MCP Task Orchestrator project, a production-ready Pytho
 **Architecture**: Python-based MCP server with SQLite persistence and enhanced features  
 **Location**: `E:\My Work\Programming\MCP Servers\mcp-task-orchestrator`
 
-<key_capabilities>
-- **Task Orchestration**: Intelligent breakdown with specialized AI roles
-- **Artifact Storage**: Context limit prevention for complex workflows
-- **Maintenance Coordination**: Automated task lifecycle management
-- **Enhanced Testing**: Advanced infrastructure with alternative runners
-- **Feature Management**: 8 approved features with implementation roadmap
-</key_capabilities>
+<worktree_focus>
+- **Migration Engine**: SQLAlchemy introspection for schema detection
+- **Safety Mechanisms**: Rollback capability and migration locking
+- **Server Integration**: Startup sequence modification for automatic migrations
+- **History Tracking**: Version management and migration audit trail
+- **Error Recovery**: Comprehensive rollback and validation systems
+</worktree_focus>
+
+## Active Task Status
+
+**Current Subtasks** (ready to execute):
+1. **architect_f74a18**: Design and implement core migration detection engine (8 hours)
+2. **implementer_8cf1b2**: Implement migration execution and safety mechanisms (6 hours)  
+3. **implementer_ade9c3**: Integrate migration system with server startup (4 hours)
+4. **tester_2e6081**: Create comprehensive testing and validation suite (6 hours)
+5. **documenter_e868b9**: Document migration system and operational procedures (3 hours)
+
+## Quick Start Commands
+
+```bash
+# Execute first architect task
+# Use MCP tool: mcp__task-orchestrator__orchestrator_execute_subtask
+# Task ID: architect_f74a18
+
+# Check system health before starting
+python scripts/diagnostics/check_status.py
+
+# Test current server functionality
+python -m mcp_task_orchestrator.server
+```
 
 ## Pre-Development System Check
 
@@ -87,8 +118,58 @@ python scripts/diagnostics/diagnose_db.py
 
 ## Enhanced Development Workflows
 
+### Git Worktrees for Parallel Development
+
+<worktree_strategy>
+**Use Worktrees for Isolated Development**: Multiple tasks simultaneously with complete code isolation
+
+**What are Git Worktrees?**
+- Multiple working directories sharing one Git repository
+- Each worktree can have different branch checked out
+- Perfect for parallel feature development without branch switching
+- Complete file isolation between concurrent Claude Code instances
+
+**Creating New Worktrees**:
+```bash
+# List existing worktrees
+git worktree list
+
+# Create new worktree for a feature
+git worktree add worktrees/feature-name -b feature/feature-name
+
+# Work in the new worktree
+cd worktrees/feature-name && claude
+```
+
+**Worktree Development Workflow**:
+1. **Create worktree**: `git worktree add worktrees/my-feature -b feature/my-feature`
+2. **Develop in isolation**: Make changes without affecting other work
+3. **Commit normally**: `git add . && git commit -m "feat: implement feature"`
+4. **Push branch**: `git push -u origin feature/my-feature`
+5. **Create PR**: `gh pr create` or via GitHub UI
+6. **Clean up after merge**: `git worktree remove worktrees/my-feature`
+
+**Benefits**:
+- Complete isolation between Claude Code instances
+- No branch switching conflicts or stashing needed
+- Test different features simultaneously
+- Parallel development on critical infrastructure
+
+**Best Practices**:
+- Use descriptive worktree names matching feature branches
+- Keep worktrees in a dedicated `worktrees/` directory
+- Clean up worktrees after PRs are merged
+- Document active worktrees in your PR descriptions
+</worktree_strategy>
+
 <workflow_selection>
 Choose your development context based on the task type:
+
+**Parallel Development** → Use Git worktrees (RECOMMENDED for features)
+- Multiple feature development simultaneously
+- Critical infrastructure components
+- Independent testing environments
+- Example: `git worktree add worktrees/feature-name -b feature/feature-name`
 
 **Universal Project Tasks** → Stay in root directory
 - Project-wide changes, documentation updates, git operations
@@ -110,6 +191,80 @@ Choose your development context based on the task type:
 - Diagnostic tools, maintenance scripts, deployment
 - Database migrations, system health monitoring
 </workflow_selection>
+
+### Git Worktree Commit and PR Workflow
+
+<worktree_git_workflow>
+**Managing Commits and PRs Across Multiple Worktrees**
+
+**Key Concepts**:
+- Each worktree operates independently on its own branch
+- Commits in one worktree don't affect others
+- Multiple PRs can exist simultaneously from different worktrees
+- All worktrees share the same remote repository
+
+**Commit Workflow for Each Worktree**:
+```bash
+# In worktree 1 (e.g., db-migration)
+cd worktrees/db-migration
+git add .
+git commit -m "feat: implement database migration system"
+git push -u origin feature/automatic-database-migration
+
+# In worktree 2 (e.g., server-reboot) - SIMULTANEOUSLY!
+cd worktrees/server-reboot
+git add .
+git commit -m "feat: implement server reboot mechanism"
+git push -u origin feature/in-context-server-reboot
+```
+
+**Creating Pull Requests**:
+```bash
+# From any worktree
+gh pr create --title "feat: Feature Name" --body "Description"
+
+# Or manually via GitHub UI - each worktree branch gets its own PR
+# PR #1: feature/automatic-database-migration → main
+# PR #2: feature/in-context-server-reboot → main
+```
+
+**Viewing Work Across Worktrees**:
+```bash
+# From anywhere in the repository
+git worktree list                    # Show all worktrees
+git branch -a                        # Show all branches
+git log --oneline --all --graph      # See commits from all worktrees
+```
+
+**After PR Merge - Cleanup**:
+```bash
+# Update main branch
+cd /path/to/main/repository
+git checkout main
+git pull origin main
+
+# Remove completed worktrees
+git worktree remove worktrees/db-migration
+git branch -d feature/automatic-database-migration
+
+# Prune remote tracking branches
+git remote prune origin
+```
+
+**Common Worktree Commands**:
+```bash
+git worktree list                    # List all worktrees
+git worktree add <path> -b <branch>  # Create new worktree
+git worktree remove <path>           # Remove worktree
+git worktree prune                   # Clean up stale worktree data
+```
+
+**Important Notes**:
+- Never force-remove worktrees with uncommitted changes
+- Each worktree maintains its own index and working directory
+- Worktrees are perfect for critical infrastructure work requiring isolation
+- Document active worktrees in team communication
+</worktree_git_workflow>
 
 ### Enhanced Testing Infrastructure
 <testing_strategy>

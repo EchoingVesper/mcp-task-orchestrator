@@ -21,6 +21,7 @@ from .orchestrator.core import TaskOrchestrator
 from .orchestrator.state import StateManager
 from .orchestrator.specialists import SpecialistManager
 from .orchestrator.artifacts import ArtifactManager
+from .db.auto_migration import execute_startup_migration
 
 # Configure logging
 log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
@@ -39,6 +40,67 @@ _specialist_manager: Optional[SpecialistManager] = None
 _orchestrator: Optional[TaskOrchestrator] = None
 
 
+def initialize_database_with_migration(base_dir: str = None, db_path: str = None) -> bool:
+    """
+    Initialize database with automatic migration support.
+    
+    This function is called before StateManager initialization to ensure
+    the database schema is up to date before any operations begin.
+    
+    Args:
+        base_dir: Base directory for the database (optional)
+        db_path: Specific database path (optional)
+        
+    Returns:
+        True if database initialization succeeded, False otherwise
+    """
+    try:
+        # Determine database path (same logic as StateManager)
+        if db_path is None:
+            db_path = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_PATH")
+            
+            if not db_path:
+                if base_dir is None:
+                    base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+                    if not base_dir:
+                        base_dir = os.getcwd()
+                
+                db_path = os.path.join(base_dir, ".task_orchestrator", "task_orchestrator.db")
+        
+        # Ensure database directory exists
+        from pathlib import Path
+        db_dir = Path(db_path).parent
+        db_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Construct database URL
+        database_url = f"sqlite:///{db_path}"
+        
+        # Execute migration
+        logger.info(f"Checking database schema: {database_url}")
+        result = execute_startup_migration(database_url)
+        
+        if result.success:
+            if result.migration_needed:
+                logger.info(f"Database migration completed: {result.operations_executed} operations in {result.execution_time_ms}ms")
+                
+                if result.backup_created and result.backup_info:
+                    logger.info(f"Backup created: {result.backup_info.backup_id}")
+            else:
+                logger.info("Database schema is up to date")
+            
+            return True
+        else:
+            logger.error(f"Database migration failed: {result.error_message}")
+            if result.warnings:
+                for warning in result.warnings:
+                    logger.warning(f"Migration warning: {warning}")
+            return False
+            
+    except Exception as e:
+        logger.error(f"Database initialization failed: {e}")
+        return False
+
+
 def get_state_manager() -> StateManager:
     """Get or create the StateManager singleton instance."""
     global _state_manager
@@ -47,6 +109,12 @@ def get_state_manager() -> StateManager:
         base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
         if not base_dir:
             base_dir = os.getcwd()
+        
+        # Initialize database with migration check before StateManager creation
+        migration_success = initialize_database_with_migration(base_dir=base_dir)
+        if not migration_success:
+            logger.warning("Database migration failed - StateManager may encounter schema issues")
+            # Continue with StateManager creation as it may still work with existing schema
         
         _state_manager = StateManager(base_dir=base_dir)
         logger.info(f"Initialized StateManager with persistence in {base_dir}/.task_orchestrator")
