@@ -240,9 +240,11 @@ class AutoMigrationSystem:
                 # Execute operation
                 operation_start = time.time()
                 
-                success = self.migration_manager._execute_single_operation(
-                    self.engine.connect().begin(), operation
-                )
+                with self.engine.connect() as conn:
+                    with conn.begin():
+                        success = self.migration_manager._execute_single_operation(
+                            conn, operation
+                        )
                 
                 operation_time_ms = int((time.time() - operation_start) * 1000)
                 

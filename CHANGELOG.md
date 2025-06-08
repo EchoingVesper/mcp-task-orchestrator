@@ -5,6 +5,44 @@ All notable changes to the MCP Task Orchestrator project will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2025-06-08
+
+### 🚀 Major Features
+- **Workspace Paradigm Implementation**: Complete transition from session-based to workspace-based architecture
+  - Smart working directory detection with PROJECT_MARKERS (package.json, pyproject.toml, Cargo.toml, go.mod, etc.)
+  - Automatic workspace root detection for improved artifact and task organization
+  - Enhanced DirectoryDetector class with comprehensive project marker recognition
+  - Database schema migration to support workspace_id columns across all tables
+
+### Fixed
+- **CRITICAL**: Database migration system SQLAlchemy 2.0+ compatibility issues
+  - Fixed `'RootTransaction' object has no attribute 'execute'` errors in migration execution
+  - Corrected transaction handling using `engine.connect()` with `conn.begin()` pattern
+  - Added proper `text()` wrapper for all raw SQL executions
+  - Resolved migration manager connection passing in auto-migration system
+  
+- **Server Import Conflicts**: Resolved server.py vs server/ package naming conflicts
+  - Renamed mcp_task_orchestrator/server/ to mcp_task_orchestrator/reboot/
+  - Updated all imports to use new package structure
+  - Eliminated Python module import ambiguity issues
+  
+- **Logging Configuration**: Fixed Claude Code MCP client error display issues
+  - Configured logging to send INFO messages to stdout and WARNING+ to stderr
+  - Eliminated false "ERROR" labels on informational startup messages
+  - Improved MCP client compatibility with proper stream separation
+
+### Enhanced
+- **Database Migration System**: Improved reliability and error handling
+  - Enhanced automatic schema detection and migration execution
+  - Better backup creation and rollback capabilities  
+  - Comprehensive migration history tracking with batch operations
+  - Conservative timeout settings with detailed operation logging
+
+### Infrastructure
+- **Production Readiness**: Completed workspace paradigm with full backward compatibility
+- **Enhanced Testing**: All migration and workspace detection systems thoroughly validated
+- **Improved Documentation**: Updated installation and configuration guides for workspace paradigm
+
 ## [1.6.1] - 2025-06-07
 
 ### Added

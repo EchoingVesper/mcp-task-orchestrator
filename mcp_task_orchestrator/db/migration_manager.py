@@ -13,7 +13,7 @@ from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 from sqlalchemy import (
     create_engine, inspect, MetaData, Table, Column, 
-    String, DateTime, Text, Integer, Boolean, event
+    String, DateTime, Text, Integer, Boolean, event, text
 )
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.engine import Engine
@@ -235,25 +235,26 @@ class MigrationManager:
         logger.info(f"Starting migration {migration_id} with {len(operations)} operations")
         
         try:
-            with self.engine.begin() as conn:
-                # Create migration history table if it doesn't exist
-                self._ensure_migration_history_table(conn)
-                
-                # Execute each operation
-                for i, operation in enumerate(operations):
-                    logger.info(f"Executing operation {i+1}/{len(operations)}: "
-                               f"{operation.operation_type} on {operation.table_name}")
+            with self.engine.connect() as conn:
+                with conn.begin():
+                    # Create migration history table if it doesn't exist
+                    self._ensure_migration_history_table(conn)
                     
-                    success = self._execute_single_operation(conn, operation)
-                    if not success:
-                        logger.error(f"Migration operation failed: {operation}")
-                        return False
-                
-                # Record successful migration
-                self._record_migration_success(conn, migration_id, operations)
-                
-                logger.info(f"Migration {migration_id} completed successfully")
-                return True
+                    # Execute each operation
+                    for i, operation in enumerate(operations):
+                        logger.info(f"Executing operation {i+1}/{len(operations)}: "
+                                   f"{operation.operation_type} on {operation.table_name}")
+                        
+                        success = self._execute_single_operation(conn, operation)
+                        if not success:
+                            logger.error(f"Migration operation failed: {operation}")
+                            return False
+                    
+                    # Record successful migration
+                    self._record_migration_success(conn, migration_id, operations)
+                    
+                    logger.info(f"Migration {migration_id} completed successfully")
+                    return True
                 
         except Exception as e:
             logger.error(f"Migration {migration_id} failed: {e}")
@@ -286,7 +287,7 @@ class MigrationManager:
                 sql = (f"ALTER TABLE {operation.table_name} "
                       f"ADD COLUMN {column.name} {col_type}{default_clause};")
                 
-                conn.execute(sql)
+                conn.execute(text(sql))
             
             return True
             
@@ -307,7 +308,7 @@ class MigrationManager:
             rollback_sql TEXT
         );
         """
-        conn.execute(create_sql)
+        conn.execute(text(create_sql))
     
     def _record_migration_success(self, conn, migration_id: str, operations: List[MigrationOperation]):
         """Record successful migration in history table."""
@@ -325,7 +326,7 @@ class MigrationManager:
         VALUES (?, ?, ?, ?, ?)
         """
         
-        conn.execute(insert_sql, (
+        conn.execute(text(insert_sql), (
             "1.0.0",  # Version - could be made configurable
             migration_id,
             datetime.now(),

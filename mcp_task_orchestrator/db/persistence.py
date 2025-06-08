@@ -14,7 +14,7 @@ from typing import Dict, List, Optional, Any, Union
 from datetime import datetime
 from contextlib import contextmanager
 
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -111,8 +111,8 @@ class DatabasePersistenceManager:
         try:
             with self.session_scope() as session:
                 # Add indexes for subtasks table to optimize parent task ID lookups
-                session.execute("CREATE INDEX IF NOT EXISTS idx_subtasks_task_id ON subtasks(task_id)")
-                session.execute("CREATE INDEX IF NOT EXISTS idx_subtasks_parent_task_id ON subtasks(parent_task_id)")
+                session.execute(text("CREATE INDEX IF NOT EXISTS idx_subtasks_task_id ON subtasks(task_id)"))
+                session.execute(text("CREATE INDEX IF NOT EXISTS idx_subtasks_parent_task_id ON subtasks(parent_task_id)"))
                 session.commit()
                 logger.info("Created performance indexes for subtasks table")
         except Exception as e:

@@ -4,9 +4,9 @@
 
 ## 🎯 What This Does
 
-Transform Claude (or other MCP clients) into an intelligent project manager that breaks down complex tasks into specialist-driven workflows.
+Transform Claude (or other MCP clients) into an intelligent project manager that breaks down complex tasks into specialist-driven workflows. **NEW in v1.8.0**: Automatically detects your project workspace and saves files in the right locations!
 
-**Example:** Ask Claude to *"Build a Python web scraper with testing and documentation"* → Get a structured plan with architect, implementer, and tester specialists working together.
+**Example:** Ask Claude to *"Build a Python web scraper with testing and documentation"* → Get a structured plan with architect, implementer, and tester specialists working together, with all artifacts saved in your project directory.
 
 ## ⚡ Quick Start
 
@@ -22,7 +22,7 @@ node --version    # Should be 16+
 #### From PyPI (Recommended)
 ```bash
 pip install mcp-task-orchestrator
-mcp-task-orchestrator-cli install
+mcp-task-orchestrator-cli setup
 ```
 
 #### From Source
@@ -40,13 +40,18 @@ python run_installer.py
 
 ### Step 4: Verify It's Working
 Open your MCP client and look for `task-orchestrator` in tools/servers. Try saying:
-*"Initialize a new orchestration session"*
+*"Create a task to add a simple hello world function to this project"*
 
-### Step 5: Test New Features (Optional)
-Try the automated maintenance:
-*"Use the maintenance coordinator to scan the current session"*
+You'll notice the orchestrator automatically:
+- Detects your project workspace (Git root, package.json, etc.)
+- Creates tasks associated with this specific project
+- Saves any artifacts in appropriate project locations
 
-This should show you system health status and confirm all features are working.
+### Step 5: Test Workspace Features (Recommended)
+Try workspace detection:
+*"Check what workspace the orchestrator detected for this project"*
+
+This should show you the detected project root and explain why it chose that location.
 
 ## 🔧 If Something Goes Wrong
 
