@@ -18,6 +18,8 @@ venv/
 venv_*/
 env/
 ENV/
+test_env/
+clean_test_env/
 
 # Environment variables and secrets
 .env
@@ -57,6 +59,7 @@ logs/
 # Backup files
 backup_obsolete_files/
 data/backups/*.bak*
+backups/
 
 # IDE specific files
 .idea/
