@@ -2,9 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 1.5.1](https://img.shields.io/badge/version-1.5.1-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.5.1)
+[![Version 1.8.0](https://img.shields.io/badge/version-1.8.0-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.8.0)
 
-A Model Context Protocol server that breaks down complex tasks into structured workflows with specialized AI roles. Works with Claude Desktop, Cursor IDE, Windsurf, and VS Code.
+A Model Context Protocol server that breaks down complex tasks into structured workflows with specialized AI roles. Features workspace-aware task management that automatically detects your project context and saves artifacts in the right locations.
 
 ## What it does - Input to Output Example
 
@@ -55,9 +55,11 @@ Each step provides specialist context and expertise rather than generic response
 - **Automated maintenance**: Built-in cleanup, optimization, and health monitoring
 - **Task persistence**: SQLite database with automatic recovery and archival
 - **Artifact management**: Prevents context limits with intelligent file storage
-- **Customizable roles**: Edit `.task_orchestrator/roles/project_roles.yaml` to adapt roles for your project
+- **Workspace intelligence**: Automatically detects Git repositories, project files (package.json, pyproject.toml), and saves artifacts in appropriate locations
+- **Customizable roles**: Edit `.task_orchestrator/roles/project_roles.yaml` to adapt roles for your project  
 - **Universal MCP compatibility**: Works across Claude Desktop, Cursor, Windsurf, VS Code + Cline
 - **Single-session completion**: Finish complex projects in one conversation
+- **Smart artifact placement**: Files are saved relative to your project root, not random locations
 
 ## Quick Start
 
@@ -70,7 +72,7 @@ Each step provides specialist context and expertise rather than generic response
 #### Option 1: Install from PyPI (Recommended)
 ```bash
 pip install mcp-task-orchestrator
-mcp-task-orchestrator-cli install
+mcp-task-orchestrator-cli setup
 # Restart your MCP client and look for 'task-orchestrator' in available tools
 ```
 
@@ -78,8 +80,16 @@ mcp-task-orchestrator-cli install
 ```bash
 git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
 cd mcp-task-orchestrator
+mcp-task-orchestrator-cli check-deps  # Check and install dependencies
 python run_installer.py
 # Restart your MCP client and look for 'task-orchestrator' in available tools
+```
+
+#### Troubleshooting Dependencies
+If you encounter import errors or missing modules:
+```bash
+mcp-task-orchestrator-cli check-deps
+# This will check for missing dependencies and offer to install them
 ```
 
 ### Verification
@@ -92,23 +102,25 @@ Try this in your MCP client:
 
 The orchestrator uses a five-step process:
 
-1. **Session Initialization** - Sets up the orchestration environment
+1. **Workspace Detection** - Automatically identifies your project type and root directory
 2. **Task Analysis** - LLM analyzes your request and creates structured subtasks  
 3. **Task Planning** - Organizes subtasks with dependencies and complexity assessment
 4. **Specialist Execution** - Each subtask runs with role-specific context and expertise
-5. **Result Synthesis** - Combines outputs into a comprehensive solution
+5. **Result Synthesis** - Combines outputs into a comprehensive solution with workspace-aware artifact placement
 
 ### Available Tools
 
-| Tool | Purpose |
-|------|---------|
-| `orchestrator_initialize_session` | Start new workflow |
-| `orchestrator_plan_task` | Create task breakdown |
-| `orchestrator_execute_subtask` | Execute with specialist context |
-| `orchestrator_complete_subtask` | Mark tasks complete with artifacts |
-| `orchestrator_synthesize_results` | Combine results |
-| `orchestrator_get_status` | Check progress |
-| `orchestrator_maintenance_coordinator` | **NEW**: Automated cleanup and optimization |
+**NEW in v1.8.0**: Workspace paradigm automatically detects your project root and creates `.task_orchestrator` files in the appropriate location. No manual directory specification needed!
+
+| Tool | Purpose | Parameters |
+|------|---------|------------|
+| `orchestrator_initialize_session` | Start new workflow | `working_directory` (optional) |
+| `orchestrator_plan_task` | Create task breakdown | Required |
+| `orchestrator_execute_subtask` | Execute with specialist context | Required |
+| `orchestrator_complete_subtask` | Mark tasks complete with artifacts | Required |
+| `orchestrator_synthesize_results` | Combine results | Required |
+| `orchestrator_get_status` | Check progress | Optional |
+| `orchestrator_maintenance_coordinator` | **NEW**: Automated cleanup and optimization | Required |
 
 ### Maintenance & Automation Features
 

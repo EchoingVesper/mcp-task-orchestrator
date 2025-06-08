@@ -23,8 +23,13 @@ class TaskBreakdownModel(Base):
     context = Column(Text)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
     
+    # Workspace paradigm support
+    workspace_id = Column(String, ForeignKey('workspaces.workspace_id'), nullable=True)
+    
     # Relationship to subtasks (one-to-many)
     subtasks = relationship("SubTaskModel", back_populates="parent_task", cascade="all, delete-orphan")
+    # Relationship to workspace (many-to-one)
+    workspace = relationship("WorkspaceModel", back_populates="task_breakdowns")
 
 
 class SubTaskModel(Base):
@@ -52,8 +57,13 @@ class SubTaskModel(Base):
     auto_maintenance_enabled = Column(Boolean, default=True)
     quality_gate_level = Column(String, default='standard')  # basic, standard, comprehensive
     
+    # Workspace paradigm support
+    workspace_id = Column(String, ForeignKey('workspaces.workspace_id'), nullable=True)
+    
     # Relationship to parent task (many-to-one)
     parent_task = relationship("TaskBreakdownModel", back_populates="subtasks")
+    # Relationship to workspace (many-to-one)
+    workspace = relationship("WorkspaceModel", back_populates="subtasks")
 
 
 class LockTrackingModel(Base):
@@ -64,6 +74,9 @@ class LockTrackingModel(Base):
     resource_name = Column(String, primary_key=True)
     locked_at = Column(DateTime, nullable=False)
     locked_by = Column(String, nullable=False)
+    
+    # Workspace paradigm support
+    workspace_id = Column(String, ForeignKey('workspaces.workspace_id'), nullable=True)
 
 
 class FileOperationModel(Base):
@@ -82,6 +95,11 @@ class FileOperationModel(Base):
     file_metadata = Column(JSON, default=dict)
     verification_status = Column(String, nullable=False, default='pending')
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+    
+    # Workspace paradigm support
+    workspace_id = Column(String, ForeignKey('workspaces.workspace_id'), nullable=True)
+    workspace_relative_path = Column(Text, nullable=True)  # Path relative to workspace root
+    original_session_id = Column(String, nullable=True)  # For migration tracking
     
     # Relationship to subtask (many-to-one)
     subtask = relationship("SubTaskModel")
@@ -269,3 +287,136 @@ class TaskLifecycleModel(Base):
     automated_transition = Column(Boolean, default=False)
     transition_metadata = Column(JSON, default=dict)
     created_at = Column(DateTime, nullable=False, default=datetime.now)
+
+
+# ============================================
+# Workspace Paradigm Models
+# ============================================
+
+class WorkspaceModel(Base):
+    """SQLAlchemy model for workspace registry."""
+    
+    __tablename__ = 'workspaces'
+    
+    workspace_id = Column(String, primary_key=True)
+    workspace_name = Column(String, nullable=False)
+    workspace_path = Column(String, nullable=False, unique=True)
+    detection_method = Column(String, nullable=False)  # git_root, project_marker, explicit, etc.
+    detection_confidence = Column(Integer, nullable=False)  # 1-10 scale
+    
+    # Project Information
+    project_type = Column(String)  # python, javascript, rust, etc.
+    project_markers = Column(JSON)  # JSON array of detected markers
+    git_root_path = Column(String)
+    
+    # Configuration
+    is_active = Column(Boolean, default=True)
+    is_default = Column(Boolean, default=False)
+    artifact_storage_policy = Column(String, default='workspace_relative')  # workspace_relative, absolute, hybrid
+    
+    # Security and Validation
+    is_validated = Column(Boolean, default=False)
+    is_writable = Column(Boolean, default=True)
+    security_warnings = Column(JSON)  # JSON array of warnings
+    
+    # Statistics
+    total_tasks = Column(Integer, default=0)
+    active_tasks = Column(Integer, default=0)
+    last_activity_at = Column(DateTime)
+    
+    # Timestamps
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(DateTime, nullable=False, default=datetime.now)
+    last_accessed_at = Column(DateTime, default=datetime.now)
+    
+    # Relationships
+    task_breakdowns = relationship("TaskBreakdownModel", back_populates="workspace")
+    subtasks = relationship("SubTaskModel", back_populates="workspace")
+    workspace_tasks = relationship("WorkspaceTaskModel", back_populates="workspace", cascade="all, delete-orphan")
+    workspace_artifacts = relationship("WorkspaceArtifactModel", back_populates="workspace", cascade="all, delete-orphan")
+    workspace_configurations = relationship("WorkspaceConfigurationModel", back_populates="workspace", cascade="all, delete-orphan")
+
+
+class WorkspaceTaskModel(Base):
+    """SQLAlchemy model for workspace-task associations."""
+    
+    __tablename__ = 'workspace_tasks'
+    
+    association_id = Column(Integer, primary_key=True, autoincrement=True)
+    workspace_id = Column(String, ForeignKey('workspaces.workspace_id'), nullable=False)
+    task_id = Column(String, ForeignKey('task_breakdowns.parent_task_id'), nullable=False)
+    
+    # Association metadata
+    association_type = Column(String, default='primary')  # primary, reference, archived
+    created_in_workspace = Column(Boolean, default=True)
+    relative_artifact_paths = Column(JSON)  # JSON array of workspace-relative paths
+    
+    # Timestamps
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    
+    # Relationships
+    workspace = relationship("WorkspaceModel", back_populates="workspace_tasks")
+    task_breakdown = relationship("TaskBreakdownModel")
+
+
+class WorkspaceArtifactModel(Base):
+    """SQLAlchemy model for workspace artifact storage."""
+    
+    __tablename__ = 'workspace_artifacts'
+    
+    artifact_id = Column(String, primary_key=True)
+    workspace_id = Column(String, ForeignKey('workspaces.workspace_id'), nullable=False)
+    task_id = Column(String, ForeignKey('subtasks.task_id'), nullable=True)
+    
+    # Storage Information
+    relative_path = Column(String, nullable=False)  # Path relative to workspace root
+    absolute_path = Column(String, nullable=False)  # Absolute path for verification
+    artifact_type = Column(String, nullable=False)  # code, documentation, analysis, etc.
+    storage_method = Column(String, default='file')  # file, embedded, external
+    
+    # Content and Metadata
+    content_hash = Column(String)
+    file_size = Column(Integer)
+    mime_type = Column(String)
+    content_preview = Column(Text)  # First few lines for quick display
+    
+    # Workspace Context
+    created_by_task = Column(Boolean, default=True)
+    is_persistent = Column(Boolean, default=True)  # Should survive task completion
+    backup_available = Column(Boolean, default=False)
+    
+    # Timestamps
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(DateTime, nullable=False, default=datetime.now)
+    last_verified_at = Column(DateTime)
+    
+    # Relationships
+    workspace = relationship("WorkspaceModel", back_populates="workspace_artifacts")
+    subtask = relationship("SubTaskModel")
+
+
+class WorkspaceConfigurationModel(Base):
+    """SQLAlchemy model for workspace configurations."""
+    
+    __tablename__ = 'workspace_configurations'
+    
+    config_id = Column(Integer, primary_key=True, autoincrement=True)
+    workspace_id = Column(String, ForeignKey('workspaces.workspace_id'), nullable=False)
+    
+    # Configuration Categories
+    config_category = Column(String, nullable=False)  # directories, artifacts, tools, security
+    config_key = Column(String, nullable=False)
+    config_value = Column(String, nullable=False)  # JSON value
+    config_type = Column(String, nullable=False)  # string, number, boolean, array, object
+    
+    # Configuration Metadata
+    is_user_defined = Column(Boolean, default=False)
+    is_system_generated = Column(Boolean, default=True)
+    description = Column(Text)
+    
+    # Timestamps
+    created_at = Column(DateTime, nullable=False, default=datetime.now)
+    updated_at = Column(DateTime, nullable=False, default=datetime.now)
+    
+    # Relationships
+    workspace = relationship("WorkspaceModel", back_populates="workspace_configurations")

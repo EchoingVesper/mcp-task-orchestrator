@@ -16,7 +16,7 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 
 setup(
     name="mcp-task-orchestrator",
-    version="1.7.0",
+    version="1.8.0",
     author="Echoing Vesper",
     author_email="noreply@github.com",
     description="A Model Context Protocol server for task orchestration",
@@ -51,14 +51,15 @@ setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.8",
-    install_requires=[req for req in requirements if not req.startswith("pytest")],
+    install_requires=[req for req in requirements if not req.startswith("pytest") and not req.startswith("#")],
     extras_require={
         "dev": ["pytest>=7.0.0", "pytest-asyncio>=0.21.0"],
+        "cli": ["typer>=0.9.0", "rich>=13.0.0"],
     },
     entry_points={
         "console_scripts": [
-            "mcp-task-orchestrator=mcp_task_orchestrator.server:main_sync",
-            "mcp-task-orchestrator-cli=mcp_task_orchestrator_cli.cli:main",
+            "mcp-task-orchestrator=mcp_task_orchestrator.__main__:main_sync",
+            "mcp-task-orchestrator-cli=mcp_task_orchestrator_cli.__main__:main",
         ],
     },
 )

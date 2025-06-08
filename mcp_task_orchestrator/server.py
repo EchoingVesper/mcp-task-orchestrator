@@ -22,15 +22,48 @@ from .orchestrator.state import StateManager
 from .orchestrator.specialists import SpecialistManager
 from .orchestrator.artifacts import ArtifactManager
 from .db.auto_migration import execute_startup_migration
-from .server.reboot_tools import REBOOT_TOOLS, REBOOT_TOOL_HANDLERS
-from .server.reboot_integration import initialize_reboot_system
+from .reboot.reboot_tools import REBOOT_TOOLS, REBOOT_TOOL_HANDLERS
+from .reboot.reboot_integration import initialize_reboot_system
 
-# Configure logging
+# Configure logging with custom handler to separate INFO from ERROR
+import sys
+
 log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
-logging.basicConfig(
-    level=getattr(logging, log_level),
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+
+# Create a custom logging configuration that sends INFO to stdout and WARN+ to stderr
+class InfoFilter(logging.Filter):
+    def filter(self, record):
+        return record.levelno <= logging.INFO
+
+class WarnFilter(logging.Filter):
+    def filter(self, record):
+        return record.levelno > logging.INFO
+
+# Configure root logger
+root_logger = logging.getLogger()
+root_logger.setLevel(getattr(logging, log_level))
+
+# Remove default handlers
+for handler in root_logger.handlers[:]:
+    root_logger.removeHandler(handler)
+
+# Formatter
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+
+# Stdout handler for INFO and below
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.addFilter(InfoFilter())
+stdout_handler.setFormatter(formatter)
+root_logger.addHandler(stdout_handler)
+
+# Stderr handler for WARN and above
+stderr_handler = logging.StreamHandler(sys.stderr)
+stderr_handler.setLevel(logging.WARNING)
+stderr_handler.addFilter(WarnFilter())
+stderr_handler.setFormatter(formatter)
+root_logger.addHandler(stderr_handler)
+
 logger = logging.getLogger("mcp_task_orchestrator")
 
 # Initialize the MCP server
@@ -155,7 +188,12 @@ async def list_tools() -> List[types.Tool]:
             description="Initialize a new task orchestration session with guidance for effective task breakdown",
             inputSchema={
                 "type": "object",
-                "properties": {}
+                "properties": {
+                    "working_directory": {
+                        "type": "string",
+                        "description": "Path where .task_orchestrator should be created. If not specified, uses current working directory."
+                    }
+                }
             }
         ),
         types.Tool(
@@ -334,11 +372,29 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
     
     Checks for interrupted tasks and offers to resume them.
     """
-    orchestrator = get_orchestrator()
-    state_manager = get_state_manager()
+    # Extract working_directory from args
+    working_directory = args.get("working_directory")
     
-    # Get project directory using our multi-strategy approach
-    project_dir = get_project_directory(args)
+    # If working_directory is provided, use it; otherwise fall back to project directory detection
+    if working_directory:
+        # Validate the directory exists
+        if not os.path.isdir(working_directory):
+            error_response = {
+                "error": f"Working directory does not exist: {working_directory}",
+                "suggestions": "Please provide a valid directory path or omit the parameter to use auto-detection"
+            }
+            return [types.TextContent(
+                type="text",
+                text=json.dumps(error_response, indent=2)
+            )]
+        project_dir = working_directory
+        logger.info(f"Using explicit working directory: {project_dir}")
+    else:
+        # Get project directory using our multi-strategy approach
+        project_dir = get_project_directory(args)
+    
+    # Initialize state manager with the specific project directory
+    state_manager = StateManager(base_dir=project_dir)
     
     # Create specialist manager and orchestrator with the project directory
     specialist_manager = SpecialistManager(project_dir=project_dir)
@@ -360,6 +416,8 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
     # Format the response for the LLM
     response = {
         "session_initialized": True,
+        "working_directory": project_dir,
+        "orchestrator_path": os.path.join(project_dir, ".task_orchestrator"),
         "orchestrator_context": session_context,
         "instructions": (
             "I'll help you break down complex tasks into manageable subtasks. "
