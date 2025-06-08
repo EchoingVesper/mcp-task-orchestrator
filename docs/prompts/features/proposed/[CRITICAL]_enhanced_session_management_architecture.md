@@ -3,11 +3,21 @@
 **Document Type**: Architecture Design Specification  
 **Version**: 1.0.0  
 **Created**: 2025-06-01  
-**Status**: [RESEARCH] - Architecture Design Phase  
-**Priority**: HIGH - Foundation for next-generation orchestrator  
+**Status**: [CRITICAL] - Required for fixing usability-blocking issues  
+**Priority**: CRITICAL - Blocking Issue #36 (Working Directory Detection)  
+**Updated**: 2025-06-08 - Moved to CRITICAL due to production issues  
 **Scope**: Complete session management architecture with database, persistence, and tool integration
 
 ---
+
+## ⚠️ CRITICAL IMPLEMENTATION NOTICE
+
+**This feature has been elevated to CRITICAL status due to production-blocking issues:**
+- **Issue #36**: Orchestrator files created in wrong directory
+- **User Impact**: Users cannot control where .task_orchestrator folder is created
+- **Required Fix**: Session-directory association with persistent session management
+
+The `working_directory` parameter has been added to `orchestrator_initialize_session` as an immediate fix, but full session management with directory persistence is required for a complete solution.
 
 ## 🎯 Executive Summary
 

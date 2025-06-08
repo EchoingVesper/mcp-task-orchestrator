@@ -6,8 +6,10 @@
 
 ```bash
 pip install mcp-task-orchestrator
-mcp-task-orchestrator-cli install
+mcp-task-orchestrator-cli setup
 ```
+
+**Note**: The `setup` command automatically detects the server module location and configures all detected MCP clients. No manual path configuration needed!
 
 ### Option 2: Install from Source
 

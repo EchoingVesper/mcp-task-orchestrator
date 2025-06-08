@@ -4,21 +4,40 @@
 
 After installation, restart your MCP clients and look for "task-orchestrator" in the available tools.
 
-## Basic Usage
+## Workspace Paradigm (v1.8.0)
 
-### New LLM-Powered Task Orchestration
+### Automatic Workspace Detection
 
-The MCP Task Orchestrator now leverages the intelligence of the calling LLM to break down tasks, providing a more flexible and powerful orchestration system.
+The MCP Task Orchestrator v1.8.0 introduces **workspace-aware task management**. Instead of manual session setup, the orchestrator automatically:
 
-### Initialization
+- **Detects your project workspace** by finding Git repositories, package.json, pyproject.toml, and other project markers
+- **Associates tasks with workspaces** so each project maintains its own task history
+- **Saves artifacts in appropriate locations** relative to your project root
 
-Always begin a task orchestration session by initializing the orchestrator:
+### Initialization (Optional but Recommended)
+
+You can initialize a workspace to get guidance, but it's no longer required:
 
 ```python
 response = await call_tool("orchestrator_initialize_session", {})
 ```
 
-This provides the LLM with context about its role as a Task Orchestrator and guidance on effective task breakdown.
+This provides the LLM with context about its role as a Task Orchestrator and confirms the detected workspace.
+
+#### Manual Workspace Override
+
+In rare cases where automatic detection fails, you can specify a workspace explicitly:
+
+```python
+response = await call_tool("orchestrator_initialize_session", {
+    "working_directory": "/path/to/your/project"
+})
+```
+
+The response will include:
+- `working_directory`: The workspace directory being used  
+- `orchestrator_path`: Full path to the `.task_orchestrator` folder
+- `detection_method`: How the workspace was detected (git_root, project_marker, etc.)
 
 ### Task Breakdown
 
@@ -64,7 +83,7 @@ response = await call_tool("orchestrator_plan_task", {
 
 ## Available Tools
 
-- `orchestrator_initialize_session` - Initialize a new task orchestration session with guidance for effective task breakdown
+- `orchestrator_initialize_session` - Initialize workspace and get guidance for effective task breakdown (optional: specify working_directory)
 - `orchestrator_plan_task` - Create a task breakdown from LLM-analyzed subtasks
 - `orchestrator_execute_subtask` - Work with specialist context
 - `orchestrator_complete_subtask` - Mark subtasks complete  
@@ -73,12 +92,15 @@ response = await call_tool("orchestrator_plan_task", {
 
 ## Complete Workflow
 
-1. **Initialize**: Call `orchestrator_initialize_session` to get guidance
-2. **Analyze**: Break down the task into structured JSON subtasks
-3. **Plan**: Call `orchestrator_plan_task` with your JSON subtasks
-4. **Execute**: Work through each subtask with `orchestrator_execute_subtask`
-5. **Complete**: Mark subtasks complete with `orchestrator_complete_subtask`
-6. **Synthesize**: Combine results with `orchestrator_synthesize_results`
+1. **Workspace Detection**: Orchestrator automatically detects your project workspace
+2. **Initialize** (Optional): Call `orchestrator_initialize_session` to confirm workspace and get guidance
+3. **Analyze**: Break down the task into structured JSON subtasks
+4. **Plan**: Call `orchestrator_plan_task` with your JSON subtasks (automatically uses detected workspace)
+5. **Execute**: Work through each subtask with `orchestrator_execute_subtask`
+6. **Complete**: Mark subtasks complete with `orchestrator_complete_subtask`
+7. **Synthesize**: Combine results with `orchestrator_synthesize_results`
+
+All artifacts will be saved in your detected workspace directory, maintaining project organization.
 
 ## Tips for Effective Task Breakdown
 
