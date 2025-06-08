@@ -56,7 +56,10 @@ def detect_clients():
             except Exception as e:
                 logger.warning(f"Error reading {client_info['display_name']} config: {e}")
     
-    return detecteddef read_client_config(config_path):
+    return detected
+
+
+def read_client_config(config_path):
     """
     Read the configuration file for a client.
     
@@ -100,7 +103,10 @@ def is_client_configured(client_id, config_path):
         return False
     except Exception as e:
         logger.warning(f"Error checking configuration for {client_id}: {e}")
-        return Falsedef backup_client_config(client_id):
+        return False
+
+
+def backup_client_config(client_id):
     """
     Create a backup of a client's configuration file.
     
