@@ -35,7 +35,12 @@ setup(
     include_package_data=True,
     package_data={
         "mcp_task_orchestrator": ["config/*.yaml"],
+        "mcp_task_orchestrator_cli": ["config/*.yaml"],
+        "": ["config/*.yaml"],  # Include config files from root
     },
+    data_files=[
+        ("config", ["config/mcp_clients_registry.yaml"]),
+    ],
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",

@@ -6,10 +6,10 @@
 
 ```bash
 pip install mcp-task-orchestrator
-mcp-task-orchestrator-cli setup
+python -m mcp_task_orchestrator_cli install
 ```
 
-**Note**: The `setup` command automatically detects the server module location and configures all detected MCP clients. No manual path configuration needed!
+**Note**: The installer automatically detects your MCP clients and configures them with the optimal settings for multi-project use.
 
 ### Option 2: Install from Source
 
@@ -20,15 +20,66 @@ mcp-task-orchestrator-cli setup
    cd mcp-task-orchestrator
    ```
 
-2. **Run installer**
+2. **Install dependencies and run installer**
 
    ```bash
-   python run_installer.py
+   pip install -e .
+   python -m mcp_task_orchestrator_cli install
    ```
 
-3. **Restart MCP clients** (Claude Desktop, Cursor, Windsurf, VS Code)
+3. **Restart MCP clients** (Claude Desktop, Claude Code, Cursor, Windsurf)
 
 4. **Verify Installation**: Follow the verification steps below
+
+## CLI Installation Options
+
+### Auto-detect Installation (Recommended)
+```bash
+python -m mcp_task_orchestrator_cli install
+```
+Automatically detects and configures all compatible MCP clients.
+
+### Client-Specific Installation
+
+**Claude Desktop (Global Multi-Project)**
+```bash
+python -m mcp_task_orchestrator_cli install --client claude_desktop
+```
+Installs globally, works across multiple projects using dynamic directory detection.
+
+**Claude Code (Project-Specific)**
+```bash
+python -m mcp_task_orchestrator_cli install --client claude_code --scope project
+```
+Installs for the current project directory only. Run this command in each project where you want to use the orchestrator.
+
+**Windsurf and Cursor (Project-Aware)**
+```bash
+python -m mcp_task_orchestrator_cli install --client windsurf,cursor
+```
+These clients automatically detect project context when opened in project folders.
+
+**Multiple Clients**
+```bash
+python -m mcp_task_orchestrator_cli install --client claude_desktop,windsurf,cursor
+```
+
+### Advanced Options
+
+**Set Default Working Directory**
+```bash
+python -m mcp_task_orchestrator_cli install --client claude_desktop --working-dir "/path/to/project"
+```
+
+**Force Reconfiguration**
+```bash
+python -m mcp_task_orchestrator_cli install --force
+```
+
+**Custom Server Name**
+```bash
+python -m mcp_task_orchestrator_cli install --name "my-orchestrator"
+```
 
 ## Installation Methods Explained
 
@@ -51,12 +102,41 @@ The `run_installer.py` method is the recommended installation approach because i
 - **Maintenance system**: Sets up automated maintenance and cleanup capabilities
 - **Robust configuration**: Properly handles edge cases in client detection and setup
 
-## Supported Clients
+## Supported MCP Clients
 
-- **Claude Desktop** - `%APPDATA%\Claude\claude_desktop_config.json`
-- **Cursor IDE** - `~/.cursor/mcp.json`
-- **Windsurf** - `~/.codeium/windsurf/mcp_config.json`
-- **VS Code (Cline)** - `~/.vscode/mcp.json`
+| Client | Configuration | Multi-Project Support | Installation Method |
+|--------|---------------|---------------------|-------------------|
+| **Claude Desktop** | JSON config file | ✅ Dynamic detection | Global installation |
+| **Claude Code** | CLI integration | ✅ Per-project | Project-specific installation |
+| **Windsurf** | JSON config file | ✅ Built-in context | Global installation |
+| **Cursor** | JSON config file | ✅ Built-in context | Global installation |
+| **VS Code + Cline** | JSON config file | ⚠️ Limited | In development |
+
+## Multi-Project Workflow
+
+### Claude Desktop Approach (Recommended)
+1. **Install once globally**: `python -m mcp_task_orchestrator_cli install --client claude_desktop`
+2. **Works everywhere**: The orchestrator automatically detects your current project
+3. **Project-specific data**: Each project gets its own `.task_orchestrator` directory
+4. **Use anywhere**: Open Claude Desktop from any project directory
+
+### Claude Code Approach (Per-Project)
+1. **Install per project**: `cd /path/to/project && python -m mcp_task_orchestrator_cli install --client claude_code --scope project`
+2. **Project isolation**: Each project has its own orchestrator configuration
+3. **Fine-grained control**: Different projects can use different orchestrator versions
+4. **No conflicts**: Projects don't interfere with each other
+
+### How Project Detection Works
+The orchestrator automatically detects your project directory using:
+- **Git repositories** (`.git` directory detection)
+- **Project markers** (`package.json`, `pyproject.toml`, `Cargo.toml`, etc.)
+- **MCP client context** (working directory from your editor)
+- **Explicit parameters** (`working_directory` in `orchestrator_initialize_session`)
+
+Each project gets its own:
+- Task database (`.task_orchestrator/task_orchestrator.db`)
+- Artifact storage (`.task_orchestrator/artifacts/`)
+- Custom role definitions (`.task_orchestrator/roles/project_roles.yaml`)
 
 ## Advanced Options
 
@@ -96,6 +176,73 @@ Try this command in your MCP client:
 ```
 "Initialize a new orchestration session"
 ```
+
+## Troubleshooting
+
+### Common Installation Issues
+
+**Claude Code not detected**
+```bash
+# Verify Claude Code CLI is available
+claude --version
+
+# If not found, install Claude Code first
+# Then re-run the installer
+python -m mcp_task_orchestrator_cli install --client claude_code
+```
+
+**Configuration file not found**
+```bash
+# Make sure your MCP client has been opened at least once
+# to create the configuration directory, then re-run installer
+python -m mcp_task_orchestrator_cli install --force
+```
+
+**Already configured warning**
+```bash
+# Use --force to overwrite existing configuration
+python -m mcp_task_orchestrator_cli install --force
+```
+
+**Permission errors**
+```bash
+# Check file permissions for config directories
+# On Windows: %APPDATA%\Claude\
+# On macOS: ~/Library/Application Support/Claude/
+# On Linux: ~/.config/Claude/
+```
+
+### Client-Specific Notes
+
+**Claude Desktop**: 
+- Installs globally, works across all projects automatically
+- Uses dynamic directory detection for per-project task storage
+- No hardcoded working directory - adapts to your current project
+
+**Claude Code**: 
+- Install per-project for best experience: `--scope project`
+- Each project gets its own orchestrator configuration
+- Must be run from within the project directory
+
+**Windsurf/Cursor**: 
+- Install globally, automatically detect project when opened in folders
+- Built-in project context awareness
+- No additional configuration needed per project
+
+### Getting Help
+
+**View installer options**
+```bash
+python -m mcp_task_orchestrator_cli install --help
+```
+
+**Check which clients are detected**
+```bash
+python -m mcp_task_orchestrator_cli install --no-auto-detect --client claude_desktop
+```
+
+**Debug installation issues**
+Check the installer output for specific error messages and client detection results.
 
 Expected response should include:
 - Session initialization confirmation
