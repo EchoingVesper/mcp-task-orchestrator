@@ -15,7 +15,7 @@ build/
 
 # Virtual environments
 venv/
-venv_*/
+.venv*/
 env/
 ENV/
 test_env/
@@ -60,6 +60,7 @@ logs/
 backup_obsolete_files/
 data/backups/*.bak*
 backups/
+archives/
 
 # IDE specific files
 .idea/
@@ -67,6 +68,9 @@ backups/
 *.swp
 *.swo
 .DS_Store
+.cursor/
+.windsurf/
+.continue/
 
 # Local configuration
 .local/
@@ -124,8 +128,40 @@ temp/
 *-claude-session.md
 claude-work-session-*.md
 .claude-cache/
+.mcp.json
 
 # Temporary development artifacts
 dev-temp/
 scratch/
 .working/
+
+# Supabase local development
+supabase/.temp/
+supabase/logs/
+supabase/docker/
+supabase/.branches/
+supabase/.gitignore
+
+# Local database files (Docker volumes handle the data)
+*.db
+*.db-shm 
+*.db-wal
+
+# Secrets and keys - NEVER commit these
+.env.rag
+supabase/*.log
+supabase/config.toml
+.env
+.env.local
+.env.production
+
+# Supabase CLI generated files that contain secrets
+supabase/.temp/
+supabase/docker-compose.yml
+
+# But DO commit these important files:
+# supabase/config.toml.example (template without secrets)
+# supabase/migrations/ (database schema)
+# supabase/seed.sql (sample data)
+# supabase/functions/ (edge functions)
+# .env.rag.example (template without secrets)
