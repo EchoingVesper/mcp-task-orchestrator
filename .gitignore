@@ -164,4 +164,7 @@ supabase/docker-compose.yml
 # supabase/migrations/ (database schema)
 # supabase/seed.sql (sample data)
 # supabase/functions/ (edge functions)
-# .env.rag.example (template without secrets)
+# .env.rag.example (template without secrets)mcp-orchestrator-env/
+mcp-orchestrator-env/
+venv/
+venv_mcp/
