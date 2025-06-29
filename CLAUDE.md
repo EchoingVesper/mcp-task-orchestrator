@@ -50,49 +50,134 @@ pip install -e .
 python scripts/release/pypi_release_simple.py
 ```
 
-## Architecture Overview
+### Server Modes
+```bash
+# Run server in dependency injection mode (default)
+MCP_TASK_ORCHESTRATOR_USE_DI=true python -m mcp_task_orchestrator.server
 
-### Core Components
+# Run server in legacy mode
+MCP_TASK_ORCHESTRATOR_USE_DI=false python -m mcp_task_orchestrator.server
 
-1. **MCP Server** (`mcp_task_orchestrator/server.py`): Main Model Context Protocol server that handles incoming requests and coordinates task execution.
+# Use dedicated DI-only server
+python -m mcp_task_orchestrator.server_with_di
+```
 
-2. **Task Orchestration System** (`mcp_task_orchestrator/orchestrator/`):
-   - `core.py`: Core orchestration logic for task breakdown and management
-   - `specialists.py`: Role-based specialist implementations (Architect, Implementer, etc.)
+## Clean Architecture Overview
+
+The MCP Task Orchestrator now follows **Clean Architecture** and **Domain-Driven Design** principles with a complete layered structure:
+
+### Architecture Layers
+
+**1. Domain Layer** (`mcp_task_orchestrator/domain/`):
+- **Entities**: Core business objects (Task, Specialist, OrchestrationSession, WorkItem)
+- **Value Objects**: Immutable types (TaskStatus, SpecialistType, ExecutionResult, TimeWindow)
+- **Exceptions**: Domain-specific error hierarchy with severity levels and recovery strategies
+- **Services**: Domain business logic (TaskBreakdownService, SpecialistAssignmentService, etc.)
+- **Repositories**: Abstract interfaces for data access (TaskRepository, StateRepository, SpecialistRepository)
+
+**2. Application Layer** (`mcp_task_orchestrator/application/`):
+- **Use Cases**: Orchestrate business workflows (OrchestrateTask, ManageSpecialists, TrackProgress)
+- **DTOs**: Data transfer objects for clean boundaries between layers
+- **Interfaces**: External service contracts (NotificationService, ExternalApiClient)
+
+**3. Infrastructure Layer** (`mcp_task_orchestrator/infrastructure/`):
+- **Database**: SQLite implementations of repository interfaces
+- **MCP Protocol**: Request/response adapters and server implementation
+- **Configuration**: Environment-aware config management and validation
+- **Monitoring**: Comprehensive health checks, metrics, and diagnostics
+- **Error Handling**: Centralized error processing, retry logic, and recovery strategies
+- **Dependency Injection**: Service container with lifetime management
+
+**4. Presentation Layer** (`mcp_task_orchestrator/presentation/`):
+- **MCP Server**: Clean architecture entry point with DI integration
+- **CLI Interface**: Command-line tools with health checks and configuration management
+
+### Key Architectural Components
+
+**1. Dependency Injection System**:
+- ServiceContainer with lifetime management (singleton, transient, scoped)
+- Fluent service registration API with automatic dependency resolution
+- Hybrid mode supporting both clean architecture and legacy compatibility
+
+**2. Error Handling Infrastructure**:
+- Comprehensive exception hierarchy with severity levels (LOW, MEDIUM, HIGH, CRITICAL)
+- Automatic retry policies (exponential backoff, linear, fixed delay)
+- Intelligent recovery strategies for tasks, specialists, and infrastructure
+- Centralized error logging with structured analytics
+
+**3. Monitoring and Diagnostics**:
+- Real-time system monitoring with configurable alerts
+- Performance metrics collection with trend analysis
+- Comprehensive health checks for all system components
+- Diagnostic tools with automated recommendations
+
+**4. Task Orchestration System** (`mcp_task_orchestrator/orchestrator/`):
+   - `task_orchestration_service.py`: Core orchestration logic (renamed from core.py)
+   - `specialist_management_service.py`: Role-based specialist implementations (renamed from specialists.py)
+   - `orchestration_state_manager.py`: State management (renamed from state.py)
    - `maintenance.py`: Automated cleanup and optimization features
    - `generic_models.py`: Flexible task model supporting any task type
 
-3. **Database Layer** (`mcp_task_orchestrator/db/`):
-   - SQLite-based persistence with automatic migrations
-   - `generic_repository.py`: Generic task storage and retrieval
-   - `migration_manager.py`: Handles schema evolution
-   - `workspace_migration.py`: Workspace-aware database management
+**5. Database Layer** (`mcp_task_orchestrator/db/` + `infrastructure/database/`):
+   - Repository pattern with abstract interfaces and SQLite implementations
+   - Automatic migrations with rollback capabilities
+   - Connection management with resource cleanup
+   - Workspace-aware database organization
 
-4. **Installation System** (`mcp_task_orchestrator_cli/`):
+**6. Installation System** (`mcp_task_orchestrator_cli/`):
    - Modular client detection and configuration
    - Support for Claude Desktop, Cursor, Windsurf, VS Code
    - Secure installation with validation and rollback
 
-5. **Testing Infrastructure** (`mcp_task_orchestrator/testing/`):
+**7. Testing Infrastructure** (`testing_utils/`):
    - File-based output system to prevent truncation
    - Alternative test runners for reliability
-   - Comprehensive hang detection
+   - Comprehensive hang detection and resource management
 
-### Task Flow
+### Domain-Driven Design Implementation
 
-1. **Initialization**: `orchestrator_initialize_session` creates workspace context
-2. **Planning**: `orchestrator_plan_task` breaks down complex tasks with LLM
-3. **Execution**: `orchestrator_execute_subtask` runs tasks with specialist roles
-4. **Completion**: `orchestrator_complete_subtask` stores artifacts and results
-5. **Synthesis**: `orchestrator_synthesize_results` combines outputs
+**Ubiquitous Language**: Core domain concepts consistently used across all layers
+- **Task**: Unit of work with lifecycle, complexity, and specialist requirements
+- **Specialist**: Role-based AI persona with specific capabilities and context
+- **Orchestration Session**: Bounded context for related tasks and state
+- **Work Item**: Atomic unit of executable work within a task
+- **Artifact**: Stored output from task execution to prevent context limits
+
+**Domain Services** (`domain/services/`):
+- `TaskBreakdownService`: Handles task planning and decomposition
+- `SpecialistAssignmentService`: Manages specialist selection and context
+- `ProgressTrackingService`: Tracks task status and progress
+- `ResultSynthesisService`: Combines results from subtasks
+- `OrchestrationCoordinator`: Composes all services for complete workflows
+
+### Clean Architecture Task Flow
+
+1. **Presentation** → **Application**: MCP request received, validated, and routed to use case
+2. **Application** → **Domain**: Use case orchestrates domain services with business logic
+3. **Domain** → **Infrastructure**: Domain services access data through repository interfaces
+4. **Infrastructure** → **Database**: Repository implementations handle data persistence
+5. **Domain** ← **Infrastructure**: Results flow back through the layers
+6. **Presentation** ← **Application**: Clean response returned to MCP client
+
+### SOLID Principles Implementation
+
+- **Single Responsibility**: Each service has one clear purpose (task breakdown, specialist assignment, etc.)
+- **Open/Closed**: New specialists and task types can be added without modifying existing code
+- **Liskov Substitution**: Repository implementations are interchangeable through interfaces
+- **Interface Segregation**: Small, focused interfaces (TaskRepository, StateRepository, etc.)
+- **Dependency Inversion**: High-level modules depend on abstractions, not concretions
 
 ### Key Design Patterns
 
-- **Workspace Paradigm**: Automatically detects project root and saves artifacts appropriately
-- **Generic Task Model**: Flexible task representation supporting any workflow
-- **Specialist Roles**: Domain-specific AI personas for different task types
-- **Artifact Management**: Prevents context limits by storing large outputs to disk
-- **Maintenance Automation**: Built-in cleanup and optimization features
+- **Clean Architecture**: Dependency flow always points inward toward domain
+- **Domain-Driven Design**: Rich domain model with ubiquitous language
+- **Repository Pattern**: Abstract data access with pluggable implementations
+- **Dependency Injection**: Automatic resolution with configurable lifetimes
+- **Strategy Pattern**: Pluggable retry policies and recovery strategies
+- **Observer Pattern**: Event-driven error handling and metrics collection
+- **Command Pattern**: Use cases encapsulate business operations
+- **Factory Pattern**: Service creation through DI container
+- **Adapter Pattern**: Infrastructure adapters for external services
 
 ## Important Considerations
 
@@ -118,30 +203,57 @@ python scripts/release/pypi_release_simple.py
 - Installer validates all operations
 - Configuration backups created automatically
 
-### Common Development Tasks
+### Clean Architecture Development Practices
 
-#### Adding a New MCP Tool
-1. Add tool handler in `enhanced_handlers.py`
-2. Update tool list in documentation
-3. Add integration tests
-4. Update README with usage examples
+#### Adding a New Domain Entity
+1. Create entity in `domain/entities/` with business logic and invariants
+2. Add value objects in `domain/value_objects/` for entity properties
+3. Define repository interface in `domain/repositories/`
+4. Implement repository in `infrastructure/database/sqlite/`
+5. Create domain service if complex business logic is needed
+6. Register services in DI container configuration
 
-#### Adding a New Specialist Role
-1. Create role definition in `config/default_roles.yaml`
-2. Test role loading with `test_role_loader.py`
-3. Document role capabilities
-4. Add usage examples
+#### Adding a New Use Case
+1. Create use case in `application/usecases/` following command pattern
+2. Define request/response DTOs in `application/dto/`
+3. Add any required domain services to support the use case
+4. Register use case in DI container
+5. Create MCP handler in `infrastructure/mcp/handlers.py`
+6. Update MCP server tool definitions
 
-#### Debugging Issues
+#### Adding a New MCP Tool (Clean Architecture Way)
+1. Create use case in `application/usecases/` for the business logic
+2. Add MCP handler in `infrastructure/mcp/handlers.py` using the use case
+3. Update tool definitions in `mcp_request_handlers.py`
+4. Add integration tests covering the full flow
+5. Document tool usage and examples
+
+#### Adding Error Handling
+1. Define domain exceptions in `domain/exceptions/` with appropriate severity
+2. Use `@handle_errors` decorator for automatic retry and recovery
+3. Add specific error handlers in `infrastructure/error_handling/handlers.py`
+4. Configure recovery strategies for new error types
+5. Test error scenarios and recovery paths
+
+#### Adding Monitoring
+1. Add metrics using `record_metric()`, `increment_counter()`, or `track_performance()`
+2. Create health checks in monitoring system for new components
+3. Add alerts for critical thresholds using `AlertRule`
+4. Include component in diagnostic runner for troubleshooting
+
+#### Debugging Issues (Modern Tools)
 ```bash
-# Check system health
-python scripts/diagnostics/check_status.py
+# Comprehensive health check and diagnostics
+python tools/diagnostics/health_check.py
 
-# Database diagnostics
-python scripts/diagnostics/diagnose_db.py
+# Real-time performance monitoring
+python tools/diagnostics/performance_monitor.py --monitor --duration 120
 
-# Server diagnostics
-python scripts/diagnostics/diagnose_server.py
+# Run diagnostic analysis
+python tools/diagnostics/health_check.py --diagnostics
+
+# Generate full system report
+python tools/diagnostics/health_check.py --report system_report.json
 
 # MCP protocol testing
 python scripts/diagnostics/test_mcp_protocol.py

@@ -32,7 +32,7 @@ Multi-team coordination requires careful management of dependencies, resource co
 - **Rollback Coordination**: Team-specific and system-wide rollback capabilities
 
 ## 🎯 When to Use These Patterns
-- Enterprise-scale feature development with multiple contributing teams
+- Large-scale feature development with multiple contributing teams
 - Shared infrastructure changes affecting multiple services
 - Coordinated releases requiring cross-team synchronization
 - Complex dependency management in microservice architectures

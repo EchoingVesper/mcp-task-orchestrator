@@ -22,7 +22,7 @@ async def test_get_parent_task_id_fix():
         os.environ["MCP_TASK_ORCHESTRATOR_DB_PATH"] = db_path
         os.environ["MCP_TASK_ORCHESTRATOR_BASE_DIR"] = base_dir
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from .orchestrator.orchestration_state_manager import StateManager
         from mcp_task_orchestrator.orchestrator.models import (
             TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
         )
@@ -129,9 +129,9 @@ async def test_integration_with_core():
         os.environ["MCP_TASK_ORCHESTRATOR_DB_PATH"] = db_path
         os.environ["MCP_TASK_ORCHESTRATOR_BASE_DIR"] = base_dir
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
-        from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
+        from .orchestrator.orchestration_state_manager import StateManager
+        from .orchestrator.task_orchestration_service import TaskOrchestrator
+        from .orchestrator.specialist_management_service import SpecialistManager
         
         # Initialize components
         state_manager = StateManager(db_path=db_path, base_dir=base_dir)

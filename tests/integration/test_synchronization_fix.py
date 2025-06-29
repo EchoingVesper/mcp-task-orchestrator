@@ -24,9 +24,9 @@ logging.basicConfig(
 logger = logging.getLogger("synchronization_test")
 
 # Import the fixed components
-from mcp_task_orchestrator.orchestrator.state import StateManager
-from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
-from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+from .orchestrator.orchestration_state_manager import StateManager
+from .orchestrator.specialist_management_service import SpecialistManager
+from .orchestrator.task_orchestration_service import TaskOrchestrator
 
 
 async def test_basic_operations():

@@ -160,7 +160,7 @@ async def test_enhanced_handler_simulation():
                 return {"status": "completed", "task_id": task_id}
         
         # Import enhanced handlers
-        from mcp_task_orchestrator.enhanced_handlers import (
+        from mcp_task_orchestrator.mcp_request_handlers import (
             handle_execute_subtask_enhanced,
             handle_complete_subtask_enhanced
         )

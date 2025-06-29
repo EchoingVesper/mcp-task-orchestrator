@@ -192,7 +192,7 @@ The orchestrator uses a five-step process:
 
 ### Available Tools
 
-**NEW in v1.7.1**: Enterprise-grade secure installer with zero vulnerabilities, cross-platform compatibility, and automatic MCP client configuration. Workspace paradigm automatically detects your project root and creates `.task_orchestrator` files in the appropriate location.
+**NEW in v1.7.1**: Secure installer with comprehensive security validation, cross-platform compatibility, and automatic MCP client configuration. Workspace paradigm automatically detects your project root and creates `.task_orchestrator` files in the appropriate location.
 
 | Tool | Purpose | Parameters |
 |------|---------|------------|
@@ -344,7 +344,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution guidelines and [`docs/
 
 **Use at your own risk.** The authors disclaim all liability for any damages or losses resulting from the use of this software, including but not limited to data loss, system failure, or business interruption.
 
-**Not production-ready without thorough testing.** This is a development tool that should be thoroughly tested and validated before any production use.
+**Not well-tested without thorough testing.** This is a development tool that should be thoroughly tested and validated before any production use.
 
 ## License & Resources
 

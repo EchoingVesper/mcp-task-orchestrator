@@ -17,18 +17,36 @@ from mcp import types
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 
-from .orchestrator.core import TaskOrchestrator
-from .orchestrator.state import StateManager
-from .orchestrator.specialists import SpecialistManager
+from config import get_config
+from .orchestrator.task_orchestration_service import TaskOrchestrator
+from .orchestrator.orchestration_state_manager import StateManager
+from .orchestrator.specialist_management_service import SpecialistManager
 from .orchestrator.artifacts import ArtifactManager
 from .db.auto_migration import execute_startup_migration
 from .reboot.reboot_tools import REBOOT_TOOLS, REBOOT_TOOL_HANDLERS
 from .reboot.reboot_integration import initialize_reboot_system
 
+# DI imports for modern architecture
+from .infrastructure.di import (
+    ServiceContainer, get_container, set_container, 
+    get_service, ServiceResolutionError
+)
+from .infrastructure.di.service_configuration import (
+    configure_all_services, get_default_config
+)
+from .domain.services import OrchestrationCoordinator
+
 # Configure logging with custom handler to separate INFO from ERROR
 import sys
 
-log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
+# Initialize configuration system
+try:
+    config = get_config()
+    log_level = config.logging.level.value
+except Exception as e:
+    # Fallback to environment variable for backwards compatibility
+    log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
+    print(f"Warning: Could not load configuration, using fallback: {e}")
 
 # Create a custom logging configuration that sends INFO to stdout and WARN+ to stderr
 class InfoFilter(logging.Filter):
@@ -74,6 +92,11 @@ _state_manager: Optional[StateManager] = None
 _specialist_manager: Optional[SpecialistManager] = None
 _orchestrator: Optional[TaskOrchestrator] = None
 
+# DI container management
+_use_dependency_injection = False
+_di_container: Optional[ServiceContainer] = None
+_di_coordinator: Optional[OrchestrationCoordinator] = None
+
 
 def initialize_database_with_migration(base_dir: str = None, db_path: str = None) -> bool:
     """
@@ -90,16 +113,33 @@ def initialize_database_with_migration(base_dir: str = None, db_path: str = None
         True if database initialization succeeded, False otherwise
     """
     try:
-        # Determine database path (same logic as StateManager)
+        # Determine database path using configuration system
         if db_path is None:
-            db_path = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_PATH")
+            try:
+                config = get_config()
+                # Try to get from configuration first
+                if hasattr(config.paths, 'workspace_dir') and config.paths.workspace_dir:
+                    base_dir = config.paths.workspace_dir
+                elif hasattr(config.paths, 'data_dir') and config.paths.data_dir:
+                    base_dir = config.paths.data_dir
+                else:
+                    # Fallback to environment variables for backwards compatibility
+                    db_path = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_PATH")
+                    if not db_path:
+                        if base_dir is None:
+                            base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+                            if not base_dir:
+                                base_dir = os.getcwd()
+            except Exception:
+                # Fallback to environment variables for backwards compatibility
+                db_path = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_PATH")
+                if not db_path:
+                    if base_dir is None:
+                        base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+                        if not base_dir:
+                            base_dir = os.getcwd()
             
             if not db_path:
-                if base_dir is None:
-                    base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
-                    if not base_dir:
-                        base_dir = os.getcwd()
-                
                 db_path = os.path.join(base_dir, ".task_orchestrator", "task_orchestrator.db")
         
         # Ensure database directory exists
@@ -136,14 +176,80 @@ def initialize_database_with_migration(base_dir: str = None, db_path: str = None
         return False
 
 
+def enable_dependency_injection(config: Optional[Dict[str, Any]] = None):
+    """
+    Enable dependency injection for the server.
+    
+    Args:
+        config: Optional configuration for services
+    """
+    global _use_dependency_injection, _di_container, _di_coordinator
+    
+    try:
+        # Get configuration
+        if config is None:
+            try:
+                config = get_config()
+                config = config.__dict__ if hasattr(config, '__dict__') else get_default_config()
+            except Exception:
+                config = get_default_config()
+        
+        # Create and configure container
+        _di_container = ServiceContainer()
+        configure_all_services(_di_container, config)
+        
+        # Set as global container
+        set_container(_di_container)
+        
+        # Get coordinator
+        _di_coordinator = _di_container.get_service(OrchestrationCoordinator)
+        
+        # Enable DI mode
+        _use_dependency_injection = True
+        
+        logger.info("Dependency injection enabled successfully")
+        
+    except Exception as e:
+        logger.error(f"Failed to enable dependency injection: {e}")
+        logger.info("Falling back to legacy singleton mode")
+        _use_dependency_injection = False
+
+
+def disable_dependency_injection():
+    """Disable dependency injection and fall back to legacy mode."""
+    global _use_dependency_injection, _di_container, _di_coordinator
+    
+    if _di_container:
+        _di_container.dispose()
+        _di_container = None
+    
+    _di_coordinator = None
+    _use_dependency_injection = False
+    
+    logger.info("Dependency injection disabled, using legacy mode")
+
+
 def get_state_manager() -> StateManager:
     """Get or create the StateManager singleton instance."""
     global _state_manager
     if _state_manager is None:
-        # Get base directory for persistence
-        base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
-        if not base_dir:
-            base_dir = os.getcwd()
+        # Get base directory for persistence using configuration system
+        try:
+            config = get_config()
+            if hasattr(config.paths, 'workspace_dir') and config.paths.workspace_dir:
+                base_dir = config.paths.workspace_dir
+            elif hasattr(config.paths, 'data_dir') and config.paths.data_dir:
+                base_dir = config.paths.data_dir
+            else:
+                # Fallback to environment variables for backwards compatibility
+                base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+                if not base_dir:
+                    base_dir = os.getcwd()
+        except Exception:
+            # Fallback to environment variables for backwards compatibility
+            base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+            if not base_dir:
+                base_dir = os.getcwd()
         
         # Initialize database with migration check before StateManager creation
         migration_success = initialize_database_with_migration(base_dir=base_dir)
@@ -177,6 +283,38 @@ def get_orchestrator(project_dir: str = None) -> TaskOrchestrator:
         logger.info("Initialized TaskOrchestrator")
     
     return _orchestrator
+
+
+def get_orchestration_coordinator() -> OrchestrationCoordinator:
+    """
+    Get the orchestration coordinator (DI mode only).
+    
+    Returns:
+        OrchestrationCoordinator instance
+        
+    Raises:
+        RuntimeError: If dependency injection is not enabled
+    """
+    if not _use_dependency_injection or _di_coordinator is None:
+        raise RuntimeError("Dependency injection must be enabled to use OrchestrationCoordinator")
+    
+    return _di_coordinator
+
+
+def get_orchestrator_hybrid(project_dir: str = None):
+    """
+    Get orchestrator using DI if enabled, otherwise fall back to legacy.
+    
+    Args:
+        project_dir: Project directory
+        
+    Returns:
+        Either OrchestrationCoordinator (DI mode) or TaskOrchestrator (legacy mode)
+    """
+    if _use_dependency_injection and _di_coordinator is not None:
+        return _di_coordinator
+    else:
+        return get_orchestrator(project_dir=project_dir)
 
 
 @app.list_tools()
@@ -393,23 +531,32 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
         # Get project directory using our multi-strategy approach
         project_dir = get_project_directory(args)
     
-    # Initialize state manager with the specific project directory
-    state_manager = StateManager(base_dir=project_dir)
-    
-    # Create specialist manager and orchestrator with the project directory
-    specialist_manager = SpecialistManager(project_dir=project_dir)
-    orchestrator = TaskOrchestrator(state_manager, specialist_manager, project_dir=project_dir)
+    # Get orchestrator using hybrid approach (DI if enabled, otherwise legacy)
+    orchestrator = get_orchestrator_hybrid(project_dir=project_dir)
     
     # Get orchestration guidance from the orchestrator
     session_context = await orchestrator.initialize_session()
     
-    # Check for interrupted tasks
-    active_tasks = await state_manager.get_all_tasks()
+    # Get state manager for checking interrupted tasks
+    if _use_dependency_injection:
+        # In DI mode, get state manager from container
+        state_manager = get_service(StateRepository)
+        # Convert state repository to legacy interface if needed
+        active_tasks = await state_manager.get_all_tasks()
+    else:
+        # In legacy mode, use singleton
+        state_manager = get_state_manager()
+        active_tasks = await state_manager.get_all_tasks()
+    
     active_parent_tasks = set()
     
     # Get unique parent task IDs
     for task in active_tasks:
-        parent_id = await state_manager._get_parent_task_id(task.task_id)
+        if hasattr(state_manager, '_get_parent_task_id'):
+            parent_id = await state_manager._get_parent_task_id(task.task_id)
+        else:
+            # For DI mode, we'll need to adapt this logic
+            parent_id = getattr(task, 'parent_task_id', None)
         if parent_id:
             active_parent_tasks.add(parent_id)
     
@@ -448,7 +595,7 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
 
 async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle task planning with LLM-provided subtasks."""
-    orchestrator = get_orchestrator()
+    orchestrator = get_orchestrator_hybrid()
     
     description = args["description"]
     subtasks_json = args["subtasks_json"]
@@ -500,7 +647,7 @@ async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
 
 async def handle_execute_subtask(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle subtask execution by providing specialist context."""
-    orchestrator = get_orchestrator()
+    orchestrator = get_orchestrator_hybrid()
     task_id = args["task_id"]
     
     try:
@@ -539,7 +686,7 @@ async def handle_execute_subtask(args: Dict[str, Any]) -> List[types.TextContent
 
 async def handle_complete_subtask(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle subtask completion with artifact storage to prevent context limit issues."""
-    orchestrator = get_orchestrator()
+    orchestrator = get_orchestrator_hybrid()
     
     # Extract new parameters
     task_id = args["task_id"]
@@ -652,7 +799,7 @@ async def handle_complete_subtask(args: Dict[str, Any]) -> List[types.TextConten
 
 async def handle_synthesize_results(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle result synthesis."""
-    orchestrator = get_orchestrator()
+    orchestrator = get_orchestrator_hybrid()
     parent_task_id = args["parent_task_id"]
     
     try:
@@ -691,7 +838,7 @@ async def handle_synthesize_results(args: Dict[str, Any]) -> List[types.TextCont
 
 async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle status requests."""
-    orchestrator = get_orchestrator()
+    orchestrator = get_orchestrator_hybrid()
     include_completed = args.get("include_completed", False)
     
     try:
@@ -728,7 +875,7 @@ async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
 
 async def handle_maintenance_coordinator(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle maintenance coordination requests."""
-    orchestrator = get_orchestrator()
+    orchestrator = get_orchestrator_hybrid()
     state_manager = get_state_manager()
     
     action = args["action"]
@@ -832,11 +979,30 @@ async def main():
         # Log server initialization
         logger.info("Starting MCP Task Orchestrator server...")
         
+        # Check if DI should be enabled
+        enable_di = os.environ.get("MCP_TASK_ORCHESTRATOR_USE_DI", "true").lower() in ("true", "1", "yes")
+        
+        if enable_di:
+            # Try to enable dependency injection
+            try:
+                enable_dependency_injection()
+                logger.info("Server running in dependency injection mode")
+            except Exception as e:
+                logger.warning(f"DI initialization failed, using legacy mode: {e}")
+                disable_dependency_injection()
+        else:
+            logger.info("Dependency injection disabled by configuration, using legacy mode")
+            disable_dependency_injection()
+        
         # Initialize reboot system
         try:
-            state_manager = get_state_manager()
-            await initialize_reboot_system(state_manager)
-            logger.info("Reboot system initialized successfully")
+            if _use_dependency_injection:
+                # In DI mode, we might need to adapt this
+                logger.info("Skipping reboot system in DI mode (needs adaptation)")
+            else:
+                state_manager = get_state_manager()
+                await initialize_reboot_system(state_manager)
+                logger.info("Reboot system initialized successfully")
         except Exception as e:
             logger.warning(f"Failed to initialize reboot system: {e}")
         
@@ -853,6 +1019,11 @@ async def main():
     except Exception as e:
         logger.error(f"Error in MCP Task Orchestrator server: {e}", exc_info=True)
         raise
+    finally:
+        # Cleanup resources
+        if _use_dependency_injection and _di_container:
+            logger.info("Disposing DI container")
+            _di_container.dispose()
 
 
 def main_sync():
@@ -879,7 +1050,17 @@ def get_project_directory(args: Dict[str, Any]) -> str:
         logger.info(f"Using project directory from request metadata: {project_dir}")
         return project_dir
     
-    # Strategy 2: Check environment variables (useful for VS Code extensions)
+    # Strategy 2: Check configuration system and environment variables
+    try:
+        config = get_config()
+        if hasattr(config.paths, 'workspace_dir') and config.paths.workspace_dir:
+            if os.path.isdir(config.paths.workspace_dir):
+                logger.info(f"Using project directory from configuration: {config.paths.workspace_dir}")
+                return config.paths.workspace_dir
+    except Exception:
+        pass
+    
+    # Fallback to environment variables (useful for VS Code extensions)
     env_project_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_PROJECT_DIR")
     if env_project_dir and os.path.isdir(env_project_dir):
         logger.info(f"Using project directory from environment: {env_project_dir}")
@@ -888,8 +1069,8 @@ def get_project_directory(args: Dict[str, Any]) -> str:
     # Strategy 3: Check common editor environment variables
     # VS Code sets VSCODE_CWD, others might set similar variables
     editor_cwd = (
-        os.environ.get("VSCODE_CWD") or 
-        os.environ.get("CURSOR_CWD") or 
+        os.environ.get("VSCODE_CWD") or
+        os.environ.get("CURSOR_CWD") or
         os.environ.get("WINDSURF_CWD")
     )
     if editor_cwd and os.path.isdir(editor_cwd):

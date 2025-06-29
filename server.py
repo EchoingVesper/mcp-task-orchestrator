@@ -17,9 +17,9 @@ from mcp import types
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 
-from .orchestrator.core import TaskOrchestrator
-from .orchestrator.state import StateManager
-from .orchestrator.specialists import SpecialistManager
+from .orchestrator.task_orchestration_service import TaskOrchestrator
+from .orchestrator.orchestration_state_manager import StateManager
+from .orchestrator.specialist_management_service import SpecialistManager
 from .orchestrator.artifacts import ArtifactManager
 from .db.auto_migration import execute_startup_migration
 from .reboot.reboot_tools import REBOOT_TOOLS, REBOOT_TOOL_HANDLERS
@@ -27,8 +27,18 @@ from .reboot.reboot_integration import initialize_reboot_system
 
 # Configure logging with custom handler to separate INFO from ERROR
 import sys
+from config import get_config
 
-log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
+# Load configuration
+try:
+    config = get_config()
+    log_level = config.logging.level
+    log_format = config.logging.format
+except Exception as e:
+    # Fallback to environment variables if config loading fails
+    log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
+    log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    logging.error(f"Failed to load configuration, using fallback: {e}")
 
 # Configure logging to stderr only (stdout reserved for MCP JSON protocol)
 
@@ -41,7 +51,7 @@ for handler in root_logger.handlers[:]:
     root_logger.removeHandler(handler)
 
 # Formatter
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter(log_format)
 
 # CRITICAL: Do NOT log to stdout - it corrupts MCP JSON protocol
 # Stdout is reserved for MCP JSON messages only

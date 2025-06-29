@@ -15,7 +15,7 @@ from mcp_task_orchestrator.orchestrator.models import (
     TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
 )
 from mcp_task_orchestrator.persistence import PersistenceManager
-from mcp_task_orchestrator.orchestrator.state import StateManager
+from .orchestrator.orchestration_state_manager import StateManager
 
 
 async def test_persistence():

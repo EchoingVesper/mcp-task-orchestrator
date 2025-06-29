@@ -3,17 +3,20 @@
 ## Priority: 🟡 LOW - DEVELOPMENT CONVENIENCE
 
 ## Issue Summary
+
 Diagnostic scripts failing with `ModuleNotFoundError: No module named 'mcp_task_orchestrator'` when run directly, requiring proper Python path setup.
 
 ## Evidence
+
 ```
 Traceback (most recent call last):
-  File "E:\My Work\Programming\MCP Servers\mcp-task-orchestrator\scripts\diagnostics\check_status.py", line 16
+  File "E:\dev\mcp-servers\mcp-task-orchestrator\scripts\diagnostics\check_status.py", line 16
     from mcp_task_orchestrator.orchestrator.state import StateManager
 ModuleNotFoundError: No module named 'mcp_task_orchestrator'
 ```
 
 ## Root Cause
+
 - Scripts expect package to be installed in Python environment
 - Direct execution doesn't add project root to Python path
 - Missing environment activation or package installation
@@ -21,6 +24,7 @@ ModuleNotFoundError: No module named 'mcp_task_orchestrator'
 ## Solutions
 
 ### Solution A: Fix Script Paths
+
 ```python
 # Add to top of diagnostic scripts
 import sys
@@ -34,10 +38,11 @@ from mcp_task_orchestrator.orchestrator.state import StateManager
 ```
 
 ### Solution B: Environment Setup Documentation
+
 ```bash
 # Add to diagnostic script headers
-# Usage: 
-#   cd "E:\My Work\Programming\MCP Servers\mcp-task-orchestrator"
+# Usage:
+#   cd "E:\dev\mcp-servers\mcp-task-orchestrator"
 #   python -m scripts.diagnostics.check_status
 # OR:
 #   source venv_mcp/bin/activate  # Linux/Mac
@@ -46,6 +51,7 @@ from mcp_task_orchestrator.orchestrator.state import StateManager
 ```
 
 ### Solution C: Wrapper Scripts
+
 ```python
 # Create run_diagnostics.py in project root
 import subprocess
@@ -58,11 +64,13 @@ def run_diagnostic(script_name):
 ```
 
 ## Implementation Steps
+
 1. **Fix Python path** in all diagnostic scripts
 2. **Update documentation** with proper usage instructions
 3. **Test all diagnostic scripts** work without environment activation
 
 ## Success Criteria
+
 - [ ] All diagnostic scripts run without module import errors
 - [ ] Clear usage instructions in script docstrings
 - [ ] Works both with and without virtual environment activation

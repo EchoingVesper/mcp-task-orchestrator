@@ -190,7 +190,7 @@ Use the actual MCP tools to:
 - **Memory leaks during long sessions** (indicate cleanup issues)
 - **Deadlocks between concurrent operations** (indicate lock contention)
 
-The goal is to achieve a completely timeout-free, production-ready task orchestrator that can handle real development workflows reliably and efficiently.
+The goal is to achieve a completely timeout-free, well-tested task orchestrator that can handle real development workflows reliably and efficiently.
 
 ## 🔍 CRITICAL DISCOVERY - Updated Investigation Focus
 

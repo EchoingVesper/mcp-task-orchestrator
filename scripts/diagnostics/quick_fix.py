@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Change to project directory
 import os
-os.chdir(r"E:\My Work\Programming\MCP Servers\mcp-task-orchestrator")
+os.chdir(r"E:\dev\mcp-servers\mcp-task-orchestrator")
 
 print("🔍 Checking database schema...")
 

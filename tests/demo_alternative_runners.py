@@ -29,7 +29,7 @@ def demo_direct_runner():
     print("This runner executes test functions directly, similar to run_migration_test.py")
     
     try:
-        from mcp_task_orchestrator.testing import DirectFunctionRunner
+        from testing_utils import DirectFunctionRunner
         
         # Create runner
         runner = DirectFunctionRunner(
@@ -80,7 +80,7 @@ def demo_migration_runner():
     print("This runner specifically handles the migration test with enhanced output")
     
     try:
-        from mcp_task_orchestrator.testing import MigrationTestRunner
+        from testing_utils import MigrationTestRunner
         
         # Create migration runner
         runner = MigrationTestRunner(
@@ -113,7 +113,7 @@ def demo_integration_runner():
     print("This runner handles complex integration tests with async support")
     
     try:
-        from mcp_task_orchestrator.testing import IntegrationTestRunner
+        from testing_utils import IntegrationTestRunner
         
         # Create integration runner
         runner = IntegrationTestRunner(
@@ -165,7 +165,7 @@ def demo_comprehensive_runner():
     print("This orchestrates multiple specialized runners automatically")
     
     try:
-        from mcp_task_orchestrator.testing import ComprehensiveTestRunner, TestRunnerConfig
+        from testing_utils import ComprehensiveTestRunner, TestRunnerConfig
         
         # Create comprehensive runner
         config = TestRunnerConfig(
@@ -233,7 +233,7 @@ def demo_output_comparison():
             test_output_lines.append(f"Test output line {i:03d}: Detailed information for verification")
         
         # Simulate file-based capture
-        from mcp_task_orchestrator.testing import TestOutputWriter, TestOutputReader
+        from testing_utils import TestOutputWriter, TestOutputReader
         
         writer = TestOutputWriter(Path.cwd() / "demo_outputs" / "comparison")
         

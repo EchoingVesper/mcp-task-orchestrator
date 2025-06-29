@@ -16,7 +16,7 @@ print("="*60)
 # Test 1: Import testing modules
 print("\n▶️ Test 1: Import Testing Modules")
 try:
-    from mcp_task_orchestrator.testing import TestOutputWriter, TestOutputReader
+    from testing_utils import TestOutputWriter, TestOutputReader
     print("✅ Successfully imported TestOutputWriter and TestOutputReader")
     
     from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager

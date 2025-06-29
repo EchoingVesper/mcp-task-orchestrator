@@ -10,7 +10,7 @@ from pathlib import Path
 
 def main():
     # Ensure we're in the project directory
-    project_dir = Path(r"E:\My Work\Programming\MCP Servers\mcp-task-orchestrator")
+    project_dir = Path(r"E:\dev\mcp-servers\mcp-task-orchestrator")
     os.chdir(project_dir)
     
     print("🔧 Emergency Database Schema Repair")
@@ -72,7 +72,7 @@ def main():
         print(f"✅ Persistence manager works - found {len(active_tasks)} active tasks")
         
         # Test the core orchestrator
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+        from .orchestrator.task_orchestration_service import TaskOrchestrator
         orchestrator = TaskOrchestrator()
         print(f"✅ Task orchestrator initialized successfully")
         

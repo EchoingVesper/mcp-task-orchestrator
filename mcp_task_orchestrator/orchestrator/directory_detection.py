@@ -22,6 +22,13 @@ from typing import Optional, List, Dict, Any, Tuple
 from dataclasses import dataclass
 from enum import Enum
 
+# Import unified configuration system
+try:
+    from ...config import get_config
+except ImportError:
+    # Fallback for backwards compatibility
+    get_config = None
+
 
 logger = logging.getLogger(__name__)
 
@@ -451,6 +458,28 @@ class DirectoryDetector:
     
     def _try_mcp_client_pwd(self) -> Optional[DetectionResult]:
         """Try MCP client PWD detection."""
+        # Try to get working directory from unified configuration first
+        try:
+            if get_config is not None:
+                config = get_config()
+                if config.paths.workspace_dir and Path(config.paths.workspace_dir).exists():
+                    path = Path(config.paths.workspace_dir).resolve()
+                    validation = self.validate_directory(str(path))
+                    
+                    if validation.is_valid:
+                        return DetectionResult(
+                            detected_path=path,
+                            method=DetectionMethod.MCP_CLIENT_PWD,
+                            confidence=8,  # Higher confidence for config-based detection
+                            validation=validation,
+                            project_markers=self.find_project_markers(path),
+                            git_root=self.find_git_root(path)
+                        )
+        except Exception:
+            # Continue with environment variable fallback
+            pass
+        
+        # Fallback to environment variables for backwards compatibility
         for env_var in self.MCP_CLIENT_ENV_VARS:
             env_value = os.environ.get(env_var)
             if env_value and Path(env_value).exists():

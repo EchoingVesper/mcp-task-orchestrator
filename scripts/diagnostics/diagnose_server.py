@@ -75,7 +75,7 @@ def main():
         
         # Step 7: Import state manager
         t = log_step("Importing state manager")
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from .orchestrator.orchestration_state_manager import StateManager
         log_time(t, "Importing state manager")
         
         # Step 8: Create state manager
@@ -85,7 +85,7 @@ def main():
         
         # Step 9: Import specialist manager
         t = log_step("Importing specialist manager")
-        from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
+        from .orchestrator.specialist_management_service import SpecialistManager
         log_time(t, "Importing specialist manager")
         
         # Step 10: Create specialist manager
@@ -95,7 +95,7 @@ def main():
         
         # Step 11: Import task orchestrator
         t = log_step("Importing task orchestrator")
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+        from .orchestrator.task_orchestration_service import TaskOrchestrator
         log_time(t, "Importing task orchestrator")
         
         # Step 12: Create task orchestrator

@@ -324,7 +324,7 @@ class HierarchicalTaskManager:
 **Priority**: Medium  
 **Complexity**: High  
 
-**Description**: Enterprise-grade security for agent communications.
+**Description**: comprehensive security for agent communications.
 
 **Features**:
 - Multi-factor agent authentication

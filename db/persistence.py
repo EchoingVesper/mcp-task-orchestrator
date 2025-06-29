@@ -20,6 +20,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from ..orchestrator.models import TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
 from .models import Base, TaskBreakdownModel, SubTaskModel, LockTrackingModel
+from ..config import get_config
 
 # Configure logging
 logger = logging.getLogger("mcp_task_orchestrator.db.persistence")
@@ -47,7 +48,12 @@ class DatabasePersistenceManager:
                    in the base directory.
         """
         if base_dir is None:
-            # Check environment variable first
+            # Try to get from configuration first, then fallback to environment variable
+            try:
+                config = get_config()
+                base_dir = config.paths.base_dir or os.getcwd()
+            except Exception:
+                # Fallback to environment variable first
             base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
             
             if not base_dir:

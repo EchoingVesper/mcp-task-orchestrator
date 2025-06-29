@@ -17,8 +17,8 @@ from mcp_task_orchestrator.orchestrator.enhanced_core import create_enhanced_orc
 from mcp_task_orchestrator.orchestrator.work_stream_integration import (
     EnhancedWorkStreamHandler, prepare_documentation_work_stream, prepare_testing_work_stream
 )
-from mcp_task_orchestrator.orchestrator.state import StateManager
-from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
 from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
 
 

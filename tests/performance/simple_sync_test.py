@@ -13,7 +13,7 @@ async def test_basic_import():
     print("Testing basic imports...")
     
     try:
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from .orchestrator.orchestration_state_manager import StateManager
         print("StateManager imported successfully")
         
         # Test initialization

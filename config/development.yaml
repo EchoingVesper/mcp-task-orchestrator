@@ -1,0 +1,38 @@
+# Development Environment Configuration Overrides
+# This file extends the default configuration with development-specific settings
+
+# Override database configuration for development
+database:
+  echo: true  # Enable SQL logging in development
+  url: "sqlite:///dev_task_orchestrator.db"
+
+# Override logging configuration for development
+logging:
+  level: DEBUG
+  console_enabled: true
+  file_enabled: true
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s:%(lineno)d - %(message)s"
+
+# Override server configuration for development
+server:
+  timeout: 600  # Longer timeout for debugging
+
+# Override task configuration for development
+tasks:
+  max_subtasks: 20  # Lower limit for development testing
+  cleanup_interval: 3600  # More frequent cleanup (1 hour)
+
+# Override security configuration for development
+security:
+  enable_cors: true
+  allowed_origins: ["http://localhost:*", "http://127.0.0.1:*"]
+  api_key_required: false
+  rate_limit_enabled: false  # Disable rate limiting in development
+
+# Development-specific paths (will be auto-detected but can be overridden)
+paths:
+  workspace_dir: null  # Auto-detect from project context
+  config_dir: null     # Auto-detect
+  data_dir: null       # Auto-detect  
+  log_dir: "./logs"    # Explicit log directory for development
+  temp_dir: "./tmp"    # Explicit temp directory for development

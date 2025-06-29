@@ -13,8 +13,8 @@
 ### Developers → Integration Patterns
 1. **[Claude Code MCP Integration](./user-guide/integration-guides/claude-code-mcp.md)** - Master coordination patterns
 2. **[Sequential Coordination](./user-guide/visual-guides/sequential-coordination-flow.md)** - Core workflow pattern
-3. **[Real-World Examples](./user-guide/real-world-examples/)** - Production-ready patterns
-4. **[Advanced Techniques](./user-guide/advanced-techniques/)** - Enterprise-scale coordination
+3. **[Real-World Examples](./user-guide/real-world-examples/)** - Practical patterns
+4. **[Advanced Techniques](./user-guide/advanced-techniques/)** - Large-scale coordination
 
 ### Architects & Planners → System Design
 1. **[A2A Framework Integration](./architecture/a2a-framework-integration.md)** - Agent-to-agent coordination architecture
@@ -54,7 +54,7 @@ user-guide/
 │   ├── legacy-modernization/      # Migration patterns
 │   └── multi-team-coordination/   # Enterprise workflows
 ├── workflow-patterns/             # Common workflow templates
-└── advanced-techniques/           # Enterprise-scale patterns
+└── advanced-techniques/           # Large-scale patterns
 ```
 
 ### 🤖 LLM Agent Documentation (`/llm-agents/`)

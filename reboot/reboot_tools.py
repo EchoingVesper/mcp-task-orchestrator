@@ -14,7 +14,7 @@ from mcp import types
 
 from .reboot_integration import get_reboot_manager
 from .state_serializer import RestartReason
-from ..orchestrator.state import StateManager
+from .orchestrator.orchestration_state_manager import StateManager
 
 logger = logging.getLogger("mcp_task_orchestrator.server.reboot_tools")
 

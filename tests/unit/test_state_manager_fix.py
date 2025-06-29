@@ -20,7 +20,7 @@ async def test_state_manager_with_correct_db():
         os.environ["MCP_TASK_ORCHESTRATOR_DB_PATH"] = db_path
         os.environ["MCP_TASK_ORCHESTRATOR_BASE_DIR"] = base_dir
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from .orchestrator.orchestration_state_manager import StateManager
         
         # Initialize StateManager with explicit paths
         state_manager = StateManager(db_path=db_path, base_dir=base_dir)

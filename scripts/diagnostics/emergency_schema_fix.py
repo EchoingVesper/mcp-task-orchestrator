@@ -154,7 +154,7 @@ def test_orchestrator_tools():
         
         # Try importing the core modules
         from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+        from .orchestrator.task_orchestration_service import TaskOrchestrator
         
         # Try creating a persistence manager
         persistence = DatabasePersistenceManager()

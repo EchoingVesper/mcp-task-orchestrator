@@ -13,6 +13,13 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 
+# Import unified configuration system with fallback handling
+try:
+    from ..config import get_config
+    _config_available = True
+except ImportError:
+    _config_available = False
+
 
 @dataclass
 class ClientConfig:
@@ -106,7 +113,19 @@ class ClientRegistry:
         
         # Handle platform-specific variables
         if system == "Windows":
-            path = path_template.replace("%APPDATA%", os.environ.get("APPDATA", ""))
+            # Try unified configuration system first, then fall back to environment variables
+            appdata_path = ""
+            if _config_available:
+                try:
+                    config = get_config()
+                    # Use system paths from configuration if available
+                    appdata_path = getattr(config.paths, 'appdata_dir', None) or os.environ.get("APPDATA", "")
+                except:
+                    appdata_path = os.environ.get("APPDATA", "")
+            else:
+                appdata_path = os.environ.get("APPDATA", "")
+            
+            path = path_template.replace("%APPDATA%", appdata_path)
             path = path.replace("~", str(Path.home()))
         else:
             path = os.path.expanduser(path_template)
@@ -232,9 +251,26 @@ class ClientRegistry:
                     pass
             
             # Add essential environment variables for Claude Desktop
+            # Try unified configuration system first, then fall back to environment variables
+            system_path = ""
+            home_path = ""
+            
+            if _config_available:
+                try:
+                    config = get_config()
+                    # Use system paths from configuration if available
+                    system_path = getattr(config.paths, 'system_path', None) or os.environ.get("PATH", "")
+                    home_path = getattr(config.paths, 'home_dir', None) or os.environ.get("HOME", os.environ.get("USERPROFILE", ""))
+                except:
+                    system_path = os.environ.get("PATH", "")
+                    home_path = os.environ.get("HOME", os.environ.get("USERPROFILE", ""))
+            else:
+                system_path = os.environ.get("PATH", "")
+                home_path = os.environ.get("HOME", os.environ.get("USERPROFILE", ""))
+            
             env_vars.update({
-                "PATH": os.environ.get("PATH", ""),
-                "HOME": os.environ.get("HOME", os.environ.get("USERPROFILE", ""))
+                "PATH": system_path,
+                "HOME": home_path
             })
         else:
             # For other clients (Windsurf, Cursor, etc.), use minimal environment

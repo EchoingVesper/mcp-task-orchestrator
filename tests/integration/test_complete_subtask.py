@@ -14,9 +14,9 @@ async def test_complete_subtask_operation():
     print("Testing complete_subtask operation...")
     
     try:
-        from mcp_task_orchestrator.orchestrator.state import StateManager
-        from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+        from .orchestrator.orchestration_state_manager import StateManager
+        from .orchestrator.specialist_management_service import SpecialistManager
+        from .orchestrator.task_orchestration_service import TaskOrchestrator
         
         print("All imports successful")
         

@@ -89,4 +89,4 @@ The migration test itself (`test_migration.py`) has been verified to work correc
 
 ## Priority
 
-This investigation should be considered **HIGH PRIORITY** as these issues could mask actual functional problems and need to be resolved before the v1.0 release can be considered production-ready.
+This investigation should be considered **HIGH PRIORITY** as these issues could mask actual functional problems and need to be resolved before the v1.0 release can be considered well-tested.

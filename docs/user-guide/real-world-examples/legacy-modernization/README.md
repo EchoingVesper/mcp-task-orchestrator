@@ -35,4 +35,4 @@ Legacy modernization requires careful coordination between analysis, refactoring
 - Large codebases requiring systematic transformation
 - Mission-critical systems needing zero-downtime migration
 - Complex dependency chains requiring careful orchestration
-- Multi-team coordination for enterprise-scale modernization
+- Multi-team coordination for Large-scale modernization

@@ -47,4 +47,4 @@ execute_command: liquibase --context=payment-v2 update
 - **Parallel Execution**: Teams work independently with orchestrated checkpoints
 
 ---
-*👥 Demonstrates enterprise-scale team coordination with minimal conflicts*
+*👥 Demonstrates Large-scale team coordination with minimal conflicts*

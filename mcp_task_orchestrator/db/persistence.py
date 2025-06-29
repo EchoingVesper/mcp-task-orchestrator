@@ -21,6 +21,13 @@ from sqlalchemy.exc import SQLAlchemyError
 from ..orchestrator.models import TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
 from .models import Base, TaskBreakdownModel, SubTaskModel, LockTrackingModel
 
+# Import unified configuration system
+try:
+    from ...config import get_config
+except ImportError:
+    # Fallback for backwards compatibility
+    get_config = None
+
 # Configure logging
 logger = logging.getLogger("mcp_task_orchestrator.db.persistence")
 
@@ -47,12 +54,20 @@ class DatabasePersistenceManager:
                    in the base directory.
         """
         if base_dir is None:
-            # Check environment variable first
-            base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
-            
-            if not base_dir:
-                # Default to current working directory (project being worked on)
-                base_dir = os.getcwd()
+            # Try to use unified configuration system first
+            try:
+                if get_config:
+                    config = get_config()
+                    base_dir = str(config.paths.workspace_dir or config.paths.data_dir)
+                else:
+                    raise ImportError("Configuration system not available")
+            except Exception:
+                # Fallback to environment variable for backwards compatibility
+                base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")
+                
+                if not base_dir:
+                    # Default to current working directory (project being worked on)
+                    base_dir = os.getcwd()
         
         self.base_dir = Path(base_dir)
         self.persistence_dir = self.base_dir / self.PERSISTENCE_DIR
@@ -65,12 +80,21 @@ class DatabasePersistenceManager:
         
         # Initialize database connection
         if db_url is None:
-            db_url = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_URL")
-            
-            if not db_url:
-                # Default to a SQLite database in the base directory
-                db_path = self.persistence_dir / "task_orchestrator.db"
-                db_url = f"sqlite:///{db_path}"
+            # Try to use unified configuration system first
+            try:
+                if get_config:
+                    config = get_config()
+                    db_url = config.database.url
+                else:
+                    raise ImportError("Configuration system not available")
+            except Exception:
+                # Fallback to environment variable for backwards compatibility
+                db_url = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_URL")
+                
+                if not db_url:
+                    # Default to a SQLite database in the base directory
+                    db_path = self.persistence_dir / "task_orchestrator.db"
+                    db_url = f"sqlite:///{db_path}"
         
         # Configure engine with optimized settings for async workloads
         self.engine = create_engine(
