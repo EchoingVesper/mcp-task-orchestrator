@@ -4,7 +4,7 @@
 
 ## Real-World Workflow Examples
 
-This section demonstrates complex, production-ready workflows using the Generic Task Model for enterprise-scale development projects.
+This section demonstrates complex, well-tested workflows using the Generic Task Model for Large-scale development projects.
 
 ## Example 1: Complete Feature Development Workflow
 

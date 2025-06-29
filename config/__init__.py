@@ -1,34 +1,69 @@
-"""
-Configuration module for MCP Task Orchestrator.
+"""Configuration Package for MCP Task Orchestrator
 
-This module provides configuration management functionality for the MCP Task Orchestrator,
-including loading specialist templates and server settings.
-"""
+This package provides a unified configuration management system with:
+- Environment-aware configuration loading (development, production, testing)
+- Pydantic validation for type safety and validation
+- Auto-detection of workspace paths and project context
+- YAML-based configuration with environment variable overrides
+- Centralized configuration access throughout the application
 
-from pathlib import Path
-import os
-
-# Default configuration paths
-DEFAULT_CONFIG_DIR = Path(__file__).parent
-USER_CONFIG_DIR = Path.home() / ".mcp_task_orchestrator"
-
-# Create user config directory if it doesn't exist
-os.makedirs(USER_CONFIG_DIR, exist_ok=True)
-
-def get_config_path(filename):
-    """
-    Get the path to a configuration file, checking user directory first,
-    then falling back to the default configuration.
+Usage:
+    from config import get_config, get_config_manager
     
-    Args:
-        filename (str): Name of the configuration file
-        
-    Returns:
-        Path: Path to the configuration file
-    """
-    user_path = USER_CONFIG_DIR / filename
-    default_path = DEFAULT_CONFIG_DIR / filename
+    # Get current configuration
+    config = get_config()
     
-    if user_path.exists():
-        return user_path
-    return default_path
+    # Access configuration properties
+    db_url = config.database.url
+    server_name = config.server.name
+    log_level = config.logging.level
+    
+    # Get configuration manager for advanced operations
+    manager = get_config_manager()
+    workspace_dir = manager.get_workspace_dir()
+"""
+
+from .schema import (
+    MCPConfig,
+    Environment,
+    DatabaseConfig,
+    ServerConfig,
+    TaskConfig,
+    PathConfig,
+    LoggingConfig,
+    SecurityConfig,
+    RoleConfig,
+    SpecialistRole
+)
+
+from .manager import (
+    ConfigurationManager,
+    get_config_manager,
+    get_config,
+    reload_config
+)
+
+__all__ = [
+    # Schema classes
+    'MCPConfig',
+    'Environment',
+    'DatabaseConfig',
+    'ServerConfig',
+    'TaskConfig',
+    'PathConfig',
+    'LoggingConfig',
+    'SecurityConfig',
+    'RoleConfig',
+    'SpecialistRole',
+    
+    # Manager classes and functions
+    'ConfigurationManager',
+    'get_config_manager',
+    'get_config',
+    'reload_config'
+]
+
+# Version information
+__version__ = "1.8.0"
+__author__ = "MCP Task Orchestrator Team"
+__description__ = "Unified configuration management system for MCP Task Orchestrator"

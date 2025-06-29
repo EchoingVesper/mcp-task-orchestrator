@@ -15,7 +15,7 @@ sys.path.insert(0, str(project_root))
 async def minimal_test():
     print("Testing minimal database operations...")
     
-    from mcp_task_orchestrator.orchestrator.state import StateManager
+    from .orchestrator.orchestration_state_manager import StateManager
     from mcp_task_orchestrator.orchestrator.models import TaskStatus
     from datetime import datetime
     

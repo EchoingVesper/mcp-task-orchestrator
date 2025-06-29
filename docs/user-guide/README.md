@@ -20,11 +20,11 @@ Welcome! Whether you're tackling your first complex development project or you'r
 - **[Quick Reference](quick-reference.md)** - Command cheat sheet for when you're in flow
 
 ### Real-World Examples 🏢
-*Production-ready scenarios with complete implementations*
+*well-tested scenarios with complete implementations*
 
 - **[Data Processing](real-world-examples/data-processing/)** - ETL pipelines and analytics workflows
 - **[Legacy Modernization](real-world-examples/legacy-modernization/)** - Migration and refactoring patterns
-- **[Multi-Team Coordination](real-world-examples/multi-team-coordination/)** - Enterprise-scale workflows
+- **[Multi-Team Coordination](real-world-examples/multi-team-coordination/)** - Large-scale workflows
 
 ### Workflow Patterns 📊
 *Real-world scenarios with step-by-step guidance*
@@ -72,7 +72,7 @@ Welcome! Whether you're tackling your first complex development project or you'r
 Looking for immediate value? Try these proven patterns:
 
 1. **The "Complex Feature" Pattern**: Turn vague requirements into systematic implementation
-2. **The "Research & Build" Pattern**: Go from learning to production-ready code
+2. **The "Research & Build" Pattern**: Go from learning to well-tested code
 3. **The "Documentation Sprint" Pattern**: Create comprehensive docs that actually help users
 
 ## 🤝 Getting Help

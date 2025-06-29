@@ -1,6 +1,6 @@
 # Advanced Workflow Patterns
 
-*Enterprise-scale orchestration strategies, performance optimization, and sophisticated coordination patterns*
+*Large-scale orchestration strategies, performance optimization, and sophisticated coordination patterns*
 
 Moving beyond basic task coordination, these advanced patterns unlock the full potential of systematic workflow orchestration for complex, multi-phase projects with demanding requirements.
 
@@ -352,4 +352,4 @@ You've mastered advanced workflow patterns when you can:
 - **Multi-Server Mastery:** [MCP Aggregation Patterns](../integration-guides/mcp-aggregators.md)
 - **Performance Tuning:** [Optimization Guide](../troubleshooting/performance-optimization.md)
 
-*These advanced patterns represent the pinnacle of systematic workflow orchestration, enabling enterprise-grade development with unprecedented efficiency and quality.*
+*These advanced patterns represent the pinnacle of systematic workflow orchestration, enabling comprehensive development with unprecedented efficiency and quality.*

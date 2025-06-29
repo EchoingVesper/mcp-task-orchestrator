@@ -13,7 +13,7 @@ async def detailed_timeout_test():
     print("Running detailed timeout analysis...")
     
     try:
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from .orchestrator.orchestration_state_manager import StateManager
         
         # Initialize StateManager (using default paths)
         print("1. Initializing StateManager...")

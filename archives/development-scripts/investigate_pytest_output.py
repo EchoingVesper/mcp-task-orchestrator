@@ -24,7 +24,7 @@ def create_test_with_extensive_output():
     """Create a test function that generates extensive output."""
     test_content = '''
 import sys
-sys.path.insert(0, r"E:\\My Work\\Programming\\MCP Servers\\mcp-task-orchestrator")
+sys.path.insert(0, r"E:\\dev\\mcp-servers\\mcp-task-orchestrator")
 
 def test_extensive_output():
     """Test function that generates extensive output to check for truncation."""

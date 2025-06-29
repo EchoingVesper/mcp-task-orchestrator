@@ -15,7 +15,7 @@ import json
 
 from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
 from mcp_task_orchestrator.db.models import Base
-from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+from .orchestrator.task_orchestration_service import TaskOrchestrator
 from mcp_task_orchestrator.orchestrator.maintenance import MaintenanceCoordinator
 from mcp_task_orchestrator.orchestrator.task_lifecycle import TaskLifecycleManager
 from mcp_task_orchestrator.orchestrator.streaming_artifacts import StreamingArtifactManager

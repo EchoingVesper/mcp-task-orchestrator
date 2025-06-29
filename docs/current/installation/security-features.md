@@ -2,7 +2,7 @@
 
 ## Security Overview
 
-The MCP Task Orchestrator installer implements enterprise-grade security measures, protecting against all 38 identified security vulnerabilities. This comprehensive security framework ensures safe installation across all supported platforms and MCP clients.
+The MCP Task Orchestrator installer implements comprehensive security measures, protecting against all 38 identified security vulnerabilities. This comprehensive security framework ensures safe installation across all supported platforms and MCP clients.
 
 ## Zero-Vulnerability Design
 

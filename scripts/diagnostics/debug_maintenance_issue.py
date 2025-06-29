@@ -7,7 +7,7 @@ from pathlib import Path
 # Add the parent directory to the Python path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from mcp_task_orchestrator.orchestrator.state import StateManager
+from .orchestrator.orchestration_state_manager import StateManager
 from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
 
 def debug_issue():

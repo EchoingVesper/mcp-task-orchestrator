@@ -23,7 +23,7 @@ async def test_orchestrator_performance():
         print("Testing StateManager initialization...")
         start = time.time()
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from .orchestrator.orchestration_state_manager import StateManager
         db_path = r"E:\My Work\Programming\MCP Task Orchestrator\task_orchestrator.db"
         state_manager = StateManager(db_path=db_path)
         

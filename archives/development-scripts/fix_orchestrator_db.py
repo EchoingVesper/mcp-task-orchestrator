@@ -12,7 +12,7 @@ def fix_database():
     """Add missing columns to the subtasks table"""
     
     # Use Windows path
-    db_path = r"E:\My Work\Programming\MCP Servers\mcp-task-orchestrator\task_orchestrator.db"
+    db_path = r"E:\dev\mcp-servers\mcp-task-orchestrator\task_orchestrator.db"
     
     if not os.path.exists(db_path):
         print(f"❌ Database not found at: {db_path}")
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         print()
         print("❌ MANUAL FIX REQUIRED:")
         print("Use DB Browser for SQLite or sqlite3 command line:")
-        print("1. Open: E:\\My Work\\Programming\\MCP Servers\\mcp-task-orchestrator\\task_orchestrator.db")
+        print("1. Open: E:\\dev\\mcp-servers\\mcp-task-orchestrator\\task_orchestrator.db")
         print("2. Run: ALTER TABLE subtasks ADD COLUMN file_operations_count INTEGER DEFAULT 0;")
         print("3. Run: ALTER TABLE subtasks ADD COLUMN verification_status VARCHAR DEFAULT 'pending';")
     

@@ -14,12 +14,13 @@ from datetime import datetime
 from typing import Dict, List, Optional, Any
 
 from .models import (
-    TaskBreakdown, SubTask, TaskStatus, SpecialistType, 
+    TaskBreakdown, SubTask, TaskStatus, SpecialistType,
     ComplexityLevel, TaskResult
 )
 from .specialists import SpecialistManager
 from .state import StateManager
 from .role_loader import get_roles
+from ..config import get_config
 
 
 # Configure logging
@@ -39,29 +40,105 @@ class TaskOrchestrator:
     def __init__(self, state_manager: StateManager, specialist_manager: SpecialistManager, project_dir: str = None):
         self.state = state_manager
         self.specialists = specialist_manager
-        self.project_dir = project_dir or os.getcwd()
+        
+        # Try to get project directory from configuration first
+        try:
+            config = get_config()
+            self.project_dir = project_dir or config.paths.base_dir or os.getcwd()
+        except Exception:
+            # Fallback to parameter or current directory
+            self.project_dir = project_dir or os.getcwd()
     
     async def initialize_session(self) -> Dict:
         """Initialize a new task orchestration session with guidance for the LLM."""
         
-        # Load role definitions from project directory or default
-        roles = get_roles(self.project_dir)
-        
-        # If task_orchestrator role is defined in the roles, use it
-        if roles and 'task_orchestrator' in roles:
-            task_orchestrator = roles['task_orchestrator']
+        # Try to load roles from configuration first, then fallback to legacy role loader
+        try:
+            config = get_config()
+            roles = config.roles
             
-            # Build response from role definition
-            response = {
-                "role": "Task Orchestrator",
-                "capabilities": task_orchestrator.get('expertise', []),
-                "instructions": "\n".join(task_orchestrator.get('approach', [])),
-                "specialist_roles": task_orchestrator.get('specialist_roles', {})
-            }
+            # Use task_orchestrator role from configuration if available
+            if hasattr(roles, 'task_orchestrator'):
+                task_orchestrator = roles.task_orchestrator
+                specialist_roles = {name: role.description for name, role in roles.__dict__.items()
+                                  if name != 'task_orchestrator' and hasattr(role, 'description')}
+                
+                response = {
+                    "role": "Task Orchestrator",
+                    "capabilities": task_orchestrator.expertise if hasattr(task_orchestrator, 'expertise') else [],
+                    "instructions": "\n".join(task_orchestrator.approach) if hasattr(task_orchestrator, 'approach') else "",
+                    "specialist_roles": specialist_roles
+                }
+            else:
+                # Fallback to legacy role loading
+                roles = get_roles(self.project_dir)
+                
+                if roles and 'task_orchestrator' in roles:
+                    task_orchestrator = roles['task_orchestrator']
+                    response = {
+                        "role": "Task Orchestrator",
+                        "capabilities": task_orchestrator.get('expertise', []),
+                        "instructions": "\n".join(task_orchestrator.get('approach', [])),
+                        "specialist_roles": task_orchestrator.get('specialist_roles', {})
+                    }
+                else:
+                    # Use default configuration if no role definitions found
+                    response = self._get_default_session_response()
+        except Exception:
+            # Fallback to legacy role loading
+            roles = get_roles(self.project_dir)
+            
+            if roles and 'task_orchestrator' in roles:
+                task_orchestrator = roles['task_orchestrator']
+                response = {
+                    "role": "Task Orchestrator",
+                    "capabilities": task_orchestrator.get('expertise', []),
+                    "instructions": "\n".join(task_orchestrator.get('approach', [])),
+                    "specialist_roles": task_orchestrator.get('specialist_roles', {})
+                }
+            else:
+                # Use default response if all else fails
+                response = self._get_default_session_response()
             
             return response
         
         # Fall back to default task orchestrator definition
+        return {
+            "role": "Task Orchestrator",
+            "capabilities": [
+                "Breaking down complex tasks into manageable subtasks",
+                "Assigning appropriate specialist roles to each subtask",
+                "Managing dependencies between subtasks",
+                "Tracking progress and coordinating work"
+            ],
+            "instructions": (
+                "As the Task Orchestrator, your role is to analyze complex tasks and break them down "
+                "into a structured set of subtasks. For each task you receive:\n\n"
+                "1. Carefully analyze the requirements and context\n"
+                "2. Identify logical components that can be worked on independently\n"
+                "3. Create a clear dependency structure between subtasks\n"
+                "4. Assign appropriate specialist roles to each subtask\n"
+                "5. Estimate effort required for each component\n\n"
+                "When creating subtasks, ensure each has:\n"
+                "- A clear, specific objective\n"
+                "- Appropriate specialist assignment (architect, implementer, debugger, etc.)\n"
+                "- Realistic effort estimation\n"
+                "- Proper dependency relationships\n\n"
+                "This structured approach ensures complex work is broken down methodically."
+            ),
+            "specialist_roles": {
+                "architect": "System design and architecture planning",
+                "implementer": "Writing code and implementing features",
+                "debugger": "Fixing issues and optimizing performance",
+                "documenter": "Creating documentation and guides",
+                "reviewer": "Code review and quality assurance",
+                "tester": "Testing and validation",
+                "researcher": "Research and information gathering"
+            }
+        }
+    
+    def _get_default_session_response(self) -> Dict:
+        """Get default session response when no role definitions are available."""
         return {
             "role": "Task Orchestrator",
             "capabilities": [

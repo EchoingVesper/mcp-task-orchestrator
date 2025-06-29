@@ -8,7 +8,7 @@ This document provides comprehensive API reference for the MCP Task Orchestrator
 
 ### SecureInstaller
 
-Primary installation class with enterprise-grade security and cross-platform compatibility.
+Primary installation class with comprehensive security and cross-platform compatibility.
 
 ```python
 from mcp_task_orchestrator_cli.secure_installer import SecureInstaller

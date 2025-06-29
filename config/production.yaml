@@ -1,0 +1,46 @@
+# Production Environment Configuration Overrides
+# This file extends the default configuration with production-specific settings
+
+# Override database configuration for production
+database:
+  echo: false  # Disable SQL logging in production
+  url: "sqlite:///prod_task_orchestrator.db"
+  pool_size: 20
+  max_overflow: 50
+
+# Override logging configuration for production
+logging:
+  level: INFO
+  console_enabled: false  # Disable console logging in production
+  file_enabled: true
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  max_file_size: 52428800  # 50MB
+  backup_count: 10
+
+# Override server configuration for production
+server:
+  timeout: 300  # Standard timeout for production
+  max_workers: 8  # More workers for production load
+
+# Override task configuration for production
+tasks:
+  max_subtasks: 100  # Higher limit for production
+  cleanup_interval: 21600  # Less frequent cleanup (6 hours)
+  artifact_max_size: 52428800  # 50MB limit for production
+
+# Override security configuration for production
+security:
+  enable_cors: true
+  allowed_origins: []  # Restrict CORS origins in production (configure as needed)
+  api_key_required: true  # Require API key in production
+  rate_limit_enabled: true
+  rate_limit_requests: 1000  # Higher rate limit for production
+  rate_limit_window: 3600
+
+# Production-specific paths (will be auto-detected but can be overridden)
+paths:
+  workspace_dir: null  # Auto-detect from project context
+  config_dir: null     # Auto-detect
+  data_dir: null       # Auto-detect  
+  log_dir: "/var/log/mcp-task-orchestrator"  # Standard log directory for production
+  temp_dir: "/tmp/mcp-task-orchestrator"     # Standard temp directory for production

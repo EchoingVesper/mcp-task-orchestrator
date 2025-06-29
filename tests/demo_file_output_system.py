@@ -20,7 +20,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from mcp_task_orchestrator.testing.file_output_system import TestOutputWriter, TestOutputReader
+from testing_utils.file_output_system import TestOutputWriter, TestOutputReader
 
 
 def simulate_slow_test():

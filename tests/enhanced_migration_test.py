@@ -17,8 +17,8 @@ from pathlib import Path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.insert(0, project_root)
 
-from mcp_task_orchestrator.testing.file_output_system import TestOutputWriter, TestOutputReader
-from mcp_task_orchestrator.testing.pytest_integration import file_output_test
+from testing_utils.file_output_system import TestOutputWriter, TestOutputReader
+from testing_utils.pytest_integration import file_output_test
 
 
 class EnhancedMigrationTestRunner:

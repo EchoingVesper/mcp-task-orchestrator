@@ -14,7 +14,7 @@ The MCP Task Orchestrator provides secure, automated installation across all sup
 
 ### Method 1: Automated Secure Installer (Recommended)
 
-The secure installer provides enterprise-grade safety and cross-tool compatibility:
+The secure installer provides comprehensive safety and cross-tool compatibility:
 
 ```bash
 # Install via pip

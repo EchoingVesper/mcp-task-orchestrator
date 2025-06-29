@@ -13,7 +13,7 @@ async def check_task_status():
     print("Checking task status...")
     
     try:
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from .orchestrator.orchestration_state_manager import StateManager
         
         state_manager = StateManager()
         
