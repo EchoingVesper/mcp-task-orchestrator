@@ -284,7 +284,7 @@ class SpecialistAssignmentService:
                     'Reproduce and isolate issues',
                     'Analyze error messages and logs',
                     'Apply systematic debugging techniques',
-                    'Verify fixes don't introduce new issues'
+                    'Verify fixes do not introduce new issues'
                 ]
             },
             'reviewer': {

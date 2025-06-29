@@ -13,7 +13,7 @@ from ...application import (
     ManageSpecialistsUseCase,
     TrackProgressUseCase
 )
-from .handlers import MCPToolHandler, MCPResourceHandler
+# from .handlers import MCPToolHandler, MCPResourceHandler  # Temporarily commented out
 
 logger = logging.getLogger(__name__)
 

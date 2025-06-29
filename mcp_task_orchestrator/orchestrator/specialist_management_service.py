@@ -14,7 +14,7 @@ logger = logging.getLogger("mcp_task_orchestrator.specialists")
 
 from .models import SpecialistType, SubTask
 from .role_loader import get_roles
-from ..config import get_config
+# from config.manager import get_config  # Temporarily disabled due to pydantic compatibility issues
 
 
 class SpecialistManager:
@@ -33,9 +33,11 @@ class SpecialistManager:
         # Determine config path
         if config_path is None:
             try:
-                config = get_config()
-                config_dir = config.paths.config_dir
-                config_path = Path(config_dir) / "default_roles.yaml"
+                # get_config() temporarily disabled due to pydantic compatibility issues
+                # config = get_config()
+                # config_dir = config.paths.config_dir
+                # config_path = Path(config_dir) / "default_roles.yaml"
+                raise Exception("get_config temporarily disabled")
             except Exception:
                 # Fallback to environment variable first
                 config_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_CONFIG_DIR")

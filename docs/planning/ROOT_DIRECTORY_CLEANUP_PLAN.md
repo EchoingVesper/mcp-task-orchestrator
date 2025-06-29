@@ -20,6 +20,7 @@
 ### Files to Relocate
 
 #### Release Documentation
+
 ```bash
 # Move to docs/releases/
 RELEASE_NOTES_v1.7.1.md → docs/releases/
@@ -28,6 +29,7 @@ DEPENDENCY_FIX_SUMMARY.md → docs/releases/ (or archive if obsolete)
 ```
 
 #### Test Files (Move to tests/)
+
 ```bash
 test_dependency_check.py → tests/unit/
 test_working_directory.py → tests/unit/
@@ -37,6 +39,7 @@ test_workspace_mcp_integration.py → tests/integration/
 ```
 
 #### Planning Content Consolidation
+
 ```bash
 # Merge planning/ into docs/planning/
 planning/development-cycle-planning.md → docs/planning/
@@ -51,6 +54,7 @@ planning/file-tracking-implementation-roadmap.md → docs/planning/
 ```
 
 #### Architecture Content Consolidation
+
 ```bash
 # Merge architecture/ into docs/architecture/
 architecture/a2a-framework-integration.md → docs/architecture/
@@ -63,6 +67,7 @@ architecture/nested-task-architecture.md → docs/architecture/
 ```
 
 #### Archive Content Consolidation
+
 ```bash
 # Merge archives/ into docs/archives/
 archives/README.md → docs/archives/
@@ -78,7 +83,8 @@ archives/task_cleanup/ → docs/archives/historical/
 
 **Problem**: Legacy directories from pre-refactoring exist alongside clean architecture versions
 
-#### Duplicate Structures Found:
+#### Duplicate Structures Found
+
 ```
 ROOT LEVEL          vs    CLEAN ARCHITECTURE
 orchestrator/       vs    mcp_task_orchestrator/orchestrator/
@@ -87,14 +93,16 @@ staging/           vs    mcp_task_orchestrator/staging/
 monitoring/        vs    mcp_task_orchestrator/monitoring/
 ```
 
-#### Resolution Strategy:
+#### Resolution Strategy
+
 1. **Verify Clean Architecture is Complete**: Ensure all functionality moved to mcp_task_orchestrator/
 2. **Check for Active References**: Scan codebase for imports/references to root-level directories
 3. **Gradual Removal**: Remove root-level duplicates after verification
 
 ### Legacy Files Analysis
 
-#### Files to Investigate for Removal:
+#### Files to Investigate for Removal
+
 ```bash
 __init__.py                    # Likely legacy, should be in mcp_task_orchestrator/
 __main__.py                    # Likely legacy, should be in mcp_task_orchestrator/
@@ -111,6 +119,7 @@ launch_orchestrator.py         # Check if still needed vs new architecture
 ### Phase 1: Safe Relocations (Week 1)
 
 #### Step 1: Move Documentation
+
 ```bash
 # Create release directory if needed
 mkdir -p docs/releases
@@ -124,6 +133,7 @@ mv DEPENDENCY_FIX_SUMMARY.md docs/releases/  # or archive if obsolete
 ```
 
 #### Step 2: Move Test Files
+
 ```bash
 # Move test files to appropriate test directories
 mv test_dependency_check.py tests/unit/
@@ -136,6 +146,7 @@ mv test_workspace_mcp_integration.py tests/integration/
 ```
 
 #### Step 3: Consolidate Planning Content
+
 ```bash
 # Move planning content to docs/planning/
 mv planning/*.md docs/planning/
@@ -149,6 +160,7 @@ rmdir planning/
 ```
 
 #### Step 4: Consolidate Architecture Content
+
 ```bash
 # Move architecture content to docs/architecture/
 mv architecture/*.md docs/architecture/
@@ -160,6 +172,7 @@ rmdir architecture/
 ### Phase 2: Legacy Code Analysis (Week 2)
 
 #### Step 1: Reference Analysis
+
 ```bash
 # Search for imports/references to root-level legacy files
 grep -r "import server" . --exclude-dir=.git
@@ -170,6 +183,7 @@ grep -r "from orchestrator" . --exclude-dir=.git
 ```
 
 #### Step 2: Functionality Verification
+
 ```bash
 # Test that clean architecture versions work
 python -m mcp_task_orchestrator.server  # Should work
@@ -177,6 +191,7 @@ python server.py                        # Check if this is needed
 ```
 
 #### Step 3: Entry Point Analysis
+
 ```bash
 # Check launch scripts and entry points
 cat launch_cli.py
@@ -187,13 +202,15 @@ cat pyproject.toml  # Check entry points definition
 
 ### Phase 3: Safe Removal (Week 3)
 
-#### Removal Criteria:
+#### Removal Criteria
+
 - [ ] No active imports/references found
 - [ ] Functionality confirmed available in clean architecture
 - [ ] Tests pass without legacy files
 - [ ] Entry points work correctly
 
-#### Legacy Files to Remove (After Verification):
+#### Legacy Files to Remove (After Verification)
+
 ```bash
 # Remove duplicate directories (after verification)
 rm -rf orchestrator/     # If functionality in mcp_task_orchestrator/orchestrator/
@@ -210,7 +227,8 @@ rm persistence_factory.py         # If functionality in mcp_task_orchestrator/
 rm mcp_request_handlers.py        # If functionality in mcp_task_orchestrator/
 ```
 
-#### Conditional Removals:
+#### Conditional Removals
+
 ```bash
 # Remove only if superseded by clean architecture
 rm launch_cli.py          # If mcp_task_orchestrator_cli/ handles this
@@ -220,6 +238,7 @@ rm launch_orchestrator.py # If mcp_task_orchestrator/server.py handles this
 ### Phase 4: Archive Consolidation (Week 4)
 
 #### Step 1: Merge Archives
+
 ```bash
 # Move archives/ content to docs/archives/
 mv archives/* docs/archives/historical/
@@ -227,6 +246,7 @@ rmdir archives/
 ```
 
 #### Step 2: Create Archive Index
+
 ```bash
 # Create comprehensive archive documentation
 # Update docs/archives/README.md with complete index
@@ -234,7 +254,8 @@ rmdir archives/
 
 ## Target Root Directory Structure
 
-### Final Clean Root Directory:
+### Final Clean Root Directory
+
 ```
 /
 ├── README.md                    # Project overview
@@ -260,7 +281,8 @@ rmdir archives/
 └── docs/                       # All documentation
 ```
 
-### Benefits of Clean Root:
+### Benefits of Clean Root
+
 1. **Clear Package Structure**: Main functionality clearly in mcp_task_orchestrator/
 2. **No Duplication**: Single source of truth for each component
 3. **Clean Dependencies**: No confusion about which files are active
@@ -269,33 +291,38 @@ rmdir archives/
 
 ## Risk Mitigation
 
-### Backup Strategy:
+### Backup Strategy
+
 ```bash
 # Create backup before major changes
 git branch cleanup-backup-$(date +%Y%m%d)
 git commit -m "Backup before cleanup"
 ```
 
-### Verification Steps:
+### Verification Steps
+
 1. **Test Suite Passes**: All tests must pass after each phase
 2. **Server Starts**: Both MCP server and CLI must start correctly
 3. **Import Check**: No broken imports after relocations
 4. **Documentation Links**: Update all internal links after moves
 
-### Rollback Plan:
+### Rollback Plan
+
 - Each phase committed separately for easy rollback
 - Backup branch available for emergency restore
 - Gradual approach allows stopping if issues found
 
 ## Success Criteria
 
-### Quantitative Goals:
+### Quantitative Goals
+
 - [ ] Reduce root directory files from 25+ to <15 essential files
 - [ ] Eliminate all duplicate directory structures
 - [ ] Move 40+ files to appropriate locations
 - [ ] Archive 20+ legacy/historical files
 
-### Qualitative Goals:
+### Qualitative Goals
+
 - [ ] Clear package structure with single source of truth
 - [ ] Professional root directory appropriate for 2.0.0
 - [ ] Easy navigation for new developers

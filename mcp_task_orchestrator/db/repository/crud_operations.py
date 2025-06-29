@@ -122,7 +122,7 @@ async def get_task(repo_instance, task_id: str, include_children: bool = False,
             return None
         
         # Convert to GenericTask
-        task = row_to_task(dict(row))
+        task = row_to_task(row._mapping)
         
         # Load related entities
         from .helpers import load_attributes, load_dependencies, load_artifacts, load_events, load_children

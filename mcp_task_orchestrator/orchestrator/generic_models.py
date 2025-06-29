@@ -14,6 +14,9 @@ import json
 from pathlib import Path
 import re
 
+# Import enums from models module
+from .models import ComplexityLevel, SpecialistType
+
 
 # ============================================
 # Enumerations
@@ -295,7 +298,7 @@ class TaskDependency(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     satisfied_at: Optional[datetime] = None
     
-    @root_validator
+    @root_validator(skip_on_failure=True)
     def validate_dependency_logic(cls, values):
         """Validate dependency configuration logic."""
         dep_type = values.get('dependency_type')
@@ -386,7 +389,7 @@ class TaskArtifact(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     
-    @root_validator
+    @root_validator(skip_on_failure=True)
     def validate_content_storage(cls, values):
         """Ensure artifact has either content or file reference."""
         if not values.get('content') and not values.get('file_reference'):
@@ -469,7 +472,7 @@ class GenericTask(BaseModel):
             
         return v
     
-    @root_validator
+    @root_validator(skip_on_failure=True)
     def validate_lifecycle_consistency(cls, values):
         """Ensure status and lifecycle stage are consistent."""
         status = values.get('status')
@@ -572,10 +575,10 @@ class GenericTask(BaseModel):
         for key in ['created_at', 'updated_at', 'started_at', 'completed_at', 'due_date', 'deleted_at']:
             if data.get(key):
                 data[key] = data[key].isoformat()
-        # Convert dicts to JSON strings for storage
-        if data.get('context'):
+        # Convert dicts to JSON strings for storage (including empty dicts)
+        if 'context' in data and data['context'] is not None:
             data['context'] = json.dumps(data['context'])
-        if data.get('configuration'):
+        if 'configuration' in data and data['configuration'] is not None:
             data['configuration'] = json.dumps(data['configuration'])
         return data
     

@@ -14,7 +14,7 @@ from typing import Dict, List, Optional, Union, Any, Tuple
 
 from .models import TaskBreakdown, SubTask, TaskStatus, SpecialistType
 from ..persistence_factory import create_persistence_manager
-from ..config import get_config
+# from ..config import get_config  # Temporarily disabled due to pydantic compatibility issues
 
 
 # Configure logging
@@ -37,8 +37,10 @@ class StateManager:
         # Initialize database path
         if db_path is None:
             try:
-                config = get_config()
-                db_path = config.database.path
+                # get_config() temporarily disabled due to pydantic compatibility issues
+                # config = get_config()
+                # db_path = config.database.path
+                raise Exception("get_config temporarily disabled")
             except Exception:
                 # Fallback to environment variable first
                 db_path = os.environ.get("MCP_TASK_ORCHESTRATOR_DB_PATH")
@@ -54,8 +56,10 @@ class StateManager:
         # Initialize persistence manager
         if base_dir is None:
             try:
-                config = get_config()
-                base_dir = config.paths.base_dir
+                # get_config() temporarily disabled due to pydantic compatibility issues
+                # config = get_config()
+                # base_dir = config.paths.base_dir
+                raise Exception("get_config temporarily disabled")
             except Exception:
                 # Fallback to environment variable first
                 base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")

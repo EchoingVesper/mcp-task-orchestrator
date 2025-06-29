@@ -11,14 +11,15 @@ The infrastructure layer implements the interfaces defined in the domain layer.
 """
 
 # Database infrastructure
-from .database import (
-    SQLiteTaskRepository,
-    SQLiteStateRepository, 
-    SQLiteSpecialistRepository,
-    DatabaseConnectionManager,
-    RepositoryFactory,
-    LegacyDatabaseAdapter
-)
+# TODO: Re-enable when database implementations are fixed
+# from .database import (
+#     SQLiteTaskRepository,
+#     SQLiteStateRepository, 
+#     SQLiteSpecialistRepository,
+#     DatabaseConnectionManager,
+#     RepositoryFactory,
+#     LegacyDatabaseAdapter
+# )
 
 # Dependency injection infrastructure
 from .di import (
@@ -30,78 +31,50 @@ from .di import (
 )
 
 # MCP protocol infrastructure
-from .mcp import (
-    MCPServerAdapter,
-    MCPRequestAdapter,
-    MCPResponseAdapter,
-    MCPErrorAdapter,
-    MCPToolHandler,
-    MCPResourceHandler
-)
+# TODO: Re-enable when MCP adapters are implemented
+# from .mcp import (
+#     MCPServerAdapter,
+#     MCPRequestAdapter,
+#     MCPResponseAdapter,
+#     MCPErrorAdapter,
+#     MCPToolHandler,
+#     MCPResourceHandler
+# )
 
 # Configuration infrastructure
-from .config import (
-    ConfigurationManager,
-    ConfigValidator,
-    EnvironmentConfigLoader,
-    FileConfigLoader,
-    DefaultConfigLoader
-)
+# TODO: Re-enable when config implementations are fixed
+# from .config import (
+#     ConfigurationManager,
+#     ConfigValidator,
+#     EnvironmentConfigLoader,
+#     FileConfigLoader,
+#     DefaultConfigLoader
+# )
 
 # Monitoring infrastructure
-from .monitoring import (
-    HealthChecker,
-    MetricsCollector,
-    LoggingConfigurator
-)
+# TODO: Re-enable when monitoring implementations are fixed
+# from .monitoring import (
+#     HealthChecker,
+#     MetricsCollector,
+#     LoggingConfigurator
+# )
 
 # External services infrastructure
-from .external import (
-    WebhookNotificationService,
-    EmailNotificationService,
-    HTTPApiClient,
-    FileSystemArtifactStorage
-)
+# TODO: Re-enable when external service implementations are fixed
+# from .external import (
+#     WebhookNotificationService,
+#     EmailNotificationService,
+#     HTTPApiClient,
+#     FileSystemArtifactStorage
+# )
 
 __all__ = [
-    # Database
-    'SQLiteTaskRepository',
-    'SQLiteStateRepository',
-    'SQLiteSpecialistRepository', 
-    'DatabaseConnectionManager',
-    'RepositoryFactory',
-    'LegacyDatabaseAdapter',
-    
-    # Dependency Injection
+    # Dependency Injection (currently working)
     'ServiceContainer',
     'ServiceRegistrar',
     'get_container',
     'set_container',
     'get_service',
     
-    # MCP Protocol
-    'MCPServerAdapter',
-    'MCPRequestAdapter',
-    'MCPResponseAdapter',
-    'MCPErrorAdapter',
-    'MCPToolHandler',
-    'MCPResourceHandler',
-    
-    # Configuration
-    'ConfigurationManager',
-    'ConfigValidator',
-    'EnvironmentConfigLoader',
-    'FileConfigLoader',
-    'DefaultConfigLoader',
-    
-    # Monitoring
-    'HealthChecker',
-    'MetricsCollector',
-    'LoggingConfigurator',
-    
-    # External Services
-    'WebhookNotificationService',
-    'EmailNotificationService',
-    'HTTPApiClient',
-    'FileSystemArtifactStorage'
+    # TODO: Add other modules as they are implemented and tested
 ]

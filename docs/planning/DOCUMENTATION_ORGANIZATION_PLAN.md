@@ -21,6 +21,7 @@
 ### Phase 1: Archive Historical Content
 
 **Move to docs/archives/historical/**:
+
 ```
 FROM docs/prompts/archives/ → docs/archives/historical/handover-prompts/
 FROM docs/prompts/fix-statemanager-parent-task-id*.md → docs/archives/completed-fixes/
@@ -31,6 +32,7 @@ FROM docs/prompts/testing_suite_implementation.md → docs/archives/completed-im
 ```
 
 **Create archive structure**:
+
 ```
 docs/archives/
 ├── completed-fixes/           # Resolved technical issues
@@ -45,6 +47,7 @@ docs/archives/
 ### Phase 2: Reorganize Planning Content
 
 **Move to docs/planning/**:
+
 ```
 FROM docs/prompts/features/ → docs/planning/features/
 FROM docs/prompts/improvement_areas.md → docs/planning/improvement-areas.md
@@ -53,6 +56,7 @@ FROM docs/architecture/ (selected files) → docs/planning/architecture/
 ```
 
 **Enhanced planning structure**:
+
 ```
 docs/planning/
 ├── MCP_TASK_ORCHESTRATOR_2.0_IMPLEMENTATION_PLAN.md  # New master plan
@@ -74,6 +78,7 @@ docs/planning/
 ### Phase 3: Consolidate User Documentation
 
 **Reorganize docs/ root files**:
+
 ```
 MOVE TO user-guide/:
 - INSTALLATION_IMPROVEMENTS.md → user-guide/installation/
@@ -96,6 +101,7 @@ MOVE TO development/:
 ### Phase 4: Consolidate Implementation Guides
 
 **Merge scattered implementation content**:
+
 ```
 docs/implementation/ MERGE INTO docs/development/implementation/
 docs/database_persistence*.md → development/implementation/database/
@@ -105,6 +111,7 @@ docs/file_based_test_output_system.md → development/testing/
 ### Phase 5: Clean Root Directory
 
 **Final docs/ root structure** (only essential top-level files):
+
 ```
 docs/
 ├── README.md                           # Main documentation index
@@ -120,11 +127,13 @@ docs/
 ### Immediate Actions (Week 1)
 
 #### 1. Create Archive Structure
+
 ```bash
 mkdir -p docs/archives/{completed-fixes,completed-implementations,historical/{handover-prompts,releases,investigations}}
 ```
 
 #### 2. Archive Completed Work
+
 ```bash
 # Move completed fixes
 mv docs/prompts/fix-statemanager-parent-task-id*.md docs/archives/completed-fixes/
@@ -143,6 +152,7 @@ mv docs/prompts/release-1.3.0-*.md docs/archives/historical/releases/
 ```
 
 #### 3. Enhance Planning Directory
+
 ```bash
 # Move strategic planning content
 mv docs/prompts/features/ docs/planning/
@@ -158,6 +168,7 @@ mv docs/architecture/nested-task-architecture.md docs/planning/architecture/
 ### Secondary Actions (Week 2)
 
 #### 4. Reorganize User Documentation
+
 ```bash
 # Enhance user-guide structure
 mkdir -p docs/user-guide/{installation,migration,workspace-paradigm}
@@ -174,6 +185,7 @@ mv docs/UNIVERSAL_INSTALLER.md docs/reference/installation/
 ```
 
 #### 5. Consolidate Development Documentation
+
 ```bash
 # Merge implementation guides
 mv docs/implementation/* docs/development/implementation/
@@ -191,6 +203,7 @@ mv docs/file_based_test_output_system.md docs/development/testing/
 ## Content Audit and Cleanup
 
 ### Files for Deletion
+
 **Criteria**: Outdated, superseded, or no longer relevant
 
 ```bash
@@ -206,6 +219,7 @@ rm docs/timeout_investigation_complete.md  # Completed investigation
 ```
 
 ### Files for Consolidation
+
 **Merge similar content to eliminate duplication**:
 
 1. **Testing Documentation**: Merge multiple testing guides into comprehensive docs/development/testing/ structure
@@ -216,6 +230,7 @@ rm docs/timeout_investigation_complete.md  # Completed investigation
 ## New Documentation Structure
 
 ### Final Target Structure
+
 ```
 docs/
 ├── README.md                           # Main entry point
@@ -264,16 +279,19 @@ docs/
 ## Quality Improvements
 
 ### 1. Consistent Naming Conventions
+
 - Use kebab-case for all markdown files
 - Prefix archive files with dates when relevant
 - Use descriptive, scannable filenames
 
 ### 2. Cross-Reference Updates
+
 - Update all internal links after reorganization
 - Create redirect documentation for moved content
 - Update CLAUDE.md with new structure guidance
 
 ### 3. Index and Navigation
+
 - Update INDEX.md with new structure
 - Create comprehensive README.md files in each major directory
 - Add navigation breadcrumbs to key documents
@@ -281,12 +299,14 @@ docs/
 ## Success Criteria
 
 ### Quantitative Metrics
+
 - [ ] Reduce docs/prompts/ from 60+ files to <10 essential files
 - [ ] Reduce docs/ root from 20+ files to <10 essential files
 - [ ] Increase docs/planning/ from 2 files to comprehensive planning structure
 - [ ] Archive 40+ historical/completed documents
 
 ### Qualitative Improvements
+
 - [ ] Clear separation between user, developer, and planning documentation
 - [ ] Logical information architecture for 2.0.0 development
 - [ ] Reduced cognitive load when navigating documentation
@@ -295,12 +315,14 @@ docs/
 ## Maintenance Plan
 
 ### Ongoing Practices
+
 1. **Archive Quickly**: Move completed work to archives within 1 week
 2. **Planning First**: New strategic content goes in planning/ not prompts/
 3. **User Focus**: Keep user-facing docs in user-guide/ hierarchy
 4. **Developer Focus**: Technical implementation content in development/
 
 ### Quarterly Reviews
+
 - Audit docs/ root for new clutter
 - Review archives for content that can be removed (>1 year old)
 - Update navigation and cross-references

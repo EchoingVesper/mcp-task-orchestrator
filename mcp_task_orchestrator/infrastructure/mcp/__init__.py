@@ -10,17 +10,18 @@ from .protocol_adapters import (
     MCPResponseAdapter,
     MCPErrorAdapter
 )
-from .handlers import (
-    MCPToolHandler,
-    MCPResourceHandler
-)
+# Commented out due to import issues - these are from handlers.py not handlers/ directory
+# from .handlers import (
+#     MCPToolHandler,
+#     MCPResourceHandler
+# )
 from .server import MCPServerAdapter
 
 __all__ = [
     'MCPRequestAdapter',
     'MCPResponseAdapter',
     'MCPErrorAdapter',
-    'MCPToolHandler',
-    'MCPResourceHandler',
+    # 'MCPToolHandler',        # Temporarily commented out
+    # 'MCPResourceHandler',    # Temporarily commented out  
     'MCPServerAdapter'
 ]
