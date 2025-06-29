@@ -168,3 +168,4 @@ supabase/docker-compose.yml
 mcp-orchestrator-env/
 venv/
 venv_mcp/
+mcp-orchestrator-env/
