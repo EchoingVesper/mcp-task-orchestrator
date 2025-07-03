@@ -15,15 +15,14 @@ from typing import Dict, List, Any, Optional
 from mcp import types
 
 # Import the Generic Task models
-from ....orchestrator.generic_models import (
-    GenericTask, TaskType, TaskStatus, LifecycleStage,
+from ....domain.entities.task import (
+    Task, TaskType, TaskStatus, LifecycleStage,
     TaskDependency, DependencyType
 )
 
-# Import base enums from orchestrator models
-from ....orchestrator.models import (
-    ComplexityLevel, SpecialistType
-)
+# Import value objects from domain layer
+from ....domain.value_objects.complexity_level import ComplexityLevel
+from ....domain.value_objects.specialist_type import SpecialistType
 
 # Import use case and database integration
 from .db_integration import get_generic_task_use_case

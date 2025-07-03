@@ -18,42 +18,50 @@ These features work synergistically: migrations trigger server reboots, which ap
 ### Week 1: Parallel Development
 
 #### Track A: Automatic Database Migration (3 days)
+
 **Developer Assignment**: Backend specialist
 
 **Day 1: Core Migration Engine**
+
 - [ ] Implement `migration_manager.py` with schema detection
 - [ ] Create `schema_comparator.py` using SQLAlchemy introspection
 - [ ] Build SQL generation for safe ALTER TABLE operations
 - [ ] Implement migration_history table and tracking
 
 **Day 2: Integration & Safety**
+
 - [ ] Integrate migration checks into server startup
 - [ ] Add migration locking mechanism
 - [ ] Implement backup creation before migrations
 - [ ] Create rollback mechanism for failed migrations
 
 **Day 3: Testing & Polish**
+
 - [ ] Test with current schema mismatch scenario
 - [ ] Implement dry-run mode for migrations
 - [ ] Add migration status reporting to CLI
 - [ ] Create comprehensive test suite
 
 #### Track B: In-Context Server Reboot (3 days)
+
 **Developer Assignment**: Infrastructure specialist
 
 **Day 1: Graceful Shutdown**
+
 - [ ] Implement server state serialization
 - [ ] Create task suspension mechanism
 - [ ] Build clean database connection closure
 - [ ] Develop shutdown readiness checks
 
 **Day 2: Restart Mechanism**
+
 - [ ] Create `orchestrator_restart_server` MCP tool
 - [ ] Implement subprocess management for restart
 - [ ] Build state restoration on startup
 - [ ] Add restart reason tracking
 
 **Day 3: Client Reconnection**
+
 - [ ] Implement reconnection protocol
 - [ ] Add client notification system
 - [ ] Create automatic retry logic
@@ -62,6 +70,7 @@ These features work synergistically: migrations trigger server reboots, which ap
 ### Week 1 End: Integration & Deployment (1 day)
 
 **Day 4: Integration Testing**
+
 - [ ] Test migration → restart workflow
 - [ ] Validate state preservation across restarts
 - [ ] Ensure client reconnection reliability
@@ -85,6 +94,7 @@ mcp_task_orchestrator/
 ```
 
 **Key Functions**:
+
 ```python
 async def check_and_apply_migrations():
     """Run on server startup"""
@@ -128,12 +138,14 @@ async def orchestrator_restart_server(
 ## 📊 Success Metrics
 
 ### Database Migration System
+
 - **Zero manual interventions** after implementation
 - **<500ms** migration detection time
 - **100%** successful automatic migrations
 - **Zero data loss** during migrations
 
 ### In-Context Server Reboot
+
 - **<5 seconds** total restart time
 - **100%** task state recovery
 - **>99%** client auto-reconnection rate
@@ -142,18 +154,21 @@ async def orchestrator_restart_server(
 ## 🚀 Deployment Strategy
 
 ### Phase 1: Internal Testing
+
 1. Deploy to development environment
 2. Test with intentional schema mismatches
 3. Validate restart mechanism with each client type
 4. Stress test with active tasks
 
 ### Phase 2: Staged Rollout
+
 1. Deploy to beta users with monitoring
 2. Collect metrics on migration success rates
 3. Fine-tune reconnection timing
 4. Document any edge cases
 
 ### Phase 3: Full Deployment
+
 1. Release to all users
 2. Monitor for first week
 3. Iterate based on feedback
@@ -162,11 +177,13 @@ async def orchestrator_restart_server(
 ## 🔄 Integration with Existing Features
 
 ### Synergy with Streaming System
+
 - State serialization uses artifact storage
 - Large task states handled efficiently
 - Cross-restart state recovery guaranteed
 
 ### Enhancement of Maintenance Features
+
 - Migrations can trigger maintenance operations
 - Cleanup can happen during restart windows
 - Database optimization integrated
@@ -174,12 +191,14 @@ async def orchestrator_restart_server(
 ## 📝 Risk Mitigation
 
 ### Critical Risks
+
 1. **Data Corruption**: Mitigated by mandatory backups
 2. **Client Confusion**: Clear status indicators and messaging
 3. **Restart Loops**: Maximum retry limits and fallback mode
 4. **Network Issues**: Robust reconnection with exponential backoff
 
 ### Testing Requirements
+
 - Unit tests for all migration operations
 - Integration tests for restart workflow
 - Client-specific reconnection tests

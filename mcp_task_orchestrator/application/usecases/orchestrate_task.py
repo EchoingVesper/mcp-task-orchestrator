@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from ...domain import (
     OrchestrationCoordinator,
-    TaskBreakdown,
+    Task,
     OrchestrationError,
     TaskValidationError
 )
@@ -103,12 +103,12 @@ class OrchestrateTaskUseCase:
         
         return errors
     
-    def _calculate_execution_order(self, breakdown: TaskBreakdown) -> list[list[str]]:
+    def _calculate_execution_order(self, breakdown: Task) -> list[list[str]]:
         """Calculate optimal execution order for subtasks."""
         levels = breakdown.get_execution_order()
         return [[st.task_id for st in level] for level in levels]
     
-    def _estimate_duration(self, breakdown: TaskBreakdown) -> int:
+    def _estimate_duration(self, breakdown: Task) -> int:
         """Estimate total duration in minutes."""
         # Simple estimation based on complexity
         base_duration = breakdown.complexity.expected_duration_minutes

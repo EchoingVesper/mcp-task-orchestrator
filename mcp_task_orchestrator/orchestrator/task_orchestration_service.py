@@ -13,10 +13,11 @@ import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Any
 
-from .models import (
-    TaskBreakdown, SubTask, TaskStatus, SpecialistType, 
-    ComplexityLevel, TaskResult
+from ..domain.entities.task import (
+    Task, TaskType, TaskStatus, LifecycleStage
 )
+from ..domain.value_objects.specialist_type import SpecialistType
+from ..domain.value_objects.complexity_level import ComplexityLevel
 from .specialist_management_service import SpecialistManager
 from .orchestration_state_manager import StateManager
 from .role_loader import get_roles
@@ -96,7 +97,7 @@ class TaskOrchestrator:
             }
         }
     
-    async def plan_task(self, description: str, complexity: str, subtasks_json: str, context: str = "") -> TaskBreakdown:
+    async def plan_task(self, description: str, complexity: str, subtasks_json: str, context: str = "") -> Task:
         """Create a task breakdown from LLM-provided subtasks."""
         
         # Generate unique task ID
@@ -107,28 +108,36 @@ class TaskOrchestrator:
             subtasks_data = json.loads(subtasks_json)
             subtasks = []
             
-            for st_data in subtasks_data:
-                # Create SubTask objects from the provided JSON
-                subtask = SubTask(
-                    task_id=st_data.get("task_id", f"{st_data['specialist_type']}_{uuid.uuid4().hex[:6]}"),
+            for i, st_data in enumerate(subtasks_data):
+                # Create Task objects from the provided JSON
+                task_id = st_data.get("task_id", f"{st_data['specialist_type']}_{uuid.uuid4().hex[:6]}")
+                subtask = Task(
+                    task_id=task_id,
+                    parent_task_id=parent_task_id,
                     title=st_data["title"],
                     description=st_data["description"],
-                    specialist_type=SpecialistType(st_data["specialist_type"]),
-                    dependencies=st_data.get("dependencies", []),
-                    estimated_effort=st_data.get("estimated_effort", "Unknown")
+                    task_type=TaskType.STANDARD,
+                    hierarchy_path=f"/{parent_task_id}/{task_id}",
+                    hierarchy_level=1,
+                    position_in_parent=i,
+                    estimated_effort=st_data.get("estimated_effort", "Unknown"),
+                    metadata={"specialist": st_data["specialist_type"]}
                 )
                 subtasks.append(subtask)
         except (json.JSONDecodeError, KeyError) as e:
             raise ValueError(f"Invalid subtasks JSON format: {str(e)}")
         
-        # Create task breakdown
+        # Create main task with child tasks
         complexity_level = ComplexityLevel(complexity)
-        breakdown = TaskBreakdown(
-            parent_task_id=parent_task_id,
+        main_task = Task(
+            task_id=parent_task_id,
+            title=description[:100],  # First 100 chars as title
             description=description,
+            task_type=TaskType.BREAKDOWN,
             complexity=complexity_level,
-            subtasks=subtasks,
-            context=context
+            hierarchy_path=f"/{parent_task_id}",
+            children=subtasks,
+            metadata={"context": context} if context else {}
         )
         
         # Store in state manager with optimized retry logic for fast database operations
@@ -138,7 +147,7 @@ class TaskOrchestrator:
         for attempt in range(max_retries):
             try:
                 await asyncio.wait_for(
-                    self.state.store_task_breakdown(breakdown),
+                    self.state.store_task_breakdown(main_task),
                     timeout=5  # Reduced from 15s to 5s since DB operations are fast
                 )
                 break  # Success, exit the retry loop
@@ -159,7 +168,7 @@ class TaskOrchestrator:
                     # Last attempt, re-raise the exception
                     raise
         
-        return breakdown
+        return main_task
     
     async def get_specialist_context(self, task_id: str) -> str:
         """Get specialist context and prompts for a specific subtask."""

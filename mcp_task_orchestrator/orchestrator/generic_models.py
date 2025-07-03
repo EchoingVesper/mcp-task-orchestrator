@@ -1,7 +1,7 @@
 """
-Generic Task Model - Pydantic Models for v2.0
+Task Model - Pydantic Models for v2.0
 
-This module defines the comprehensive Pydantic models for the unified Generic Task System.
+This module defines the comprehensive Pydantic models for the unified Task System.
 These models replace the dual-model system (TaskBreakdown + SubTask) with a flexible,
 extensible architecture supporting rich task management capabilities.
 """
@@ -14,8 +14,9 @@ import json
 from pathlib import Path
 import re
 
-# Import enums from models module
-from .models import ComplexityLevel, SpecialistType
+# Import value objects from domain layer
+from ..domain.value_objects.complexity_level import ComplexityLevel
+from ..domain.value_objects.flexible_specialist_type import validate_specialist_type
 
 
 # ============================================
@@ -270,6 +271,13 @@ class TaskAttribute(BaseModel):
             return json.loads(self.attribute_value)
         else:
             return self.attribute_value
+    
+    class Config:
+        """Pydantic configuration."""
+        use_enum_values = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
 
 
 class TaskDependency(BaseModel):
@@ -328,6 +336,13 @@ class TaskDependency(BaseModel):
         else:
             # For other types, specific logic would be needed
             return prerequisite_status == TaskStatus.COMPLETED
+    
+    class Config:
+        """Pydantic configuration."""
+        use_enum_values = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
 
 
 class TaskEvent(BaseModel):
@@ -360,6 +375,13 @@ class TaskEvent(BaseModel):
             except json.JSONDecodeError:
                 return {"raw": v}
         return v
+    
+    class Config:
+        """Pydantic configuration."""
+        use_enum_values = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
 
 
 class TaskArtifact(BaseModel):
@@ -395,9 +417,16 @@ class TaskArtifact(BaseModel):
         if not values.get('content') and not values.get('file_reference'):
             raise ValueError("Artifact must have either content or file_reference")
         return values
+    
+    class Config:
+        """Pydantic configuration."""
+        use_enum_values = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
 
 
-class GenericTask(BaseModel):
+class Task(BaseModel):
     """Unified task model supporting hierarchical task management."""
     
     # Identification
@@ -424,7 +453,7 @@ class GenericTask(BaseModel):
     actual_effort: Optional[str] = Field(None, description="Actual time/effort")
     
     # Assignment
-    specialist_type: Optional[SpecialistType] = None
+    specialist_type: Optional[str] = Field(None, description="Specialist type name")
     assigned_to: Optional[str] = Field(None, description="Assigned user/agent")
     
     # Context and configuration
@@ -457,7 +486,18 @@ class GenericTask(BaseModel):
     dependencies: List[TaskDependency] = Field(default_factory=list)
     artifacts: List[TaskArtifact] = Field(default_factory=list)
     events: List[TaskEvent] = Field(default_factory=list)
-    children: List['GenericTask'] = Field(default_factory=list)
+    children: List['Task'] = Field(default_factory=list)
+    
+    @validator('specialist_type')
+    def validate_specialist_type(cls, v):
+        """Validate specialist type if provided."""
+        if v is not None and not validate_specialist_type(v):
+            # For backwards compatibility, allow any string for now but log a warning
+            import logging
+            logging.getLogger(__name__).warning(f"Unknown specialist type: {v}")
+            # Uncomment to enforce validation:
+            # raise ValueError(f"Invalid specialist type: {v}. Available types: {list_available_specialists()}")
+        return v
     
     @validator('hierarchy_path')
     def validate_hierarchy_path(cls, v, values):
@@ -591,7 +631,7 @@ class GenericTask(BaseModel):
 
 
 # Enable forward reference resolution
-GenericTask.update_forward_refs()
+Task.update_forward_refs()
 
 
 # ============================================
@@ -651,7 +691,7 @@ class TaskTemplate(BaseModel):
                 
         return validated
     
-    def instantiate(self, parameters: Dict[str, Any], parent_task_id: Optional[str] = None) -> List[GenericTask]:
+    def instantiate(self, parameters: Dict[str, Any], parent_task_id: Optional[str] = None) -> List[Task]:
         """Create task instances from template."""
         validated_params = self.validate_parameters(parameters)
         
@@ -665,7 +705,7 @@ class TaskTemplate(BaseModel):
             return text
         
         def create_tasks_from_structure(structure: Dict[str, Any], parent_id: Optional[str] = None,
-                                      parent_path: str = "") -> List[GenericTask]:
+                                      parent_path: str = "") -> List[Task]:
             """Recursively create tasks from structure."""
             created = []
             
@@ -677,7 +717,7 @@ class TaskTemplate(BaseModel):
                 hierarchy_path = f"{parent_path}/{task_id}" if parent_path else f"/{task_id}"
                 
                 # Create task
-                task = GenericTask(
+                task = Task(
                     task_id=task_id,
                     parent_task_id=parent_id,
                     title=substitute_params(task_def.get('title', ''), validated_params),
@@ -714,10 +754,10 @@ class TaskTemplate(BaseModel):
 # Backward Compatibility Support
 # ============================================
 
-def create_generic_task_from_breakdown(breakdown: 'TaskBreakdown') -> GenericTask:
-    """Convert old TaskBreakdown to GenericTask."""
+def create_task_from_breakdown(breakdown: 'TaskBreakdown') -> Task:
+    """Convert old TaskBreakdown to Task."""
     task_id = breakdown.parent_task_id
-    return GenericTask(
+    return Task(
         task_id=task_id,
         parent_task_id=None,
         title=f"Task Breakdown: {breakdown.description[:100]}",
@@ -731,9 +771,9 @@ def create_generic_task_from_breakdown(breakdown: 'TaskBreakdown') -> GenericTas
     )
 
 
-def create_generic_task_from_subtask(subtask: 'SubTask', parent_task_id: str,
-                                   parent_path: str, position: int = 0) -> GenericTask:
-    """Convert old SubTask to GenericTask."""
+def create_task_from_subtask(subtask: 'SubTask', parent_task_id: str,
+                                   parent_path: str, position: int = 0) -> Task:
+    """Convert old SubTask to Task."""
     task_id = subtask.task_id
     hierarchy_path = f"{parent_path}/{task_id}"
     
@@ -747,7 +787,7 @@ def create_generic_task_from_subtask(subtask: 'SubTask', parent_task_id: str,
         'archived': LifecycleStage.ARCHIVED
     }
     
-    task = GenericTask(
+    task = Task(
         task_id=task_id,
         parent_task_id=parent_task_id,
         title=subtask.title,
@@ -786,5 +826,4 @@ def create_generic_task_from_subtask(subtask: 'SubTask', parent_task_id: str,
     return task
 
 
-# Import existing enums for backward compatibility
-from .models import ComplexityLevel, SpecialistType
+# Note: ComplexityLevel and SpecialistType are now imported from domain.value_objects above

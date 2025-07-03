@@ -22,12 +22,14 @@ features/
 ```
 
 **Rationale for Reorganization:**
+
 - **Status-based lifecycle**: Clear progression from idea → implementation → completion
 - **Workflow alignment**: Matches development lifecycle stages
 - **Better discoverability**: Easier to find features by implementation status
 - **Templates**: Standardize feature specification format
 
 ### Current vs. Proposed Mapping
+
 - `new_features/` → `proposed/` (clearer intent)
 - `low-priority_features/` → Use priority tags within specs instead
 - `implemented_features/` → `completed/` (more precise)
@@ -36,6 +38,7 @@ features/
 ## 📋 Feature Specification Standards
 
 ### Required Elements
+
 - **Feature ID**: Unique identifier for tracking
 - **Priority**: High/Medium/Low with rationale
 - **Category**: Core Infrastructure/User Experience/Integration/etc.
@@ -45,6 +48,7 @@ features/
 - **Success Metrics**: Measurable outcomes
 
 ### File Naming Convention
+
 - Use kebab-case: `automation-maintenance-enhancement.md`
 - Include feature category if needed: `core-automation-enhancement.md`
 - Keep names descriptive but concise
@@ -62,11 +66,13 @@ features/
 Use tags within feature specifications instead of separate directories:
 
 ### Priority Levels
+
 - **High**: Critical for core functionality or blocking other work
 - **Medium**: Important but not urgent, planned for upcoming cycles
 - **Low**: Nice to have, future consideration
 
 ### Categories
+
 - **Core Infrastructure**: Database, server architecture, core tools
 - **User Experience**: Documentation, interfaces, workflows  
 - **Integration**: MCP server connections, external tool support
@@ -76,6 +82,7 @@ Use tags within feature specifications instead of separate directories:
 ## 📊 Status Tracking
 
 Consider adding a features index file or database integration to track:
+
 - Feature dependencies and relationships
 - Implementation progress and milestones
 - Impact assessment and success metrics

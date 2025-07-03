@@ -10,7 +10,8 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 
 from ..repositories import TaskRepository, StateRepository, SpecialistRepository
-from ...orchestrator.models import SpecialistType, TaskStatus
+from ..value_objects.specialist_type import SpecialistType
+from ..value_objects.task_status import TaskStatus
 from ...orchestrator.role_loader import get_roles
 
 

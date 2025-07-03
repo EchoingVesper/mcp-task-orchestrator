@@ -10,7 +10,7 @@ from datetime import datetime
 import json
 
 from ..repositories import TaskRepository, StateRepository
-from ...orchestrator.models import TaskStatus
+from ..value_objects.task_status import TaskStatus
 
 
 class ProgressTrackingService:

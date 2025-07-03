@@ -11,19 +11,19 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from ....application.usecases.manage_generic_tasks import GenericTaskUseCase
-from ....db.generic_repository import GenericTaskRepository
+from ....application.usecases.manage_tasks import TaskUseCase
+from ....db.generic_repository import TaskRepository
 from ....domain.exceptions import OrchestrationError
 
 logger = logging.getLogger(__name__)
 
 # Singleton instance for reuse across handlers
-_use_case_instance: Optional[GenericTaskUseCase] = None
+_use_case_instance: Optional[TaskUseCase] = None
 
 
-def get_generic_task_use_case(force_new: bool = False) -> GenericTaskUseCase:
+def get_generic_task_use_case(force_new: bool = False) -> TaskUseCase:
     """
-    Get a GenericTaskUseCase instance with database connection.
+    Get a TaskUseCase instance with database connection.
     
     This is a pragmatic factory function that creates the use case with
     all necessary dependencies without requiring complex DI setup.
@@ -32,7 +32,7 @@ def get_generic_task_use_case(force_new: bool = False) -> GenericTaskUseCase:
         force_new: If True, create a new instance instead of reusing singleton
         
     Returns:
-        GenericTaskUseCase instance ready for database operations
+        TaskUseCase instance ready for database operations
         
     Raises:
         OrchestrationError: If database initialization fails
@@ -54,20 +54,20 @@ def get_generic_task_use_case(force_new: bool = False) -> GenericTaskUseCase:
         db_path = db_dir / "task_orchestrator.db"
         db_url = f"sqlite:///{db_path}"
         
-        logger.info(f"Initializing GenericTaskRepository with database: {db_path}")
+        logger.info(f"Initializing TaskRepository with database: {db_path}")
         
         # Create repository and use case
-        repository = GenericTaskRepository(db_url)
-        use_case = GenericTaskUseCase(repository)
+        repository = TaskRepository(db_url)
+        use_case = TaskUseCase(repository)
         
         # Store as singleton
         _use_case_instance = use_case
         
-        logger.info("GenericTaskUseCase initialized successfully")
+        logger.info("TaskUseCase initialized successfully")
         return use_case
         
     except Exception as e:
-        logger.error(f"Failed to initialize GenericTaskUseCase: {e}")
+        logger.error(f"Failed to initialize TaskUseCase: {e}")
         raise OrchestrationError(f"Database initialization failed: {str(e)}")
 
 
@@ -75,7 +75,7 @@ def reset_connection():
     """Reset the singleton connection (useful for testing)."""
     global _use_case_instance
     _use_case_instance = None
-    logger.info("GenericTaskUseCase connection reset")
+    logger.info("TaskUseCase connection reset")
 
 
 def health_check() -> dict:

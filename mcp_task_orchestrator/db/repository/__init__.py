@@ -24,7 +24,7 @@ File Sizes (all under 500 lines for Claude Code safety):
 """
 
 # Export base repository components for backward compatibility
-from .base import GenericTaskRepository, CycleDetectedError
+from .base import TaskRepository, CycleDetectedError
 
 # Optional: Export converter utilities if needed externally
 from .converters import (
@@ -38,7 +38,7 @@ from .converters import (
 
 __all__ = [
     # Core repository class
-    'GenericTaskRepository',
+    'TaskRepository',
     
     # Exception types
     'CycleDetectedError',

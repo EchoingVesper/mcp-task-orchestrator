@@ -12,7 +12,8 @@ from jinja2 import Environment, FileSystemLoader
 
 logger = logging.getLogger("mcp_task_orchestrator.specialists")
 
-from .models import SpecialistType, SubTask
+from ..domain.value_objects.specialist_type import SpecialistType
+from ..domain.entities.task import Task
 from .role_loader import get_roles
 # from config.manager import get_config  # Temporarily disabled due to pydantic compatibility issues
 
@@ -222,7 +223,7 @@ class SpecialistManager:
             }
         }
     
-    async def get_specialist_prompt(self, specialist_type: SpecialistType, subtask: SubTask) -> str:
+    async def get_specialist_prompt(self, specialist_type: SpecialistType, subtask: Task) -> str:
         """Get the specialist prompt for a specific subtask."""
         
         # Get specialist config
@@ -269,7 +270,7 @@ Remember: You are the {specialist_type.value} specialist for this task. Apply yo
         return "\n".join(context_parts)
     
     async def synthesize_task_results(self, parent_task_id: str, 
-                                    completed_subtasks: List[SubTask]) -> str:
+                                    completed_subtasks: List[Task]) -> str:
         """Synthesize results from multiple completed subtasks."""
         
         synthesis_parts = []

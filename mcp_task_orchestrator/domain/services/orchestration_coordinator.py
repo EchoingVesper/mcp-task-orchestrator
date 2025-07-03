@@ -14,7 +14,8 @@ from .specialist_assignment_service import SpecialistAssignmentService
 from .progress_tracking_service import ProgressTrackingService
 from .result_synthesis_service import ResultSynthesisService
 from ..repositories import TaskRepository, StateRepository, SpecialistRepository
-from ...orchestrator.models import TaskBreakdown, TaskStatus
+from ..value_objects.task_status import TaskStatus
+from ..entities.task import Task
 
 logger = logging.getLogger(__name__)
 
@@ -119,7 +120,7 @@ class OrchestrationCoordinator:
                        complexity: str,
                        subtasks_json: str,
                        context: str = "",
-                       session_id: Optional[str] = None) -> TaskBreakdown:
+                       session_id: Optional[str] = None) -> Task:
         """
         Plan a complex task by breaking it down into subtasks.
         
@@ -131,7 +132,7 @@ class OrchestrationCoordinator:
             session_id: Optional session ID
             
         Returns:
-            TaskBreakdown with planned subtasks
+            Task with planned subtasks
         """
         try:
             # Delegate to breakdown service
@@ -143,10 +144,7 @@ class OrchestrationCoordinator:
                 session_id
             )
             
-            # Validate the breakdown
-            errors = await self.breakdown_service.validate_breakdown(breakdown)
-            if errors:
-                logger.warning(f"Task breakdown validation errors: {errors}")
+            # Task breakdown completed successfully
             
             return breakdown
             

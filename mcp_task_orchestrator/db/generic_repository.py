@@ -14,7 +14,7 @@ import logging
 
 # Import base repository and common items from the new modular structure
 from .repository.base import (
-    GenericTaskRepository, CycleDetectedError, 
+    TaskRepository, CycleDetectedError, 
     asynccontextmanager, AsyncSession,
     select, delete, update, and_, or_, func,
     SQLAlchemyError, IntegrityError, text,

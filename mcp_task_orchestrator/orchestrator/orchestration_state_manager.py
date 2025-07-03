@@ -12,7 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Union, Any, Tuple
 
-from .models import TaskBreakdown, SubTask, TaskStatus, SpecialistType
+from ..domain.entities.task import Task, TaskType, TaskStatus
+from ..domain.value_objects.specialist_type import SpecialistType
 from ..persistence_factory import create_persistence_manager
 # from ..config import get_config  # Temporarily disabled due to pydantic compatibility issues
 
@@ -112,7 +113,7 @@ class StateManager:
         except Exception as e:
             logger.error(f"Failed to clean up stale locks: {str(e)}")
     
-    async def store_task_breakdown(self, breakdown: TaskBreakdown):
+    async def store_task_breakdown(self, breakdown: Task):
         """Store a task breakdown and its subtasks using persistence manager only."""
         async with self.lock:
             try:
@@ -123,7 +124,7 @@ class StateManager:
                 logger.error(f"Failed to save task breakdown to persistent storage: {str(e)}")
                 raise
     
-    async def get_subtask(self, task_id: str, timeout: int = 10) -> Optional[SubTask]:
+    async def get_subtask(self, task_id: str, timeout: int = 10) -> Optional[Task]:
         """Retrieve a specific subtask by ID - simplified version."""
         async with self.lock:
             try:
@@ -146,7 +147,7 @@ class StateManager:
                 logger.error(f"Error getting subtask {task_id}: {str(e)}")
                 raise
     
-    async def update_subtask(self, subtask: SubTask):
+    async def update_subtask(self, subtask: Task):
         """Update an existing subtask using persistence manager only - simplified version."""
         async with self.lock:
             try:
@@ -185,7 +186,7 @@ class StateManager:
                 logger.error(f"Failed to archive completed task {parent_task_id}: {str(e)}")
                 # Continue execution even if archiving fails
     
-    def _get_subtasks_for_parent_unlocked(self, parent_task_id: str) -> List[SubTask]:
+    def _get_subtasks_for_parent_unlocked(self, parent_task_id: str) -> List[Task]:
         """Get all subtasks for a given parent task - INTERNAL METHOD without lock."""
         try:
             breakdown = self.persistence.load_task_breakdown(parent_task_id)
@@ -199,12 +200,12 @@ class StateManager:
             logger.error(f"Failed to retrieve subtasks for parent task {parent_task_id}: {str(e)}")
             return []
     
-    async def get_subtasks_for_parent(self, parent_task_id: str) -> List[SubTask]:
+    async def get_subtasks_for_parent(self, parent_task_id: str) -> List[Task]:
         """Get all subtasks for a given parent task using persistence manager only."""
         async with self.lock:
             return self._get_subtasks_for_parent_unlocked(parent_task_id)
     
-    async def get_all_tasks(self) -> List[SubTask]:
+    async def get_all_tasks(self) -> List[Task]:
         """Get all tasks in the system using persistence manager only."""
         async with self.lock:
             all_subtasks = []

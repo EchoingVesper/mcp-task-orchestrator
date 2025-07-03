@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## MCP Tools Integration
+@/home/aya/.claude/mcp-tools-core.md
+
+Available MCP servers provide search, development, and automation capabilities. See user memory for detailed usage patterns.
+
 ## Commands
 
 ### Building and Testing

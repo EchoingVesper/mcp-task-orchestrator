@@ -5,14 +5,15 @@ Entities are the core business objects with unique identities.
 They encapsulate business logic and maintain state.
 """
 
-from .task import Task, TaskBreakdown, Subtask
+from .task import Task, TaskType, TaskStatus, LifecycleStage
 from .specialist import Specialist, SpecialistContext
 from .orchestration import OrchestrationSession, WorkItem
 
 __all__ = [
     'Task',
-    'TaskBreakdown', 
-    'Subtask',
+    'TaskType',
+    'TaskStatus', 
+    'LifecycleStage',
     'Specialist',
     'SpecialistContext',
     'OrchestrationSession',

@@ -8,7 +8,7 @@ entities, repository interfaces, and domain services.
 
 # Import entities
 from .entities import (
-    Task, TaskBreakdown, Subtask,
+    Task, TaskType, LifecycleStage,
     Specialist, SpecialistContext,
     OrchestrationSession, WorkItem
 )
@@ -46,7 +46,7 @@ from .services import (
 
 __all__ = [
     # Entities
-    'Task', 'TaskBreakdown', 'Subtask',
+    'Task', 'TaskType', 'LifecycleStage',
     'Specialist', 'SpecialistContext',
     'OrchestrationSession', 'WorkItem',
     

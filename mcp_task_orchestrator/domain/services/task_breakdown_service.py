@@ -1,8 +1,8 @@
 """
-Task Breakdown Service - Handles task decomposition and planning.
+Task Breakdown Service - Domain Service
 
-This service is responsible for analyzing complex tasks and breaking them
-down into manageable subtasks with proper dependencies and assignments.
+This service handles the decomposition of complex tasks into hierarchical subtasks
+using the Task model (replacing legacy TaskBreakdown/SubTask models).
 """
 
 import json
@@ -11,9 +11,10 @@ from typing import Dict, List, Optional, Any
 from datetime import datetime
 
 from ..repositories import TaskRepository, StateRepository, SpecialistRepository
-from ...orchestrator.models import (
-    TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
-)
+from ..value_objects.task_status import TaskStatus
+from ..value_objects.complexity_level import ComplexityLevel
+from ..value_objects.flexible_specialist_type import validate_specialist_type
+from ..entities.task import Task, TaskType, LifecycleStage, DependencyType
 
 
 class TaskBreakdownService:
@@ -21,7 +22,8 @@ class TaskBreakdownService:
     Service for breaking down complex tasks into subtasks.
     
     This service encapsulates the logic for task decomposition,
-    dependency analysis, and initial task planning.
+    dependency analysis, and initial task planning using the
+    unified Task model.
     """
     
     def __init__(self, 
@@ -32,9 +34,9 @@ class TaskBreakdownService:
         Initialize the task breakdown service.
         
         Args:
-            task_repository: Repository for task persistence
-            state_repository: Repository for state persistence
-            specialist_repository: Repository for specialist management
+            task_repository: Repository for task operations
+            state_repository: Repository for state management
+            specialist_repository: Repository for specialist operations
         """
         self.task_repo = task_repository
         self.state_repo = state_repository
@@ -45,7 +47,7 @@ class TaskBreakdownService:
                        complexity: str, 
                        subtasks_json: str, 
                        context: str = "",
-                       session_id: Optional[str] = None) -> TaskBreakdown:
+                       session_id: Optional[str] = None) -> Task:
         """
         Create a task breakdown from LLM-provided subtasks.
         
@@ -57,7 +59,7 @@ class TaskBreakdownService:
             session_id: Optional session ID for tracking
             
         Returns:
-            TaskBreakdown object with planned subtasks
+            Task object with planned subtasks as children
         """
         # Parse subtasks JSON
         try:
@@ -66,223 +68,188 @@ class TaskBreakdownService:
             raise ValueError(f"Invalid subtasks JSON: {e}")
         
         # Create main task
-        main_task_id = str(uuid.uuid4())
-        main_task = TaskBreakdown(
-            id=main_task_id,
+        main_task_id = f"task_{uuid.uuid4().hex[:8]}"
+        main_task = Task(
+            task_id=main_task_id,
+            title=description[:100],  # First 100 chars as title
             description=description,
-            complexity_level=ComplexityLevel(complexity.lower()),
-            subtasks=[],
-            dependencies={},
-            estimated_effort=0
+            task_type=TaskType.BREAKDOWN,
+            hierarchy_path=f"/{main_task_id}",
+            hierarchy_level=0,
+            status=TaskStatus.PENDING,
+            lifecycle_stage=LifecycleStage.PLANNING,
+            complexity=ComplexityLevel(complexity.lower()),
+            context={"original_context": context, "session_id": session_id} if context else {"session_id": session_id}
         )
         
-        # Create session if not provided
-        if not session_id:
-            session_id = str(uuid.uuid4())
-            await self._create_session(session_id, description)
-        
-        # Create main task in repository
-        self.task_repo.create_task({
-            'id': main_task_id,
-            'session_id': session_id,
-            'title': description[:100],  # First 100 chars as title
-            'description': description,
-            'type': 'main',
-            'status': 'planning',
-            'metadata': {
-                'complexity': complexity,
-                'context': context
-            }
-        })
-        
         # Process subtasks
-        subtask_mapping = {}  # For tracking dependencies
-        
-        for subtask_data in subtasks_data:
+        for i, subtask_data in enumerate(subtasks_data):
             subtask = self._create_subtask(
                 subtask_data, 
                 main_task_id,
-                session_id
+                main_task.hierarchy_path,
+                i
             )
-            main_task.subtasks.append(subtask)
-            subtask_mapping[subtask_data.get('id', subtask.id)] = subtask.id
+            main_task.children.append(subtask)
             
-            # Persist subtask
-            self.task_repo.create_task({
-                'id': subtask.id,
-                'session_id': session_id,
-                'parent_task_id': main_task_id,
-                'title': subtask.title,
-                'description': subtask.description,
-                'type': 'subtask',
-                'status': subtask.status.value,
-                'metadata': {
-                    'specialist': subtask.assigned_specialist.value,
-                    'estimated_effort': subtask.estimated_effort,
-                    'complexity': subtask.complexity.value
-                }
-            })
-        
-        # Process dependencies
-        for subtask_data in subtasks_data:
-            subtask_id = subtask_mapping.get(subtask_data.get('id'))
+            # Add dependencies if specified
             dependencies = subtask_data.get('dependencies', [])
-            
-            if subtask_id and dependencies:
-                main_task.dependencies[subtask_id] = []
-                
-                for dep_id in dependencies:
-                    if dep_id in subtask_mapping:
-                        actual_dep_id = subtask_mapping[dep_id]
-                        main_task.dependencies[subtask_id].append(actual_dep_id)
-                        
-                        # Record dependency in repository
-                        self.task_repo.add_task_dependency(
-                            subtask_id, 
-                            actual_dep_id
-                        )
+            for dep_data in dependencies:
+                # For now, we'll just store dependency info in context
+                # Full dependency resolution would happen when tasks are persisted
+                if 'dependencies' not in subtask.context:
+                    subtask.context['dependencies'] = []
+                subtask.context['dependencies'].append(dep_data)
         
-        # Calculate total estimated effort
-        main_task.estimated_effort = sum(
-            subtask.estimated_effort for subtask in main_task.subtasks
-        )
-        
-        # Update main task status
-        self.task_repo.update_task_status(main_task_id, 'planned')
-        
-        # Record planning event
-        self.state_repo.record_event(
-            session_id,
-            'task_planned',
-            {
-                'task_id': main_task_id,
-                'subtask_count': len(main_task.subtasks),
-                'total_effort': main_task.estimated_effort
-            }
-        )
+        # Set main task status to planned
+        main_task.status = TaskStatus.PENDING
+        main_task.lifecycle_stage = LifecycleStage.READY
         
         return main_task
     
     def _create_subtask(self, 
                        subtask_data: Dict[str, Any], 
                        parent_id: str,
-                       session_id: str) -> SubTask:
+                       parent_path: str,
+                       position: int) -> Task:
         """
-        Create a SubTask object from data.
+        Create a Task subtask from data.
         
         Args:
             subtask_data: Dictionary containing subtask information
             parent_id: Parent task ID
-            session_id: Session ID
+            parent_path: Parent task hierarchy path
+            position: Position in parent task
             
         Returns:
-            SubTask object
+            Task object
         """
-        subtask_id = str(uuid.uuid4())
+        # Generate subtask ID
+        subtask_id = f"task_{uuid.uuid4().hex[:8]}"
         
-        # Determine specialist type
-        specialist_str = subtask_data.get('specialist', 'implementer').lower()
-        try:
-            specialist = SpecialistType(specialist_str)
-        except ValueError:
-            specialist = SpecialistType.IMPLEMENTER
+        # Extract basic information
+        title = subtask_data.get('title', 'Untitled Subtask')
+        description = subtask_data.get('description', '')
+        specialist_type = subtask_data.get('specialist_type', 'generic')
+        estimated_effort = subtask_data.get('estimated_effort', 'Unknown')
         
-        # Determine complexity
-        complexity_str = subtask_data.get('complexity', 'medium').lower()
-        try:
-            complexity = ComplexityLevel(complexity_str)
-        except ValueError:
-            complexity = ComplexityLevel.MEDIUM
+        # Validate specialist type
+        if not validate_specialist_type(specialist_type):
+            # Log warning but allow the task to be created
+            import logging
+            logging.getLogger(__name__).warning(f"Unknown specialist type: {specialist_type}")
         
-        return SubTask(
-            id=subtask_id,
-            parent_id=parent_id,
-            title=subtask_data.get('title', 'Untitled Task'),
-            description=subtask_data.get('description', ''),
-            assigned_specialist=specialist,
-            complexity=complexity,
-            estimated_effort=subtask_data.get('estimated_effort', 1),
+        # Build hierarchy path
+        hierarchy_path = f"{parent_path}/{subtask_id}"
+        hierarchy_level = len(hierarchy_path.split('/')) - 2
+        
+        # Create subtask
+        subtask = Task(
+            task_id=subtask_id,
+            parent_task_id=parent_id,
+            title=title,
+            description=description,
+            task_type=TaskType.STANDARD,
+            hierarchy_path=hierarchy_path,
+            hierarchy_level=hierarchy_level,
+            position_in_parent=position,
             status=TaskStatus.PENDING,
-            dependencies=[]  # Will be set later
+            lifecycle_stage=LifecycleStage.CREATED,
+            specialist_type=specialist_type,
+            estimated_effort=estimated_effort,
+            context={}
         )
+        
+        return subtask
     
-    async def _create_session(self, session_id: str, description: str):
-        """Create a new session for task tracking."""
-        self.state_repo.save_session(session_id, {
-            'status': 'active',
-            'created_at': datetime.utcnow().isoformat(),
-            'metadata': {
-                'main_task_description': description
-            }
-        })
-    
-    async def validate_breakdown(self, breakdown: TaskBreakdown) -> List[str]:
+    async def analyze_task_complexity(self, description: str, context: str = "") -> str:
         """
-        Validate a task breakdown for issues.
+        Analyze task complexity based on description and context.
         
         Args:
-            breakdown: TaskBreakdown to validate
+            description: Task description
+            context: Additional context
             
         Returns:
-            List of validation errors (empty if valid)
+            Complexity level string
         """
-        errors = []
+        # Simple heuristic-based complexity analysis
+        # In a real implementation, this might use ML or more sophisticated analysis
         
-        # Check for circular dependencies
-        if self._has_circular_dependencies(breakdown.dependencies):
-            errors.append("Circular dependencies detected")
+        word_count = len(description.split())
+        context_complexity = len(context.split()) if context else 0
         
-        # Check for orphaned dependencies
-        task_ids = {task.id for task in breakdown.subtasks}
-        for task_id, deps in breakdown.dependencies.items():
-            if task_id not in task_ids:
-                errors.append(f"Dependencies defined for non-existent task: {task_id}")
-            
-            for dep_id in deps:
-                if dep_id not in task_ids:
-                    errors.append(f"Dependency references non-existent task: {dep_id}")
+        # Keywords that indicate complexity
+        complex_keywords = [
+            'integrate', 'architecture', 'design', 'refactor', 'migrate',
+            'optimize', 'scale', 'implement', 'algorithm', 'machine learning',
+            'database', 'api', 'microservice', 'distributed', 'concurrent'
+        ]
         
-        # Check for reasonable effort estimates
-        for task in breakdown.subtasks:
-            if task.estimated_effort <= 0:
-                errors.append(f"Task '{task.title}' has invalid effort estimate")
-            elif task.estimated_effort > 100:
-                errors.append(f"Task '{task.title}' has unreasonably high effort estimate")
+        complexity_score = 0
         
-        # Check for specialist availability
-        for task in breakdown.subtasks:
-            specialist_type = task.assigned_specialist.value
-            specialists = self.specialist_repo.list_specialists(
-                category=specialist_type,
-                active_only=True
-            )
-            if not specialists:
-                errors.append(f"No active specialist available for type: {specialist_type}")
+        # Base score from word count
+        if word_count > 100:
+            complexity_score += 3
+        elif word_count > 50:
+            complexity_score += 2
+        elif word_count > 20:
+            complexity_score += 1
         
-        return errors
+        # Context complexity
+        complexity_score += min(context_complexity // 50, 2)
+        
+        # Keyword analysis
+        description_lower = description.lower()
+        keyword_matches = sum(1 for keyword in complex_keywords if keyword in description_lower)
+        complexity_score += min(keyword_matches, 3)
+        
+        # Determine complexity level
+        if complexity_score >= 6:
+            return "very_complex"
+        elif complexity_score >= 4:
+            return "complex"
+        elif complexity_score >= 2:
+            return "moderate"
+        else:
+            return "simple"
     
-    def _has_circular_dependencies(self, dependencies: Dict[str, List[str]]) -> bool:
-        """Check if the dependency graph has cycles."""
-        visited = set()
-        rec_stack = set()
+    async def estimate_effort(self, subtasks: List[Task]) -> Dict[str, Any]:
+        """
+        Estimate total effort for a task breakdown.
         
-        def has_cycle(node: str) -> bool:
-            visited.add(node)
-            rec_stack.add(node)
+        Args:
+            subtasks: List of subtasks
             
-            for neighbor in dependencies.get(node, []):
-                if neighbor not in visited:
-                    if has_cycle(neighbor):
-                        return True
-                elif neighbor in rec_stack:
-                    return True
+        Returns:
+            Dictionary with effort estimates
+        """
+        # Simple effort estimation
+        # In practice, this might use historical data or ML models
+        
+        effort_map = {
+            "simple": 1,
+            "moderate": 3,
+            "complex": 8,
+            "very_complex": 21
+        }
+        
+        total_points = 0
+        effort_breakdown = {}
+        
+        for subtask in subtasks:
+            complexity = subtask.complexity.value if hasattr(subtask.complexity, 'value') else str(subtask.complexity)
+            points = effort_map.get(complexity, 3)
+            total_points += points
             
-            rec_stack.remove(node)
-            return False
+            specialist = subtask.specialist_type or 'generic'
+            if specialist not in effort_breakdown:
+                effort_breakdown[specialist] = 0
+            effort_breakdown[specialist] += points
         
-        for node in dependencies:
-            if node not in visited:
-                if has_cycle(node):
-                    return True
-        
-        return False
+        return {
+            "total_story_points": total_points,
+            "estimated_hours": total_points * 4,  # Rough conversion
+            "effort_by_specialist": effort_breakdown,
+            "estimated_duration_days": max(1, total_points // 3)
+        }

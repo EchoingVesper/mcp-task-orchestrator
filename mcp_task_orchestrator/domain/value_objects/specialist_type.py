@@ -18,6 +18,10 @@ class SpecialistType(str, Enum):
     COORDINATOR = "coordinator"
     RESEARCHER = "researcher"
     OPTIMIZER = "optimizer"
+    DEBUGGER = "debugger"  # Added for compatibility with default_roles.yaml
+    CODER = "coder"  # Added as alias for implementer
+    DEVOPS = "devops"  # Added for infrastructure tasks
+    GENERIC = "generic"  # Added for flexible task assignment
     CUSTOM = "custom"
     
     @property
@@ -33,6 +37,10 @@ class SpecialistType(str, Enum):
             SpecialistType.COORDINATOR: ["project_management", "task_coordination", "communication"],
             SpecialistType.RESEARCHER: ["information_gathering", "analysis", "synthesis"],
             SpecialistType.OPTIMIZER: ["performance_tuning", "optimization", "profiling"],
+            SpecialistType.DEBUGGER: ["debugging", "troubleshooting", "root_cause_analysis"],
+            SpecialistType.CODER: ["coding", "implementation", "algorithm_design"],
+            SpecialistType.DEVOPS: ["infrastructure", "deployment", "automation", "monitoring"],
+            SpecialistType.GENERIC: ["general_tasks", "flexible_assignment"],
             SpecialistType.CUSTOM: []
         }
         return capabilities_map.get(self, [])
@@ -50,6 +58,10 @@ class SpecialistType(str, Enum):
             SpecialistType.COORDINATOR: "collaborative",
             SpecialistType.RESEARCHER: "exploratory",
             SpecialistType.OPTIMIZER: "efficiency-focused",
+            SpecialistType.DEBUGGER: "diagnostic",
+            SpecialistType.CODER: "practical",
+            SpecialistType.DEVOPS: "systematic",
+            SpecialistType.GENERIC: "versatile",
             SpecialistType.CUSTOM: "professional"
         }
         return styles.get(self, "professional")

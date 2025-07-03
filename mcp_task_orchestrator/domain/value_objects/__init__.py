@@ -10,6 +10,8 @@ from .specialist_type import SpecialistType, SpecialistCapability
 from .execution_result import ExecutionResult, ExecutionStatus
 from .artifact_reference import ArtifactReference, ArtifactType
 from .time_window import TimeWindow, Duration
+from .complexity_level import ComplexityLevel
+from .flexible_specialist_type import validate_specialist_type, normalize_specialist_type
 
 __all__ = [
     'TaskStatus',
@@ -22,5 +24,8 @@ __all__ = [
     'ArtifactReference',
     'ArtifactType',
     'TimeWindow',
-    'Duration'
+    'Duration',
+    'ComplexityLevel',
+    'validate_specialist_type',
+    'normalize_specialist_type'
 ]

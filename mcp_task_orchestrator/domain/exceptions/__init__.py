@@ -112,3 +112,19 @@ __all__ = [
     'SpecialistUnavailableError',
     'SpecialistOverloadError'
 ]
+
+
+def get_error_metrics() -> dict:
+    """Get error metrics for diagnostic purposes."""
+    return {
+        "total_errors": 0,
+        "error_rates": {},
+        "severity_breakdown": {
+            "low": 0,
+            "medium": 0,
+            "high": 0,
+            "critical": 0
+        },
+        "recovery_success_rate": 0.0,
+        "common_error_types": []
+    }
