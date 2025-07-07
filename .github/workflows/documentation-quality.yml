@@ -1,0 +1,146 @@
+name: Documentation Quality Gates
+
+on:
+  push:
+    branches: [main, develop]
+    paths: 
+      - 'docs/**'
+      - '*.md'
+      - '.markdownlint.json'
+      - '.vale.ini'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'docs/**'
+      - '*.md'
+      - '.markdownlint.json'
+      - '.vale.ini'
+
+jobs:
+  documentation-quality:
+    runs-on: ubuntu-latest
+    name: Documentation Quality Checks
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Setup Node.js for markdownlint
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install markdownlint
+      run: npm install -g markdownlint-cli
+      
+    - name: Install Vale
+      run: |
+        wget https://github.com/errata-ai/vale/releases/latest/download/vale_Linux_64-bit.tar.gz
+        tar -xzf vale_Linux_64-bit.tar.gz
+        sudo mv vale /usr/local/bin/
+        vale --version
+        
+    - name: Setup Vale styles
+      run: |
+        vale sync
+        
+    - name: Run Documentation Quality Gates
+      run: |
+        python scripts/quality_automation.py --check all --report quality_report.json
+        
+    - name: Upload quality report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: quality-report
+        path: quality_report.json
+        
+    - name: Comment PR with results
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // Read quality report if it exists
+          let report = {};
+          try {
+            const reportData = fs.readFileSync('quality_report.json', 'utf8');
+            report = JSON.parse(reportData);
+          } catch (error) {
+            console.log('No quality report found');
+            return;
+          }
+          
+          // Format comment
+          const summary = report.summary || {};
+          const passed = summary.passed_gates || 0;
+          const total = summary.total_gates || 0;
+          const errors = summary.total_errors || 0;
+          const warnings = summary.total_warnings || 0;
+          
+          const emoji = passed === total ? '✅' : '❌';
+          
+          const comment = `## ${emoji} Documentation Quality Report
+          
+          **Summary**: ${passed}/${total} quality gates passed
+          - **Errors**: ${errors}
+          - **Warnings**: ${warnings}
+          
+          ### Gate Results:
+          ${Object.entries(report.detailed_results || {}).map(([gate, result]) => {
+            const status = result.passed ? '✅' : '❌';
+            const errorCount = (result.errors || []).length;
+            const warningCount = (result.warnings || []).length;
+            return `- ${status} **${gate.replace('_', ' ').toUpperCase()}**: ${errorCount} errors, ${warningCount} warnings`;
+          }).join('\n')}
+          
+          ${errors > 0 ? '\n⚠️ Please fix the errors before merging.' : ''}
+          ${warnings > 0 ? '\n💡 Consider addressing the warnings for better documentation quality.' : ''}
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  markdownlint-only:
+    runs-on: ubuntu-latest
+    name: Quick Markdown Lint Check
+    if: github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install markdownlint
+      run: npm install -g markdownlint-cli
+      
+    - name: Run markdownlint
+      run: markdownlint --config .markdownlint.json docs/ *.md
+      
+    - name: Auto-fix markdown issues
+      if: failure()
+      run: |
+        python scripts/fix_markdown_lint.py
+        
+    - name: Commit auto-fixes
+      if: failure()
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff --staged --quiet || git commit -m "Auto-fix markdown lint issues"
+        git push

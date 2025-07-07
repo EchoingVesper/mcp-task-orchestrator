@@ -75,7 +75,8 @@ archives/
 # Local configuration
 .local/
 local_settings.py
-.claude/
+.claude/*
+!.claude/commands/
 .tools/
 
 # Jupyter Notebook
@@ -134,6 +135,13 @@ claude-work-session-*.md
 dev-temp/
 scratch/
 .working/
+
+# PRP-specific files
+PRPs/completed/
+PRPs/in-progress/
+PRPs/*.tmp
+PRPs/.cache/
+.prp-session/
 
 # Supabase local development
 supabase/.temp/
