@@ -2,7 +2,7 @@
 Use case for tracking task progress.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Literal, TypedDict
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -16,7 +16,31 @@ from ...domain import (
     SessionNotFoundError,
     OrchestrationError
 )
+from ...domain.entities.orchestration import SessionStatus
 from ..dto import ProgressStatusRequest, ProgressStatusResponse
+
+
+class FormattedTask(TypedDict):
+    """Type definition for formatted task data."""
+    task_id: str
+    title: str
+    description: str
+    status: str
+    specialist_type: str
+    created_at: str
+    updated_at: str
+    parent_task_id: Optional[str]
+    dependencies: List[str]
+    result: Optional[str]
+    error: Optional[str]
+
+
+class SessionSummary(TypedDict):
+    """Type definition for session summary data."""
+    session_id: str
+    name: str
+    status: str
+    progress: Dict[str, Any]
 
 
 @dataclass
@@ -181,23 +205,23 @@ class TrackProgressUseCase:
             overall_status="active" if active_tasks > 0 else "idle"
         )
     
-    def _format_task(self, task: Task) -> Dict[str, Any]:
+    def _format_task(self, task: Task) -> FormattedTask:
         """Format a task for response."""
-        return {
-            'task_id': task.task_id,
-            'title': task.title,
-            'description': task.description,
-            'status': task.status.value,
-            'specialist_type': task.specialist_type,
-            'created_at': task.created_at.isoformat(),
-            'updated_at': task.updated_at.isoformat(),
-            'parent_task_id': task.parent_task_id,
-            'dependencies': task.dependencies,
-            'result': task.result,
-            'error': task.error
-        }
+        return FormattedTask(
+            task_id=task.task_id,
+            title=task.title,
+            description=task.description,
+            status=task.status.value,
+            specialist_type=task.specialist_type,
+            created_at=task.created_at.isoformat(),
+            updated_at=task.updated_at.isoformat(),
+            parent_task_id=task.parent_task_id,
+            dependencies=task.dependencies or [],
+            result=task.result,
+            error=task.error
+        )
     
-    def _format_tasks(self, tasks: List[Task]) -> List[Dict[str, Any]]:
+    def _format_tasks(self, tasks: List[Task]) -> List[FormattedTask]:
         """Format multiple tasks for response."""
         return [self._format_task(task) for task in tasks]
     
@@ -205,7 +229,7 @@ class TrackProgressUseCase:
         self,
         session: OrchestrationSession,
         tasks: List[Task]
-    ) -> str:
+    ) -> Literal["failed", "completed", "in_progress", "ready_to_complete", "has_failures", "pending"]:
         """Determine overall status based on session and tasks."""
         if session.status == SessionStatus.FAILED:
             return "failed"

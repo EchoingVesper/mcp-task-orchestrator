@@ -62,48 +62,10 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
     )]
 
 
-async def handle_plan_task(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle task planning with LLM-provided subtasks.""" 
-    response = {
-        "status": "task_planned",
-        "message": "Task planning completed (simplified implementation)",
-        "description": args.get("description", ""),
-        "subtasks_received": bool(args.get("subtasks_json"))
-    }
-    return [types.TextContent(
-        type="text",
-        text=json.dumps(response, indent=2)
-    )]
 
 
-async def handle_execute_subtask(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle subtask execution by providing specialist context."""
-    task_id = args.get("task_id", "unknown")
-    response = {
-        "status": "subtask_ready",
-        "message": f"Subtask {task_id} ready for execution (simplified implementation)",
-        "task_id": task_id
-    }
-    return [types.TextContent(
-        type="text",
-        text=json.dumps(response, indent=2)
-    )]
 
 
-async def handle_complete_subtask(args: Dict[str, Any]) -> List[types.TextContent]:
-    """Handle subtask completion and store artifacts."""
-    task_id = args.get("task_id", "unknown")
-    summary = args.get("summary", "")
-    response = {
-        "status": "subtask_completed",
-        "message": f"Subtask {task_id} marked as complete (simplified implementation)",
-        "task_id": task_id,
-        "summary": summary
-    }
-    return [types.TextContent(
-        type="text",
-        text=json.dumps(response, indent=2)
-    )]
 
 
 async def handle_synthesize_results(args: Dict[str, Any]) -> List[types.TextContent]:

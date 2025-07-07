@@ -29,91 +29,6 @@ def get_core_orchestration_tools() -> List[types.Tool]:
             }
         ),
         types.Tool(
-            name="orchestrator_plan_task",
-            description="Create a task breakdown from LLM-analyzed subtasks",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "description": {
-                        "type": "string",
-                        "description": "The complex task to be broken down"
-                    },
-                    "subtasks_json": {
-                        "type": "string",
-                        "description": "JSON array of subtasks created by the LLM, each with title, description, specialist_type, and optional dependencies and estimated_effort"
-                    },
-                    "complexity_level": {
-                        "type": "string", 
-                        "enum": ["simple", "moderate", "complex", "very_complex"],
-                        "description": "Estimated complexity of the task",
-                        "default": "moderate"
-                    },
-                    "context": {
-                        "type": "string",
-                        "description": "Additional context about the task (optional)"
-                    }
-                },
-                "required": ["description", "subtasks_json"]
-            }
-        ),
-        types.Tool(
-            name="orchestrator_execute_subtask",
-            description="Get specialist context and prompts for executing a specific subtask",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "task_id": {
-                        "type": "string",
-                        "description": "ID of the subtask to execute"
-                    }
-                },
-                "required": ["task_id"]
-            }
-        ),
-        types.Tool(
-            name="orchestrator_complete_subtask",
-            description="Mark a subtask as complete and store detailed work as artifacts to prevent context limit issues",
-            inputSchema={
-                "type": "object", 
-                "properties": {
-                    "task_id": {
-                        "type": "string",
-                        "description": "ID of the completed subtask"
-                    },
-                    "summary": {
-                        "type": "string",
-                        "description": "Brief summary of what was accomplished (for database/UI display)"
-                    },
-                    "detailed_work": {
-                        "type": "string",
-                        "description": "Full detailed work content to store as artifacts (code, documentation, analysis, etc.)"
-                    },
-                    "file_paths": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "List of original file paths being referenced or created (optional)"
-                    },
-                    "artifact_type": {
-                        "type": "string",
-                        "enum": ["code", "documentation", "analysis", "design", "test", "config", "general"],
-                        "description": "Type of artifact being created",
-                        "default": "general"
-                    },
-                    "next_action": {
-                        "type": "string",
-                        "enum": ["continue", "needs_revision", "blocked", "complete"],
-                        "description": "What should happen next"
-                    },
-                    "legacy_artifacts": {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "description": "Legacy artifacts field for backward compatibility (optional)"
-                    }
-                },
-                "required": ["task_id", "summary", "detailed_work", "next_action"]
-            }
-        ),
-        types.Tool(
             name="orchestrator_synthesize_results", 
             description="Combine completed subtasks into a final comprehensive result",
             inputSchema={
@@ -148,8 +63,8 @@ def get_generic_task_tools() -> List[types.Tool]:
     """Get the generic task management tools."""
     return [
         types.Tool(
-            name="orchestrator_create_generic_task",
-            description="Create a new generic task with rich metadata and flexible structure",
+            name="orchestrator_plan_task",
+            description="Create a new task with rich metadata and flexible structure",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -374,6 +289,63 @@ def get_generic_task_tools() -> List[types.Tool]:
                         "default": 0
                     }
                 }
+            }
+        ),
+        types.Tool(
+            name="orchestrator_execute_task",
+            description="Get specialist context and prompts for executing a specific task",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "task_id": {
+                        "type": "string",
+                        "description": "ID of the task to execute"
+                    }
+                },
+                "required": ["task_id"]
+            }
+        ),
+        types.Tool(
+            name="orchestrator_complete_task",
+            description="Mark a task as complete and store detailed work as artifacts to prevent context limit issues",
+            inputSchema={
+                "type": "object", 
+                "properties": {
+                    "task_id": {
+                        "type": "string",
+                        "description": "ID of the completed task"
+                    },
+                    "summary": {
+                        "type": "string",
+                        "description": "Brief summary of what was accomplished (for database/UI display)"
+                    },
+                    "detailed_work": {
+                        "type": "string",
+                        "description": "Full detailed work content to store as artifacts (code, documentation, analysis, etc.)"
+                    },
+                    "file_paths": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of original file paths being referenced or created (optional)"
+                    },
+                    "artifact_type": {
+                        "type": "string",
+                        "enum": ["code", "documentation", "analysis", "design", "test", "config", "general"],
+                        "description": "Type of artifact being created",
+                        "default": "general"
+                    },
+                    "next_action": {
+                        "type": "string",
+                        "enum": ["continue", "needs_revision", "blocked", "complete"],
+                        "description": "What should happen next"
+                    },
+                    "legacy_artifacts": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Legacy artifacts field for backward compatibility (optional)"
+                    }
+                },
+                "required": ["task_id", "summary", "detailed_work", "next_action"]
             }
         )
     ]

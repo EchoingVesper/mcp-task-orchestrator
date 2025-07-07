@@ -14,12 +14,15 @@ import logging
 
 # Import base repository and common items from the new modular structure
 from .repository.base import (
-    TaskRepository, CycleDetectedError, 
+    CycleDetectedError, 
     asynccontextmanager, AsyncSession,
     select, delete, update, and_, or_, func,
     SQLAlchemyError, IntegrityError, text,
     selectinload, joinedload
 )
+
+# Import the abstract repository interface
+from ..domain.repositories.task_repository import TaskRepository
 
 # Import converter functions 
 from .repository.converters import (
@@ -29,8 +32,10 @@ from .repository.converters import (
 
 # Import models that are used throughout
 from ..orchestrator.generic_models import (
-    GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
-    TaskTemplate, TemplateParameter,
+    Task as GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
+    TaskTemplate, TemplateParameter
+)
+from ..domain.value_objects.enums import (
     TaskType, TaskStatus, LifecycleStage, DependencyType, DependencyStatus,
     EventType, EventCategory, AttributeType, ArtifactType
 )
@@ -40,7 +45,7 @@ logger = logging.getLogger(__name__)
 
 # Extend the base repository with all the methods
 # (This is temporary during refactoring - methods will be moved to appropriate modules)
-class GenericTaskRepository(GenericTaskRepository):
+class GenericTaskRepository(TaskRepository):
     
     # ============================================
     # Task CRUD Operations (delegated to crud_operations)

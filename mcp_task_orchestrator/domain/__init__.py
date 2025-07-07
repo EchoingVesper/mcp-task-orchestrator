@@ -18,7 +18,7 @@ from .value_objects import (
     TaskStatus, TaskComplexity, TaskPriority,
     SpecialistType, SpecialistCapability,
     ExecutionResult, ExecutionStatus,
-    ArtifactReference, ArtifactType,
+    ArtifactReference,
     TimeWindow, Duration
 )
 
@@ -54,7 +54,7 @@ __all__ = [
     'TaskStatus', 'TaskComplexity', 'TaskPriority',
     'SpecialistType', 'SpecialistCapability',
     'ExecutionResult', 'ExecutionStatus',
-    'ArtifactReference', 'ArtifactType',
+    'ArtifactReference',
     'TimeWindow', 'Duration',
     
     # Exceptions

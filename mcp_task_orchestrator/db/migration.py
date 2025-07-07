@@ -10,6 +10,10 @@ import logging
 from pathlib import Path
 from typing import List, Optional, TYPE_CHECKING
 
+# Import error handling infrastructure
+from ..infrastructure.error_handling.decorators import handle_errors
+from ..infrastructure.error_handling.retry_coordinator import ExponentialBackoffPolicy
+
 # Type hints for IDE support
 if TYPE_CHECKING:
     from ..persistence import PersistenceManager
@@ -58,6 +62,33 @@ class PersistenceMigrator:
         logger.addHandler(file_handler)
         logger.info("Migration logging initialized")
     
+    @handle_errors(
+        auto_retry=True,
+        retry_policy=ExponentialBackoffPolicy(max_attempts=3, base_delay=1.0),
+        component="PersistenceMigrator",
+        operation="migrate_single_task"
+    )
+    def _migrate_single_task(self, task_id: str) -> bool:
+        """Migrate a single task from file-based to database persistence.
+        
+        Args:
+            task_id: ID of the task to migrate
+            
+        Returns:
+            True if migration was successful, False otherwise
+        """
+        # Load task from file-based persistence
+        breakdown = self.source.load_task_breakdown(task_id)
+        
+        if breakdown:
+            # Save task to database-backed persistence
+            self.target.save_task_breakdown(breakdown)
+            logger.info(f"Successfully migrated task {task_id}")
+            return True
+        else:
+            logger.warning(f"Task {task_id} not found in file-based persistence")
+            return False
+    
     def migrate_active_tasks(self) -> int:
         """Migrate all active tasks from file-based to database-backed persistence.
         
@@ -71,21 +102,10 @@ class PersistenceMigrator:
         # Counter for successful migrations
         success_count = 0
         
-        # Migrate each task
+        # Migrate each task using the error-handled helper method
         for task_id in active_task_ids:
-            try:
-                # Load task from file-based persistence
-                breakdown = self.source.load_task_breakdown(task_id)
-                
-                if breakdown:
-                    # Save task to database-backed persistence
-                    self.target.save_task_breakdown(breakdown)
-                    logger.info(f"Successfully migrated task {task_id}")
-                    success_count += 1
-                else:
-                    logger.warning(f"Task {task_id} not found in file-based persistence")
-            except Exception as e:
-                logger.error(f"Error migrating task {task_id}: {str(e)}")
+            if self._migrate_single_task(task_id):
+                success_count += 1
         
         logger.info(f"Migration completed: {success_count}/{len(active_task_ids)} tasks migrated successfully")
         return success_count
@@ -103,21 +123,10 @@ class PersistenceMigrator:
         # Counter for successful migrations
         success_count = 0
         
-        # Migrate each task
+        # Migrate each task using the error-handled helper method
         for task_id in archived_task_ids:
-            try:
-                # Load task from file-based persistence
-                breakdown = self.source.load_task_breakdown(task_id)
-                
-                if breakdown:
-                    # Save task to database-backed persistence
-                    self.target.save_task_breakdown(breakdown)
-                    logger.info(f"Successfully migrated archived task {task_id}")
-                    success_count += 1
-                else:
-                    logger.warning(f"Archived task {task_id} not found in file-based persistence")
-            except Exception as e:
-                logger.error(f"Error migrating archived task {task_id}: {str(e)}")
+            if self._migrate_single_task(task_id):
+                success_count += 1
         
         logger.info(f"Archive migration completed: {success_count}/{len(archived_task_ids)} tasks migrated successfully")
         return success_count

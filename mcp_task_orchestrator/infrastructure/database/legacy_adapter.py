@@ -11,7 +11,8 @@ from datetime import datetime
 import logging
 
 from ...domain.repositories import TaskRepository, StateRepository, SpecialistRepository
-from ...orchestrator.generic_models import GenericTask, TaskStatus
+from ...orchestrator.generic_models import GenericTask
+from ...domain.value_objects.enums import TaskStatus
 from .repository_factory import RepositoryFactory
 
 logger = logging.getLogger(__name__)

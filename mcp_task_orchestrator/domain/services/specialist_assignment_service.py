@@ -12,7 +12,8 @@ from datetime import datetime
 from ..repositories import TaskRepository, StateRepository, SpecialistRepository
 from ..value_objects.specialist_type import SpecialistType
 from ..value_objects.task_status import TaskStatus
-from ...orchestrator.role_loader import get_roles
+# NOTE: Role loading functionality moved to infrastructure layer
+# TODO: Create RoleRepository interface and implement in infrastructure
 
 
 class SpecialistAssignmentService:

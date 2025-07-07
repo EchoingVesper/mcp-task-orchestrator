@@ -17,6 +17,10 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, asdict
 from sqlalchemy.engine import Engine
 
+# Import error handling infrastructure
+from ..infrastructure.error_handling.decorators import handle_errors, suppress_errors
+from ..infrastructure.error_handling.retry_coordinator import FixedDelayPolicy
+
 
 logger = logging.getLogger(__name__)
 
@@ -190,6 +194,13 @@ class BackupManager:
             logger.error(f"Failed to restore backup {backup_info.backup_id}: {e}")
             return False
     
+    @suppress_errors(
+        error_types=[FileNotFoundError, json.JSONDecodeError, PermissionError],
+        default_return=[],
+        log_suppressed=True,
+        component="BackupManager",
+        operation="list_backups"
+    )
     def list_backups(self) -> List[BackupInfo]:
         """
         List all available backups.
@@ -197,20 +208,22 @@ class BackupManager:
         Returns:
             List of BackupInfo objects
         """
-        try:
-            if not self.metadata_file.exists():
-                return []
-            
-            with open(self.metadata_file, 'r') as f:
-                metadata_list = json.load(f)
-            
-            backups = [BackupInfo.from_dict(data) for data in metadata_list]
-            return backups
-            
-        except Exception as e:
-            logger.error(f"Failed to list backups: {e}")
+        if not self.metadata_file.exists():
             return []
+        
+        with open(self.metadata_file, 'r') as f:
+            metadata_list = json.load(f)
+        
+        backups = [BackupInfo.from_dict(data) for data in metadata_list]
+        return backups
     
+    @suppress_errors(
+        error_types=[Exception],
+        default_return=None,
+        log_suppressed=True,
+        component="BackupManager",
+        operation="find_backup_for_migration"
+    )
     def find_backup_for_migration(self, migration_time: datetime, batch_id: Optional[str] = None) -> Optional[BackupInfo]:
         """
         Find the most appropriate backup for a migration rollback.
@@ -222,34 +235,35 @@ class BackupManager:
         Returns:
             Most suitable BackupInfo or None
         """
-        try:
-            backups = self.list_backups()
-            
-            # Filter backups created before migration
-            suitable_backups = [
-                backup for backup in backups
-                if backup.created_at < migration_time
-            ]
-            
-            if not suitable_backups:
-                return None
-            
-            # Prefer backup from same batch if available
-            if batch_id:
-                batch_backups = [
-                    backup for backup in suitable_backups
-                    if backup.migration_batch_id == batch_id
-                ]
-                if batch_backups:
-                    return max(batch_backups, key=lambda b: b.created_at)
-            
-            # Return most recent suitable backup
-            return max(suitable_backups, key=lambda b: b.created_at)
-            
-        except Exception as e:
-            logger.error(f"Failed to find backup for migration: {e}")
+        backups = self.list_backups()
+        
+        # Filter backups created before migration
+        suitable_backups = [
+            backup for backup in backups
+            if backup.created_at < migration_time
+        ]
+        
+        if not suitable_backups:
             return None
+        
+        # Prefer backup from same batch if available
+        if batch_id:
+            batch_backups = [
+                backup for backup in suitable_backups
+                if backup.migration_batch_id == batch_id
+            ]
+            if batch_backups:
+                return max(batch_backups, key=lambda b: b.created_at)
+        
+        # Return most recent suitable backup
+        return max(suitable_backups, key=lambda b: b.created_at)
     
+    @handle_errors(
+        auto_retry=True,
+        retry_policy=FixedDelayPolicy(max_attempts=2, delay=1.0),
+        component="BackupManager",
+        operation="cleanup_old_backups"
+    )
     def cleanup_old_backups(self, keep_days: int = 30) -> int:
         """
         Clean up old backup files.
@@ -262,36 +276,44 @@ class BackupManager:
         """
         logger.info(f"Cleaning up backups older than {keep_days} days...")
         
-        try:
-            cutoff_date = datetime.now() - timedelta(days=keep_days)
-            backups = self.list_backups()
-            
-            deleted_count = 0
-            remaining_backups = []
-            
-            for backup in backups:
-                if backup.created_at < cutoff_date:
-                    # Delete backup file
-                    backup_path = Path(backup.backup_path)
-                    if backup_path.exists():
-                        backup_path.unlink()
-                        logger.debug(f"Deleted backup file: {backup_path}")
-                    
-                    deleted_count += 1
-                else:
-                    remaining_backups.append(backup)
-            
-            # Update metadata file
-            if deleted_count > 0:
-                self._save_backup_metadata(remaining_backups)
-            
-            logger.info(f"Cleaned up {deleted_count} old backups")
-            return deleted_count
-            
-        except Exception as e:
-            logger.error(f"Failed to cleanup old backups: {e}")
-            return 0
+        cutoff_date = datetime.now() - timedelta(days=keep_days)
+        backups = self.list_backups()
+        
+        deleted_count = 0
+        remaining_backups = []
+        
+        for backup in backups:
+            if backup.created_at < cutoff_date:
+                # Delete backup file
+                backup_path = Path(backup.backup_path)
+                if backup_path.exists():
+                    backup_path.unlink()
+                    logger.debug(f"Deleted backup file: {backup_path}")
+                
+                deleted_count += 1
+            else:
+                remaining_backups.append(backup)
+        
+        # Update metadata file
+        if deleted_count > 0:
+            self._save_backup_metadata(remaining_backups)
+        
+        logger.info(f"Cleaned up {deleted_count} old backups")
+        return deleted_count
     
+    @suppress_errors(
+        error_types=[Exception],
+        default_return={
+            'total_backups': 0,
+            'total_size_bytes': 0,
+            'oldest_backup': None,
+            'newest_backup': None,
+            'average_size_bytes': 0
+        },
+        log_suppressed=True,
+        component="BackupManager",
+        operation="get_backup_statistics"
+    )
     def get_backup_statistics(self) -> Dict[str, Any]:
         """
         Get backup statistics.
@@ -299,36 +321,31 @@ class BackupManager:
         Returns:
             Dictionary with backup statistics
         """
-        try:
-            backups = self.list_backups()
-            
-            if not backups:
-                return {
-                    'total_backups': 0,
-                    'total_size_bytes': 0,
-                    'oldest_backup': None,
-                    'newest_backup': None,
-                    'average_size_bytes': 0
-                }
-            
-            total_size = sum(backup.size_bytes for backup in backups)
-            oldest_backup = min(backups, key=lambda b: b.created_at)
-            newest_backup = max(backups, key=lambda b: b.created_at)
-            
-            stats = {
-                'total_backups': len(backups),
-                'total_size_bytes': total_size,
-                'total_size_mb': round(total_size / (1024 * 1024), 2),
-                'oldest_backup': oldest_backup.backup_id,
-                'newest_backup': newest_backup.backup_id,
-                'average_size_bytes': round(total_size / len(backups), 2)
+        backups = self.list_backups()
+        
+        if not backups:
+            return {
+                'total_backups': 0,
+                'total_size_bytes': 0,
+                'oldest_backup': None,
+                'newest_backup': None,
+                'average_size_bytes': 0
             }
-            
-            return stats
-            
-        except Exception as e:
-            logger.error(f"Failed to get backup statistics: {e}")
-            return {}
+        
+        total_size = sum(backup.size_bytes for backup in backups)
+        oldest_backup = min(backups, key=lambda b: b.created_at)
+        newest_backup = max(backups, key=lambda b: b.created_at)
+        
+        stats = {
+            'total_backups': len(backups),
+            'total_size_bytes': total_size,
+            'total_size_mb': round(total_size / (1024 * 1024), 2),
+            'oldest_backup': oldest_backup.backup_id,
+            'newest_backup': newest_backup.backup_id,
+            'average_size_bytes': round(total_size / len(backups), 2)
+        }
+        
+        return stats
     
     def _calculate_file_checksum(self, file_path: Path) -> str:
         """Calculate MD5 checksum of a file."""

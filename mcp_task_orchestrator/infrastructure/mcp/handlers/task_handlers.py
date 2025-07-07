@@ -24,8 +24,12 @@ from ....domain.entities.task import (
 from ....domain.value_objects.complexity_level import ComplexityLevel
 from ....domain.value_objects.specialist_type import SpecialistType
 
-# Import use case and database integration
-from .db_integration import get_generic_task_use_case
+# Import use cases and database integration
+from .db_integration import (
+    get_generic_task_use_case, 
+    get_execute_task_use_case,
+    get_complete_task_use_case
+)
 from ....domain.exceptions import OrchestrationError
 
 logger = logging.getLogger(__name__)
@@ -398,6 +402,160 @@ async def handle_query_tasks(args: Dict[str, Any]) -> List[types.TextContent]:
             "tool": "orchestrator_query_tasks"
         }
         logger.error(f"Error querying tasks: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+
+
+async def handle_execute_task(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle executing a task by providing specialist context and instructions."""
+    try:
+        # Extract required task_id
+        task_id = args.get("task_id")
+        if not task_id:
+            error_response = {
+                "error": "Missing required field: task_id",
+                "required": ["task_id"],
+                "received": list(args.keys())
+            }
+            return [types.TextContent(
+                type="text",
+                text=json.dumps(error_response, indent=2)
+            )]
+
+        logger.info(f"Executing task: {task_id}")
+
+        # Get use case instance
+        use_case = get_execute_task_use_case()
+
+        # Get execution context using use case
+        execution_context = await use_case.get_task_execution_context(task_id)
+
+        # Convert response to dict for serialization
+        response = {
+            "status": "ready_for_execution",
+            "task_id": task_id,
+            "task_title": execution_context.task_title,
+            "task_description": execution_context.task_description,
+            "specialist_type": execution_context.specialist_type,
+            "specialist_context": execution_context.specialist_context,
+            "specialist_prompts": execution_context.specialist_prompts,
+            "execution_instructions": execution_context.execution_instructions,
+            "dependencies_completed": execution_context.dependencies_completed,
+            "estimated_effort": execution_context.estimated_effort,
+            "next_steps": execution_context.next_steps
+        }
+
+        logger.info(f"Task {task_id} ready for execution")
+
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(response, indent=2)
+        )]
+
+    except OrchestrationError as e:
+        error_response = {
+            "error": "Task execution failed",
+            "details": str(e),
+            "tool": "orchestrator_execute_task"
+        }
+        logger.error(f"Orchestration error executing task: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+
+    except Exception as e:
+        error_response = {
+            "error": "Execution setup error",
+            "details": str(e),
+            "tool": "orchestrator_execute_task"
+        }
+        logger.error(f"Error setting up task execution: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+
+
+async def handle_complete_task(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle completing a task with artifact storage to prevent context limit issues."""
+    try:
+        # Extract required fields
+        task_id = args.get("task_id")
+        if not task_id:
+            error_response = {
+                "error": "Missing required field: task_id",
+                "required": ["task_id"],
+                "received": list(args.keys())
+            }
+            return [types.TextContent(
+                type="text",
+                text=json.dumps(error_response, indent=2)
+            )]
+
+        # Validate required completion fields
+        required_fields = ["summary", "detailed_work", "next_action"]
+        missing_fields = [field for field in required_fields if not args.get(field)]
+        if missing_fields:
+            error_response = {
+                "error": f"Missing required fields: {missing_fields}",
+                "required": required_fields,
+                "received": list(args.keys())
+            }
+            return [types.TextContent(
+                type="text",
+                text=json.dumps(error_response, indent=2)
+            )]
+
+        logger.info(f"Completing task: {task_id}")
+
+        # Get use case instance
+        use_case = get_complete_task_use_case()
+
+        # Complete task using use case
+        completion_response = await use_case.complete_task_with_artifacts(task_id, args)
+
+        # Convert response to dict for serialization
+        response = {
+            "status": "success",
+            "task_id": task_id,
+            "message": completion_response.message,
+            "summary": completion_response.summary,
+            "artifact_count": completion_response.artifact_count,
+            "artifact_references": completion_response.artifact_references,
+            "next_action": completion_response.next_action,
+            "completion_time": completion_response.completion_time,
+            "next_steps": completion_response.next_steps
+        }
+
+        logger.info(f"Task {task_id} completed successfully")
+
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(response, indent=2)
+        )]
+
+    except OrchestrationError as e:
+        error_response = {
+            "error": "Task completion failed",
+            "details": str(e),
+            "tool": "orchestrator_complete_task"
+        }
+        logger.error(f"Orchestration error completing task: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+
+    except Exception as e:
+        error_response = {
+            "error": "Completion execution error",
+            "details": str(e),
+            "tool": "orchestrator_complete_task"
+        }
+        logger.error(f"Error completing task: {e}")
         return [types.TextContent(
             type="text",
             text=json.dumps(error_response, indent=2)
