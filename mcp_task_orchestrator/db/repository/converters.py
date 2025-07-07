@@ -14,21 +14,21 @@ import json
 from datetime import datetime
 from typing import Dict
 
-from ...orchestrator.generic_models import (
-    GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
+from ...domain.entities.task import (
+    Task, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
     TaskTemplate, TemplateParameter,
     TaskType, TaskStatus, LifecycleStage, DependencyType, DependencyStatus,
     EventType, EventCategory, AttributeType, ArtifactType
 )
 
 
-def row_to_task(row: Dict) -> GenericTask:
-    """Convert database row to GenericTask."""
+def row_to_task(row: Dict) -> Task:
+    """Convert database row to Task."""
     # Parse JSON fields
     context = json.loads(row['context']) if row['context'] else {}
     config = json.loads(row['configuration']) if row['configuration'] else {}
     
-    return GenericTask(
+    return Task(
         task_id=row['task_id'],
         parent_task_id=row['parent_task_id'],
         title=row['title'],

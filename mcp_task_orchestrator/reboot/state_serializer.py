@@ -16,7 +16,8 @@ from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, asdict
 from enum import Enum
 
-from ..orchestrator.models import TaskBreakdown, SubTask, TaskStatus, SpecialistType
+from ..domain.entities.task import Task, TaskType, TaskStatus
+from ..domain.value_objects.specialist_type import SpecialistType
 
 logger = logging.getLogger("mcp_task_orchestrator.server.state_serializer")
 

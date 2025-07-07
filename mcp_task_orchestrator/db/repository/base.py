@@ -19,8 +19,8 @@ from sqlalchemy.orm import selectinload, joinedload, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy.sql import text
 
-from ...orchestrator.generic_models import (
-    GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
+from ...domain.entities.task import (
+    Task, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
     TaskTemplate, TemplateParameter,
     TaskType, TaskStatus, LifecycleStage, DependencyType, DependencyStatus,
     EventType, EventCategory, AttributeType, ArtifactType
@@ -35,7 +35,7 @@ class CycleDetectedError(Exception):
     pass
 
 
-class GenericTaskRepository:
+class TaskRepository:
     """Repository for Generic Task database operations with async support."""
     
     def __init__(self, db_url: str, sync_mode: bool = False):

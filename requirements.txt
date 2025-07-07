@@ -20,6 +20,7 @@ filelock>=3.12.0
 # Database persistence (SQLAlchemy ORM + migrations)
 sqlalchemy>=2.0.0
 alembic>=1.10.0
+aiosqlite>=0.19.0  # Async SQLite driver for SQLAlchemy
 
 # CLI dependencies
 typer>=0.9.0  # CLI framework for command-line interface

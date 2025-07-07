@@ -318,7 +318,7 @@ class ShutdownCoordinator:
         try:
             # TODO: Get actual state manager instance
             # For now, simulate state serialization
-            from ..orchestrator.state import StateManager
+            from .orchestrator.orchestration_state_manager import StateManager
             
             # Create a mock state manager for testing
             # In real implementation, this would be passed in or obtained from server

@@ -92,7 +92,7 @@ async def query_tasks(repo_instance, filters: Dict[str, Any],
         
         tasks = []
         for row in result:
-            task = row_to_task(dict(row))
+            task = row_to_task(row._mapping)
             # Load minimal related data
             task.attributes = await load_attributes(session, task.task_id)
             tasks.append(task)
@@ -136,7 +136,7 @@ async def search_by_attribute(repo_instance, attribute_name: str,
         
         tasks = []
         for row in result:
-            task = row_to_task(dict(row))
+            task = row_to_task(row._mapping)
             task.attributes = await load_attributes(session, task.task_id)
             tasks.append(task)
         
@@ -196,7 +196,7 @@ async def get_subtree(repo_instance, task_id: str, max_depth: Optional[int] = No
         from .helpers import load_attributes, load_dependencies
         
         for row in result:
-            task = row_to_task(dict(row))
+            task = row_to_task(row._mapping)
             # Load related data
             task.attributes = await load_attributes(session, task.task_id)
             task.dependencies = await load_dependencies(session, task.task_id)

@@ -149,7 +149,7 @@ async def load_attributes(session: AsyncSession, task_id: str) -> List[TaskAttri
     """)
     
     result = await session.execute(stmt, {"task_id": task_id})
-    return [row_to_attribute(dict(row)) for row in result]
+    return [row_to_attribute(row._mapping) for row in result]
 
 
 async def load_dependencies(session: AsyncSession, task_id: str) -> List[TaskDependency]:
@@ -161,7 +161,7 @@ async def load_dependencies(session: AsyncSession, task_id: str) -> List[TaskDep
     """)
     
     result = await session.execute(stmt, {"task_id": task_id})
-    return [row_to_dependency(dict(row)) for row in result]
+    return [row_to_dependency(row._mapping) for row in result]
 
 
 async def load_artifacts(session: AsyncSession, task_id: str) -> List[TaskArtifact]:
@@ -173,7 +173,7 @@ async def load_artifacts(session: AsyncSession, task_id: str) -> List[TaskArtifa
     """)
     
     result = await session.execute(stmt, {"task_id": task_id})
-    return [row_to_artifact(dict(row)) for row in result]
+    return [row_to_artifact(row._mapping) for row in result]
 
 
 async def load_events(session: AsyncSession, task_id: str) -> List[TaskEvent]:
@@ -186,7 +186,7 @@ async def load_events(session: AsyncSession, task_id: str) -> List[TaskEvent]:
     """)
     
     result = await session.execute(stmt, {"task_id": task_id})
-    return [row_to_event(dict(row)) for row in result]
+    return [row_to_event(row._mapping) for row in result]
 
 
 async def load_children(repo_instance, session: AsyncSession, parent_id: str) -> List[GenericTask]:
@@ -205,7 +205,7 @@ async def load_children(repo_instance, session: AsyncSession, parent_id: str) ->
     children = []
     
     for row in result:
-        child = row_to_task(dict(row))
+        child = row_to_task(row._mapping)
         # Load minimal data for children
         child.attributes = await load_attributes(session, child.task_id)
         children.append(child)

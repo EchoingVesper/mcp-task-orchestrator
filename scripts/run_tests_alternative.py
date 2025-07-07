@@ -20,7 +20,7 @@ def run_migration_test():
     print("="*60)
     
     try:
-        from mcp_task_orchestrator.testing.direct_runner import MigrationTestRunner
+        from testing_utils.direct_runner import MigrationTestRunner
         
         runner = MigrationTestRunner()
         result = runner.run_migration_test()
@@ -46,7 +46,7 @@ def run_all_tests():
     print("="*60)
     
     try:
-        from mcp_task_orchestrator.testing.comprehensive_runner import ComprehensiveTestRunner, TestRunnerConfig
+        from testing_utils.comprehensive_runner import ComprehensiveTestRunner, TestRunnerConfig
         
         config = TestRunnerConfig(
             runner_types=['direct', 'integration', 'migration'],
@@ -91,7 +91,7 @@ def run_integration_tests():
     print("="*60)
     
     try:
-        from mcp_task_orchestrator.testing.integration_runner import IntegrationTestRunner
+        from testing_utils.integration_runner import IntegrationTestRunner
         
         runner = IntegrationTestRunner()
         
@@ -166,7 +166,7 @@ def compare_with_pytest():
         print(f"   Alternative result: {'PASSED' if alt_success else 'FAILED'}")
         
         # Count output files
-        from mcp_task_orchestrator.testing.comprehensive_runner import TestRunnerConfig
+        from testing_utils.comprehensive_runner import TestRunnerConfig
         config = TestRunnerConfig()
         output_files = list(config.output_dir.rglob("*.txt"))
         total_output_lines = 0

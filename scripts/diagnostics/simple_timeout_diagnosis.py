@@ -17,9 +17,9 @@ async def test_complete_subtask():
     print("=" * 60)
     
     try:
-        from mcp_task_orchestrator.orchestrator.state import StateManager
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator  
-        from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
+        from .orchestrator.orchestration_state_manager import StateManager
+        from .orchestrator.task_orchestration_service import TaskOrchestrator  
+        from .orchestrator.specialist_management_service import SpecialistManager
         
         print("Imports successful")
         

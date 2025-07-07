@@ -9,15 +9,16 @@ from datetime import datetime, timedelta
 import json
 from typing import Dict, Any
 
-from mcp_task_orchestrator.orchestrator.generic_models import (
-    GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
+from mcp_task_orchestrator.domain.entities.task import (
+    Task, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
     TaskTemplate, TemplateParameter,
     TaskType, TaskStatus, LifecycleStage, DependencyType, DependencyStatus,
     QualityGateLevel, EventType, EventCategory, AttributeType, ArtifactType,
-    LifecycleStateMachine, ComplexityLevel, SpecialistType,
-    create_generic_task_from_breakdown, create_generic_task_from_subtask
+    LifecycleStateMachine
+    # Note: create_task_from_breakdown, create_task_from_subtask removed - legacy models deprecated
 )
-from mcp_task_orchestrator.orchestrator.models import TaskBreakdown, SubTask
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 
 
 class TestTaskAttribute:
@@ -225,12 +226,12 @@ class TestLifecycleStateMachine:
         assert LifecycleStage.CREATED not in allowed
 
 
-class TestGenericTask:
-    """Test GenericTask model."""
+class TestTask:
+    """Test Task model."""
     
     def test_basic_task_creation(self):
         """Test creating a basic task."""
-        task = GenericTask(
+        task = Task(
             task_id="task_1",
             title="Test Task",
             description="A test task",
@@ -244,7 +245,7 @@ class TestGenericTask:
     def test_hierarchy_path_validation(self):
         """Test hierarchy path validation."""
         # Should auto-fix missing leading slash
-        task = GenericTask(
+        task = Task(
             task_id="task_1",
             title="Test",
             description="Test",
@@ -253,7 +254,7 @@ class TestGenericTask:
         assert task.hierarchy_path == "/task_1"
         
         # Should auto-append task_id if missing
-        task = GenericTask(
+        task = Task(
             task_id="task_2",
             title="Test",
             description="Test",
@@ -264,7 +265,7 @@ class TestGenericTask:
     def test_lifecycle_consistency(self):
         """Test status and lifecycle stage consistency."""
         # Active status should set active lifecycle
-        task = GenericTask(
+        task = Task(
             task_id="task_1",
             title="Test",
             description="Test",
@@ -276,7 +277,7 @@ class TestGenericTask:
     
     def test_attribute_management(self):
         """Test adding and retrieving attributes."""
-        task = GenericTask(
+        task = Task(
             task_id="task_1",
             title="Test",
             description="Test",
@@ -301,7 +302,7 @@ class TestGenericTask:
     
     def test_dependency_management(self):
         """Test adding and checking dependencies."""
-        task = GenericTask(
+        task = Task(
             task_id="task_2",
             title="Dependent Task",
             description="Test",
@@ -326,7 +327,7 @@ class TestGenericTask:
     
     def test_event_recording(self):
         """Test recording events."""
-        task = GenericTask(
+        task = Task(
             task_id="task_1",
             title="Test",
             description="Test",
@@ -345,7 +346,7 @@ class TestGenericTask:
     
     def test_storage_conversion(self):
         """Test converting to storage format."""
-        task = GenericTask(
+        task = Task(
             task_id="task_1",
             title="Test",
             description="Test",
@@ -508,7 +509,7 @@ class TestBackwardCompatibility:
     """Test backward compatibility functions."""
     
     def test_convert_task_breakdown(self):
-        """Test converting TaskBreakdown to GenericTask."""
+        """Test converting TaskBreakdown to Task."""
         breakdown = TaskBreakdown(
             parent_task_id="old_task_1",
             description="Implement new feature",
@@ -527,7 +528,7 @@ class TestBackwardCompatibility:
         assert generic.context["original_context"] == "Additional context"
     
     def test_convert_subtask(self):
-        """Test converting SubTask to GenericTask."""
+        """Test converting SubTask to Task."""
         subtask = SubTask(
             task_id="sub_1",
             title="Implement feature",

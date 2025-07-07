@@ -12,7 +12,7 @@ from typing import Optional, Dict, Any
 
 from .state_serializer import StateSerializer, RestartReason, ServerStateSnapshot
 from .shutdown_coordinator import ShutdownCoordinator, ShutdownManager, ShutdownPhase
-from ..orchestrator.state import StateManager
+from ..orchestrator.orchestration_state_manager import StateManager
 
 logger = logging.getLogger("mcp_task_orchestrator.server.reboot_integration")
 

@@ -25,9 +25,9 @@ class TestServer(unittest.TestCase):
                 StateManager,
                 SpecialistManager
             )
-            from mcp_task_orchestrator.orchestrator.models import (
-                TaskBreakdown,
-                SubTask,
+            from mcp_task_orchestrator.domain.entities.task import (
+                Task,
+                TaskType,
                 TaskStatus
             )
             self.assertTrue(True, "All imports successful")

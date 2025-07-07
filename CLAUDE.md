@@ -1,475 +1,712 @@
-# In-Context Server Reboot - Claude Code Development Guide
 
-<worktree_context>
-**Worktree Purpose**: In-Context Server Reboot Mechanism Implementation
-**Branch**: feature/in-context-server-reboot
-**Task ID**: task_2f047d36
-**Priority**: CRITICAL - Development Velocity Blocker  
-**Timeline**: 3 days implementation
-</worktree_context>
+# CLAUDE.md
 
-<critical_file_size_warning>
-⚠️ **CRITICAL: FILE SIZE LIMITS FOR CLAUDE CODE STABILITY** ⚠️
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Maximum File Size**: 500 lines (300-400 lines recommended)
-**Risk**: Files exceeding 500 lines can cause Claude Code to crash or become unresponsive
+#
+# MCP Tools Integration
 
-**Current Status**: Multiple files in this codebase exceed safe limits:
-- `generic_repository.py` (1180 lines) - CRITICAL
-- `task_lifecycle.py` (1132 lines) - CRITICAL  
-- `server.py` (764 lines) - HIGH RISK
-- See full analysis in `.task_orchestrator/artifacts/researcher_3629b7/`
+@/home/aya/.claude/mcp-tools-core.md
 
-**Best Practices**:
-1. Keep all files under 500 lines (ideally 300-400)
-2. Split large files into focused modules
-3. Use subdirectories for logical grouping
-4. Maintain clear module interfaces
-5. Update imports after refactoring
+Available MCP servers provide search, development, and automation capabilities. See user memory for detailed usage patterns.
 
-**If Working with Large Files**:
-- Consider reading specific sections with offset/limit
-- Refactor before making major changes
-- Use the Task Orchestrator to plan modularization
-</critical_file_size_warning>
+#
+# Commands
 
-<context_analysis>
-You are working with the MCP Task Orchestrator project, a production-ready Python-based MCP server with advanced orchestration capabilities. Before taking any action, analyze the current situation:
-
-1. What type of development task are you being asked to perform?
-2. Which project area(s) will be affected?
-3. What is the current git status and any recent changes?
-4. Are there any critical system health indicators to check first?
-</context_analysis>
-
-## Project Overview
-
-**Version**: 1.6.0 (stable, production-ready)  
-**Architecture**: Python-based MCP server with SQLite persistence and enhanced features  
-**Location**: `E:\My Work\Programming\MCP Servers\mcp-task-orchestrator`
-
-<worktree_focus>
-- **Graceful Shutdown**: State serialization and task suspension
-- **Connection Preservation**: MCP client connection maintenance during reboot
-- **State Restoration**: Seamless server restart with preserved state
-- **Reboot Coordination**: Safe reboot triggers and confirmation mechanisms
-- **Integration Support**: Coordination with migration system for automatic reboots
-</worktree_focus>
-
-## Active Task Status
-
-**Current Subtasks** (ready to execute):
-1. **architect_9e06a9**: Design server state serialization and graceful shutdown (6 hours)
-2. **implementer_a8b5f3**: Implement graceful shutdown and state preservation (8 hours)
-3. **implementer_dd2297**: Implement restart mechanism and state restoration (8 hours)
-4. **implementer_9d9414**: Create reboot coordination and trigger mechanisms (4 hours)
-5. **tester_953f91**: Test reboot scenarios and validate client preservation (6 hours)
-6. **documenter_b80ca2**: Document reboot system and operational procedures (3 hours)
-
-## Quick Start Commands
+#
+## Building and Testing
 
 ```bash
-# Execute first architect task  
-# Use MCP tool: mcp__task-orchestrator__orchestrator_execute_subtask
-# Task ID: architect_9e06a9
 
-# Check system health before starting
-python scripts/diagnostics/check_status.py
+# Install in development mode
 
-# Test current server functionality
-python -m mcp_task_orchestrator.server
-```
+pip install -e ".[dev]"
 
-## Pre-Development System Check
+# Run all tests
 
-<reasoning_framework>
-Before making any changes, follow this systematic approach:
+pytest
 
-1. **Health Assessment**: Run diagnostic check to understand current system state
-2. **Git Status Review**: Ensure repository is clean and up-to-date
-3. **Context Selection**: Choose appropriate directory context for your task
-4. **Resource Validation**: Verify system resources and dependencies
-</reasoning_framework>
+# Run specific test categories
 
-### Critical System Diagnostics
-```bash
-# Step 1: Comprehensive health check (ALWAYS run first)
-python scripts/diagnostics/check_status.py
+pytest -m unit           
+# Unit tests only
+pytest -m integration    
+# Integration tests
+pytest -m "not slow"     
+# Skip slow tests
 
-# Step 2: Installation verification if issues found
-python scripts/diagnostics/verify_tools.py
+# Run single test file
 
-# Step 3: Database optimization for performance issues
-python scripts/diagnostics/diagnose_db.py
-```
-<example_diagnostic_workflow>
-**Scenario**: Starting a new development session
+pytest tests/test_server.py -v
 
-**Input**: "I want to add a new feature to the orchestrator"
+# Alternative test runners (more reliable output)
 
-**Reasoning Process**:
-1. Check system health: `python scripts/diagnostics/check_status.py`
-2. Review git status: `git status && git pull origin main`
-3. Identify affected components: Core orchestrator? Database? Testing?
-4. Choose context: `cd mcp_task_orchestrator` for core changes
-5. Validate prerequisites: Dependencies, database schema, test status
-
-**Output**: Ready to proceed with guided development in appropriate context
-</example_diagnostic_workflow>
-
-## Enhanced Development Workflows
-
-### Git Worktrees for Parallel Development
-
-<worktree_strategy>
-**Use Worktrees for Isolated Development**: Multiple tasks simultaneously with complete code isolation
-
-**What are Git Worktrees?**
-- Multiple working directories sharing one Git repository
-- Each worktree can have different branch checked out
-- Perfect for parallel feature development without branch switching
-- Complete file isolation between concurrent Claude Code instances
-
-**Creating New Worktrees**:
-```bash
-# List existing worktrees
-git worktree list
-
-# Create new worktree for a feature
-git worktree add worktrees/feature-name -b feature/feature-name
-
-# Work in the new worktree
-cd worktrees/feature-name && claude
-```
-
-**Worktree Development Workflow**:
-1. **Create worktree**: `git worktree add worktrees/my-feature -b feature/my-feature`
-2. **Develop in isolation**: Make changes without affecting other work
-3. **Commit normally**: `git add . && git commit -m "feat: implement feature"`
-4. **Push branch**: `git push -u origin feature/my-feature`
-5. **Create PR**: `gh pr create` or via GitHub UI
-6. **Clean up after merge**: `git worktree remove worktrees/my-feature`
-
-**Benefits**:
-- Complete isolation between Claude Code instances
-- No branch switching conflicts or stashing needed
-- Test different features simultaneously
-- Parallel development on critical infrastructure
-
-**Best Practices**:
-- Use descriptive worktree names matching feature branches
-- Keep worktrees in a dedicated `worktrees/` directory
-- Clean up worktrees after PRs are merged
-- Document active worktrees in your PR descriptions
-</worktree_strategy>
-
-<workflow_selection>
-Choose your development context based on the task type:
-
-**Parallel Development** → Use Git worktrees (RECOMMENDED for features)
-- Multiple feature development simultaneously
-- Critical infrastructure components
-- Independent testing environments
-- Example: `git worktree add worktrees/feature-name -b feature/feature-name`
-
-**Universal Project Tasks** → Stay in root directory
-- Project-wide changes, documentation updates, git operations
-- Cross-component integration, release management
-
-**Core Implementation** → `cd mcp_task_orchestrator && claude`
-- Orchestrator logic, database operations, MCP protocol
-- Performance optimization, new API endpoints
-
-**Testing Development** → `cd tests && claude`
-- Test infrastructure, validation suites, resource management
-- Test debugging, performance benchmarking
-
-**Documentation Work** → `cd docs && claude`
-- Multi-audience documentation, API docs, user guides
-- Architecture decisions, troubleshooting guides
-
-**System Administration** → `cd scripts && claude`
-- Diagnostic tools, maintenance scripts, deployment
-- Database migrations, system health monitoring
-</workflow_selection>
-
-### Git Worktree Commit and PR Workflow
-
-<worktree_git_workflow>
-**Managing Commits and PRs Across Multiple Worktrees**
-
-**Key Concepts**:
-- Each worktree operates independently on its own branch
-- Commits in one worktree don't affect others
-- Multiple PRs can exist simultaneously from different worktrees
-- All worktrees share the same remote repository
-
-**Commit Workflow for Each Worktree**:
-```bash
-# In worktree 1 (e.g., db-migration)
-cd worktrees/db-migration
-git add .
-git commit -m "feat: implement database migration system"
-git push -u origin feature/automatic-database-migration
-
-# In worktree 2 (e.g., server-reboot) - SIMULTANEOUSLY!
-cd worktrees/server-reboot
-git add .
-git commit -m "feat: implement server reboot mechanism"
-git push -u origin feature/in-context-server-reboot
-```
-
-**Creating Pull Requests**:
-```bash
-# From any worktree
-gh pr create --title "feat: Feature Name" --body "Description"
-
-# Or manually via GitHub UI - each worktree branch gets its own PR
-# PR #1: feature/automatic-database-migration → main
-# PR #2: feature/in-context-server-reboot → main
-```
-
-**Viewing Work Across Worktrees**:
-```bash
-# From anywhere in the repository
-git worktree list                    # Show all worktrees
-git branch -a                        # Show all branches
-git log --oneline --all --graph      # See commits from all worktrees
-```
-
-**After PR Merge - Cleanup**:
-```bash
-# Update main branch
-cd /path/to/main/repository
-git checkout main
-git pull origin main
-
-# Remove completed worktrees
-git worktree remove worktrees/db-migration
-git branch -d feature/automatic-database-migration
-
-# Prune remote tracking branches
-git remote prune origin
-```
-
-**Common Worktree Commands**:
-```bash
-git worktree list                    # List all worktrees
-git worktree add <path> -b <branch>  # Create new worktree
-git worktree remove <path>           # Remove worktree
-git worktree prune                   # Clean up stale worktree data
-```
-
-**Important Notes**:
-- Never force-remove worktrees with uncommitted changes
-- Each worktree maintains its own index and working directory
-- Worktrees are perfect for critical infrastructure work requiring isolation
-- Document active worktrees in team communication
-</worktree_git_workflow>
-
-### Enhanced Testing Infrastructure
-<testing_strategy>
-**Preferred Approach**: Use enhanced test runners for reliability
-
-**Primary Runners** (Use these first):
-```bash
-# Enhanced test runner with improved reliability
-python simple_test_runner.py
-
-# Comprehensive validation with detailed output
-python test_validation_runner.py
-
-# Resource management validation (prevents warnings)
 python tests/test_resource_cleanup.py
-```
+python tests/test_hang_detection.py
+python tests/enhanced_migration_test.py
 
-**Traditional Fallback** (If enhanced runners fail):
-```bash
-# Standard pytest (may have truncation issues)
-python -m pytest tests/ -v
-```
+```text
 
-**Reasoning**: Enhanced runners prevent output truncation, include hang detection, and provide better resource management than standard pytest.
-</testing_strategy>
+#
+## Linting and Formatting
 
-## Legal Protection Documentation Standards
+```text
+bash
 
-<legal_liability_protection>
-⚠️ **CRITICAL: DOCUMENTATION LEGAL RISK MANAGEMENT** ⚠️
+# Format code with Black
 
-**Legal Liability Score**: Current project documents score **7.5/10 HIGH RISK** for potential legal exposure in commercial environments.
+black mcp_task_orchestrator/
 
-**Problem**: Documentation contains warranty language that could trigger lawsuits if tools fail in high-stakes commercial environments where significant financial losses occur.
+# Sort imports
 
-**Required Standards for ALL Documentation**:
+isort mcp_task_orchestrator/
 
-### Prohibited Language (NEVER USE):
-- **Absolute Claims**: "always", "never fails", "guaranteed", "100%", "eliminates", "prevents"
-- **Completeness Warranties**: "complete reference", "comprehensive coverage", "total solution"
-- **Performance Guarantees**: "optimal performance", "seamless integration", "robust handling"
-- **Reliability Assertions**: "production-ready", "enterprise-grade" (without qualification)
-- **Specification Compliance**: "follows all standards", "fully compliant" (without version/scope)
+# Type checking (if mypy is configured)
 
-### Required Protective Language:
-- **Qualifiers**: "designed to", "intended for", "typical conditions", "under normal use"
-- **Scope Limitations**: "available features", "current implementation", "documented capabilities"
-- **Conditional Performance**: "when properly configured", "in supported environments"
-- **Version-Specific**: "as of version X.Y.Z", "subject to change"
+mypy mcp_task_orchestrator/
 
-### Mandatory Disclaimers for Documentation Categories:
+# Lint markdown files
 
-**API Documentation**: "This documentation describes available functionality as implemented. Performance and compatibility may vary based on environment and usage patterns."
+markdownlint docs/ *.md
 
-**User Guides**: "This software is provided 'as is' without warranties. Users should evaluate suitability for their specific use cases."
+```text
 
-**Technical Specifications**: "Specifications subject to change. Verify current behavior through testing in your environment."
+#
+## Markdown Guidelines
 
-**Installation/Setup**: "Installation success depends on system configuration. Troubleshooting may be required for specific environments."
-</legal_liability_protection>
+When creating or editing markdown files, follow these rules to prevent markdownlint warnings:
 
-### Documentation Writing Framework
+**Structure Rules:**
 
-<safe_documentation_patterns>
-**Before Writing ANY Documentation**:
+- Start files with H1 heading (`
+# Title`) on first line (first-line-heading/first-line-h1)
 
-1. **Legal Risk Check**: Does this create warranties, guarantees, or absolute claims?
-2. **Scope Definition**: Are we clearly limiting what we promise?
-3. **User Context**: Could this be used in high-stakes commercial environments?
-4. **Failure Scenarios**: What happens if this claim proves false?
+- Use proper heading hierarchy without skipping levels (no-emphasis-as-heading)
 
-**Safe Language Patterns**:
-```
-❌ RISKY: "This system prevents data loss"
-✅ SAFE: "This system is designed to reduce risk of data loss"
+- End files with single newline (single-trailing-newline)
 
-❌ RISKY: "Complete API reference covering all features"  
-✅ SAFE: "API reference for available features in version X.Y.Z"
+**Spacing Rules:**
 
-❌ RISKY: "Guaranteed seamless integration"
-✅ SAFE: "Designed for integration with supported MCP clients"
+- Add blank lines before and after headings (blanks-around-headings)
 
-❌ RISKY: "Production-ready, enterprise-grade solution"
-✅ SAFE: "Suitable for development and testing environments"
-```
+- Add blank lines before and after lists (blanks-around-lists)
 
-**Documentation Review Checklist**:
-- [ ] No absolute language ("always", "never", "guaranteed")
-- [ ] No unqualified performance claims
-- [ ] Scope clearly defined and limited
-- [ ] Appropriate disclaimers included
-- [ ] Version/environment context provided
-- [ ] Failure scenarios acknowledged where relevant
-</safe_documentation_patterns>
+- Add blank lines before and after code fences (blanks-around-fences)
 
-## PyPI Release Management
+**List Formatting:**
 
-<pypi_release_workflow>
-⚠️ **CRITICAL: PyPI Release Process** ⚠️
+- Use consistent ordered list numbering: `1.` for all items (ol-prefix)
 
-**Package Status**: This project is published to PyPI as `mcp-task-orchestrator`
-**Current Version**: Check `setup.py` line 9 for current version
+- Use `-` for unordered lists consistently (ul-style)
 
-### Development Workflow (Unchanged)
-- **Continue developing in this directory** - this is your source repository
-- **Git operations remain the same** - commit, push, pull requests, branches
-- **All development and testing happens here first**
+- Start top-level list items at left margin (0 spaces indentation) (ul-indent)
 
-### Automated Release Process (RECOMMENDED)
+**Code Block Guidelines:**
 
-**After Merging PRs to Main:**
+- Always specify a language for fenced code blocks (fenced-code-language)
 
-1. **Automated Release (Single Command):**
-   ```bash
-   # Standard patch release (bug fixes)
-   python scripts/release/pypi_release_automation.py
-   
-   # Minor release (new features)
-   python scripts/release/pypi_release_automation.py --version minor
-   
-   # Major release (breaking changes)
-   python scripts/release/pypi_release_automation.py --version major
-   
-   # Test release (upload to TestPyPI)
-   python scripts/release/pypi_release_automation.py --test
-   ```
+- Use `bash`/`shell` for commands, `text` for plain content, `console` for terminal output, `yaml` for configuration, `json` for JSON examples, `python` for Python code
 
-2. **Automation Includes:**
-   - ✅ Safety checks (branch validation, uncommitted changes, upstream sync)
-   - ✅ Version number updates (setup.py, pyproject.toml, __init__.py)
-   - ✅ Test suite execution
-   - ✅ Package building and validation
-   - ✅ PyPI upload with proper authentication
-   - ✅ Git tagging and pushing
-   - ✅ GitHub release creation
-   - ✅ Cleanup of build artifacts
+- Add blank lines before and after code blocks (blanks-around-fences)
 
-3. **Safety Features:**
-   - Must be on main branch
-   - No uncommitted changes allowed
-   - Local main must be up-to-date with remote
-   - Build verification before upload
-   - Confirmation prompts for critical steps
+- When showing code blocks within markdown examples, use indented code blocks (4 spaces) to avoid nesting issues
 
-### Manual Release Process (Fallback)
+- Escape special characters in code: use `\_\_init\_\_.py` instead of `__init__.py` to avoid strong formatting
 
-**If automation fails, use manual process:**
+**Example:**
 
-1. **Version Management** - Update version numbers in these files:
-   ```bash
-   # Update these files with new version (e.g., 1.5.2)
-   setup.py                           # Line 9: version="X.Y.Z"
-   pyproject.toml                     # version field
-   mcp_task_orchestrator/__init__.py  # __version__ (if present)
-   ```
+```text
+markdown
 
-2. **Build and Test Process:**
-   ```bash
-   # Activate PyPI virtual environment
-   source venv_pypi/bin/activate
-   
-   # Build package distributions
-   python setup.py sdist bdist_wheel
-   
-   # Test upload to TestPyPI first
-   python scripts/release/upload.py --test
-   
-   # If test successful, upload to production PyPI
-   python scripts/release/upload.py
-   ```
+# Document Title
 
-3. **Git Release Tagging:**
-   ```bash
-   # After successful PyPI upload, tag the release
-   git tag v1.5.2
-   git push origin v1.5.2
-   ```
+#
+# Section Heading
 
-### Prerequisites for Automation
-```bash
-# Install required packages
-pip install rich python-dotenv twine build
+This is content with proper spacing.
 
-# Configure .env with PyPI tokens
-cp .env.example .env
-# Edit .env with your PyPI API tokens
-```
+- List item 1
 
-### When to Trigger PyPI Release
-- **Bug fixes requiring user updates**
-- **New features ready for public use**
-- **Security patches**
-- **Major milestone releases**
+- List item 2
 
-### What NOT to Upload
-- **Development/experimental changes**
-- **Documentation-only updates**
-- **Internal refactoring without user impact**
-- **Work-in-progress features**
+#
+# Another Section
 
-**Important**: PyPI uploads are permanent and cannot be deleted. Only upload stable, tested versions.
+1. Ordered item 1
 
-### Documentation
-See detailed automation documentation:
-- [PyPI Release Automation Guide](docs/development/PYPI_RELEASE_AUTOMATION.md)
-- [Workflow Integration](docs/development/PYPI_WORKFLOW_INTEGRATION.md)
-</pypi_release_workflow>
+1. Ordered item 2
+
+    
+# Indented code block example
+    echo "This avoids markdown parsing conflicts"
+
+Final paragraph.
+
+```text
+
+**Common Violation Patterns and Solutions (Proven Effective):**
+
+1. **Multiple H1 Headings (MD025)**:
+- **Issue**: Using `#` for all major sections
+- **Solution**: Use `#` only for document title, then `##`, `###` for subsections
+- **Pattern**: `
+# Title` → `## Section` → `### Subsection`
+
+2. **Missing Blank Lines (MD022)**:
+- **Issue**: Headings touching content without spacing
+- **Solution**: Always add blank line before and after headings
+- **Pattern**: `content\n\n
+## Heading\n\ncontent`
+
+3. **Code Block Language Missing (MD040)**:
+- **Issue**: Fenced code blocks without language specification
+- **Solution**: Always specify appropriate language tag
+- **Common Tags**: `bash`, `python`, `yaml`, `json`, `text`, `console`
+
+4. **Inconsistent List Numbering (MD029)**:
+- **Issue**: Using incremental numbering (1., 2., 3.)
+- **Solution**: Use `1.` for all ordered list items (markdown auto-numbers)
+
+5. **Trailing Spaces and Line Issues (MD009, MD012, MD047)**:
+- **Issue**: Extra spaces at line ends, multiple blank lines, missing final newline
+- **Solution**: Remove trailing spaces, use single blank lines, ensure file ends with newline
+
+**Quick Fix Commands:**
+```text
+bash
+
+# Check all markdown files
+
+markdownlint **/*.md
+
+# Fix specific file
+
+markdownlint filename.md
+
+# Common patterns to search and replace
+
+# Multiple H1s: Replace "
+# Section" with "## Section" (except first)
+
+# List numbering: Replace "2. item" with "1. item"
+
+# Trailing spaces: Remove all trailing whitespace
+
+```text
+
+#
+## Package Management
+
+```text
+bash
+
+# Build distribution
+
+python setup.py sdist bdist_wheel
+
+# Install locally
+
+pip install -e .
+
+# PyPI release
+
+python scripts/release/pypi_release_simple.py
+
+```text
+
+#
+## Server Modes
+
+```text
+bash
+
+# Run server in dependency injection mode (default)
+
+MCP_TASK_ORCHESTRATOR_USE_DI=true python -m mcp_task_orchestrator.server
+
+# Run server in legacy mode
+
+MCP_TASK_ORCHESTRATOR_USE_DI=false python -m mcp_task_orchestrator.server
+
+# Use dedicated DI-only server
+
+python -m mcp_task_orchestrator.server_with_di
+
+```text
+
+#
+# Clean Architecture Overview
+
+The MCP Task Orchestrator now follows **Clean Architecture** and **Domain-Driven Design** principles with a complete layered structure:
+
+#
+## Architecture Layers
+
+**1. Domain Layer** (`mcp_task_orchestrator/domain/`):
+
+- **Entities**: Core business objects (Task, Specialist, OrchestrationSession, WorkItem)
+
+- **Value Objects**: Immutable types (TaskStatus, SpecialistType, ExecutionResult, TimeWindow)
+
+- **Exceptions**: Domain-specific error hierarchy with severity levels and recovery strategies
+
+- **Services**: Domain business logic (TaskBreakdownService, SpecialistAssignmentService, etc.)
+
+- **Repositories**: Abstract interfaces for data access (TaskRepository, StateRepository, SpecialistRepository)
+
+**2. Application Layer** (`mcp_task_orchestrator/application/`):
+
+- **Use Cases**: Orchestrate business workflows (OrchestrateTask, ManageSpecialists, TrackProgress)
+
+- **DTOs**: Data transfer objects for clean boundaries between layers
+
+- **Interfaces**: External service contracts (NotificationService, ExternalApiClient)
+
+**3. Infrastructure Layer** (`mcp_task_orchestrator/infrastructure/`):
+
+- **Database**: SQLite implementations of repository interfaces
+
+- **MCP Protocol**: Request/response adapters and server implementation
+
+- **Configuration**: Environment-aware config management and validation
+
+- **Monitoring**: Comprehensive health checks, metrics, and diagnostics
+
+- **Error Handling**: Centralized error processing, retry logic, and recovery strategies
+
+- **Dependency Injection**: Service container with lifetime management
+
+**4. Presentation Layer** (`mcp_task_orchestrator/presentation/`):
+
+- **MCP Server**: Clean architecture entry point with DI integration
+
+- **CLI Interface**: Command-line tools with health checks and configuration management
+
+#
+## Key Architectural Components
+
+**1. Dependency Injection System**:
+
+- ServiceContainer with lifetime management (singleton, transient, scoped)
+
+- Fluent service registration API with automatic dependency resolution
+
+- Hybrid mode supporting both clean architecture and legacy compatibility
+
+**2. Error Handling Infrastructure**:
+
+- Comprehensive exception hierarchy with severity levels (LOW, MEDIUM, HIGH, CRITICAL)
+
+- Automatic retry policies (exponential backoff, linear, fixed delay)
+
+- Intelligent recovery strategies for tasks, specialists, and infrastructure
+
+- Centralized error logging with structured analytics
+
+**3. Monitoring and Diagnostics**:
+
+- Real-time system monitoring with configurable alerts
+
+- Performance metrics collection with trend analysis
+
+- Comprehensive health checks for all system components
+
+- Diagnostic tools with automated recommendations
+
+**4. Task Orchestration System** (`mcp_task_orchestrator/orchestrator/`):
+
+- `task_orchestration_service.py`: Core orchestration logic (renamed from core.py)
+
+- `specialist_management_service.py`: Role-based specialist implementations (renamed from specialists.py)
+
+- `orchestration_state_manager.py`: State management (renamed from state.py)
+
+- `maintenance.py`: Automated cleanup and optimization features
+
+- `generic_models.py`: Flexible task model supporting any task type
+
+**5. Database Layer** (`mcp_task_orchestrator/db/` + `infrastructure/database/`):
+
+- Repository pattern with abstract interfaces and SQLite implementations
+
+- Automatic migrations with rollback capabilities
+
+- Connection management with resource cleanup
+
+- Workspace-aware database organization
+
+**6. Installation System** (`mcp_task_orchestrator_cli/`):
+
+- Modular client detection and configuration
+
+- Support for Claude Desktop, Cursor, Windsurf, VS Code
+
+- Secure installation with validation and rollback
+
+**7. Testing Infrastructure** (`testing_utils/`):
+
+- File-based output system to prevent truncation
+
+- Alternative test runners for reliability
+
+- Comprehensive hang detection and resource management
+
+#
+## Domain-Driven Design Implementation
+
+**Ubiquitous Language**: Core domain concepts consistently used across all layers
+
+- **Task**: Unit of work with lifecycle, complexity, and specialist requirements
+
+- **Specialist**: Role-based AI persona with specific capabilities and context
+
+- **Orchestration Session**: Bounded context for related tasks and state
+
+- **Work Item**: Atomic unit of executable work within a task
+
+- **Artifact**: Stored output from task execution to prevent context limits
+
+**Domain Services** (`domain/services/`):
+
+- `TaskBreakdownService`: Handles task planning and decomposition
+
+- `SpecialistAssignmentService`: Manages specialist selection and context
+
+- `ProgressTrackingService`: Tracks task status and progress
+
+- `ResultSynthesisService`: Combines results from subtasks
+
+- `OrchestrationCoordinator`: Composes all services for complete workflows
+
+#
+## Clean Architecture Task Flow
+
+1. **Presentation** → **Application**: MCP request received, validated, and routed to use case
+
+2. **Application** → **Domain**: Use case orchestrates domain services with business logic
+
+3. **Domain** → **Infrastructure**: Domain services access data through repository interfaces
+
+4. **Infrastructure** → **Database**: Repository implementations handle data persistence
+
+5. **Domain** ← **Infrastructure**: Results flow back through the layers
+
+6. **Presentation** ← **Application**: Clean response returned to MCP client
+
+#
+## SOLID Principles Implementation
+
+- **Single Responsibility**: Each service has one clear purpose (task breakdown, specialist assignment, etc.)
+
+- **Open/Closed**: New specialists and task types can be added without modifying existing code
+
+- **Liskov Substitution**: Repository implementations are interchangeable through interfaces
+
+- **Interface Segregation**: Small, focused interfaces (TaskRepository, StateRepository, etc.)
+
+- **Dependency Inversion**: High-level modules depend on abstractions, not concretions
+
+#
+## Key Design Patterns
+
+- **Clean Architecture**: Dependency flow always points inward toward domain
+
+- **Domain-Driven Design**: Rich domain model with ubiquitous language
+
+- **Repository Pattern**: Abstract data access with pluggable implementations
+
+- **Dependency Injection**: Automatic resolution with configurable lifetimes
+
+- **Strategy Pattern**: Pluggable retry policies and recovery strategies
+
+- **Observer Pattern**: Event-driven error handling and metrics collection
+
+- **Command Pattern**: Use cases encapsulate business operations
+
+- **Factory Pattern**: Service creation through DI container
+
+- **Adapter Pattern**: Infrastructure adapters for external services
+
+#
+# Important Considerations
+
+#
+## File Size Limits
+
+- Keep files under 500 lines (300-400 recommended) to prevent Claude Code crashes
+
+- Large files requiring refactoring:
+  - `db/generic_repository.py` (1180 lines)
+  - `orchestrator/task_lifecycle.py` (1132 lines)
+  - `orchestrator/generic_models.py` (786 lines)
+
+#
+## Database Handling
+
+- Always use context managers for database connections
+
+- Resource cleanup is critical to prevent warnings
+
+- Migrations run automatically on startup
+
+#
+## Testing Best Practices
+
+- Use file-based output for long test results
+
+- Alternative test runners available for reliability
+
+- Resource warnings indicate connection leaks
+
+#
+## Security Considerations
+
+- Never commit API keys or tokens
+
+- Installer validates all operations
+
+- Configuration backups created automatically
+
+#
+## Clean Architecture Development Practices
+
+#
+### Adding a New Domain Entity
+
+1. Create entity in `domain/entities/` with business logic and invariants
+
+2. Add value objects in `domain/value_objects/` for entity properties
+
+3. Define repository interface in `domain/repositories/`
+
+4. Implement repository in `infrastructure/database/sqlite/`
+
+5. Create domain service if complex business logic is needed
+
+6. Register services in DI container configuration
+
+#
+### Adding a New Use Case
+
+1. Create use case in `application/usecases/` following command pattern
+
+2. Define request/response DTOs in `application/dto/`
+
+3. Add any required domain services to support the use case
+
+4. Register use case in DI container
+
+5. Create MCP handler in `infrastructure/mcp/handlers.py`
+
+6. Update MCP server tool definitions
+
+#
+### Adding a New MCP Tool (Clean Architecture Way)
+
+1. Create use case in `application/usecases/` for the business logic
+
+2. Add MCP handler in `infrastructure/mcp/handlers.py` using the use case
+
+3. Update tool definitions in `mcp_request_handlers.py`
+
+4. Add integration tests covering the full flow
+
+5. Document tool usage and examples
+
+#
+### Adding Error Handling
+
+1. Define domain exceptions in `domain/exceptions/` with appropriate severity
+
+2. Use `@handle_errors` decorator for automatic retry and recovery
+
+3. Add specific error handlers in `infrastructure/error_handling/handlers.py`
+
+4. Configure recovery strategies for new error types
+
+5. Test error scenarios and recovery paths
+
+#
+### Adding Monitoring
+
+1. Add metrics using `record_metric()`, `increment_counter()`, or `track_performance()`
+
+2. Create health checks in monitoring system for new components
+
+3. Add alerts for critical thresholds using `AlertRule`
+
+4. Include component in diagnostic runner for troubleshooting
+
+#
+### Debugging Issues (Modern Tools)
+
+```text
+bash
+
+# Comprehensive health check and diagnostics
+
+python tools/diagnostics/health_check.py
+
+# Real-time performance monitoring
+
+python tools/diagnostics/performance_monitor.py --monitor --duration 120
+
+# Run diagnostic analysis
+
+python tools/diagnostics/health_check.py --diagnostics
+
+# Generate full system report
+
+python tools/diagnostics/health_check.py --report system_report.json
+
+# MCP protocol testing
+
+python scripts/diagnostics/test_mcp_protocol.py
+
+```text
+
+#
+# Development Workflow
+
+1. Create feature branch from `main`
+
+2. Write tests first (TDD approach)
+
+3. Implement features incrementally
+
+4. Run full test suite before commits
+
+5. Update documentation as needed
+
+6. Submit PR with clear description
+
+#
+# Project-Specific Notes
+
+- Workspace detection looks for `.git`, `package.json`, `pyproject.toml`
+
+- `.task_orchestrator/` directory created in project root
+
+- Custom roles can be defined per-project
+
+- Database stored in workspace-specific location
+
+- Supports multiple concurrent MCP clients
+
+#
+# File Organization Guidelines
+
+#
+## Root Directory Guidelines
+
+**Keep the root directory clean**. Only place essential files directly in the repository root:
+
+**Allowed in Root:**
+
+- Core project files: `README.md`, `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`
+
+- Configuration files: `pyproject.toml`, `setup.py`, `requirements.txt`
+
+- Critical documentation: `CLAUDE.md`, `QUICK_START.md`, `TESTING_INSTRUCTIONS.md`
+
+- Build artifacts: `build/`, `dist/`, `*.egg-info/`
+
+**NOT Allowed in Root:**
+
+- Test artifacts (`.json` reports, validation files)
+
+- Migration reports and summaries 
+
+- Temporary documentation
+
+- Individual test files
+
+- Backup files
+
+- Log files
+
+#
+## Proper File Placement
+
+**Test Files and Artifacts:**
+```text
+bash
+tests/                          
+# All test files
+docs/archives/test-artifacts/   
+# Test validation reports (*.json)
+docs/archives/migration-reports/  
+# Migration summaries and reports
+
+```text
+
+**Documentation:**
+```text
+bash
+docs/users/           
+# User-facing documentation
+docs/developers/      
+# Developer/contributor documentation  
+docs/archives/        
+# Historical docs, migration reports, test artifacts
+
+```text
+
+**Scripts and Tools:**
+```text
+bash
+scripts/             
+# Utility scripts organized by purpose
+tools/               
+# Production diagnostic tools
+
+```text
+
+**Configuration and Data:**
+```text
+bash
+mcp_task_orchestrator/  
+# Source code only
+archives/               
+# Legacy code and historical artifacts
+backups/               
+# Automatic backups
+
+```text
+
+#
+## Automated File Placement
+
+When creating files, follow these patterns:
+
+- **Test outputs**: Always save to `docs/archives/test-artifacts/`
+
+- **Migration reports**: Save to `docs/archives/migration-reports/`
+
+- **Temporary test files**: Create in `tests/` with appropriate subdirectories
+
+- **Documentation drafts**: Create in appropriate `docs/` subdirectory, not root
+
+- **Analysis reports**: Save to `docs/archives/` with descriptive subdirectory names
+
+#
+## Examples
+
+```text
+bash
+
+# Good ✅
+
+docs/archives/test-artifacts/validation_report_20250707.json
+tests/integration/test_new_feature.py
+docs/developers/architecture/new-design.md
+
+# Bad ❌  
+
+validation_report.json                    
+# Move to docs/archives/test-artifacts/
+test_something.py                        
+# Move to tests/
+MIGRATION_SUMMARY.md                     
+# Move to docs/archives/migration-reports/
+```text

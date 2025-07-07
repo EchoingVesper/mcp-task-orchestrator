@@ -30,9 +30,9 @@ from mcp_task_orchestrator.orchestrator.models import (
     TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
 )
 from mcp_task_orchestrator.persistence import PersistenceManager
-from mcp_task_orchestrator.orchestrator.state import StateManager
-from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
-from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+from .orchestrator.orchestration_state_manager import StateManager
+from .orchestrator.specialist_management_service import SpecialistManager
+from .orchestrator.task_orchestration_service import TaskOrchestrator
 
 async def cleanup_stale_locks():
     """Clean up any stale lock files."""

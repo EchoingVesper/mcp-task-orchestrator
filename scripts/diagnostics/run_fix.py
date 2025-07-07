@@ -1,8 +1,8 @@
 import sqlite3
 import os
 
-# Change to project directory  
-os.chdir(r"E:\My Work\Programming\MCP Servers\mcp-task-orchestrator")
+# Change to project directory
+os.chdir(r"E:\dev\mcp-servers\mcp-task-orchestrator")
 
 print("🔧 Applying emergency database schema fix...")
 

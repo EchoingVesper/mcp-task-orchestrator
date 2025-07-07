@@ -15,6 +15,9 @@ from dataclasses import dataclass
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
 
+# Import error handling infrastructure
+from ..infrastructure.error_handling.decorators import suppress_errors
+
 from .migration_manager import MigrationManager, MigrationOperation, SchemaDifference
 from .schema_comparator import SchemaComparator, SchemaComparisonResult
 from .migration_history import MigrationHistoryManager, MigrationRecord
@@ -306,6 +309,18 @@ class AutoMigrationSystem:
                 'error': str(e)
             }
     
+    @suppress_errors(
+        error_types=[Exception],
+        default_return={
+            'overall_health': 'UNKNOWN',
+            'health_score': 0,
+            'error': 'Health check failed',
+            'last_health_check': datetime.now().isoformat()
+        },
+        log_suppressed=True,
+        component="AutoMigrationSystem",
+        operation="get_system_health"
+    )
     def get_system_health(self) -> Dict[str, Any]:
         """
         Get overall migration system health status.
@@ -313,37 +328,27 @@ class AutoMigrationSystem:
         Returns:
             Dictionary with health information
         """
-        try:
-            # Get migration statistics
-            migration_stats = self.history_manager.get_migration_statistics()
-            
-            # Get backup statistics
-            backup_stats = self.backup_manager.get_backup_statistics()
-            
-            # Check for recent failures
-            failed_migrations = self.history_manager.get_failed_migrations(since_hours=24)
-            
-            # Calculate health score
-            health_score = self._calculate_health_score(migration_stats, failed_migrations)
-            
-            return {
-                'overall_health': 'HEALTHY' if health_score >= 80 else 'WARNING' if health_score >= 60 else 'CRITICAL',
-                'health_score': health_score,
-                'migration_statistics': migration_stats,
-                'backup_statistics': backup_stats,
-                'recent_failures': len(failed_migrations),
-                'recommendations': self._generate_health_recommendations(migration_stats, failed_migrations),
-                'last_health_check': datetime.now().isoformat()
-            }
-            
-        except Exception as e:
-            logger.error(f"Health check failed: {e}")
-            return {
-                'overall_health': 'UNKNOWN',
-                'health_score': 0,
-                'error': str(e),
-                'last_health_check': datetime.now().isoformat()
-            }
+        # Get migration statistics
+        migration_stats = self.history_manager.get_migration_statistics()
+        
+        # Get backup statistics
+        backup_stats = self.backup_manager.get_backup_statistics()
+        
+        # Check for recent failures
+        failed_migrations = self.history_manager.get_failed_migrations(since_hours=24)
+        
+        # Calculate health score
+        health_score = self._calculate_health_score(migration_stats, failed_migrations)
+        
+        return {
+            'overall_health': 'HEALTHY' if health_score >= 80 else 'WARNING' if health_score >= 60 else 'CRITICAL',
+            'health_score': health_score,
+            'migration_statistics': migration_stats,
+            'backup_statistics': backup_stats,
+            'recent_failures': len(failed_migrations),
+            'recommendations': self._generate_health_recommendations(migration_stats, failed_migrations),
+            'last_health_check': datetime.now().isoformat()
+        }
     
     def _calculate_health_score(self, migration_stats: Dict[str, Any], failed_migrations: List[Dict]) -> int:
         """Calculate system health score (0-100)."""

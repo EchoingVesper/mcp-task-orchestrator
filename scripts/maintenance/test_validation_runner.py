@@ -62,7 +62,7 @@ def test_file_output_system():
     print("\n=== Testing File-Based Output System ===")
     
     try:
-        from mcp_task_orchestrator.testing.file_output_system import TestOutputWriter, TestOutputReader
+        from testing_utils.file_output_system import TestOutputWriter, TestOutputReader
         import tempfile
         
         # Create temp directory for test
