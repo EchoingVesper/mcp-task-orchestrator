@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/echoingvesper-mcp-task-orchestrator-badge.png)](https://mseep.ai/app/echoingvesper-mcp-task-orchestrator)
+
 # MCP Task Orchestrator
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
