@@ -17,6 +17,8 @@ from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
 from mcp_task_orchestrator.db.models import Base
 from mcp_task_orchestrator.orchestrator.task_orchestration_service import TaskOrchestrator
 from mcp_task_orchestrator.orchestrator.maintenance import MaintenanceCoordinator
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
 from mcp_task_orchestrator.orchestrator.task_lifecycle import TaskLifecycleManager
 from mcp_task_orchestrator.orchestrator.streaming_artifacts import StreamingArtifactManager
 from mcp_task_orchestrator.orchestrator.artifacts import ArtifactManager
@@ -40,18 +42,21 @@ class TestMaintenanceIntegration:
         Base.metadata.create_all(engine)
         
         # Initialize components
-        state_manager = DatabasePersistenceManager(str(db_path))
+        db_state_manager = DatabasePersistenceManager(str(db_path))
+        state_manager = StateManager(db_state_manager)
+        specialist_manager = SpecialistManager()
         artifact_manager = ArtifactManager(temp_dir)
         streaming_manager = StreamingArtifactManager(temp_dir)
         
         # Create orchestrator
         orchestrator = TaskOrchestrator(
             state_manager=state_manager,
-            artifact_manager=artifact_manager
+            specialist_manager=specialist_manager,
+            project_dir=str(temp_dir)
         )
         
         # Create maintenance components
-        maintenance_coordinator = MaintenanceCoordinator(state_manager, orchestrator)
+        maintenance_coordinator = MaintenanceCoordinator(db_state_manager, orchestrator)
         lifecycle_manager = TaskLifecycleManager(state_manager, artifact_manager)
         
         yield {

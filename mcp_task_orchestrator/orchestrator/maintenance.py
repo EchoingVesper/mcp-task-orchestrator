@@ -14,11 +14,11 @@ from pathlib import Path
 
 from ..db.persistence import DatabasePersistenceManager
 from ..db.models import (
-    TaskBreakdownModel, SubTaskModel, MaintenanceOperationModel,
+    Base, TaskBreakdownModel, SubTaskModel, MaintenanceOperationModel,
     TaskLifecycleModel, StaleTaskTrackingModel, TaskArchiveModel
 )
 from .models import TaskStatus, SpecialistType
-from .core import TaskOrchestrator
+from .task_orchestration_service import TaskOrchestrator
 
 logger = logging.getLogger("mcp_task_orchestrator.maintenance")
 
