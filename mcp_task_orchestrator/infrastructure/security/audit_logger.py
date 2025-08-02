@@ -138,8 +138,8 @@ class SecurityAuditLogger:
                 )
                 syslog_handler.setFormatter(syslog_formatter)
                 self.logger.addHandler(syslog_handler)
-            except (ImportError, FileNotFoundError):
-                # Syslog not available on this system
+            except (ImportError, FileNotFoundError, AttributeError, OSError):
+                # Syslog not available on this system (Unix sockets not supported on Windows)
                 pass
         
         # Log initialization
