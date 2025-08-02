@@ -913,38 +913,30 @@ yaml
 
 1. **Rate Limiting**: Prevent DoS through connection exhaustion
 
-```python
- class PoolSecurityConfig:
-     max_connections_per_client: int = 10
-     connection_rate_limit: int = 100  
-    # per minute
-     blacklist_threshold: int = 3  
-    # failed attempts
-```
+    ```python
+    class PoolSecurityConfig:
+        max_connections_per_client: int = 10
+        connection_rate_limit: int = 100  # per minute
+        blacklist_threshold: int = 3  # failed attempts
+    ```
 
 2. **Connection Validation**: Verify connections before reuse
 
-```python
- async def validate_connection(conn) -> bool:
-     """Validate connection is safe to reuse"""
-
-# Check for pending transactions
-
-# Verify connection integrity
-
-# Reset session state
-
-```
+    ```python
+    async def validate_connection(conn) -> bool:
+        """Validate connection is safe to reuse"""
+        # Check for pending transactions
+        # Verify connection integrity
+        # Reset session state
+    ```
 
 3. **Credential Protection**: Never log connection strings
 
-```python
-   def sanitize_config(config: dict) -> dict:
-       """Remove sensitive data before logging"""
-
-# Mask passwords, API keys, etc
-
-```
+    ```python
+    def sanitize_config(config: dict) -> dict:
+        """Remove sensitive data before logging"""
+        # Mask passwords, API keys, etc
+    ```
 
 ### Input Validation Requirements
 
@@ -1031,8 +1023,7 @@ python scripts/benchmark_pooling.py --compare-before-after
 
 ```
 
-#
-## Stage 5: Production Readiness
+### Stage 5: Production Readiness
 
 ```bash
 
