@@ -83,6 +83,14 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
                 text=str(error_response)
             )]
     
+    # Template system tools
+    elif name.startswith("template_"):
+        from ..template_system.mcp_tools import TEMPLATE_TOOL_HANDLERS
+        if name in TEMPLATE_TOOL_HANDLERS:
+            return await TEMPLATE_TOOL_HANDLERS[name](arguments)
+        else:
+            raise ValueError(f"Unknown template tool: {name}")
+    
     # Reboot tools from existing system
     elif name in REBOOT_TOOL_HANDLERS:
         return await REBOOT_TOOL_HANDLERS[name](arguments)

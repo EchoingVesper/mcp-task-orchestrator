@@ -401,6 +401,10 @@ def get_all_tools() -> List[types.Tool]:
     # Add maintenance tools
     tools.extend(get_maintenance_tools())
     
+    # Add template system tools
+    from ..template_system.mcp_tools import get_template_tools
+    tools.extend(get_template_tools())
+    
     # Add reboot tools from existing system
     tools.extend(REBOOT_TOOLS)
     
