@@ -1,0 +1,57 @@
+{
+  "default": true,
+  "line_length": false,
+  "MD013": false,
+  "MD025": {
+    "front_matter_title": ""
+  },
+  "MD033": {
+    "allowed_elements": ["details", "summary", "br", "kbd", "sup", "sub"]
+  },
+  "MD034": false,
+  "MD036": false,
+  "MD041": true,
+  "MD003": {
+    "style": "atx"
+  },
+  "MD022": {
+    "lines_above": 1,
+    "lines_below": 1
+  },
+  "MD023": true,
+  "MD024": {
+    "allow_different_nesting": true
+  },
+  "MD029": {
+    "style": "one"
+  },
+  "MD040": true,
+  "MD046": {
+    "style": "fenced"
+  },
+  "MD047": true,
+  "MD048": {
+    "style": "backtick"
+  },
+  "MD049": {
+    "style": "underscore"
+  },
+  "MD050": {
+    "style": "asterisk"
+  },
+  "feature-docs-metadata": {
+    "required_fields": ["title", "status", "priority", "category", "version", "description"],
+    "status_values": ["DRAFT", "REVIEW", "APPROVED", "IMPLEMENTED", "COMPLETED", "DEPRECATED"],
+    "priority_values": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+    "category_values": ["CORE", "ENHANCEMENT", "INTEGRATION", "PERFORMANCE", "SECURITY", "TESTING", "DOCUMENTATION"]
+  },
+  "feature-docs-structure": {
+    "required_sections": ["Overview", "Requirements", "Implementation", "Testing", "Dependencies"],
+    "max_file_size": 500,
+    "max_section_size": 100
+  },
+  "feature-docs-references": {
+    "allowed_reference_patterns": ["@/", "docs/", "scripts/", "tools/", "tests/"],
+    "deprecated_patterns": ["task_", "subtask_", "Task ", "Subtask "]
+  }
+}

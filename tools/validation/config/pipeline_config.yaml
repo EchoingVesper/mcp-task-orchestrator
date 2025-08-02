@@ -1,0 +1,116 @@
+pipeline:
+  name: "MCP Task Orchestrator Validation"
+  version: "2.0"
+  fail_fast: true
+  parallel_execution: false
+  timeout_minutes: 30
+  project_root: "/mnt/e/dev/mcp-servers/mcp-task-orchestrator"
+  output_directory: "validation_results"
+
+stages:
+  stage_1:
+    name: "Syntax & Static Analysis"
+    enabled: true
+    timeout_minutes: 5
+    tools:
+      - ruff
+      - mypy
+      - complexity_analyzer
+      - import_analyzer
+    fail_on_error: true
+    
+  stage_2:
+    name: "Unit Testing & Coverage"
+    enabled: true
+    timeout_minutes: 10
+    coverage_threshold: 90
+    test_timeout: 60
+    parallel_tests: true
+    fail_on_error: true
+    
+  stage_3:
+    name: "Integration Testing"
+    enabled: true
+    timeout_minutes: 15
+    test_categories:
+      - mcp_protocol
+      - database_integration
+      - service_integration
+    fail_on_error: true
+    
+  stage_4:
+    name: "Security & Performance"
+    enabled: true
+    timeout_minutes: 20
+    security_checks:
+      - vulnerability_scan
+      - dependency_audit
+      - code_security
+    performance_checks:
+      - memory_profiling
+      - response_time
+      - resource_usage
+    fail_on_error: true
+    
+  stage_5:
+    name: "Production Readiness"
+    enabled: true
+    timeout_minutes: 5
+    checks:
+      - configuration_validation
+      - environment_compatibility
+      - deployment_readiness
+      - documentation_completeness
+    fail_on_error: false  # Warnings only
+
+reporting:
+  formats:
+    - html
+    - json
+    - console
+  output_dir: "validation_results"
+  include_trends: true
+  archive_results: true
+  retention_days: 30
+
+quality_gates:
+  stage_1:
+    syntax_errors: 0
+    ruff_score_min: 9.5
+    mypy_compliance_min: 95
+    complexity_max: 10
+    
+  stage_2:
+    test_pass_rate_min: 100
+    coverage_min: 90
+    critical_path_coverage_min: 99
+    test_execution_time_max: 60
+    
+  stage_3:
+    integration_pass_rate_min: 100
+    mcp_compliance: true
+    database_tests_pass: true
+    
+  stage_4:
+    critical_vulnerabilities: 0
+    high_vulnerabilities_max: 0
+    performance_baseline_deviation_max: 20
+    memory_leak_tolerance: 0
+    
+  stage_5:
+    config_validation_pass: true
+    documentation_completeness_min: 95
+    deployment_tests_pass: true
+
+notifications:
+  enabled: false
+  channels: []
+  failure_only: true
+
+advanced:
+  retry_failed_stages: true
+  max_retries: 2
+  stage_dependencies: true
+  parallel_stage_execution: false
+  cache_results: true
+  incremental_validation: false
