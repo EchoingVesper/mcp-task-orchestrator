@@ -57,11 +57,11 @@ def handle_errors(
                     retry_coordinator = get_retry_coordinator()
                     operation_id = f"{component or 'unknown'}.{func.__name__}"
                     
-                    async def operation():
+                    async def operation_func():
                         return await func(*args, **kwargs)
                     
                     result = await retry_coordinator.retry_async(
-                        operation, operation_id, retry_policy, error_context
+                        operation_func, operation_id, retry_policy, error_context
                     )
                     
                     if result.success:
@@ -103,11 +103,11 @@ def handle_errors(
                     retry_coordinator = get_retry_coordinator()
                     operation_id = f"{component or 'unknown'}.{func.__name__}"
                     
-                    def operation():
+                    def operation_func():
                         return func(*args, **kwargs)
                     
                     result = retry_coordinator.retry_sync(
-                        operation, operation_id, retry_policy, error_context
+                        operation_func, operation_id, retry_policy, error_context
                     )
                     
                     if result.success:

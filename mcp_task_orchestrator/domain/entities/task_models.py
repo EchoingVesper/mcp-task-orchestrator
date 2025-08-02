@@ -8,7 +8,7 @@ to improve modularity and reduce file size.
 import json
 from datetime import datetime
 from typing import Dict, List, Optional, Union, Any, Set, Tuple
-from pydantic import BaseModel, Field, validator, root_validator
+from pydantic import BaseModel, Field, validator, root_validator, model_validator
 
 # Import value objects
 from ..value_objects.complexity_level import ComplexityLevel
@@ -208,7 +208,7 @@ class Task(BaseModel):
             raise ValueError("Task description cannot be empty")
         return v.strip()
     
-    @root_validator
+    @model_validator(mode='before')
     def validate_hierarchy_consistency(cls, values):
         """Validate hierarchy consistency."""
         hierarchy_path = values.get('hierarchy_path', '/')
@@ -224,7 +224,7 @@ class Task(BaseModel):
         
         return values
     
-    @root_validator
+    @model_validator(mode='before')
     def validate_temporal_consistency(cls, values):
         """Validate temporal field consistency."""
         created_at = values.get('created_at')

@@ -22,22 +22,8 @@ def main_sync():
             # Set the current working directory as default
             os.environ['MCP_TASK_ORCHESTRATOR_WORKING_DIR'] = os.getcwd()
         
-        # Import the server.py file directly to avoid server/ package conflict
-        import importlib.util
-        
-        # Get the path to server.py specifically
-        server_py_path = os.path.join(os.path.dirname(__file__), 'server.py')
-        
-        if not os.path.exists(server_py_path):
-            print(f"Error: server.py not found at {server_py_path}", file=sys.stderr)
-            sys.exit(1)
-        
-        # Load server.py as a module to avoid package conflicts
-        spec = importlib.util.spec_from_file_location("mcp_server", server_py_path)
-        server_module = importlib.util.module_from_spec(spec)
-        
-        # Execute the server module
-        spec.loader.exec_module(server_module)
+        # Import server module using proper package import to handle relative imports
+        from . import server as server_module
         
         # Call the main function
         if hasattr(server_module, 'main'):
@@ -64,13 +50,8 @@ def main_sync():
 
 def main_async():
     """Async entry point (for direct async usage)."""
-    # Import the server.py file directly
-    import importlib.util
-    
-    server_py_path = os.path.join(os.path.dirname(__file__), 'server.py')
-    spec = importlib.util.spec_from_file_location("mcp_server", server_py_path)
-    server_module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(server_module)
+    # Import server module using proper package import
+    from . import server as server_module
     
     return server_module.main()
 

@@ -18,32 +18,95 @@ from mcp import types
 
 # Logging setup function
 def setup_logging():
-    """Set up logging configuration."""
+    """Set up MCP-compliant logging configuration."""
     
     # Get log level from environment
     log_level = os.environ.get("MCP_TASK_ORCHESTRATOR_LOG_LEVEL", "INFO")
     
-    # Create a simple logging configuration
+    # Detect if running in MCP server mode (non-interactive environment)
+    is_mcp_server = not sys.stdin.isatty()
+    
+    # Configure logging based on mode for MCP protocol compliance
+    if is_mcp_server:
+        # MCP mode: Use stderr and reduce noise for protocol compliance
+        handler = logging.StreamHandler(sys.stderr)
+        effective_level = max(getattr(logging, log_level), logging.WARNING)
+    else:
+        # CLI mode: Use stdout for visibility
+        handler = logging.StreamHandler(sys.stdout)
+        effective_level = getattr(logging, log_level)
+    
+    # Create MCP-compliant logging configuration
     logging.basicConfig(
-        level=getattr(logging, log_level),
+        level=effective_level,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[logging.StreamHandler(sys.stdout)]
+        handlers=[handler],
+        force=True  # Override any existing configuration
     )
     
-    return logging.getLogger("mcp_task_orchestrator")
+    logger = logging.getLogger("mcp_task_orchestrator")
+    
+    # Log the configuration for debugging (only in non-MCP mode)
+    if not is_mcp_server:
+        logger.info(f"Logging configured for CLI mode: level={log_level}, output=stdout")
+    
+    return logger
 
 
-# Placeholder DI functions
-def enable_dependency_injection():
-    """Enable dependency injection (placeholder)."""
-    # TODO: Implement full DI logic when needed
-    logging.getLogger(__name__).info("Dependency injection mode requested")
+# Dependency injection setup
+async def enable_dependency_injection():
+    """Enable dependency injection and initialize core services."""
+    logger = logging.getLogger(__name__)
+    logger.info("Initializing dependency injection container...")
+    
+    from ...di.container import get_container, register_services
+    from ...di.registration import LifetimeScope
+    from ....reboot.reboot_integration import initialize_reboot_system, get_reboot_manager
+    from ....orchestrator.orchestration_state_manager import StateManager
+    
+    def configure_services(registrar):
+        """Configure all services in the DI container."""
+        
+        # Register StateManager as singleton
+        registrar.register_factory(StateManager, lambda container: StateManager()).as_singleton()
+        
+        # Register RebootManager - singleton that gets initialized with StateManager
+        registrar.register_factory(
+            type(get_reboot_manager()), 
+            lambda container: get_reboot_manager()
+        ).as_singleton()
+    
+    # Configure services
+    register_services(configure_services)
+    
+    # Initialize the reboot system
+    try:
+        container = get_container()
+        state_manager = container.get_service(StateManager)
+        
+        # StateManager initializes automatically in constructor
+        
+        # Initialize reboot system with state manager
+        await initialize_reboot_system(state_manager)
+        
+        logger.info("Dependency injection and core services initialized successfully")
+        
+    except Exception as e:
+        logger.error(f"Failed to initialize core services: {e}")
+        raise
 
 
 def disable_dependency_injection():
-    """Disable dependency injection (placeholder).""" 
-    # TODO: Implement full DI cleanup when needed
-    logging.getLogger(__name__).info("Dependency injection disabled")
+    """Disable dependency injection and cleanup resources."""
+    logger = logging.getLogger(__name__)
+    logger.info("Cleaning up dependency injection container...")
+    
+    try:
+        from ...di.container import reset_container
+        reset_container()
+        logger.info("Dependency injection container cleaned up")
+    except Exception as e:
+        logger.warning(f"Error during DI cleanup: {e}")
 
 
 # Core handler functions - simplified implementations for now

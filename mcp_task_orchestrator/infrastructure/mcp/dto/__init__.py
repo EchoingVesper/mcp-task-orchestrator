@@ -43,7 +43,8 @@ from .task_dtos import (
     
     # Common response components
     ErrorDetail,
-    NextStep
+    NextStep,
+    MCPErrorResponse
 )
 
 __all__ = [
@@ -71,5 +72,6 @@ __all__ = [
     
     # Common components
     "ErrorDetail",
-    "NextStep"
+    "NextStep",
+    "MCPErrorResponse"
 ]

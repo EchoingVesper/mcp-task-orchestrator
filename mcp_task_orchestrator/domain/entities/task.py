@@ -9,7 +9,7 @@ extensible architecture supporting rich task management capabilities.
 from datetime import datetime
 from enum import Enum
 from typing import Dict, List, Optional, Union, Any, Set, Tuple
-from pydantic import BaseModel, Field, validator, root_validator, ValidationError
+from pydantic import BaseModel, Field, validator, root_validator, ValidationError, model_validator, ConfigDict, field_validator
 import json
 from pathlib import Path
 import re
@@ -17,6 +17,13 @@ import re
 # Import value objects from domain layer
 from ..value_objects.complexity_level import ComplexityLevel
 from ..value_objects.flexible_specialist_type import validate_specialist_type as validate_specialist_type_func
+
+# Import security framework for input validation
+from ...infrastructure.security.validators import (
+    validate_string_input, 
+    validate_task_id,
+    ValidationError as SecurityValidationError
+)
 
 
 # ============================================
@@ -306,7 +313,7 @@ class TaskDependency(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     satisfied_at: Optional[datetime] = None
     
-    @root_validator(skip_on_failure=True)
+    @model_validator(mode='before')
     def validate_dependency_logic(cls, values):
         """Validate dependency configuration logic."""
         dep_type = values.get('dependency_type')
@@ -411,7 +418,7 @@ class TaskArtifact(BaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     
-    @root_validator(skip_on_failure=True)
+    @model_validator(mode='before')
     def validate_content_storage(cls, values):
         """Ensure artifact has either content or file reference."""
         if not values.get('content') and not values.get('file_reference'):
@@ -434,8 +441,8 @@ class Task(BaseModel):
     parent_task_id: Optional[str] = Field(None, description="Parent task for hierarchy")
     
     # Basic information
-    title: str = Field(..., description="Task title")
-    description: str = Field(..., description="Detailed description")
+    title: str = Field(..., min_length=1, max_length=255, description="Task title")
+    description: str = Field(..., max_length=2000, description="Detailed description")
     task_type: TaskType = Field(default=TaskType.STANDARD, description="Type of task")
     
     # Hierarchy management
@@ -512,7 +519,7 @@ class Task(BaseModel):
             
         return v
     
-    @root_validator(skip_on_failure=True)
+    @model_validator(mode='before')
     def validate_lifecycle_consistency(cls, values):
         """Ensure status and lifecycle stage are consistent."""
         status = values.get('status')
@@ -622,12 +629,55 @@ class Task(BaseModel):
             data['configuration'] = json.dumps(data['configuration'])
         return data
     
-    class Config:
-        """Pydantic configuration."""
-        use_enum_values = True
-        json_encoders = {
+    # Security validators for XSS prevention and input sanitization
+    @field_validator('title', 'description')
+    @classmethod
+    def prevent_xss_and_sanitize(cls, v: str, info) -> str:
+        """Prevent XSS attacks and sanitize input in text fields."""
+        if not v:
+            return v
+        
+        try:
+            # Use security framework for validation and sanitization
+            field_name = info.field_name if info else "text_field"
+            sanitized_value = validate_string_input(v, field_name)
+            return sanitized_value.strip()
+        except SecurityValidationError as e:
+            raise ValueError(f"Security validation failed for {info.field_name if info else 'field'}: {str(e)}")
+    
+    @field_validator('task_id')
+    @classmethod
+    def validate_task_identifier(cls, v: str) -> str:
+        """Validate task ID for security and format compliance."""
+        if not v:
+            raise ValueError("Task ID cannot be empty")
+        
+        try:
+            return validate_task_id(v)
+        except SecurityValidationError as e:
+            raise ValueError(f"Invalid task ID format: {str(e)}")
+    
+    @field_validator('parent_task_id')
+    @classmethod
+    def validate_parent_task_identifier(cls, v: Optional[str]) -> Optional[str]:
+        """Validate parent task ID if provided."""
+        if v is None:
+            return v
+        
+        try:
+            return validate_task_id(v)
+        except SecurityValidationError as e:
+            raise ValueError(f"Invalid parent task ID format: {str(e)}")
+
+    model_config = ConfigDict(
+        extra='forbid',                    # Reject unknown fields
+        validate_assignment=True,          # Runtime validation 
+        str_strip_whitespace=True,        # Auto-sanitization
+        use_enum_values=True,             # Keep existing enum behavior
+        json_encoders={
             datetime: lambda v: v.isoformat()
         }
+    )
 
 
 # Enable forward reference resolution

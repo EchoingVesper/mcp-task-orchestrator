@@ -76,25 +76,40 @@ class StateManager:
         
         # Mark as initialized and perform startup tasks
         self._initialized = True
+        self._async_initialized = False
         
-        # Attempt to recover any interrupted tasks
-        self._recover_interrupted_tasks()
-        
-        # Clean up any stale locks
-        self._cleanup_stale_locks()
+        # Note: Async initialization tasks are deferred to first use
+        # to avoid blocking the constructor
     
-    def _recover_interrupted_tasks(self):
+    async def _initialize(self):
+        """Perform async initialization tasks."""
+        if self._async_initialized:
+            return
+        
+        try:
+            # Attempt to recover any interrupted tasks
+            await self._recover_interrupted_tasks()
+            
+            # Clean up any stale locks
+            await self._cleanup_stale_locks()
+            
+            self._async_initialized = True
+            logger.info("Async initialization completed")
+        except Exception as e:
+            logger.error(f"Async initialization failed: {e}")
+    
+    async def _recover_interrupted_tasks(self):
         """Attempt to recover any interrupted tasks from persistent storage."""
         try:
             # Get all active tasks from persistent storage
-            active_task_ids = self.persistence.get_all_active_tasks()
+            active_task_ids = await self.persistence.get_all_active_tasks()
             logger.info(f"Found {len(active_task_ids)} active tasks in persistent storage")
             
             # Load each task into memory
             for task_id in active_task_ids:
                 try:
                     # Load the task breakdown from persistent storage
-                    breakdown = self.persistence.load_task_breakdown(task_id)
+                    breakdown = await self.persistence.load_task_breakdown(task_id)
                     if breakdown:
                         logger.info(f"Recovered task {task_id} from persistent storage")
                 except Exception as e:
@@ -102,12 +117,12 @@ class StateManager:
         except Exception as e:
             logger.error(f"Failed to recover interrupted tasks: {str(e)}")
     
-    def _cleanup_stale_locks(self):
+    async def _cleanup_stale_locks(self):
         """Clean up any stale locks at startup."""
         try:
             # Use the persistence manager to clean up stale locks
             # Using a shorter timeout (2 minutes instead of 5)
-            cleaned = self.persistence.cleanup_stale_locks(max_age_seconds=120)
+            cleaned = await self.persistence.cleanup_stale_locks(max_age_seconds=120)
             if cleaned > 0:
                 logger.info(f"Cleaned up {cleaned} stale locks at startup")
         except Exception as e:
@@ -116,9 +131,12 @@ class StateManager:
     async def store_task_breakdown(self, breakdown: Task):
         """Store a task breakdown and its subtasks using persistence manager only."""
         async with self.lock:
+            # Ensure async initialization is complete
+            await self._initialize()
+            
             try:
                 # Store in persistent storage - this handles all database operations
-                self.persistence.save_task_breakdown(breakdown)
+                await self.persistence.save_task_breakdown(breakdown)
                 logger.info(f"Saved task breakdown {breakdown.parent_task_id} to persistent storage")
             except Exception as e:
                 logger.error(f"Failed to save task breakdown to persistent storage: {str(e)}")
@@ -127,14 +145,17 @@ class StateManager:
     async def get_subtask(self, task_id: str, timeout: int = 10) -> Optional[Task]:
         """Retrieve a specific subtask by ID - simplified version."""
         async with self.lock:
+            # Ensure async initialization is complete
+            await self._initialize()
+            
             try:
                 # Get parent task ID first
-                parent_task_id = self.persistence.get_parent_task_id(task_id)
+                parent_task_id = await self.persistence.get_parent_task_id(task_id)
                 if not parent_task_id:
                     return None
                 
                 # Load the task breakdown from persistent storage
-                breakdown = self.persistence.load_task_breakdown(parent_task_id)
+                breakdown = await self.persistence.load_task_breakdown(parent_task_id)
                 if breakdown:
                     for subtask in breakdown.subtasks:
                         if subtask.task_id == task_id:
@@ -150,13 +171,16 @@ class StateManager:
     async def update_subtask(self, subtask: Task):
         """Update an existing subtask using persistence manager only - simplified version."""
         async with self.lock:
+            # Ensure async initialization is complete
+            await self._initialize()
+            
             try:
                 # Get parent task ID for persistence
-                parent_task_id = self.persistence.get_parent_task_id(subtask.task_id)
+                parent_task_id = await self.persistence.get_parent_task_id(subtask.task_id)
                 
                 if parent_task_id:
                     # Update in persistent storage
-                    self.persistence.update_subtask(subtask, parent_task_id)
+                    await self.persistence.update_subtask(subtask, parent_task_id)
                     logger.info(f"Updated subtask {subtask.task_id} in persistent storage")
                     
                     # If the task is completed, check if we should archive the parent task
@@ -175,21 +199,21 @@ class StateManager:
         INTERNAL METHOD - assumes lock is already held by caller.
         """
         # Use internal method that doesn't acquire lock (since we already have it)
-        subtasks = self._get_subtasks_for_parent_unlocked(parent_task_id)
+        subtasks = await self._get_subtasks_for_parent_unlocked(parent_task_id)
         
         # If all subtasks are completed, archive the task
         if subtasks and all(st.status == TaskStatus.COMPLETED for st in subtasks):
             try:
-                self.persistence.archive_task(parent_task_id)
+                await self.persistence.archive_task(parent_task_id)
                 logger.info(f"Archived completed task {parent_task_id}")
             except Exception as e:
                 logger.error(f"Failed to archive completed task {parent_task_id}: {str(e)}")
                 # Continue execution even if archiving fails
     
-    def _get_subtasks_for_parent_unlocked(self, parent_task_id: str) -> List[Task]:
+    async def _get_subtasks_for_parent_unlocked(self, parent_task_id: str) -> List[Task]:
         """Get all subtasks for a given parent task - INTERNAL METHOD without lock."""
         try:
-            breakdown = self.persistence.load_task_breakdown(parent_task_id)
+            breakdown = await self.persistence.load_task_breakdown(parent_task_id)
             if breakdown:
                 logger.info(f"Retrieved subtasks for parent task {parent_task_id} from persistent storage")
                 return breakdown.subtasks
@@ -203,21 +227,26 @@ class StateManager:
     async def get_subtasks_for_parent(self, parent_task_id: str) -> List[Task]:
         """Get all subtasks for a given parent task using persistence manager only."""
         async with self.lock:
-            return self._get_subtasks_for_parent_unlocked(parent_task_id)
+            # Ensure async initialization is complete
+            await self._initialize()
+            return await self._get_subtasks_for_parent_unlocked(parent_task_id)
     
     async def get_all_tasks(self) -> List[Task]:
         """Get all tasks in the system using persistence manager only."""
         async with self.lock:
+            # Ensure async initialization is complete
+            await self._initialize()
+            
             all_subtasks = []
             
             try:
                 # Get all active tasks from persistent storage
-                active_task_ids = self.persistence.get_all_active_tasks()
+                active_task_ids = await self.persistence.get_all_active_tasks()
                 
                 # Load each task breakdown and extract subtasks
                 for parent_task_id in active_task_ids:
                     try:
-                        breakdown = self.persistence.load_task_breakdown(parent_task_id)
+                        breakdown = await self.persistence.load_task_breakdown(parent_task_id)
                         if breakdown:
                             all_subtasks.extend(breakdown.subtasks)
                     except Exception as e:
@@ -241,8 +270,11 @@ class StateManager:
             The parent task ID, or None if subtask not found
         """
         async with self.lock:
+            # Ensure async initialization is complete
+            await self._initialize()
+            
             try:
-                return self.persistence.get_parent_task_id(task_id)
+                return await self.persistence.get_parent_task_id(task_id)
             except Exception as e:
                 logger.error(f"Error getting parent task ID for {task_id}: {str(e)}")
                 return None

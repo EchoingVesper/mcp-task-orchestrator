@@ -18,6 +18,14 @@ from ....domain.exceptions import OrchestrationError
 from ....orchestrator.task_orchestration_service import TaskOrchestrator
 from ....orchestrator.orchestration_state_manager import StateManager
 from ....orchestrator.specialist_management_service import SpecialistManager
+
+# Import security framework for path validation
+from ...security.validators import (
+    validate_file_path,
+    validate_task_id,
+    ValidationError as SecurityValidationError
+)
+from ...security.audit_logger import log_path_traversal
 from ....domain.entities.task import Task, TaskType, TaskStatus
 from ....domain.value_objects.complexity_level import ComplexityLevel
 from ....domain.value_objects.specialist_type import SpecialistType
@@ -33,9 +41,29 @@ class ArtifactService:
         self.base_dir.mkdir(parents=True, exist_ok=True)
     
     async def store_artifact(self, task_id: str, content: str, artifact_type: str, metadata: Dict[str, Any]):
-        """Store an artifact for a task."""
-        artifact_id = f"artifact_{uuid.uuid4().hex[:8]}"
-        artifact_path = self.base_dir / f"{task_id}_{artifact_id}.txt"
+        """Store an artifact for a task with security validation."""
+        try:
+            # Validate task_id for security compliance
+            safe_task_id = validate_task_id(task_id)
+            
+            # Generate secure artifact filename
+            artifact_id = f"artifact_{uuid.uuid4().hex[:8]}"
+            
+            # Create filename with validated task_id
+            filename = f"{safe_task_id}_{artifact_id}.txt"
+            
+            # Validate the complete file path to prevent traversal attacks
+            artifact_path = validate_file_path(filename, self.base_dir, "artifact_path")
+            
+        except SecurityValidationError as e:
+            # Log security violation attempt
+            log_path_traversal(
+                attempted_path=task_id, 
+                base_directory=str(self.base_dir),
+                details={"artifact_type": artifact_type, "error": str(e)},
+                user_id=None  # TODO: Add user context when authentication is integrated
+            )
+            raise OrchestrationError(f"Invalid file path: Security validation failed")
         
         # Store content to file
         with open(artifact_path, 'w', encoding='utf-8') as f:
@@ -51,6 +79,45 @@ class ArtifactService:
             size=len(content),
             metadata=metadata
         )
+
+# Compatibility wrapper
+class MockTaskResult:
+    """Wrapper to make real Task objects compatible with mock interface."""
+    
+    def __init__(self, task: Task):
+        self._task = task
+        self.id = task.task_id
+        self.title = task.title
+        self.description = task.description
+        self.status = task.status.value if hasattr(task.status, 'value') else str(task.status)
+        self.lifecycle_stage = "initialized"
+        self.complexity = task.complexity.value if hasattr(task.complexity, 'value') else str(task.complexity)
+        self.specialist_type = task.metadata.get("specialist", "generic")
+        self.task_type = task.task_type.value if hasattr(task.task_type, 'value') else str(task.task_type)
+        self.created_at = task.created_at
+        self.updated_at = task.updated_at
+        self.due_date = getattr(task, 'due_date', None)
+        self.started_at = getattr(task, 'started_at', None)
+        self.completed_at = getattr(task, 'completed_at', None)
+        self.deleted_at = getattr(task, 'deleted_at', None)
+    
+    def dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "status": self.status,
+            "lifecycle_stage": self.lifecycle_stage,
+            "complexity": self.complexity,
+            "specialist_type": self.specialist_type,
+            "task_type": self.task_type,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "due_date": self.due_date,
+            "started_at": self.started_at,
+            "completed_at": self.completed_at,
+            "deleted_at": self.deleted_at
+        }
 
 # Real implementations using existing orchestrator system
 class RealTaskUseCase:
@@ -92,44 +159,248 @@ class RealTaskUseCase:
         except Exception as e:
             logger.error(f"Failed to create real task: {str(e)}")
             raise OrchestrationError(f"Task creation failed: {str(e)}")
-
-class MockTaskResult:
-    """Wrapper to make real Task objects compatible with mock interface."""
     
-    def __init__(self, task: Task):
-        self._task = task
-        self.id = task.task_id
-        self.title = task.title
-        self.description = task.description
-        self.status = task.status.value if hasattr(task.status, 'value') else str(task.status)
-        self.lifecycle_stage = "initialized"
-        self.complexity = task.complexity.value if hasattr(task.complexity, 'value') else str(task.complexity)
-        self.specialist_type = task.metadata.get("specialist", "generic")
-        self.task_type = task.task_type.value if hasattr(task.task_type, 'value') else str(task.task_type)
-        self.created_at = task.created_at
-        self.updated_at = task.updated_at
-        self.due_date = getattr(task, 'due_date', None)
-        self.started_at = getattr(task, 'started_at', None)
-        self.completed_at = getattr(task, 'completed_at', None)
-        self.deleted_at = getattr(task, 'deleted_at', None)
+    async def update_task(self, task_id: str, update_data: Dict[str, Any]) -> MockTaskResult:
+        """Update an existing task using the state manager."""
+        try:
+            # Get the existing task first
+            existing_task = await self.state_manager.get_subtask(task_id)
+            if not existing_task:
+                raise OrchestrationError(f"Task {task_id} not found")
+            
+            # Update the task fields with new data
+            updated_task = Task(
+                task_id=existing_task.task_id,
+                title=update_data.get("title", existing_task.title),
+                description=update_data.get("description", existing_task.description),
+                task_type=existing_task.task_type,
+                status=TaskStatus(update_data.get("status", existing_task.status.value)) if "status" in update_data else existing_task.status,
+                complexity=ComplexityLevel(update_data.get("complexity", existing_task.complexity.value)) if "complexity" in update_data else existing_task.complexity,
+                specialist_type=update_data.get("specialist_type", existing_task.metadata.get("specialist", "generic")),
+                created_at=existing_task.created_at,
+                updated_at=datetime.utcnow(),
+                metadata={**existing_task.metadata, **update_data.get("context", {})}
+            )
+            
+            # Use state manager to update the task
+            await self.state_manager.update_subtask(updated_task)
+            
+            logger.info(f"Successfully updated task {task_id}")
+            return MockTaskResult(updated_task)
+            
+        except Exception as e:
+            logger.error(f"Failed to update task {task_id}: {str(e)}")
+            raise OrchestrationError(f"Task update failed: {str(e)}")
     
-    def dict(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "status": self.status,
-            "lifecycle_stage": self.lifecycle_stage,
-            "complexity": self.complexity,
-            "specialist_type": self.specialist_type,
-            "task_type": self.task_type,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-            "due_date": self.due_date,
-            "started_at": self.started_at,
-            "completed_at": self.completed_at,
-            "deleted_at": self.deleted_at
-        }
+    async def delete_task(self, task_id: str, force: bool = False, archive_instead: bool = True) -> Dict[str, Any]:
+        """Delete or archive a task using the state manager."""
+        try:
+            # Get the existing task first
+            existing_task = await self.state_manager.get_subtask(task_id)
+            if not existing_task:
+                raise OrchestrationError(f"Task {task_id} not found")
+            
+            if archive_instead and not force:
+                # Archive the task by updating its status
+                archived_task = Task(
+                    task_id=existing_task.task_id,
+                    title=existing_task.title,
+                    description=existing_task.description,
+                    task_type=existing_task.task_type,
+                    status=TaskStatus.ARCHIVED,
+                    complexity=existing_task.complexity,
+                    specialist_type=existing_task.metadata.get("specialist", "generic"),
+                    created_at=existing_task.created_at,
+                    updated_at=datetime.utcnow(),
+                    metadata={**existing_task.metadata, "archived_at": datetime.utcnow().isoformat()}
+                )
+                
+                await self.state_manager.update_subtask(archived_task)
+                logger.info(f"Successfully archived task {task_id}")
+                
+                return {
+                    "success": True,
+                    "task_id": task_id,
+                    "action": "archived",
+                    "message": f"Task {task_id} has been archived",
+                    "archived_at": datetime.utcnow().isoformat()
+                }
+            else:
+                # Force deletion - mark as deleted
+                deleted_task = Task(
+                    task_id=existing_task.task_id,
+                    title=existing_task.title,
+                    description=existing_task.description,
+                    task_type=existing_task.task_type,
+                    status=TaskStatus.CANCELLED,
+                    complexity=existing_task.complexity,
+                    specialist_type=existing_task.metadata.get("specialist", "generic"),
+                    created_at=existing_task.created_at,
+                    updated_at=datetime.utcnow(),
+                    metadata={**existing_task.metadata, "deleted_at": datetime.utcnow().isoformat(), "force_deleted": force}
+                )
+                
+                await self.state_manager.update_subtask(deleted_task)
+                logger.info(f"Successfully deleted task {task_id}")
+                
+                return {
+                    "success": True,
+                    "task_id": task_id,
+                    "action": "deleted",
+                    "message": f"Task {task_id} has been deleted",
+                    "deleted_at": datetime.utcnow().isoformat()
+                }
+                
+        except Exception as e:
+            logger.error(f"Failed to delete task {task_id}: {str(e)}")
+            return {
+                "success": False,
+                "task_id": task_id,
+                "action": "delete_failed",
+                "message": f"Task deletion failed: {str(e)}",
+                "error": str(e)
+            }
+    
+    async def cancel_task(self, task_id: str, reason: str, preserve_work: bool = True) -> Dict[str, Any]:
+        """Cancel a task while optionally preserving work artifacts."""
+        try:
+            # Get the existing task first
+            existing_task = await self.state_manager.get_subtask(task_id)
+            if not existing_task:
+                raise OrchestrationError(f"Task {task_id} not found")
+            
+            # Cancel the task by updating its status
+            cancelled_task = Task(
+                task_id=existing_task.task_id,
+                title=existing_task.title,
+                description=existing_task.description,
+                task_type=existing_task.task_type,
+                status=TaskStatus.CANCELLED,
+                complexity=existing_task.complexity,
+                specialist_type=existing_task.metadata.get("specialist", "generic"),
+                created_at=existing_task.created_at,
+                updated_at=datetime.utcnow(),
+                metadata={
+                    **existing_task.metadata,
+                    "cancelled_at": datetime.utcnow().isoformat(),
+                    "cancellation_reason": reason,
+                    "work_preserved": preserve_work
+                }
+            )
+            
+            await self.state_manager.update_subtask(cancelled_task)
+            logger.info(f"Successfully cancelled task {task_id} with reason: {reason}")
+            
+            return {
+                "success": True,
+                "task_id": task_id,
+                "action": "cancelled",
+                "message": f"Task {task_id} has been cancelled",
+                "reason": reason,
+                "work_preserved": preserve_work,
+                "cancelled_at": datetime.utcnow().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to cancel task {task_id}: {str(e)}")
+            return {
+                "success": False,
+                "task_id": task_id,
+                "action": "cancel_failed",
+                "message": f"Task cancellation failed: {str(e)}",
+                "error": str(e)
+            }
+    
+    async def query_tasks(self, filters: Dict[str, Any]) -> Dict[str, Any]:
+        """Query tasks with filtering support using the state manager."""
+        try:
+            # Get all tasks from state manager
+            all_tasks = await self.state_manager.get_all_tasks()
+            
+            # Apply filters
+            filtered_tasks = []
+            for task in all_tasks:
+                include_task = True
+                
+                # Filter by status
+                if "status" in filters:
+                    if isinstance(filters["status"], list):
+                        include_task &= task.status.value in filters["status"]
+                    else:
+                        include_task &= task.status.value == filters["status"]
+                
+                # Filter by complexity
+                if "complexity" in filters:
+                    if isinstance(filters["complexity"], list):
+                        include_task &= task.complexity.value in filters["complexity"]
+                    else:
+                        include_task &= task.complexity.value == filters["complexity"]
+                
+                # Filter by specialist type
+                if "specialist_type" in filters:
+                    specialist = task.metadata.get("specialist", "generic")
+                    if isinstance(filters["specialist_type"], list):
+                        include_task &= specialist in filters["specialist_type"]
+                    else:
+                        include_task &= specialist == filters["specialist_type"]
+                
+                # Filter by search text (title and description)
+                if "search_text" in filters and filters["search_text"]:
+                    search_text = filters["search_text"].lower()
+                    include_task &= (search_text in task.title.lower() or 
+                                   search_text in task.description.lower())
+                
+                # Filter by date range
+                if "created_after" in filters:
+                    include_task &= task.created_at >= datetime.fromisoformat(filters["created_after"])
+                
+                if "created_before" in filters:
+                    include_task &= task.created_at <= datetime.fromisoformat(filters["created_before"])
+                
+                if include_task:
+                    filtered_tasks.append(task)
+            
+            # Apply pagination
+            limit = filters.get("limit", 100)
+            offset = filters.get("offset", 0)
+            
+            paginated_tasks = filtered_tasks[offset:offset + limit]
+            
+            # Convert tasks to dict format
+            task_dicts = []
+            for task in paginated_tasks:
+                task_dicts.append({
+                    "task_id": task.task_id,
+                    "title": task.title,
+                    "description": task.description,
+                    "status": task.status.value,
+                    "complexity": task.complexity.value,
+                    "specialist_type": task.metadata.get("specialist", "generic"),
+                    "created_at": task.created_at.isoformat() if task.created_at else None,
+                    "updated_at": task.updated_at.isoformat() if task.updated_at else None
+                })
+            
+            logger.info(f"Query returned {len(task_dicts)} tasks out of {len(all_tasks)} total")
+            
+            return {
+                "success": True,
+                "tasks": task_dicts,
+                "total_count": len(filtered_tasks),
+                "page_count": len(paginated_tasks),
+                "filters_applied": filters,
+                "has_more": (offset + limit) < len(filtered_tasks)
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to query tasks: {str(e)}")
+            return {
+                "success": False,
+                "tasks": [],
+                "total_count": 0,
+                "page_count": 0,
+                "message": f"Task query failed: {str(e)}",
+                "error": str(e)
+            }
 
 class RealExecuteTaskUseCase:
     """Real execute task use case using SpecialistManager integration."""

@@ -137,7 +137,7 @@ class TaskOrchestrator:
                     hierarchy_level=1,
                     position_in_parent=i,
                     estimated_effort=st_data.get("estimated_effort", "Unknown"),
-                    metadata={"specialist": st_data["specialist_type"]}
+                    specialist_type=st_data["specialist_type"]
                 )
                 subtasks.append(subtask)
         except (json.JSONDecodeError, KeyError) as e:
@@ -153,7 +153,7 @@ class TaskOrchestrator:
             complexity=complexity_level,
             hierarchy_path=f"/{parent_task_id}",
             children=subtasks,
-            metadata={"context": context} if context else {}
+            context={"original_context": context} if context else {}
         )
         
         # Store in state manager using error handling infrastructure

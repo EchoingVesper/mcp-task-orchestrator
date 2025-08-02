@@ -7,11 +7,13 @@ data storage technologies.
 """
 
 from .task_repository import TaskRepository
+from .async_task_repository import AsyncTaskRepository
 from .state_repository import StateRepository
 from .specialist_repository import SpecialistRepository
 
 __all__ = [
     'TaskRepository',
+    'AsyncTaskRepository',
     'StateRepository', 
     'SpecialistRepository'
 ]

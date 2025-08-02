@@ -4,7 +4,8 @@ Generic Task Management Handlers
 Handlers for the 5 critical Generic Task Model MCP tools that enable
 flexible task creation, modification, deletion, cancellation, and querying.
 
-These handlers implement the foundation for the v2.0.0 Generic Task Model system.
+These handlers implement the foundation for the v2.0.0 Generic Task Model system
+with proper MCP JSON-RPC error code compliance.
 """
 
 import json
@@ -32,226 +33,137 @@ from .db_integration import (
 )
 from ....domain.exceptions import OrchestrationError
 
+# Import MCP error handling system
+from ..error_handling import (
+    mcp_error_handler, 
+    mcp_validation_handler,
+    format_mcp_success_response
+)
+
 logger = logging.getLogger(__name__)
 
 
+@mcp_validation_handler(["title", "description"])
+@mcp_error_handler(tool_name="orchestrator_create_generic_task", require_auth=True)
 async def handle_create_generic_task(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle creation of a new generic task using Clean Architecture."""
-    try:
-        logger.info(f"Creating generic task: {args.get('title', 'Unknown')}")
-        
-        # Get use case instance
-        use_case = get_generic_task_use_case()
-        
-        # Create task using use case
-        created_task = await use_case.create_task(args)
-        
-        # Convert task to dict for response
-        task_dict = created_task.dict()
-        
-        # Convert datetime objects to ISO strings for JSON serialization
-        for field in ["created_at", "updated_at", "due_date", "started_at", "completed_at", "deleted_at"]:
-            if task_dict.get(field):
-                task_dict[field] = task_dict[field].isoformat()
-        
-        # Convert enums to string values
-        for field in ["status", "lifecycle_stage", "complexity", "specialist_type", "task_type"]:
-            if task_dict.get(field) and hasattr(task_dict[field], 'value'):
-                task_dict[field] = task_dict[field].value
-        
-        response = {
-            "status": "success",
-            "message": f"Generic task '{created_task.title}' created successfully",
-            "task": task_dict,
-            "next_steps": [
-                "Task is ready for assignment and execution",
-                "Use orchestrator_update_task to modify properties",
-                "Use orchestrator_query_tasks to find this task later"
-            ]
-        }
-        
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(response, indent=2)
-        )]
-        
-    except OrchestrationError as e:
-        error_response = {
-            "error": "Task creation failed",
-            "details": str(e),
-            "tool": "orchestrator_create_generic_task"
-        }
-        logger.error(f"Orchestration error creating task: {e}")
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(error_response, indent=2)
-        )]
-        
-    except Exception as e:
-        error_response = {
-            "error": "Internal error",
-            "details": str(e),
-            "tool": "orchestrator_create_generic_task"
-        }
-        logger.error(f"Unexpected error creating generic task: {e}")
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(error_response, indent=2)
-        )]
+    logger.info(f"Creating generic task: {args.get('title', 'Unknown')}")
+    
+    # Get use case instance
+    use_case = get_generic_task_use_case()
+    
+    # Create task using use case
+    created_task = await use_case.create_task(args)
+    
+    # Convert task to dict for response
+    task_dict = created_task.dict()
+    
+    # Convert datetime objects to ISO strings for JSON serialization
+    for field in ["created_at", "updated_at", "due_date", "started_at", "completed_at", "deleted_at"]:
+        if task_dict.get(field):
+            task_dict[field] = task_dict[field].isoformat()
+    
+    # Convert enums to string values
+    for field in ["status", "lifecycle_stage", "complexity", "specialist_type", "task_type"]:
+        if task_dict.get(field) and hasattr(task_dict[field], 'value'):
+            task_dict[field] = task_dict[field].value
+    
+    # Format success response
+    response_data = {
+        "task": task_dict,
+        "next_steps": [
+            "Task is ready for assignment and execution",
+            "Use orchestrator_update_task to modify properties",
+            "Use orchestrator_query_tasks to find this task later"
+        ]
+    }
+    
+    return format_mcp_success_response(
+        data=response_data,
+        message=f"Generic task '{created_task.title}' created successfully"
+    )
 
 
+@mcp_validation_handler(["task_id"])
+@mcp_error_handler(tool_name="orchestrator_update_task", require_auth=True)
 async def handle_update_task(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle updating an existing generic task with validation and lifecycle management."""
-    try:
-        # Extract required task_id
-        task_id = args.get("task_id")
-        if not task_id:
-            error_response = {
-                "error": "Missing required field: task_id",
-                "required": ["task_id"],
-                "received": list(args.keys())
-            }
-            return [types.TextContent(
-                type="text",
-                text=json.dumps(error_response, indent=2)
-            )]
-        
-        logger.info(f"Updating generic task: {task_id}")
-        
-        # Get use case instance
-        use_case = get_generic_task_use_case()
-        
-        # Create update data from args (excluding task_id)
-        update_data = {k: v for k, v in args.items() if k != "task_id"}
-        
-        # Update task using use case
-        updated_task = await use_case.update_task(task_id, update_data)
-        
-        # Convert task to dict for response
-        task_dict = updated_task.dict()
-        
-        # Convert datetime objects to ISO strings for JSON serialization
-        for field in ["created_at", "updated_at", "due_date", "started_at", "completed_at", "deleted_at"]:
-            if task_dict.get(field):
-                task_dict[field] = task_dict[field].isoformat()
-        
-        # Convert enums to string values
-        for field in ["status", "lifecycle_stage", "complexity", "specialist_type", "task_type"]:
-            if task_dict.get(field) and hasattr(task_dict[field], 'value'):
-                task_dict[field] = task_dict[field].value
-        
-        response = {
-            "status": "success",
-            "message": f"Task {task_id} updated successfully",
-            "task_id": task_id,
-            "updated_task": task_dict,
-            "next_steps": [
-                "Task has been updated in the database",
-                "Use orchestrator_query_tasks to verify changes",
-                "Consider updating dependent tasks if needed"
-            ]
-        }
-        
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(response, indent=2)
-        )]
-        
-    except OrchestrationError as e:
-        error_response = {
-            "error": "Task update failed",
-            "details": str(e),
-            "tool": "orchestrator_update_task"
-        }
-        logger.error(f"Orchestration error updating task: {e}")
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(error_response, indent=2)
-        )]
-        
-    except Exception as e:
-        error_response = {
-            "error": "Update execution error",
-            "details": str(e),
-            "tool": "orchestrator_update_task"
-        }
-        logger.error(f"Error updating task: {e}")
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(error_response, indent=2)
-        )]
+    task_id = args.get("task_id")
+    logger.info(f"Updating generic task: {task_id}")
+    
+    # Get use case instance
+    use_case = get_generic_task_use_case()
+    
+    # Create update data from args (excluding task_id)
+    update_data = {k: v for k, v in args.items() if k != "task_id"}
+    
+    # Update task using use case
+    updated_task = await use_case.update_task(task_id, update_data)
+    
+    # Convert task to dict for response
+    task_dict = updated_task.dict()
+    
+    # Convert datetime objects to ISO strings for JSON serialization
+    for field in ["created_at", "updated_at", "due_date", "started_at", "completed_at", "deleted_at"]:
+        if task_dict.get(field):
+            task_dict[field] = task_dict[field].isoformat()
+    
+    # Convert enums to string values
+    for field in ["status", "lifecycle_stage", "complexity", "specialist_type", "task_type"]:
+        if task_dict.get(field) and hasattr(task_dict[field], 'value'):
+            task_dict[field] = task_dict[field].value
+    
+    # Format success response
+    response_data = {
+        "task_id": task_id,
+        "updated_task": task_dict,
+        "next_steps": [
+            "Task has been updated in the database",
+            "Use orchestrator_query_tasks to verify changes",
+            "Consider updating dependent tasks if needed"
+        ]
+    }
+    
+    return format_mcp_success_response(
+        data=response_data,
+        message=f"Task {task_id} updated successfully"
+    )
 
 
+@mcp_validation_handler(["task_id"])
+@mcp_error_handler(tool_name="orchestrator_delete_task", require_auth=True)
 async def handle_delete_task(args: Dict[str, Any]) -> List[types.TextContent]:
     """Handle deletion of a generic task with dependency checking and safe removal."""
-    try:
-        # Extract required task_id
-        task_id = args.get("task_id")
-        if not task_id:
-            error_response = {
-                "error": "Missing required field: task_id",
-                "required": ["task_id"],
-                "received": list(args.keys())
-            }
-            return [types.TextContent(
-                type="text",
-                text=json.dumps(error_response, indent=2)
-            )]
-        
-        force = args.get("force", False)
-        archive_instead = args.get("archive_instead", True)
-        
-        logger.info(f"Deleting generic task: {task_id} (force={force}, archive={archive_instead})")
-        
-        # Get use case instance
-        use_case = get_generic_task_use_case()
-        
-        # Delete task using use case
-        deletion_result = await use_case.delete_task(task_id, force, archive_instead)
-        
-        response = {
-            "status": "success",
-            "message": f"Task {task_id} {deletion_result['action_taken']} successfully",
-            "task_id": task_id,
-            "action_taken": deletion_result["action_taken"],
-            "deletion_result": deletion_result,
-            "next_steps": [
-                "Task has been processed according to the deletion policy",
-                "Check dependent tasks if any were affected",
-                "Use orchestrator_query_tasks to verify the task state"
-            ]
-        }
-        
-        logger.info(f"Task {task_id} deletion completed: {deletion_result['action_taken']}")
-        
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(response, indent=2)
-        )]
-        
-    except OrchestrationError as e:
-        error_response = {
-            "error": "Task deletion failed",
-            "details": str(e),
-            "tool": "orchestrator_delete_task"
-        }
-        logger.error(f"Orchestration error deleting task: {e}")
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(error_response, indent=2)
-        )]
-        
-    except Exception as e:
-        error_response = {
-            "error": "Deletion execution error",
-            "details": str(e),
-            "tool": "orchestrator_delete_task"
-        }
-        logger.error(f"Error deleting task: {e}")
-        return [types.TextContent(
-            type="text",
-            text=json.dumps(error_response, indent=2)
-        )]
+    task_id = args.get("task_id")
+    force = args.get("force", False)
+    archive_instead = args.get("archive_instead", True)
+    
+    logger.info(f"Deleting generic task: {task_id} (force={force}, archive={archive_instead})")
+    
+    # Get use case instance
+    use_case = get_generic_task_use_case()
+    
+    # Delete task using use case
+    deletion_result = await use_case.delete_task(task_id, force, archive_instead)
+    
+    logger.info(f"Task {task_id} deletion completed: {deletion_result['action_taken']}")
+    
+    # Format success response
+    response_data = {
+        "task_id": task_id,
+        "action_taken": deletion_result["action_taken"],
+        "deletion_result": deletion_result,
+        "next_steps": [
+            "Task has been processed according to the deletion policy",
+            "Check dependent tasks if any were affected",
+            "Use orchestrator_query_tasks to verify the task state"
+        ]
+    }
+    
+    return format_mcp_success_response(
+        data=response_data,
+        message=f"Task {task_id} {deletion_result['action_taken']} successfully"
+    )
 
 
 async def handle_cancel_task(args: Dict[str, Any]) -> List[types.TextContent]:
