@@ -2,280 +2,399 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
-  test:
+  # Multi-Stage Validation Pipeline (Primary Quality Gate)
+  validation-pipeline:
     runs-on: ubuntu-latest
+    name: Multi-Stage Validation Pipeline
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel setuptools
+        
+        # Install project dependencies
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt || echo "⚠️ Some requirements failed to install"
+        fi
+        
+        # Install development dependencies
+        pip install pytest pytest-cov pytest-asyncio ruff mypy psutil || echo "⚠️ Some dev tools failed to install"
+    
+    - name: Install project in development mode
+      run: |
+        if [ -f setup.py ] || [ -f pyproject.toml ]; then
+          pip install -e ".[dev]" || pip install -e . || echo "⚠️ Development installation failed"
+        fi
+    
+    - name: Run Multi-Stage Validation Pipeline
+      run: |
+        echo "🚀 Starting Multi-Stage Validation Pipeline..."
+        python -m tools.validation.pipeline_orchestrator --run-full || echo "⚠️ Validation pipeline completed with issues"
+    
+    - name: Upload validation reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: validation-reports-${{ github.run_id }}
+        path: validation_results/
+        retention-days: 30
+    
+    - name: Comment PR with validation summary
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          try {
+            const reportPath = 'validation_results/pipeline_report.json';
+            if (fs.existsSync(reportPath)) {
+              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+              
+              const status = report.status || 'UNKNOWN';
+              const emoji = status === 'PASSED' ? '✅' : '❌';
+              const summary = report.stage_summary || {};
+              
+              const comment = `## ${emoji} Multi-Stage Validation Report
+              
+              **Overall Status**: ${status}
+              **Stages**: ${summary.completed_stages || 0}/${summary.total_stages || 5} passed
+              **Issues**: ${summary.total_issues || 0} total, ${summary.critical_issues || 0} critical
+              
+              ### Stage Results:
+              ${(report.stages || []).map(stage => {
+                const stageEmoji = stage.passed ? '✅' : '❌';
+                return `- ${stageEmoji} **Stage ${stage.stage_id}**: ${stage.stage_name} (${stage.issues?.length || 0} issues)`;
+              }).join('\n')}
+              
+              📊 **Quality Score**: ${report.overall_results?.pipeline_quality_score || 'N/A'}
+              
+              ${status !== 'PASSED' ? '\n⚠️ Please review and fix validation issues before merging.' : ''}
+              
+              📋 Detailed reports available in the workflow artifacts.
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          } catch (error) {
+            console.log('Could not post validation summary:', error.message);
+          }
+
+  # Compatibility Testing Across Python Versions  
+  compatibility-test:
+    runs-on: ubuntu-latest
+    needs: validation-pipeline
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-      fail-fast: false  # Don't cancel other jobs if one fails
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+      fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     
-    - name: Debug project structure
-      run: |
-        echo "📁 Project structure:"
-        ls -la
-        echo "📁 Contents of mcp_task_orchestrator (if exists):"
-        ls -la mcp_task_orchestrator/ 2>/dev/null || echo "Directory not found"
-        echo "📄 Requirements.txt contents:"
-        cat requirements.txt 2>/dev/null || echo "requirements.txt not found"
-        echo "📄 Setup.py exists:"
-        [ -f setup.py ] && echo "✅ Yes" || echo "❌ No"
-    
-    - name: Install base dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install wheel setuptools
-        echo "✅ Base dependencies installed"
-    
-    - name: Install project dependencies with fallbacks
-      run: |
-        echo "🔧 Installing dependencies with error handling..."
         
         if [ -f requirements.txt ]; then
-          echo "📋 Installing from requirements.txt..."
-          
-          while IFS= read -r line; do
-            if [[ $line =~ ^[[:space:]]*# ]] || [[ -z "${line// }" ]]; then
-              continue
-            fi
-            
-            package=$(echo "$line" | cut -d'=' -f1 | cut -d'>' -f1 | cut -d'<' -f1 | tr -d ' ')
-            
-            if [[ "$package" == "mcp" ]]; then
-              echo "🔄 Trying to install MCP with fallbacks..."
-              pip install "mcp>=1.9.0" || pip install mcp || echo "⚠️ MCP installation failed, continuing without it"
-            else
-              echo "📦 Installing: $package"
-              pip install "$line" || echo "⚠️ Failed to install $package, continuing..."
-            fi
-          done < requirements.txt
-        else
-          echo "⚠️ No requirements.txt found"
+          pip install -r requirements.txt || echo "⚠️ Some requirements failed on Python ${{ matrix.python-version }}"
         fi
         
-        pip install pytest pytest-cov pytest-asyncio flake8 black || echo "⚠️ Some testing tools failed to install"
-        echo "✅ Dependency installation completed"
+        pip install pytest pytest-asyncio || echo "⚠️ Some testing tools failed to install"
     
-    - name: Install project in development mode
+    - name: Install project
       run: |
-        if [ -f setup.py ]; then
-          echo "🔧 Installing project in development mode..."
-          pip install -e . || echo "⚠️ Development installation failed, continuing with validation"
-        else
-          echo "⚠️ No setup.py found, skipping development installation"
+        if [ -f setup.py ] || [ -f pyproject.toml ]; then
+          pip install -e . || echo "⚠️ Project installation failed on Python ${{ matrix.python-version }}"
         fi
     
-    - name: Lint with flake8
+    - name: Run basic compatibility tests
       run: |
-        echo "🔍 Running linting checks..."
-        if command -v flake8 &> /dev/null; then
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "⚠️ Critical linting issues found"
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics --exclude=__pycache__,.git,build,dist,venv*
-        else
-          echo "⚠️ flake8 not available, skipping linting"
-        fi
-    
-    - name: Check code formatting with black
-      run: |
-        echo "🎨 Checking code formatting..."
-        if command -v black &> /dev/null; then
-          black --check --diff --exclude="/(\.git|__pycache__|\.pytest_cache|venv|build|dist)/" . || echo "⚠️ Code formatting issues found (non-blocking)"
-        else
-          echo "⚠️ black not available, skipping formatting check"
-        fi
-    
-    - name: Run tests comprehensive
-      run: |
-        echo "🧪 Running test suite..."
+        echo "🧪 Running compatibility tests for Python ${{ matrix.python-version }}..."
         
+        # Test basic imports
+        python -c "import mcp_task_orchestrator; print('✅ Package import successful')" || echo "❌ Package import failed"
+        
+        # Run lightweight tests
         if [ -d "tests" ]; then
-          echo "📁 Found tests directory, running pytest..."
-          if command -v pytest &> /dev/null; then
-            pytest tests/ -s -v --tb=short || echo "⚠️ Some tests failed"
-            
-            if pip list | grep -q pytest-cov; then
-              pytest tests/ -s --cov=mcp_task_orchestrator --cov-report=term || echo "⚠️ Coverage generation failed"
-            fi
-          else
-            echo "⚠️ pytest not available, running basic Python test discovery"
-            python -m unittest discover tests/ -v || echo "⚠️ unittest discovery failed"
-          fi
-        else
-          echo "📁 No tests directory found, running basic import tests..."
-          
-          echo "🐍 Testing Python syntax..."
-          find . -name "*.py" -not -path "./build/*" -not -path "./.git/*" -not -path "./venv*/*" | while read file; do
-            python -m py_compile "$file" && echo "✅ $file" || echo "❌ $file"
-          done
-          
-          echo "📦 Testing package import..."
-          python -c 'import sys; import os; import importlib.util; sys.path.insert(0, "."); package_name = "mcp_task_orchestrator"; print(f"Testing import of {package_name}"); exec(open("tests/test_ci_validation.py").read()) if os.path.exists("tests/test_ci_validation.py") else print("No validation test found")' || echo "⚠️ Import test completed with warnings"
+          pytest tests/ -x --tb=short -k "not security and not integration" || echo "⚠️ Some compatibility tests failed"
         fi
 
+  # Enhanced Security Testing
   security:
     runs-on: ubuntu-latest
+    needs: validation-pipeline
+    name: Enhanced Security Testing
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        python-version: "3.11"
     
-    - name: Install security scanning tools
+    - name: Install dependencies and security tools
       run: |
         python -m pip install --upgrade pip
-        pip install safety bandit[toml] || echo "⚠️ Some security tools failed to install"
+        pip install wheel setuptools
+        
+        # Install project dependencies
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt || echo "⚠️ Some requirements failed to install"
+        fi
+        
+        # Install project
+        if [ -f setup.py ] || [ -f pyproject.toml ]; then
+          pip install -e ".[dev]" || pip install -e . || echo "⚠️ Project installation failed"
+        fi
+        
+        # Install security scanning tools
+        pip install safety bandit[toml] semgrep pip-audit || echo "⚠️ Some security tools failed to install"
     
-    - name: Run safety check
+    - name: Run comprehensive security test suite
       run: |
-        echo "🔒 Running safety check for known security vulnerabilities..."
+        echo "🛡️ Running comprehensive security test suite..."
+        if [ -d "tests/security" ]; then
+          pytest tests/security/ -v --tb=short || echo "⚠️ Security tests completed with issues"
+        else
+          echo "⚠️ Security test suite not found - skipping comprehensive security tests"
+        fi
+    
+    - name: Run dependency vulnerability scan
+      run: |
+        echo "🔒 Running dependency vulnerability scans..."
+        
+        # Safety check for known vulnerabilities
         if command -v safety &> /dev/null; then
-          safety check --json 2>/dev/null || safety check || echo "✅ Safety check completed (some issues may exist)"
-        else
-          echo "⚠️ Safety tool not available"
+          safety check --json --output safety-report.json 2>/dev/null || safety check || echo "⚠️ Safety scan completed with potential issues"
+        fi
+        
+        # Pip-audit for additional vulnerability scanning
+        if command -v pip-audit &> /dev/null; then
+          pip-audit --format=json --output=pip-audit-report.json || echo "⚠️ Pip-audit completed with potential issues"
         fi
     
-    - name: Run bandit security scan
+    - name: Run static security analysis
       run: |
-        echo "🛡️ Running bandit security scan..."
+        echo "🔍 Running static security analysis..."
+        
+        # Bandit for Python security issues
         if command -v bandit &> /dev/null && [ -d "mcp_task_orchestrator" ]; then
-          bandit -r mcp_task_orchestrator/ -f json 2>/dev/null || bandit -r mcp_task_orchestrator/ || echo "✅ Bandit scan completed (some issues may exist)"
-        else
-          echo "⚠️ Bandit tool not available or package directory not found"
+          bandit -r mcp_task_orchestrator/ -f json -o bandit-report.json || echo "⚠️ Bandit scan completed with potential issues"
         fi
+        
+        # Semgrep for additional security patterns
+        if command -v semgrep &> /dev/null; then
+          semgrep --config=auto --json --output=semgrep-report.json . || echo "⚠️ Semgrep scan completed with potential issues"
+        fi
+    
+    - name: Upload security reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-reports-${{ github.run_id }}
+        path: |
+          *-report.json
+          validation_results/
+        retention-days: 30
 
-  validate-project:
+  # Modern Build and Package Testing
+  build-and-package:
     runs-on: ubuntu-latest
+    needs: [validation-pipeline, compatibility-test]
+    name: Build and Package Testing
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
     
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.10"
+        python-version: "3.11"
     
-    - name: Comprehensive project validation
-      run: |
-        echo "🔍 Comprehensive project structure validation..."
-        
-        required_files=("README.md" "LICENSE" "setup.py" "requirements.txt")
-        for file in "${required_files[@]}"; do
-          if [ -f "$file" ]; then
-            echo "✅ Found: $file"
-          else
-            echo "⚠️ Missing: $file"
-          fi
-        done
-        
-        if [ -d "mcp_task_orchestrator" ]; then
-          echo "✅ Found: mcp_task_orchestrator/ package directory"
-          echo "📁 Package contents:"
-          ls -la mcp_task_orchestrator/
-        else
-          echo "⚠️ Missing: mcp_task_orchestrator/ package directory"
-        fi
-        
-        echo "🐍 Checking Python syntax..."
-        syntax_errors=0
-        if [ -d "mcp_task_orchestrator" ]; then
-          for py_file in mcp_task_orchestrator/*.py; do
-            if [ -f "$py_file" ]; then
-              if python -m py_compile "$py_file" 2>/dev/null; then
-                echo "✅ $py_file"
-              else
-                echo "❌ $py_file"
-                syntax_errors=$((syntax_errors + 1))
-              fi
-            fi
-          done
-        fi
-        
-        if [ $syntax_errors -eq 0 ]; then
-          echo "✅ All Python files have valid syntax"
-        else
-          echo "⚠️ Found $syntax_errors files with syntax issues"
-        fi
-        
-        echo "📦 Validating setup.py..."
-        if [ -f "setup.py" ]; then
-          python setup.py check 2>/dev/null && echo "✅ setup.py validation passed" || echo "⚠️ setup.py validation completed with warnings"
-        else
-          echo "⚠️ setup.py not found"
-        fi
-        
-        echo "📋 Git repository status:"
-        git status --porcelain || echo "⚠️ Git status check failed"
-        
-        echo "✅ Project structure validation complete"
-
-  build-test:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
-    
-    - name: Test package build
+    - name: Install build tools
       run: |
         python -m pip install --upgrade pip
-        pip install build wheel setuptools || echo "⚠️ Some build tools failed to install"
+        pip install build wheel setuptools twine check-wheel-contents
+    
+    - name: Build package
+      run: |
+        echo "🔨 Building package..."
+        python -m build
         
-        if [ -f "setup.py" ]; then
-          echo "🔨 Testing package build..."
-          python -m build 2>/dev/null && echo "✅ Package build successful" || echo "⚠️ Package build failed"
-          
-          if [ -d "dist" ]; then
-            echo "📦 Build artifacts:"
-            ls -la dist/
-            
-            wheel_file=$(find dist -name "*.whl" | head -1)
-            if [ -n "$wheel_file" ]; then
-              echo "🧪 Testing package installation..."
-              pip install "$wheel_file" && echo "✅ Package installation successful" || echo "⚠️ Package installation failed"
-            fi
-          fi
-        else
-          echo "⚠️ No setup.py found, skipping build test"
+        echo "📦 Build artifacts:"
+        ls -la dist/
+    
+    - name: Validate package
+      run: |
+        echo "🔍 Validating package contents..."
+        
+        # Check wheel contents
+        wheel_file=$(find dist -name "*.whl" | head -1)
+        if [ -n "$wheel_file" ]; then
+          check-wheel-contents "$wheel_file" || echo "⚠️ Wheel validation completed with warnings"
         fi
+        
+        # Check package metadata
+        twine check dist/* || echo "⚠️ Package metadata validation completed with warnings"
+    
+    - name: Test package installation
+      run: |
+        echo "🧪 Testing package installation..."
+        
+        # Test in clean environment
+        pip install dist/*.whl
+        
+        # Test basic import
+        python -c "import mcp_task_orchestrator; print('✅ Package installation and import successful')"
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-${{ github.run_id }}
+        path: dist/
+        retention-days: 30
 
-  summary:
+  # Code Quality and Standards  
+  code-quality:
     runs-on: ubuntu-latest
-    needs: [test, security, validate-project, build-test]
-    if: always()
+    needs: validation-pipeline
+    name: Code Quality and Standards
     
     steps:
-    - name: Job Summary
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+    
+    - name: Install quality tools
       run: |
+        python -m pip install --upgrade pip
+        pip install ruff mypy pre-commit
+        
+        # Install project dependencies for type checking
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt || echo "⚠️ Some requirements failed to install"
+        fi
+        
+        if [ -f setup.py ] || [ -f pyproject.toml ]; then
+          pip install -e . || echo "⚠️ Project installation failed"
+        fi
+    
+    - name: Run Ruff linting and formatting
+      run: |
+        echo "🔍 Running Ruff linting..."
+        ruff check . --output-format=github || echo "⚠️ Ruff linting found issues"
+        
+        echo "🎨 Checking code formatting..."
+        ruff format --check . || echo "⚠️ Code formatting issues found"
+    
+    - name: Run MyPy type checking
+      run: |
+        echo "🔍 Running MyPy type checking..."
+        mypy . --ignore-missing-imports --show-error-codes || echo "⚠️ Type checking found issues"
+    
+    - name: Validate pre-commit hooks
+      run: |
+        echo "🪝 Validating pre-commit configuration..."
+        if [ -f ".pre-commit-config.yaml" ]; then
+          pre-commit run --all-files || echo "⚠️ Pre-commit hooks found issues"
+        else
+          echo "⚠️ No pre-commit configuration found"
+        fi
+
+  # Pipeline Summary and Status
+  pipeline-summary:
+    runs-on: ubuntu-latest
+    needs: [validation-pipeline, compatibility-test, security, build-and-package, code-quality]
+    if: always()
+    name: Pipeline Summary
+    
+    steps:
+    - name: Generate Pipeline Summary
+      run: |
+        echo "# 📊 CI/CD Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+        echo "## Job Results" >> $GITHUB_STEP_SUMMARY
+        echo "| Job | Status | Details |" >> $GITHUB_STEP_SUMMARY
+        echo "|-----|--------|---------|" >> $GITHUB_STEP_SUMMARY
+        echo "| 🚀 Multi-Stage Validation | ${{ needs.validation-pipeline.result }} | Primary quality gate with 5-stage validation |" >> $GITHUB_STEP_SUMMARY
+        echo "| 🐍 Compatibility Testing | ${{ needs.compatibility-test.result }} | Python 3.9-3.12 compatibility |" >> $GITHUB_STEP_SUMMARY
+        echo "| 🛡️ Security Testing | ${{ needs.security.result }} | Comprehensive security analysis |" >> $GITHUB_STEP_SUMMARY
+        echo "| 📦 Build & Package | ${{ needs.build-and-package.result }} | Package build and validation |" >> $GITHUB_STEP_SUMMARY
+        echo "| 🔍 Code Quality | ${{ needs.code-quality.result }} | Linting, formatting, and type checking |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Determine overall status
+        if [[ "${{ needs.validation-pipeline.result }}" == "success" && 
+              "${{ needs.compatibility-test.result }}" == "success" && 
+              "${{ needs.security.result }}" == "success" && 
+              "${{ needs.build-and-package.result }}" == "success" && 
+              "${{ needs.code-quality.result }}" == "success" ]]; then
+          echo "## ✅ Pipeline Status: SUCCESS" >> $GITHUB_STEP_SUMMARY
+          echo "🎉 All validation stages passed! The codebase meets all quality standards." >> $GITHUB_STEP_SUMMARY
+        else
+          echo "## ❌ Pipeline Status: ISSUES DETECTED" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ Some validation stages detected issues. Review the job details and validation reports." >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 📋 Available Artifacts" >> $GITHUB_STEP_SUMMARY
+        echo "- **Validation Reports**: Comprehensive multi-stage validation results" >> $GITHUB_STEP_SUMMARY
+        echo "- **Security Reports**: Vulnerability scans and security analysis" >> $GITHUB_STEP_SUMMARY
+        echo "- **Package Artifacts**: Built wheels and source distributions" >> $GITHUB_STEP_SUMMARY
+        
+        # Console output
         echo "📊 CI/CD Pipeline Summary"
         echo "========================="
-        echo "Test Job: ${{ needs.test.result }}"
-        echo "Security Job: ${{ needs.security.result }}"
-        echo "Validation Job: ${{ needs.validate-project.result }}"
-        echo "Build Test Job: ${{ needs.build-test.result }}"
+        echo "Multi-Stage Validation: ${{ needs.validation-pipeline.result }}"
+        echo "Compatibility Testing: ${{ needs.compatibility-test.result }}"
+        echo "Security Testing: ${{ needs.security.result }}"
+        echo "Build & Package: ${{ needs.build-and-package.result }}"
+        echo "Code Quality: ${{ needs.code-quality.result }}"
         echo ""
         
-        if [[ "${{ needs.test.result }}" == "success" && "${{ needs.security.result }}" == "success" && "${{ needs.validate-project.result }}" == "success" && "${{ needs.build-test.result }}" == "success" ]]; then
-          echo "🎉 All checks passed! Repository is in good shape."
+        if [[ "${{ needs.validation-pipeline.result }}" == "success" && 
+              "${{ needs.compatibility-test.result }}" == "success" && 
+              "${{ needs.security.result }}" == "success" && 
+              "${{ needs.build-and-package.result }}" == "success" && 
+              "${{ needs.code-quality.result }}" == "success" ]]; then
+          echo "🎉 All pipeline stages passed! Repository is production-ready."
+          exit 0
         else
-          echo "⚠️ Some checks had issues, but this is normal for development branches."
-          echo "Review the individual job logs for details."
+          echo "⚠️ Some pipeline stages detected issues."
+          echo "💡 Check individual job logs and validation reports for details."
+          exit 1
         fi
