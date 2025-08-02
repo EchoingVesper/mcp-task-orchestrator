@@ -45,15 +45,27 @@ class TemplateSecurityValidator:
             r'__import__',         # dynamic imports
             r'[;&|`]\s*[a-zA-Z]',  # Shell command sequences
             
+            # File system access patterns
+            r'open\s*\(["\'][^"\']*["\']',  # open() function calls
+            r'with\s+open\s*\(',           # with open() statements
+            r'file\s*\(["\'][^"\']*["\']', # file() function calls
+            r'Path\s*\(["\'][^"\']*["\']\.read_text\(',  # Path.read_text()
+            
             # Path traversal patterns
             r'\.\./.*',            # Directory traversal
             r'/etc/passwd',        # System files
+            r'/etc/shadow',        # Shadow file
+            r'/etc/hosts',         # Hosts file
             r'/root/',             # Root directory
             r'~/',                 # Home directory expansion
             
             # Network/URL patterns
             r'javascript:',        # javascript: URLs
             r'data:.*base64',      # data URLs with base64
+            r'urllib\.request',    # urllib requests
+            r'requests\.get',      # requests library
+            r'socket\.connect',    # socket connections
+            r'http\.client',       # HTTP client
             
             # Dangerous file extensions in paths
             r'["\'].*\.(?:exe|bat|cmd|ps1|sh|bash|zsh)["\']',  # Executable files in quotes
