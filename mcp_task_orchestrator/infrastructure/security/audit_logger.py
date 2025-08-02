@@ -326,6 +326,32 @@ class SecurityAuditLogger:
             user_id=user_id
         )
     
+    def log_error_event(self, error_type: str,
+                       context: str,
+                       severity: str = "MEDIUM",
+                       details: Optional[Dict[str, Any]] = None,
+                       user_id: Optional[str] = None) -> None:
+        """Log error event with security implications."""
+        # Map string severity to SecurityLevel enum
+        severity_map = {
+            "LOW": SecurityLevel.LOW,
+            "MEDIUM": SecurityLevel.MEDIUM,
+            "HIGH": SecurityLevel.HIGH,
+            "CRITICAL": SecurityLevel.CRITICAL
+        }
+        security_level = severity_map.get(severity.upper(), SecurityLevel.MEDIUM)
+        
+        # Determine event type based on context
+        event_type = SecurityEventType.SUSPICIOUS_ACTIVITY
+        
+        self.log_event(
+            event_type,
+            security_level,
+            f"Error in {context}: {error_type}",
+            {**(details or {}), "error_type": error_type, "context": context},
+            user_id=user_id
+        )
+    
     def get_recent_events(self, hours: int = 24,
                          event_types: Optional[List[SecurityEventType]] = None,
                          severity_levels: Optional[List[SecurityLevel]] = None) -> List[Dict[str, Any]]:
