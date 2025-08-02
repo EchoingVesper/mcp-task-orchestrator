@@ -195,8 +195,15 @@ def mcp_validation_handler(required_fields: List[str]) -> Callable:
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         async def wrapper(*args, **kwargs) -> List[types.TextContent]:
-            # Extract tool arguments (typically first argument)
-            tool_args = args[0] if args and isinstance(args[0], dict) else {}
+            # Extract tool arguments 
+            # Handle both direct dict argument and wrapped in args
+            if args and isinstance(args[0], dict):
+                tool_args = args[0]
+            elif kwargs and isinstance(kwargs, dict):
+                tool_args = kwargs
+            else:
+                # Fallback - empty dict will trigger validation error
+                tool_args = {}
             
             # Validate required fields
             missing_fields = []
