@@ -20,7 +20,9 @@ This document outlines research requirements for implementing RAG (Retrieval-Aug
 
 #
 
-## Primary Goals
+#
+
+# Primary Goals
 
 1. **Semantic Search**: Enable natural language search across tasks and artifacts
 
@@ -32,7 +34,9 @@ This document outlines research requirements for implementing RAG (Retrieval-Aug
 
 #
 
-## Success Criteria
+#
+
+# Success Criteria
 
 - Lightweight, embedded solution (no external servers)
 
@@ -50,11 +54,17 @@ This document outlines research requirements for implementing RAG (Retrieval-Aug
 
 #
 
-## 1. Vector Database Evaluation
+#
+
+# 1. Vector Database Evaluation
 
 #
 
-### Requirements Matrix
+#
+
+#
+
+# Requirements Matrix
 
 | Requirement | Priority | Description |
 |------------|----------|-------------|
@@ -67,7 +77,11 @@ This document outlines research requirements for implementing RAG (Retrieval-Aug
 
 #
 
-### Candidates to Evaluate
+#
+
+#
+
+# Candidates to Evaluate
 
 **ChromaDB**
 
@@ -111,11 +125,17 @@ This document outlines research requirements for implementing RAG (Retrieval-Aug
 
 #
 
-## 2. Knowledge Graph Options
+#
+
+# 2. Knowledge Graph Options
 
 #
 
-### Lightweight Graph Storage
+#
+
+#
+
+# Lightweight Graph Storage
 
 **NetworkX + SQLite**
 
@@ -145,11 +165,17 @@ class LightweightKnowledgeGraph:
 
 #
 
-## 3. Hybrid RAG Frameworks
+#
+
+# 3. Hybrid RAG Frameworks
 
 #
 
-### LlamaIndex Evaluation
+#
+
+#
+
+# LlamaIndex Evaluation
 
 ```text
 text
@@ -170,7 +196,11 @@ from llama_index.vector_stores import ChromaVectorStore
 
 #
 
-### Langchain Assessment
+#
+
+#
+
+# Langchain Assessment
 
 - Overhead vs. benefits analysis
 
@@ -180,7 +210,11 @@ from llama_index.vector_stores import ChromaVectorStore
 
 #
 
-### Build vs. Buy Decision Matrix
+#
+
+#
+
+# Build vs. Buy Decision Matrix
 
 | Factor | Build Custom | Use Framework |
 |--------|--------------|---------------|
@@ -192,11 +226,17 @@ from llama_index.vector_stores import ChromaVectorStore
 
 #
 
-## 4. Embedding Model Research
+#
+
+# 4. Embedding Model Research
 
 #
 
-### Local Model Requirements
+#
+
+#
+
+# Local Model Requirements
 
 - Size: <500MB
 
@@ -208,7 +248,11 @@ from llama_index.vector_stores import ChromaVectorStore
 
 #
 
-### Candidates
+#
+
+#
+
+# Candidates
 
 ```python
 
@@ -231,11 +275,17 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 
 #
 
-## 5. Integration Architecture
+#
+
+# 5. Integration Architecture
 
 #
 
-### Background Processing Design
+#
+
+#
+
+# Background Processing Design
 
 ```python
 class RAGBackgroundProcessor:
@@ -257,7 +307,11 @@ class RAGBackgroundProcessor:
 
 #
 
-### Storage Schema Extensions
+#
+
+#
+
+# Storage Schema Extensions
 
 ```text
 sql
@@ -292,7 +346,9 @@ CREATE TABLE IF NOT EXISTS knowledge_edges (
 
 #
 
-## Phase 1: Minimal Vector Search (1 week)
+#
+
+# Phase 1: Minimal Vector Search (1 week)
 
 ```text
 python
@@ -321,7 +377,9 @@ class MinimalRAG:
 
 #
 
-## Phase 2: Persistent Storage (1 week)
+#
+
+# Phase 2: Persistent Storage (1 week)
 
 - Integrate chosen vector database
 
@@ -331,7 +389,9 @@ class MinimalRAG:
 
 #
 
-## Phase 3: Knowledge Graph (1 week)
+#
+
+# Phase 3: Knowledge Graph (1 week)
 
 - Add relationship tracking
 
@@ -345,7 +405,9 @@ class MinimalRAG:
 
 #
 
-## Performance
+#
+
+# Performance
 
 1. Can we achieve <100ms search latency with 100k documents?
 
@@ -357,7 +419,9 @@ class MinimalRAG:
 
 #
 
-## Functionality
+#
+
+# Functionality
 
 1. How well does semantic search work for technical content?
 
@@ -369,7 +433,9 @@ class MinimalRAG:
 
 #
 
-## Operations
+#
+
+# Operations
 
 1. How to handle embedding model updates?
 
@@ -385,7 +451,9 @@ class MinimalRAG:
 
 #
 
-## GitHub Copilot Approach
+#
+
+# GitHub Copilot Approach
 
 - Uses embeddings for code search
 
@@ -395,7 +463,9 @@ class MinimalRAG:
 
 #
 
-## Notion AI
+#
+
+# Notion AI
 
 - Hybrid search (keyword + semantic)
 
@@ -405,7 +475,9 @@ class MinimalRAG:
 
 #
 
-## Obsidian + Plugins
+#
+
+# Obsidian + Plugins
 
 - Local-first approach
 
@@ -419,7 +491,9 @@ class MinimalRAG:
 
 #
 
-## Technical Risks
+#
+
+# Technical Risks
 
 1. **Performance**: Vector search may be too slow
 
@@ -437,7 +511,9 @@ class MinimalRAG:
 
 #
 
-## Implementation Risks
+#
+
+# Implementation Risks
 
 1. **Complexity**: Over-engineering the solution
 
@@ -454,7 +530,9 @@ class MinimalRAG:
 
 #
 
-## Quantitative
+#
+
+# Quantitative
 
 - Search latency: p95 < 100ms
 
@@ -466,7 +544,9 @@ class MinimalRAG:
 
 #
 
-## Qualitative
+#
+
+# Qualitative
 
 - Users find relevant content easily
 

@@ -16,7 +16,9 @@ The PyPI release automation script handles the complete release process from ver
 
 #
 
-## Required Dependencies
+#
+
+# Required Dependencies
 
 ```bash
 pip install rich python-dotenv twine build
@@ -25,7 +27,9 @@ pip install rich python-dotenv twine build
 
 #
 
-## GitHub CLI (Optional)
+#
+
+# GitHub CLI (Optional)
 
 For automatic GitHub release creation:
 
@@ -41,7 +45,9 @@ text
 
 #
 
-## Environment Configuration
+#
+
+# Environment Configuration
 
 Ensure `.env` file is configured with PyPI tokens:
 
@@ -62,7 +68,9 @@ text
 
 #
 
-## Basic Release (Patch Version)
+#
+
+# Basic Release (Patch Version)
 
 ```text
 bash
@@ -72,7 +80,9 @@ python scripts/release/pypi_release_automation.py
 
 #
 
-## Version Type Selection
+#
+
+# Version Type Selection
 
 ```text
 bash
@@ -93,7 +103,9 @@ python scripts/release/pypi_release_automation.py --version major
 
 #
 
-## Test Mode
+#
+
+# Test Mode
 
 ```text
 bash
@@ -106,7 +118,9 @@ python scripts/release/pypi_release_automation.py --test
 
 #
 
-## Skip Tests
+#
+
+# Skip Tests
 
 ```text
 bash
@@ -125,7 +139,9 @@ The automation includes comprehensive safety checks:
 
 #
 
-## 1. Branch Validation
+#
+
+# 1. Branch Validation
 
 - ✅ Must be on `main` branch
 
@@ -133,7 +149,9 @@ The automation includes comprehensive safety checks:
 
 #
 
-## 2. Uncommitted Changes
+#
+
+# 2. Uncommitted Changes
 
 - ✅ Working directory must be clean
 
@@ -141,7 +159,9 @@ The automation includes comprehensive safety checks:
 
 #
 
-## 3. Upstream Synchronization
+#
+
+# 3. Upstream Synchronization
 
 - ✅ Local main must be up-to-date with remote
 
@@ -151,7 +171,9 @@ The automation includes comprehensive safety checks:
 
 #
 
-## 4. Version Validation
+#
+
+# 4. Version Validation
 
 - ✅ Validates current version format
 
@@ -161,7 +183,9 @@ The automation includes comprehensive safety checks:
 
 #
 
-## 5. Build Verification
+#
+
+# 5. Build Verification
 
 - ✅ Verifies build artifacts exist
 
@@ -215,7 +239,9 @@ The automation updates version numbers in:
 
 #
 
-## Automatic Operations
+#
+
+# Automatic Operations
 
 - Creates commit with version changes
 
@@ -227,7 +253,9 @@ The automation updates version numbers in:
 
 #
 
-## Commit Message Format
+#
+
+# Commit Message Format
 
 ```text
 
@@ -257,7 +285,9 @@ If GitHub CLI is available, creates a release with:
 
 #
 
-## Common Failure Points
+#
+
+# Common Failure Points
 
 1. **Branch Check**: Switch to main branch
 
@@ -271,7 +301,9 @@ If GitHub CLI is available, creates a release with:
 
 #
 
-## Recovery Procedures
+#
+
+# Recovery Procedures
 
 - **Failed Upload**: Re-run script after fixing issues
 
@@ -287,7 +319,9 @@ If automation fails, follow manual steps:
 
 #
 
-## 1. Version Update
+#
+
+# 1. Version Update
 
 ```text
 bash
@@ -303,7 +337,9 @@ git commit -m "release: v1.6.2"
 
 #
 
-## 2. Build and Upload
+#
+
+# 2. Build and Upload
 
 ```text
 bash
@@ -320,7 +356,9 @@ python -m twine upload dist/*
 
 #
 
-## 3. Git Operations
+#
+
+# 3. Git Operations
 
 ```text
 bash
@@ -335,7 +373,9 @@ git push origin v1.6.2
 
 #
 
-## 4. GitHub Release
+#
+
+# 4. GitHub Release
 
 ```text
 bash
@@ -352,7 +392,9 @@ gh release create v1.6.2 --title "Release 1.6.2" --generate-notes
 
 #
 
-## When to Use Automation
+#
+
+# When to Use Automation
 
 - ✅ Bug fixes requiring user updates
 
@@ -364,7 +406,9 @@ gh release create v1.6.2 --title "Release 1.6.2" --generate-notes
 
 #
 
-## When NOT to Use
+#
+
+# When NOT to Use
 
 - ❌ Development/experimental changes
 
@@ -380,7 +424,9 @@ gh release create v1.6.2 --title "Release 1.6.2" --generate-notes
 
 #
 
-## Environment Variables
+#
+
+# Environment Variables
 
 ```text
 bash
@@ -407,7 +453,9 @@ VERBOSE_OUTPUT=false
 
 #
 
-## Custom Repository URLs
+#
+
+# Custom Repository URLs
 
 ```text
 bash
@@ -422,7 +470,9 @@ TEST_PYPI_REPOSITORY_URL=https://test.pypi.org/legacy/
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 **"externally-managed-environment" Error**:
 
@@ -477,7 +527,9 @@ text
 
 #
 
-## Token Protection
+#
+
+# Token Protection
 
 - Never commit `.env` file to repository
 
@@ -489,7 +541,9 @@ text
 
 #
 
-## Access Control
+#
+
+# Access Control
 
 - Limit PyPI token scope to specific packages
 

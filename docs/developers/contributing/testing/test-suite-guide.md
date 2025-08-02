@@ -46,7 +46,9 @@ tests/
 
 #
 
-## Integration Tests (`tests/integration/`)
+#
+
+# Integration Tests (`tests/integration/`)
 
 Full end-to-end tests that verify complete workflows:
 
@@ -76,7 +78,9 @@ text
 
 #
 
-## Unit Tests (`tests/unit/`)
+#
+
+# Unit Tests (`tests/unit/`)
 
 Isolated tests for individual components:
 
@@ -106,7 +110,9 @@ text
 
 #
 
-## Performance Tests (`tests/performance/`)
+#
+
+# Performance Tests (`tests/performance/`)
 
 Performance benchmarks and load testing:
 
@@ -134,7 +140,9 @@ text
 
 #
 
-## Test Fixtures (`tests/fixtures/`)
+#
+
+# Test Fixtures (`tests/fixtures/`)
 
 Test utilities and helper scripts:
 
@@ -150,7 +158,9 @@ Test utilities and helper scripts:
 
 #
 
-## Prerequisites
+#
+
+# Prerequisites
 
 ```text
 bash
@@ -175,7 +185,9 @@ pip install pytest pytest-asyncio
 
 #
 
-## Quick Test Commands
+#
+
+# Quick Test Commands
 
 ```text
 bash
@@ -214,11 +226,17 @@ python -m pytest tests/ -v -s
 
 #
 
-## Test Environment Setup
+#
+
+# Test Environment Setup
 
 #
 
-### Database Setup
+#
+
+#
+
+# Database Setup
 
 Tests use either in-memory databases or isolated test databases:
 
@@ -237,7 +255,11 @@ export INTEGRATION_DB_PATH="integration_test.db"
 
 #
 
-### Configuration
+#
+
+#
+
+# Configuration
 
 Test configuration is handled automatically, but you can override:
 
@@ -264,7 +286,9 @@ export SKIP_SLOW_TESTS=true
 
 #
 
-## Expected Performance Metrics
+#
+
+# Expected Performance Metrics
 
 **Unit Tests:**
 
@@ -292,7 +316,9 @@ export SKIP_SLOW_TESTS=true
 
 #
 
-## Benchmark Commands
+#
+
+# Benchmark Commands
 
 ```text
 bash
@@ -313,11 +339,17 @@ python -m pytest tests/performance/ --benchmark-only --benchmark-sort=mean
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 #
 
-### Database Lock Errors
+#
+
+#
+
+# Database Lock Errors
 
 ```text
 bash
@@ -334,7 +366,11 @@ python -m pytest tests/ --fresh-db
 
 #
 
-### Import Errors
+#
+
+#
+
+# Import Errors
 
 ```text
 bash
@@ -351,7 +387,11 @@ export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 
 #
 
-### Timeout Issues
+#
+
+#
+
+# Timeout Issues
 
 ```text
 bash
@@ -368,7 +408,9 @@ python -m pytest tests/ -v --timeout=60 --timeout-method=thread
 
 #
 
-## Test Debugging
+#
+
+# Test Debugging
 
 ```text
 bash
@@ -393,7 +435,9 @@ python -m pytest tests/ --log-level=DEBUG
 
 #
 
-## Pre-commit Checks
+#
+
+# Pre-commit Checks
 
 ```text
 bash
@@ -409,7 +453,9 @@ python -m pytest tests/unit/ -v
 
 #
 
-## Test Data Management
+#
+
+# Test Data Management
 
 - Test databases are automatically cleaned up
 
@@ -423,7 +469,9 @@ python -m pytest tests/unit/ -v
 
 #
 
-## Writing New Tests
+#
+
+# Writing New Tests
 
 1. Follow existing test structure and naming conventions
 
@@ -437,7 +485,9 @@ python -m pytest tests/unit/ -v
 
 #
 
-## Test Coverage Goals
+#
+
+# Test Coverage Goals
 
 - Unit tests: >90% code coverage
 

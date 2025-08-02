@@ -18,7 +18,9 @@ Beyond simple two-server integrations, real-world projects often require coordin
 
 #
 
-## Domain Separation Model
+#
+
+# Domain Separation Model
 
 ```text
                     ┌─────────────────┐
@@ -41,7 +43,9 @@ Testing     Schema Mgmt    Validation Monitoring   Integration
 
 #
 
-## Responsibility Matrix
+#
+
+# Responsibility Matrix
 
 | Domain | Primary Server | Secondary Servers | Orchestrator Role |
 |--------|---------------|-------------------|------------------|
@@ -52,11 +56,14 @@ Testing     Schema Mgmt    Validation Monitoring   Integration
 | **Integration** | API Client | Claude Code | Service design, contract validation |
 
 #
+
 # 🎯 Advanced Orchestration Patterns
 
 #
 
-## Pattern 1: Full-Stack Application Development
+#
+
+# Pattern 1: Full-Stack Application Development
 
 **Scenario:** Build a complete e-commerce platform with microservices architecture
 
@@ -117,7 +124,10 @@ Testing     Schema Mgmt    Validation Monitoring   Integration
 ```text
 
 #
-## Pattern 2: Data Pipeline with ML Integration
+
+#
+
+# Pattern 2: Data Pipeline with ML Integration
 
 **Scenario:** Build an automated data processing pipeline with machine learning components
 
@@ -171,7 +181,9 @@ orchestrator_execute_subtask("mlops_specialist")
 
 #
 
-## Technique 1: Pipeline Orchestration
+#
+
+# Technique 1: Pipeline Orchestration
 
 For workflows with clear dependencies:
 
@@ -200,7 +212,10 @@ workflow_stages = [
 ```text
 
 #
-## Technique 2: Parallel Execution with Synchronization
+
+#
+
+# Technique 2: Parallel Execution with Synchronization
 
 For independent workstreams that need coordination:
 
@@ -237,7 +252,9 @@ sync_points = [
 
 #
 
-## Graceful Degradation Strategy
+#
+
+# Graceful Degradation Strategy
 
 When servers become unavailable:
 
@@ -272,7 +289,9 @@ orchestrator_execute_subtask("adaptive_architect")
 
 #
 
-## 1. Clear Domain Boundaries
+#
+
+# 1. Clear Domain Boundaries
 
 Define explicit responsibilities for each server:
 
@@ -289,7 +308,9 @@ domain_boundaries:
 
 #
 
-## 2. Standardized Communication Patterns
+#
+
+# 2. Standardized Communication Patterns
 
 Use consistent patterns for cross-server coordination:
 

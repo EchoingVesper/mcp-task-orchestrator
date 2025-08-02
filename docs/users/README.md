@@ -24,7 +24,9 @@ Layered complexity for different workflow needs:
 
 #
 
-## Basic Workflows
+#
+
+# Basic Workflows
 
 - [Single Task Execution](guides/basic/single-task.md)
 
@@ -34,7 +36,9 @@ Layered complexity for different workflow needs:
 
 #
 
-## Intermediate Workflows
+#
+
+# Intermediate Workflows
 
 - [Project Planning](guides/intermediate/project-planning.md)
 
@@ -44,7 +48,9 @@ Layered complexity for different workflow needs:
 
 #
 
-## Advanced Workflows
+#
+
+# Advanced Workflows
 
 - [Enterprise Workflows](guides/advanced/enterprise-workflows.md)
 

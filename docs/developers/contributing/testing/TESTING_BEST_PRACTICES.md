@@ -8,7 +8,9 @@
 
 #
 
-## 1. Use File-Based Output for All Tests
+#
+
+# 1. Use File-Based Output for All Tests
 
 **Do this:**
 
@@ -22,6 +24,7 @@ with writer.write_test_output("my_test", "text") as session:
 ```text
 
 **Not this:**
+
 ```text
 text
 python
@@ -30,10 +33,13 @@ print("Test output...")
 # May be truncated
 
 ```text
+text
 
 #
 
-## 2. Use Alternative Test Runners
+#
+
+# 2. Use Alternative Test Runners
 
 **Do this:**
 
@@ -60,7 +66,9 @@ text
 
 #
 
-## 3. Use Context Managers for Database Connections
+#
+
+# 3. Use Context Managers for Database Connections
 
 **Do this:**
 
@@ -98,7 +106,9 @@ text
 
 #
 
-## 4. Add Hang Protection
+#
+
+# 4. Add Hang Protection
 
 **Do this:**
 
@@ -137,7 +147,9 @@ text
 
 #
 
-## Testing Database Operations
+#
+
+# Testing Database Operations
 
 ```text
 python
@@ -159,7 +171,9 @@ class MyTest(DatabaseTestCase):
 
 #
 
-## Testing Long-Running Operations
+#
+
+# Testing Long-Running Operations
 
 ```text
 python
@@ -181,7 +195,9 @@ async def test_long_operation():
 
 #
 
-## Safe Test Output Reading
+#
+
+# Safe Test Output Reading
 
 ```text
 python

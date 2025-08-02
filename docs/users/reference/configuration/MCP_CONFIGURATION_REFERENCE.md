@@ -28,7 +28,9 @@ MCP (Model Context Protocol) servers require careful environment and configurati
 
 #
 
-## Client-Server Model
+#
+
+# Client-Server Model
 
 ```text
 MCP Host (Claude Desktop) → MCP Client → MCP Server (Your Python Server)
@@ -47,13 +49,19 @@ MCP Host (Claude Desktop) → MCP Client → MCP Server (Your Python Server)
 
 #
 
-## Official Recommendations
+#
+
+# Official Recommendations
 
 Based on the Python SDK documentation:
 
 #
 
-### Primary Method: Using `uv` (Universal Package Manager)
+#
+
+#
+
+# Primary Method: Using `uv` (Universal Package Manager)
 
 ```text
 bash
@@ -68,7 +76,11 @@ uv add "mcp[cli]"
 
 #
 
-### Alternative Method: pip + Virtual Environment
+#
+
+#
+
+# Alternative Method: pip + Virtual Environment
 
 ```text
 bash
@@ -92,7 +104,9 @@ pip install "mcp[cli]"
 
 #
 
-## Environment Isolation
+#
+
+# Environment Isolation
 
 **Virtual Environment Benefits:**
 
@@ -120,7 +134,9 @@ pip install "mcp[cli]"
 
 #
 
-## Entry Point Configuration
+#
+
+# Entry Point Configuration
 
 Based on official server examples:
 
@@ -161,7 +177,9 @@ if __name__ == "__main__":
 
 #
 
-## Project Structure (pyproject.toml)
+#
+
+# Project Structure (pyproject.toml)
 
 ```text
 toml
@@ -185,7 +203,9 @@ mcp-server-myserver = "mcp_server_myserver:main"
 
 #
 
-## Claude Desktop Configuration
+#
+
+# Claude Desktop Configuration
 
 **Correct Configuration Pattern:**
 
@@ -221,7 +241,9 @@ text
 
 #
 
-## Environment Variable Handling
+#
+
+# Environment Variable Handling
 
 **Limited Inheritance:**
 
@@ -256,7 +278,9 @@ text
 
 #
 
-## The Core Problem
+#
+
+# The Core Problem
 
 **Issue**: Claude Desktop may use different Python than package installation
 
@@ -272,7 +296,9 @@ text
 
 #
 
-## Detection Strategy
+#
+
+# Detection Strategy
 
 ```text
 python
@@ -345,7 +371,9 @@ def find_correct_python():
 
 #
 
-## MCP Inspector Usage
+#
+
+# MCP Inspector Usage
 
 **Installation:**
 
@@ -389,15 +417,20 @@ text
 
 #
 
-## Debugging Workflow
+#
+
+# Debugging Workflow
 
 1. **Test with Inspector First**
    
+
 ```text
 bash
    npx @modelcontextprotocol/inspector python -m mcp_task_orchestrator.server
    
+
 ```text
+text
 text
 
 2. **Validate Configuration**
@@ -434,11 +467,14 @@ text
 
 #
 
-## Windows Specific
+#
+
+# Windows Specific
 
 **Python Launcher Recommended:**
 
 ```text
+text
 json
 {
   "command": "py",
@@ -458,7 +494,9 @@ text
 
 #
 
-## WSL/Linux
+#
+
+# WSL/Linux
 
 **Virtual Environment Paths:**
 
@@ -489,7 +527,9 @@ text
 
 #
 
-## macOS
+#
+
+# macOS
 
 **Homebrew Python:**
 
@@ -510,13 +550,19 @@ text
 
 #
 
-## Registry-Based Installer Enhancements
+#
+
+# Registry-Based Installer Enhancements
 
 Based on research findings, our installer should:
 
 #
 
-### 1. Python Detection Enhancement
+#
+
+#
+
+# 1. Python Detection Enhancement
 
 ```text
 python
@@ -551,7 +597,11 @@ def _test_python_installation(self, python_path: str) -> bool:
 
 #
 
-### 2. Configuration Generation
+#
+
+#
+
+# 2. Configuration Generation
 
 ```text
 python
@@ -573,7 +623,11 @@ def create_claude_config(self, python_path: str) -> dict:
 
 #
 
-### 3. Validation Integration
+#
+
+#
+
+# 3. Validation Integration
 
 ```text
 python
@@ -601,7 +655,9 @@ def validate_configuration(self, config_path: Path) -> bool:
 
 #
 
-## ModuleNotFoundError
+#
+
+# ModuleNotFoundError
 
 **Cause**: Python path mismatch between config and installation
 
@@ -615,7 +671,9 @@ def validate_configuration(self, config_path: Path) -> bool:
 
 #
 
-## Server Disconnected
+#
+
+# Server Disconnected
 
 **Cause**: Environment variable inheritance issues
 
@@ -635,7 +693,9 @@ text
 
 #
 
-## Permission Denied
+#
+
+# Permission Denied
 
 **Cause**: Executable permissions or paths
 
@@ -653,7 +713,9 @@ text
 
 #
 
-## Immediate Fixes for Our Installer
+#
+
+# Immediate Fixes for Our Installer
 
 1. **Enhanced Python Detection**
 
@@ -689,7 +751,9 @@ text
 
 #
 
-## Testing Protocol
+#
+
+# Testing Protocol
 
 1. **Test with Inspector**: `npx @modelcontextprotocol/inspector python -m mcp_task_orchestrator.server`
 

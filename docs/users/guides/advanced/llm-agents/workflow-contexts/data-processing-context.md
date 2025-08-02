@@ -16,7 +16,9 @@ Use for ETL pipelines, analytics workflows, data transformation, and reporting a
 
 #
 
-## 1. Data Research and Planning (Researcher)
+#
+
+# 1. Data Research and Planning (Researcher)
 
 - Data source analysis, schema mapping, quality assessment
 
@@ -24,7 +26,9 @@ Use for ETL pipelines, analytics workflows, data transformation, and reporting a
 
 #
 
-## 2. Architecture Design (Architect)
+#
+
+# 2. Architecture Design (Architect)
 
 - Pipeline architecture, data flow design, error handling strategy
 
@@ -32,7 +36,9 @@ Use for ETL pipelines, analytics workflows, data transformation, and reporting a
 
 #
 
-## 3. Implementation (Implementer)
+#
+
+# 3. Implementation (Implementer)
 
 - Data extraction, transformation scripts, loading mechanisms
 
@@ -40,7 +46,9 @@ Use for ETL pipelines, analytics workflows, data transformation, and reporting a
 
 #
 
-## 4. Validation and Testing (Tester)
+#
+
+# 4. Validation and Testing (Tester)
 
 - Data quality validation, pipeline testing, performance benchmarks
 

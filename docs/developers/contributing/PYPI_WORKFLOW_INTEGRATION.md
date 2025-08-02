@@ -40,7 +40,9 @@ graph TD
 
 #
 
-## 1. Feature Development
+#
+
+# 1. Feature Development
 
 Standard development process remains unchanged:
 
@@ -56,7 +58,9 @@ Standard development process remains unchanged:
 
 #
 
-## 2. Release Decision Point
+#
+
+# 2. Release Decision Point
 
 After merging to main, decide if a release is needed:
 
@@ -84,7 +88,9 @@ After merging to main, decide if a release is needed:
 
 #
 
-## 3. Release Execution
+#
+
+# 3. Release Execution
 
 When a release is needed, use the PyPI automation:
 
@@ -111,11 +117,17 @@ python scripts/release/pypi_release_automation.py --version major
 
 #
 
-## Git Workflow Integration
+#
+
+# Git Workflow Integration
 
 #
 
-### Before Automation
+#
+
+#
+
+# Before Automation
 
 Traditional manual steps that are now automated:
 
@@ -145,7 +157,11 @@ text
 
 #
 
-### After Automation
+#
+
+#
+
+# After Automation
 
 Single command replaces all manual steps:
 
@@ -158,11 +174,17 @@ text
 
 #
 
-## CI/CD Integration
+#
+
+# CI/CD Integration
 
 #
 
-### GitHub Actions (Future Enhancement)
+#
+
+#
+
+# GitHub Actions (Future Enhancement)
 
 The automation can be integrated into GitHub Actions:
 
@@ -206,11 +228,17 @@ jobs:
 
 #
 
-## MCP Client Updates
+#
+
+# MCP Client Updates
 
 #
 
-### User Installation Workflow
+#
+
+#
+
+# User Installation Workflow
 
 After each release, users can update with:
 
@@ -223,7 +251,11 @@ text
 
 #
 
-### Claude Code Configuration
+#
+
+#
+
+# Claude Code Configuration
 
 The CLI tools help users update their Claude Code configuration:
 
@@ -247,7 +279,9 @@ text
 
 #
 
-## Main Branch Protection
+#
+
+# Main Branch Protection
 
 Recommended GitHub branch protection rules:
 
@@ -261,7 +295,9 @@ Recommended GitHub branch protection rules:
 
 #
 
-## Release Branch Strategy
+#
+
+# Release Branch Strategy
 
 ```text
 bash
@@ -282,7 +318,9 @@ main → release/v1.7.0 → PyPI Release → merge back to main
 
 #
 
-## Semantic Versioning
+#
+
+# Semantic Versioning
 
 Follow semantic versioning (semver) principles:
 
@@ -312,7 +350,9 @@ Follow semantic versioning (semver) principles:
 
 #
 
-## Pre-release Versions
+#
+
+# Pre-release Versions
 
 For testing major changes:
 
@@ -340,7 +380,9 @@ text
 
 #
 
-## Automated Communication
+#
+
+# Automated Communication
 
 The automation handles:
 
@@ -354,7 +396,9 @@ The automation handles:
 
 #
 
-## Manual Communication
+#
+
+# Manual Communication
 
 After automation completes:
 
@@ -372,7 +416,9 @@ After automation completes:
 
 #
 
-## Automated Testing
+#
+
+# Automated Testing
 
 The automation includes built-in test execution:
 
@@ -390,7 +436,9 @@ python scripts/release/pypi_release_automation.py --skip-tests
 
 #
 
-## Manual QA Checkpoints
+#
+
+# Manual QA Checkpoints
 
 Before running automation:
 
@@ -406,7 +454,9 @@ Before running automation:
 
 #
 
-## Post-Release Validation
+#
+
+# Post-Release Validation
 
 After automation completes:
 
@@ -424,7 +474,9 @@ After automation completes:
 
 #
 
-## Hotfix Workflow
+#
+
+# Hotfix Workflow
 
 For critical security or functionality issues:
 
@@ -459,7 +511,9 @@ python scripts/release/pypi_release_automation.py --version patch
 
 #
 
-## Rollback Procedures
+#
+
+# Rollback Procedures
 
 If a release causes issues:
 
@@ -488,7 +542,9 @@ git tag --sort=-version:refname | head -5
 
 #
 
-## Release Health Monitoring
+#
+
+# Release Health Monitoring
 
 Track release success metrics:
 
@@ -502,7 +558,9 @@ Track release success metrics:
 
 #
 
-## Automation Performance
+#
+
+# Automation Performance
 
 Monitor automation script performance:
 
@@ -520,7 +578,9 @@ Monitor automation script performance:
 
 #
 
-## Planned Improvements
+#
+
+# Planned Improvements
 
 1. **Enhanced Testing Integration**
 
@@ -560,7 +620,9 @@ Monitor automation script performance:
 
 #
 
-## Common Workflow Problems
+#
+
+# Common Workflow Problems
 
 **Automation Fails After Merge:**
 
@@ -592,7 +654,9 @@ Monitor automation script performance:
 
 #
 
-## Development Team Guidelines
+#
+
+# Development Team Guidelines
 
 1. **One Release per Merged PR Set**: Group related changes for single release
 
@@ -604,7 +668,9 @@ Monitor automation script performance:
 
 #
 
-## Release Timing
+#
+
+# Release Timing
 
 - **Avoid Fridays**: Don't release just before weekends
 

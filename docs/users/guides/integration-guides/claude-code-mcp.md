@@ -18,7 +18,9 @@ The Task Orchestrator + Claude Code MCP integration creates a powerful developme
 
 #
 
-## Separation of Concerns
+#
+
+# Separation of Concerns
 
 ```text
 ┌─────────────────────────────┐    ┌─────────────────────────────┐
@@ -40,7 +42,9 @@ The Task Orchestrator + Claude Code MCP integration creates a powerful developme
 
 #
 
-## Resource Coordination Principles
+#
+
+# Resource Coordination Principles
 
 1. **File Operation Ownership:** Claude Code exclusively handles all file read/write operations
 
@@ -51,13 +55,16 @@ The Task Orchestrator + Claude Code MCP integration creates a powerful developme
 4. **Error Handling:** Workflow-level recovery (orchestrator) + execution-level recovery (claude-code)
 
 #
+
 # 🎯 The Sequential Coordination Pattern (CORE)
 
 This is the foundational pattern that drives all successful integrations:
 
 #
 
-## Step 1: Initialize Session & Context
+#
+
+# Step 1: Initialize Session & Context
 
 ```text
 
@@ -68,7 +75,9 @@ orchestrator_initialize_session()
 
 #
 
-## Step 2: Strategic Task Breakdown
+#
+
+# Step 2: Strategic Task Breakdown
 
 ```text
 
@@ -88,13 +97,19 @@ orchestrator_plan_task(
 
 #
 
-## Step 3: Execute-Coordinate Loop
+#
+
+# Step 3: Execute-Coordinate Loop
 
 For each subtask:
 
 #
 
-### 3a. Get Specialist Context
+#
+
+#
+
+# 3a. Get Specialist Context
 
 ```text
 
@@ -105,7 +120,11 @@ orchestrator_execute_subtask(task_id="architect_abc123")
 
 #
 
-### 3b. Implement with Claude Code
+#
+
+#
+
+# 3b. Implement with Claude Code
 
 ```text
 
@@ -122,7 +141,11 @@ create_file("/project/tests/test_api.py", content="...")
 
 #
 
-### 3c. Record Progress
+#
+
+#
+
+# 3c. Record Progress
 
 ```text
 text
@@ -137,7 +160,9 @@ orchestrator_complete_subtask(
 
 #
 
-## Step 4: Final Synthesis
+#
+
+# Step 4: Final Synthesis
 
 ```text
 
@@ -147,11 +172,14 @@ orchestrator_synthesize_results(parent_task_id="main_task")
 **Output:** Comprehensive project summary and next steps
 
 #
+
 # 🔄 Real Coordination Examples
 
 #
 
-## Example 1: Full-Stack Web Application
+#
+
+# Example 1: Full-Stack Web Application
 
 **User Request:** "Build a complete task management web app with React frontend and Node.js backend"
 
@@ -204,7 +232,10 @@ orchestrator_synthesize_results(parent_task_id="main_task")
 **Result:** Complete, well-tested web application with 25+ files, proper structure, and comprehensive testing.
 
 #
-## Example 2: Data Processing Pipeline
+
+#
+
+# Example 2: Data Processing Pipeline
 
 **User Request:** "Create a Python pipeline that processes CSV files, cleans data, and generates reports"
 
@@ -248,7 +279,9 @@ orchestrator_synthesize_results(parent_task_id="main_task")
 
 #
 
-## Pattern 1: Iterative Refinement
+#
+
+# Pattern 1: Iterative Refinement
 
 When initial implementation needs improvement:
 
@@ -280,7 +313,9 @@ When initial implementation needs improvement:
 
 #
 
-## Pattern 2: Multi-Language Projects
+#
+
+# Pattern 2: Multi-Language Projects
 
 Coordination across different technology stacks:
 
@@ -303,7 +338,10 @@ Coordination across different technology stacks:
 ```text
 
 #
-## Pattern 3: Legacy System Integration
+
+#
+
+# Pattern 3: Legacy System Integration
 
 Working with existing codebases:
 
@@ -337,7 +375,9 @@ Working with existing codebases:
 
 #
 
-## Workflow-Level Error Recovery (Orchestrator)
+#
+
+# Workflow-Level Error Recovery (Orchestrator)
 
 ```text
 python
@@ -360,7 +400,9 @@ orchestrator_execute_subtask("troubleshooter_123")
 
 #
 
-## Execution-Level Error Recovery (Claude Code)
+#
+
+# Execution-Level Error Recovery (Claude Code)
 
 ```python
 
@@ -385,11 +427,14 @@ if lint_results.has_errors:
 ```text
 
 #
+
 # 📊 Performance Optimization Patterns
 
 #
 
-## Parallel Subtask Execution
+#
+
+# Parallel Subtask Execution
 
 For independent subtasks that can run simultaneously:
 
@@ -411,7 +456,9 @@ For independent subtasks that can run simultaneously:
 
 #
 
-## Incremental Implementation
+#
+
+# Incremental Implementation
 
 For large projects, break into meaningful chunks:
 
@@ -432,7 +479,9 @@ Each week follows full orchestrator → claude-code → synthesis cycle
 
 #
 
-## Common Issues & Solutions
+#
+
+# Common Issues & Solutions
 
 **Issue:** Orchestrator plans don't align with Claude Code capabilities
 **Solution:** Use Claude Code file analysis before planning:
@@ -475,17 +524,22 @@ text
 - Use Claude Code to verify file states before planning
 
 #
+
 # 🚀 Best Practices
 
 #
 
-## 1. Start Small, Scale Up
+#
+
+# 1. Start Small, Scale Up
 
 Begin with simple 2-3 subtask workflows before attempting complex orchestrations.
 
 #
 
-## 2. Maintain Clear Ownership
+#
+
+# 2. Maintain Clear Ownership
 
 - **Orchestrator:** Planning, coordination, specialist expertise, progress tracking
 
@@ -493,25 +547,33 @@ Begin with simple 2-3 subtask workflows before attempting complex orchestrations
 
 #
 
-## 3. Use Specific Specialist Types
+#
+
+# 3. Use Specific Specialist Types
 
 Instead of generic "developer", use "backend_specialist", "frontend_architect", "security_expert" for focused expertise.
 
 #
 
-## 4. Complete Subtasks Fully
+#
+
+# 4. Complete Subtasks Fully
 
 Don't move to the next subtask until the current one is completely implemented and recorded.
 
 #
 
-## 5. Leverage File Analysis
+#
+
+# 5. Leverage File Analysis
 
 Use Claude Code's file reading capabilities to inform orchestrator planning decisions.
 
 #
 
-## 6. Document Integration Points
+#
+
+# 6. Document Integration Points
 
 When Claude Code creates files, have the orchestrator document architectural decisions and integration patterns.
 

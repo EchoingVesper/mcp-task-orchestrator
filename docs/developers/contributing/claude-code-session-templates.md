@@ -43,7 +43,9 @@
 
 #
 
-## Core Development
+#
+
+# Core Development
 
 ```bash
 
@@ -63,7 +65,9 @@ cd mcp_task_orchestrator && claude
 
 #
 
-## Script Development
+#
+
+# Script Development
 
 ```text
 bash
@@ -86,7 +90,9 @@ cd scripts && claude
 
 #
 
-## Documentation Work
+#
+
+# Documentation Work
 
 ```bash
 
@@ -112,7 +118,9 @@ cd docs && claude
 
 #
 
-## Quick Health Check
+#
+
+# Quick Health Check
 
 ```bash
 python scripts/diagnostics/check-project-structure.py
@@ -127,7 +135,9 @@ python scripts/diagnostics/health_monitor.py --report
 
 #
 
-## Maintenance Operations
+#
+
+# Maintenance Operations
 
 ```bash
 
@@ -154,7 +164,9 @@ python scripts/maintenance/automated_cleanup.py --dry-run
 
 #
 
-## Safe Development Workflow
+#
+
+# Safe Development Workflow
 
 ```text
 bash
@@ -181,7 +193,9 @@ git pull origin main
 
 #
 
-## Enhanced Test Runners (Recommended)
+#
+
+# Enhanced Test Runners (Recommended)
 
 ```text
 bash
@@ -196,7 +210,9 @@ python scripts/testing/basic_migration_test.py
 
 #
 
-## Package Development Testing
+#
+
+# Package Development Testing
 
 ```text
 bash
@@ -233,7 +249,9 @@ venv_mcp/Scripts/python.exe -m pip install -e . --quiet
 
 #
 
-## Rollback to Pre-Cleanup State
+#
+
+# Rollback to Pre-Cleanup State
 
 ```text
 bash
@@ -251,7 +269,9 @@ git reset --hard <previous-commit>
 
 #
 
-## Health Score Issues
+#
+
+# Health Score Issues
 
 ```text
 bash
@@ -276,7 +296,9 @@ find . -name "__pycache__" -not -path "./venv*" -exec rm -rf {} +
 
 #
 
-## Feature Development Session
+#
+
+# Feature Development Session
 
 ```text
 text
@@ -324,7 +346,9 @@ markdown
 
 #
 
-## Documentation Session
+#
+
+# Documentation Session
 
 ```text
 markdown

@@ -28,7 +28,9 @@ The MCP Task Orchestrator now supports a robust database-backed persistence mech
 
 #
 
-## Technology Stack
+#
+
+# Technology Stack
 
 - **SQLAlchemy**: A powerful ORM with transaction support
 
@@ -38,7 +40,9 @@ The MCP Task Orchestrator now supports a robust database-backed persistence mech
 
 #
 
-## Architecture
+#
+
+# Architecture
 
 The database persistence implementation follows the same interface as the file-based system, allowing for a smooth transition. The key components are:
 
@@ -56,7 +60,9 @@ The database persistence implementation follows the same interface as the file-b
 
 #
 
-## Configuration
+#
+
+# Configuration
 
 You can enable the database-backed persistence in one of the following ways:
 
@@ -66,11 +72,14 @@ You can enable the database-backed persistence in one of the following ways:
 
 ```bash
    export MCP_TASK_ORCHESTRATOR_USE_DB=true
-   ```
+   
+
+```text
 
 2. **Programmatically**:
 
-   ```
+   
+```text
 
 python
    from mcp_task_orchestrator.persistence_factory import create_persistence_manager
@@ -83,10 +92,15 @@ python
    
 
 ```text
+text
+text
+text
 
 3. **StateManager Initialization**:
 
-   ```
+   
+
+```text
 
 python
    from mcp_task_orchestrator.orchestrator.state import StateManager
@@ -99,26 +113,36 @@ python
    
 
 ```text
+text
+text
 
 #
 
-## Database URL
+#
+
+# Database URL
 
 By default, the database is stored in a SQLite file in the persistence directory. You can customize the database URL:
 
 1. **Environment Variable**:
 
-   ```
+   
+
+```text
 
 bash
    export MCP_TASK_ORCHESTRATOR_DB_URL="sqlite:///path/to/database.db"
    
 
 ```text
+text
+text
 
 2. **Programmatically**:
 
-   ```
+   
+
+```text
 
 python
    from mcp_task_orchestrator.persistence_factory import create_persistence_manager
@@ -134,6 +158,8 @@ python
    
 
 ```text
+text
+text
 
 #
 
@@ -150,7 +176,9 @@ python migrate_to_db.py
 
 #
 
-## Options
+#
+
+# Options
 
 - `--base-dir`: Base directory for the persistence storage (default: current directory)
 
@@ -160,7 +188,9 @@ python migrate_to_db.py
 
 #
 
-## Example
+#
+
+# Example
 
 ```text
 bash
@@ -174,13 +204,17 @@ python migrate_to_db.py --base-dir /path/to/base/dir --db-url "sqlite:///path/to
 
 #
 
-## Logging
+#
+
+# Logging
 
 The database persistence implementation logs detailed information about its operations. Logs are stored in the `.task_orchestrator/logs/db_persistence.log` file.
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 1. **Migration Failures**: If migration fails, check the migration log for details. You can run the migration script with the `--dry-run` option to see what would be migrated without making any changes.
 
@@ -194,7 +228,9 @@ The database persistence implementation logs detailed information about its oper
 
 #
 
-## Adding New Features
+#
+
+# Adding New Features
 
 When adding new features to the database persistence implementation, follow these guidelines:
 
@@ -208,7 +244,9 @@ When adding new features to the database persistence implementation, follow thes
 
 #
 
-## Testing
+#
+
+# Testing
 
 To run the database persistence tests:
 

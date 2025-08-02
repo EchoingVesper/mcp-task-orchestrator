@@ -28,7 +28,9 @@ The MCP Task Orchestrator includes an in-context server reboot system that allow
 
 #
 
-## Basic Server Restart
+#
+
+# Basic Server Restart
 
 To trigger a basic server restart:
 
@@ -58,7 +60,9 @@ This will:
 
 #
 
-## Health Check Before Restart
+#
+
+# Health Check Before Restart
 
 Check if the server is ready for restart:
 
@@ -81,7 +85,9 @@ readiness = await orchestrator_shutdown_prepare()
 
 #
 
-## orchestrator_restart_server
+#
+
+# orchestrator_restart_server
 
 Trigger a graceful server restart with state preservation.
 
@@ -155,7 +161,9 @@ text
 
 #
 
-## orchestrator_health_check
+#
+
+# orchestrator_health_check
 
 Check server health and readiness for operations.
 
@@ -216,7 +224,9 @@ text
 
 #
 
-## orchestrator_shutdown_prepare
+#
+
+# orchestrator_shutdown_prepare
 
 Check server readiness for graceful shutdown.
 
@@ -272,7 +282,9 @@ text
 
 #
 
-## orchestrator_restart_status
+#
+
+# orchestrator_restart_status
 
 Get current status of restart operation.
 
@@ -320,7 +332,9 @@ text
 
 #
 
-## orchestrator_reconnect_test
+#
+
+# orchestrator_reconnect_test
 
 Test client reconnection capability.
 
@@ -356,7 +370,9 @@ text
 
 #
 
-## Claude Desktop
+#
+
+# Claude Desktop
 
 Claude Desktop automatically handles server reconnection:
 
@@ -378,7 +394,9 @@ Claude Desktop automatically handles server reconnection:
 
 #
 
-## VS Code / Cursor / Windsurf
+#
+
+# VS Code / Cursor / Windsurf
 
 MCP extensions in code editors handle reconnection:
 
@@ -420,12 +438,15 @@ text
 
 #
 
-## Planned Maintenance
+#
+
+# Planned Maintenance
 
 For planned server maintenance:
 
 1. **Pre-Maintenance Check**
    
+
 ```text
 python
    
@@ -440,7 +461,9 @@ python
 
    readiness = await orchestrator_shutdown_prepare()
    
+
 ```text
+text
 text
 
 2. **Notify Stakeholders** (if applicable)
@@ -451,7 +474,9 @@ text
 
 3. **Perform Restart**
    
+
 ```text
+text
 python
    
 
@@ -462,12 +487,16 @@ python
        "timeout": 60
    })
    
+
 ```text
+text
 text
 
 4. **Verify Success**
    
+
 ```text
+text
 python
    
 
@@ -481,12 +510,16 @@ python
 
    health = await orchestrator_health_check()
    
+
 ```text
+text
 text
 
 #
 
-## Emergency Recovery
+#
+
+# Emergency Recovery
 
 For emergency restart scenarios:
 
@@ -498,7 +531,9 @@ For emergency restart scenarios:
 
 2. **Emergency Restart** (if graceful restart not possible)
    
+
 ```text
+text
 python
    
 
@@ -511,7 +546,9 @@ python
        "timeout": 15
    })
    
+
 ```text
+text
 text
 
 3. **Post-Recovery Validation**
@@ -524,13 +561,17 @@ text
 
 #
 
-## Configuration Updates
+#
+
+# Configuration Updates
 
 When updating server configuration:
 
 1. **Backup Current State**
    
+
 ```text
+text
 python
    
 
@@ -538,7 +579,9 @@ python
 
    health = await orchestrator_health_check()
    
+
 ```text
+text
 text
 
 2. **Update Configuration Files**
@@ -549,18 +592,24 @@ text
 
 3. **Restart with Configuration Update**
    
+
 ```text
+text
 python
    result = await orchestrator_restart_server({
        "reason": "configuration_update"
    })
    
+
 ```text
+text
 text
 
 4. **Validate New Configuration**
    
+
 ```text
+text
 python
    
 
@@ -568,7 +617,9 @@ python
 
    health = await orchestrator_health_check()
    
+
 ```text
+text
 text
 
 #
@@ -577,7 +628,9 @@ text
 
 #
 
-## Key Metrics to Monitor
+#
+
+# Key Metrics to Monitor
 
 1. **Restart Success Rate**
 
@@ -605,9 +658,12 @@ text
 
 #
 
-## Monitoring Setup
+#
+
+# Monitoring Setup
 
 ```text
+text
 python
 
 # Example monitoring script
@@ -644,7 +700,9 @@ async def monitor_restart_health():
 
 #
 
-## Optimal Settings
+#
+
+# Optimal Settings
 
 For typical workloads:
 
@@ -692,7 +750,9 @@ buffer_config = {
 
 #
 
-## Performance Optimization
+#
+
+# Performance Optimization
 
 1. **Reduce State Size**
 
@@ -724,7 +784,9 @@ buffer_config = {
 
 #
 
-## Access Control
+#
+
+# Access Control
 
 - Restart operations require appropriate permissions
 
@@ -734,7 +796,9 @@ buffer_config = {
 
 #
 
-## State Security
+#
+
+# State Security
 
 - State files are encrypted at rest
 
@@ -744,7 +808,9 @@ buffer_config = {
 
 #
 
-## Network Security
+#
+
+# Network Security
 
 - Client reconnection uses secure channels
 

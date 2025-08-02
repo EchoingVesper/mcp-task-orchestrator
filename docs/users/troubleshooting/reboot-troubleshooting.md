@@ -20,10 +20,13 @@ Before troubleshooting specific issues, run these basic checks:
 ```python
    health = await orchestrator_health_check()
    print("System healthy:", health['healthy'])
-   ```
+   
+
+```text
 
 2. **Restart Readiness**
-   ```
+   
+```text
 
 python
    readiness = await orchestrator_shutdown_prepare()
@@ -33,9 +36,14 @@ python
    
 
 ```text
+text
+text
+text
 
 3. **Current Status**
-   ```
+   
+
+```text
 
 python
    status = await orchestrator_restart_status()
@@ -43,6 +51,8 @@ python
    
 
 ```text
+text
+text
 
 #
 
@@ -50,7 +60,9 @@ python
 
 #
 
-## 1. Restart Fails to Initiate
+#
+
+# 1. Restart Fails to Initiate
 
 **Symptoms:**
 
@@ -67,6 +79,7 @@ python
 - Reboot manager not initialized
 
 **Diagnosis:**
+
 ```text
 text
 python
@@ -88,11 +101,13 @@ if 'reboot_readiness' in health['checks']:
     print("Reboot ready:", health['checks']['reboot_readiness']['ready'])
 
 ```text
+text
 
 **Solutions:**
 
 1. **Wait for Current Operation** (if restart in progress):
    
+
 ```text
 python
    
@@ -109,12 +124,16 @@ python
        print(f"Waiting for restart to complete: {phase}")
        await asyncio.sleep(2)
    
+
 ```text
+text
 text
 
 2. **Force Emergency Restart** (if stuck):
    
+
 ```text
+text
 python
    
 
@@ -126,7 +145,9 @@ python
        "reason": "emergency_shutdown"
    })
    
+
 ```text
+text
 text
 
 3. **Reset Maintenance Mode** (manual intervention required):
@@ -137,7 +158,9 @@ text
 
 #
 
-## 2. Restart Times Out
+#
+
+# 2. Restart Times Out
 
 **Symptoms:**
 
@@ -156,6 +179,7 @@ text
 **Diagnosis:**
 
 ```text
+text
 python
 
 # Monitor restart progress
@@ -180,6 +204,7 @@ text
 
 1. **Increase Timeout**:
    
+
 ```text
 python
    
@@ -193,12 +218,16 @@ python
 
    })
    
+
 ```text
+text
 text
 
 2. **Emergency Restart** (if timeout persists):
    
+
 ```text
+text
 python
    
 
@@ -209,7 +238,9 @@ python
        "timeout": 30
    })
    
+
 ```text
+text
 text
 
 3. **Manual Intervention** (server-side):
@@ -222,7 +253,9 @@ text
 
 #
 
-## 3. State Not Preserved
+#
+
+# 3. State Not Preserved
 
 **Symptoms:**
 
@@ -243,6 +276,7 @@ text
 **Diagnosis:**
 
 ```text
+text
 python
 
 # Check if state preservation was requested
@@ -279,6 +313,7 @@ text
 
 1. **Verify State Preservation Settings**:
    
+
 ```text
 python
    
@@ -290,12 +325,16 @@ python
        "graceful": true
    })
    
+
 ```text
+text
 text
 
 2. **Check Available Disk Space**:
    
+
 ```text
+text
 bash
    
 
@@ -303,12 +342,16 @@ bash
 
    df -h .task_orchestrator/server_state/
    
+
 ```text
+text
 text
 
 3. **Manual State Recovery** (if backup exists):
    
+
 ```text
+text
 python
    
 
@@ -327,12 +370,16 @@ python
 # (requires server restart with restored file)
 
    
+
 ```text
+text
 text
 
 #
 
-## 4. Client Reconnection Issues
+#
+
+# 4. Client Reconnection Issues
 
 **Symptoms:**
 
@@ -353,6 +400,7 @@ text
 **Diagnosis:**
 
 ```text
+text
 python
 
 # Test client reconnection capability
@@ -389,6 +437,7 @@ text
 
 2. **Test Specific Client Session**:
    
+
 ```text
 python
    
@@ -400,12 +449,16 @@ python
    })
    print("Session test result:", session_test)
    
+
 ```text
+text
 text
 
 3. **Clear Request Buffers** (if buffers are full):
    
+
 ```text
+text
 python
    
 
@@ -415,7 +468,9 @@ python
        "reason": "error_recovery"
    })
    
+
 ```text
+text
 text
 
 4. **Manual Client Restart** (last resort):
@@ -428,7 +483,9 @@ text
 
 #
 
-## 5. Database Connection Issues
+#
+
+# 5. Database Connection Issues
 
 **Symptoms:**
 
@@ -449,6 +506,7 @@ text
 **Diagnosis:**
 
 ```text
+text
 python
 
 # Check database health
@@ -474,6 +532,7 @@ text
 
 1. **Wait for Database Operations** to complete:
    
+
 ```text
 python
    
@@ -491,12 +550,16 @@ python
 # Wait and retry
 
    
+
 ```text
+text
 text
 
 2. **Force Database Cleanup**:
    
+
 ```text
+text
 python
    
 
@@ -510,12 +573,16 @@ python
        "reason": "error_recovery"
    })
    
+
 ```text
+text
 text
 
 3. **Database Integrity Check** (server-side):
    
+
 ```text
+text
 bash
    
 
@@ -523,12 +590,16 @@ bash
 
    sqlite3 .task_orchestrator/task_orchestrator.db "PRAGMA integrity_check;"
    
+
 ```text
+text
 text
 
 #
 
-## 6. Performance Issues
+#
+
+# 6. Performance Issues
 
 **Symptoms:**
 
@@ -549,6 +620,7 @@ text
 **Diagnosis:**
 
 ```text
+text
 python
 
 # Monitor restart performance
@@ -590,6 +662,7 @@ text
 
 3. **Stagger Client Connections**:
    
+
 ```text
 python
    
@@ -603,7 +676,9 @@ python
 
    })
    
+
 ```text
+text
 text
 
 #
@@ -612,7 +687,9 @@ text
 
 #
 
-## RESTART_001: Initialization Failed
+#
+
+# RESTART_001: Initialization Failed
 
 - **Cause**: Reboot manager not properly initialized
 
@@ -620,7 +697,9 @@ text
 
 #
 
-## RESTART_002: Already In Progress  
+#
+
+# RESTART_002: Already In Progress  
 
 - **Cause**: Another restart operation is already running
 
@@ -628,7 +707,9 @@ text
 
 #
 
-## RESTART_003: System Not Ready
+#
+
+# RESTART_003: System Not Ready
 
 - **Cause**: Blocking conditions prevent restart
 
@@ -636,7 +717,9 @@ text
 
 #
 
-## RESTART_004: Timeout Exceeded
+#
+
+# RESTART_004: Timeout Exceeded
 
 - **Cause**: Operation took longer than specified timeout
 
@@ -644,7 +727,9 @@ text
 
 #
 
-## RESTART_005: State Serialization Failed
+#
+
+# RESTART_005: State Serialization Failed
 
 - **Cause**: Unable to save server state to disk
 
@@ -652,7 +737,9 @@ text
 
 #
 
-## RESTART_006: Process Management Failed
+#
+
+# RESTART_006: Process Management Failed
 
 - **Cause**: Unable to start/stop server processes
 
@@ -660,7 +747,9 @@ text
 
 #
 
-## RESTART_007: Connection Manager Error
+#
+
+# RESTART_007: Connection Manager Error
 
 - **Cause**: Client connection handling failed
 
@@ -668,7 +757,9 @@ text
 
 #
 
-## RESTART_008: Database Error
+#
+
+# RESTART_008: Database Error
 
 - **Cause**: Database operations failed during restart
 
@@ -680,11 +771,14 @@ text
 
 #
 
-## Enable Debug Logging
+#
+
+# Enable Debug Logging
 
 Set environment variable for detailed logging:
 
 ```text
+text
 bash
 export MCP_TASK_ORCHESTRATOR_LOG_LEVEL=DEBUG
 
@@ -693,7 +787,9 @@ text
 
 #
 
-## Manual State File Inspection
+#
+
+# Manual State File Inspection
 
 ```text
 python
@@ -721,7 +817,9 @@ if state['integrity_hash']:
 
 #
 
-## Process Monitoring
+#
+
+# Process Monitoring
 
 ```text
 bash
@@ -742,7 +840,9 @@ lsof | grep task_orchestrator | wc -l
 
 #
 
-## Network Diagnostics
+#
+
+# Network Diagnostics
 
 ```text
 bash
@@ -763,75 +863,104 @@ tcpdump -i lo port <server_port>
 
 #
 
-## Complete System Recovery
+#
+
+# Complete System Recovery
 
 If the server is completely unresponsive:
 
 1. **Stop Server Process**:
    
+
 ```text
 bash
    pkill -f mcp_task_orchestrator
    
+
 ```text
+text
 text
 
 2. **Clear Lock Files** (if any):
    
+
 ```text
+text
 bash
    rm -f .task_orchestrator/*.lock
    
+
 ```text
+text
 text
 
 3. **Backup Current State**:
    
+
 ```text
+text
 bash
    cp .task_orchestrator/server_state/current_state.json \
       .task_orchestrator/server_state/recovery_backup.json
    
+
 ```text
+text
 text
 
 4. **Restart Server**:
    
+
 ```text
+text
 bash
    python -m mcp_task_orchestrator.server
    
+
 ```text
+text
 text
 
 5. **Verify Recovery**:
    
+
 ```text
+text
 python
    health = await orchestrator_health_check()
    print("Recovery successful:", health['healthy'])
    
+
 ```text
+text
 text
 
 #
 
-## State Recovery from Backup
+#
+
+# State Recovery from Backup
 
 If state file is corrupted:
 
 1. **List Available Backups**:
    
+
 ```text
+text
 bash
    ls -la .task_orchestrator/server_state/backup_state_*.json
    
+
 ```text
+text
 text
 
 2. **Restore from Backup**:
    
+
 ```text
+text
 bash
    
 
@@ -840,12 +969,16 @@ bash
    cp .task_orchestrator/server_state/backup_state_<timestamp>.json \
       .task_orchestrator/server_state/current_state.json
    
+
 ```text
+text
 text
 
 3. **Restart and Verify**:
    
+
 ```text
+text
 python
    
 
@@ -854,7 +987,9 @@ python
    health = await orchestrator_health_check()
    status = await orchestrator_restart_status()
    
+
 ```text
+text
 text
 
 #
@@ -863,11 +998,15 @@ text
 
 #
 
-## Regular Maintenance
+#
+
+# Regular Maintenance
 
 1. **Monitor Restart Health**:
    
+
 ```text
+text
 python
    
 
@@ -881,12 +1020,16 @@ python
 
        send_alert("Server health check failed")
    
+
 ```text
+text
 text
 
 2. **Clean Up Old State Files**:
    
+
 ```text
+text
 bash
    
 
@@ -895,12 +1038,16 @@ bash
    cd .task_orchestrator/server_state/
    ls -t backup_state_*.json | tail -n +11 | xargs rm -f
    
+
 ```text
+text
 text
 
 3. **Archive Completed Tasks**:
    
+
 ```text
+text
 python
    
 
@@ -911,14 +1058,19 @@ python
 # (implementation depends on task management system)
 
    
+
 ```text
+text
 text
 
 #
 
-## Monitoring Setup
+#
+
+# Monitoring Setup
 
 ```text
+text
 python
 
 # Example monitoring script
@@ -965,12 +1117,15 @@ asyncio.create_task(monitor_restart_system())
 
 #
 
-## Log Collection
+#
+
+# Log Collection
 
 Before contacting support, collect these logs:
 
 1. **Server Logs**:
    
+
 ```text
 bash
    
@@ -979,12 +1134,16 @@ bash
 
    grep -A 10 -B 10 "restart\|reboot\|shutdown" server.log
    
+
 ```text
+text
 text
 
 2. **System Information**:
    
+
 ```text
+text
 bash
    
 
@@ -994,11 +1153,14 @@ bash
    free -h
    ps aux | head -20
    
+
 ```text
+text
 text
 
 3. **State Files**:
    ```
+
 bash
    
 
@@ -1009,7 +1171,9 @@ bash
 
 #
 
-## Contact Information
+#
+
+# Contact Information
 
 For issues not resolved by this guide:
 

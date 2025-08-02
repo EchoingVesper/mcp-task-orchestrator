@@ -16,7 +16,9 @@ Use for comprehensive documentation creation, restructuring, and maintenance acr
 
 #
 
-## 1. Research and Analysis (Researcher)
+#
+
+# 1. Research and Analysis (Researcher)
 
 - Current state analysis, content audit, user needs assessment
 
@@ -24,7 +26,9 @@ Use for comprehensive documentation creation, restructuring, and maintenance acr
 
 #
 
-## 2. Architecture Design (Architect)
+#
+
+# 2. Architecture Design (Architect)
 
 - Documentation structure, navigation design, format standardization
 
@@ -32,7 +36,9 @@ Use for comprehensive documentation creation, restructuring, and maintenance acr
 
 #
 
-## 3. Content Creation (Documenter)
+#
+
+# 3. Content Creation (Documenter)
 
 - User guides, API docs, tutorials, LLM-optimized references
 
@@ -40,7 +46,9 @@ Use for comprehensive documentation creation, restructuring, and maintenance acr
 
 #
 
-## 4. Implementation (Implementer)
+#
+
+# 4. Implementation (Implementer)
 
 - Directory structure, file organization, template implementation
 

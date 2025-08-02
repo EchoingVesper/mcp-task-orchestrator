@@ -16,7 +16,9 @@ Use for monolith decomposition, framework migrations, API modernization, and inf
 
 #
 
-## 1. Legacy Analysis (Researcher)
+#
+
+# 1. Legacy Analysis (Researcher)
 
 - Current system assessment, dependency mapping, technical debt analysis
 
@@ -24,7 +26,9 @@ Use for monolith decomposition, framework migrations, API modernization, and inf
 
 #
 
-## 2. Modernization Architecture (Architect)
+#
+
+# 2. Modernization Architecture (Architect)
 
 - Target architecture design, migration strategy, integration patterns
 
@@ -32,7 +36,9 @@ Use for monolith decomposition, framework migrations, API modernization, and inf
 
 #
 
-## 3. Incremental Implementation (Implementer)
+#
+
+# 3. Incremental Implementation (Implementer)
 
 - Phased migration execution, backward compatibility, integration bridges
 
@@ -40,7 +46,9 @@ Use for monolith decomposition, framework migrations, API modernization, and inf
 
 #
 
-## 4. Quality Assurance (Reviewer/Tester)
+#
+
+# 4. Quality Assurance (Reviewer/Tester)
 
 - Migration validation, functionality preservation, performance comparison
 

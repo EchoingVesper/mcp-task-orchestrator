@@ -46,11 +46,17 @@ You'll need one of these MCP clients:
 
 #
 
-## Task Orchestrator Setup
+#
+
+# Task Orchestrator Setup
 
 #
 
-### Option 1: From PyPI (Recommended)
+#
+
+#
+
+# Option 1: From PyPI (Recommended)
 
 ```bash
 pip install mcp-task-orchestrator
@@ -60,7 +66,11 @@ mcp-task-orchestrator-cli install
 
 #
 
-### Option 2: From Source
+#
+
+#
+
+# Option 2: From Source
 
 ```text
 bash
@@ -72,7 +82,9 @@ python run_installer.py
 
 #
 
-## Claude Code MCP Setup
+#
+
+# Claude Code MCP Setup
 
 Add Claude Code to your MCP configuration. In your MCP client config:
 
@@ -144,7 +156,9 @@ Let's build a complete web scraper project that demonstrates both planning and i
 
 #
 
-## 2.1 Initialize the Orchestration
+#
+
+# 2.1 Initialize the Orchestration
 
 In your MCP client:
 
@@ -156,7 +170,9 @@ Initialize a new orchestration session and help me build a complete Python web s
 
 #
 
-## 2.2 Watch the Magic - Automatic Task Breakdown
+#
+
+# 2.2 Watch the Magic - Automatic Task Breakdown
 
 The orchestrator creates structured subtasks:
 
@@ -180,7 +196,9 @@ Created 6 subtasks:
 
 #
 
-## 2.3 Execute With File Operations
+#
+
+# 2.3 Execute With File Operations
 
 Now here's where the magic happens. As you execute each subtask:
 
@@ -203,7 +221,9 @@ Create the project directory structure and initial files as planned by the archi
 
 #
 
-## 2.4 The Integration Dance 💃
+#
+
+# 2.4 The Integration Dance 💃
 
 Watch this beautiful coordination:
 
@@ -257,7 +277,9 @@ Synthesize the results for this web scraper project
 
 #
 
-## Before vs. After Integration
+#
+
+# Before vs. After Integration
 
 **Single Tool Approach:**
 

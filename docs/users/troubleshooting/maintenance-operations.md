@@ -10,11 +10,17 @@
 
 #
 
-## 1. Operation Timeouts
+#
+
+# 1. Operation Timeouts
 
 #
 
-### Symptoms
+#
+
+#
+
+# Symptoms
 
 ```json
 {
@@ -27,7 +33,11 @@
 
 #
 
-### Causes
+#
+
+#
+
+# Causes
 
 - Large number of tasks in scope
 
@@ -39,7 +49,11 @@
 
 #
 
-### Solutions
+#
+
+#
+
+# Solutions
 
 1. **Reduce Scope**: Use `current_session` instead of `full_project`
 
@@ -51,7 +65,11 @@
 
 #
 
-### Example Recovery
+#
+
+#
+
+# Example Recovery
 
 ```text
 bash
@@ -68,11 +86,17 @@ bash
 
 #
 
-## 2. Database Connection Errors
+#
+
+# 2. Database Connection Errors
 
 #
 
-### Symptoms
+#
+
+#
+
+# Symptoms
 
 - Connection refused errors
 
@@ -84,7 +108,11 @@ bash
 
 #
 
-### Causes
+#
+
+#
+
+# Causes
 
 - Concurrent database access
 
@@ -96,7 +124,11 @@ bash
 
 #
 
-### Solutions
+#
+
+#
+
+# Solutions
 
 1. **Restart Server**: Stop and restart the MCP server
 
@@ -108,7 +140,11 @@ bash
 
 #
 
-### Diagnostic Commands
+#
+
+#
+
+# Diagnostic Commands
 
 ```text
 bash
@@ -129,11 +165,17 @@ sqlite3 .task_orchestrator/database/tasks.db ".schema"
 
 #
 
-## 3. Target Task Not Found
+#
+
+# 3. Target Task Not Found
 
 #
 
-### Symptoms
+#
+
+#
+
+# Symptoms
 
 ```text
 json
@@ -147,7 +189,11 @@ json
 
 #
 
-### Causes
+#
+
+#
+
+# Causes
 
 - Incorrect task ID
 
@@ -159,7 +205,11 @@ json
 
 #
 
-### Solutions
+#
+
+#
+
+# Solutions
 
 1. **Verify Task ID**: Use `orchestrator_get_status` to list active tasks
 
@@ -171,7 +221,11 @@ json
 
 #
 
-### Example Verification
+#
+
+#
+
+# Example Verification
 
 ```text
 json
@@ -185,11 +239,17 @@ json
 
 #
 
-## 4. No Maintenance Actions Needed
+#
+
+# 4. No Maintenance Actions Needed
 
 #
 
-### Symptoms
+#
+
+#
+
+# Symptoms
 
 ```text
 json
@@ -203,7 +263,11 @@ json
 
 #
 
-### Analysis
+#
+
+#
+
+# Analysis
 
 This is actually a **positive result** indicating:
 
@@ -217,7 +281,11 @@ This is actually a **positive result** indicating:
 
 #
 
-### When This Occurs
+#
+
+#
+
+# When This Occurs
 
 - After recent maintenance
 
@@ -229,17 +297,27 @@ This is actually a **positive result** indicating:
 
 #
 
-### No Action Required
+#
+
+#
+
+# No Action Required
 
 This result means your system is healthy and optimized.
 
 #
 
-## 5. Partial Cleanup Failures
+#
+
+# 5. Partial Cleanup Failures
 
 #
 
-### Symptoms
+#
+
+#
+
+# Symptoms
 
 ```text
 json
@@ -254,7 +332,11 @@ json
 
 #
 
-### Causes
+#
+
+#
+
+# Causes
 
 - Mixed permission issues
 
@@ -266,7 +348,11 @@ json
 
 #
 
-### Solutions
+#
+
+#
+
+# Solutions
 
 1. **Review Successful Actions**: Partial completion is better than none
 
@@ -278,11 +364,17 @@ json
 
 #
 
-## 6. Memory or Performance Issues
+#
+
+# 6. Memory or Performance Issues
 
 #
 
-### Symptoms
+#
+
+#
+
+# Symptoms
 
 - Slow maintenance operations
 
@@ -294,7 +386,11 @@ json
 
 #
 
-### Immediate Actions
+#
+
+#
+
+# Immediate Actions
 
 1. **Reduce Batch Size**: Use smaller scopes
 
@@ -306,7 +402,11 @@ json
 
 #
 
-### Long-term Solutions
+#
+
+#
+
+# Long-term Solutions
 
 ```text
 bash
@@ -333,11 +433,17 @@ sqlite3 .task_orchestrator/database/tasks.db "VACUUM;"
 
 #
 
-## 7. Archive Recovery Issues
+#
+
+# 7. Archive Recovery Issues
 
 #
 
-### Symptoms
+#
+
+#
+
+# Symptoms
 
 - Need to recover archived task
 
@@ -347,7 +453,11 @@ sqlite3 .task_orchestrator/database/tasks.db "VACUUM;"
 
 #
 
-### Solutions
+#
+
+#
+
+# Solutions
 
 1. **Check Archive Table**: Query database for archived tasks
 
@@ -357,7 +467,11 @@ sqlite3 .task_orchestrator/database/tasks.db "VACUUM;"
 
 #
 
-### Archive Query Example
+#
+
+#
+
+# Archive Query Example
 
 ```text
 sql
@@ -373,7 +487,9 @@ AND expires_at > datetime('now');
 
 #
 
-## 1. Basic Health Check
+#
+
+# 1. Basic Health Check
 
 ```text
 json
@@ -387,7 +503,9 @@ json
 
 #
 
-## 2. Performance Analysis
+#
+
+# 2. Performance Analysis
 
 ```text
 json
@@ -401,7 +519,9 @@ json
 
 #
 
-## 3. Comprehensive Audit
+#
+
+# 3. Comprehensive Audit
 
 ```text
 json
@@ -419,7 +539,9 @@ json
 
 #
 
-## Regular Maintenance Schedule
+#
+
+# Regular Maintenance Schedule
 
 ```text
 
@@ -432,7 +554,9 @@ Quarterly: Complete system audit
 
 #
 
-## Monitoring Guidelines
+#
+
+# Monitoring Guidelines
 
 - Watch for increasing task counts
 
@@ -444,7 +568,9 @@ Quarterly: Complete system audit
 
 #
 
-## System Optimization
+#
+
+# System Optimization
 
 - Keep active tasks under 100 for optimal performance
 
@@ -472,7 +598,9 @@ Quarterly: Complete system audit
 
 #
 
-## Complete System Reset
+#
+
+# Complete System Reset
 
 ```text
 bash
@@ -487,7 +615,9 @@ rm -rf .task_orchestrator/database/
 
 #
 
-## Database Repair
+#
+
+# Database Repair
 
 ```bash
 
@@ -504,7 +634,9 @@ sqlite3 .task_orchestrator/database/tasks.db "VACUUM;"
 
 #
 
-## Log Analysis
+#
+
+# Log Analysis
 
 ```text
 bash
@@ -524,7 +656,9 @@ grep -i "error" .task_orchestrator/logs/maintenance.log
 
 #
 
-## Information to Collect
+#
+
+# Information to Collect
 
 1. **Error Message**: Complete error response
 
@@ -538,7 +672,9 @@ grep -i "error" .task_orchestrator/logs/maintenance.log
 
 #
 
-## Escalation Path
+#
+
+# Escalation Path
 
 1. **Self-Service**: Use this troubleshooting guide
 

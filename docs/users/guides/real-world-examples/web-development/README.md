@@ -16,7 +16,9 @@ Practical examples for orchestrating complex web development projects, from init
 
 #
 
-## 1. **Full-Stack Application Development** (`fullstack-webapp.md`)
+#
+
+# 1. **Full-Stack Application Development** (`fullstack-webapp.md`)
 
 - ⭐ **Featured**: Complete React + Node.js application build
 
@@ -28,7 +30,9 @@ Practical examples for orchestrating complex web development projects, from init
 
 #
 
-## 2. **API Development and Testing** (`api-development.md`) 
+#
+
+# 2. **API Development and Testing** (`api-development.md`) 
 
 - RESTful API design and implementation
 
@@ -40,7 +44,9 @@ Practical examples for orchestrating complex web development projects, from init
 
 #
 
-## 3. **Frontend Framework Migration** (`frontend-migration.md`)
+#
+
+# 3. **Frontend Framework Migration** (`frontend-migration.md`)
 
 - Large-scale framework migration (e.g., Angular to React)
 
@@ -52,7 +58,9 @@ Practical examples for orchestrating complex web development projects, from init
 
 #
 
-## 4. **Microservices Orchestration** (`microservices-setup.md`)
+#
+
+# 4. **Microservices Orchestration** (`microservices-setup.md`)
 
 - Multi-service architecture setup
 
@@ -64,7 +72,9 @@ Practical examples for orchestrating complex web development projects, from init
 
 #
 
-## 5. **E-commerce Platform Build** (`ecommerce-platform.md`)
+#
+
+# 5. **E-commerce Platform Build** (`ecommerce-platform.md`)
 
 - Complete e-commerce solution development
 

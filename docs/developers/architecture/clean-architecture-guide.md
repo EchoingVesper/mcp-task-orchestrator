@@ -25,7 +25,9 @@ The MCP Task Orchestrator follows **Clean Architecture** principles with strict 
 
 #
 
-## Dependency Rule
+#
+
+# Dependency Rule
 
 Dependencies always point **inward**:
 
@@ -41,7 +43,9 @@ Dependencies always point **inward**:
 
 #
 
-## Domain Layer (`domain/`)
+#
+
+# Domain Layer (`domain/`)
 
 **Purpose**: Core business logic and rules
 **Dependencies**: None (inner-most layer)
@@ -95,7 +99,9 @@ domain/
 
 #
 
-## Application Layer (`application/`)
+#
+
+# Application Layer (`application/`)
 
 **Purpose**: Orchestrate business workflows
 **Dependencies**: Domain layer only
@@ -137,7 +143,9 @@ application/
 
 #
 
-## Infrastructure Layer (`infrastructure/`)
+#
+
+# Infrastructure Layer (`infrastructure/`)
 
 **Purpose**: External system integrations
 **Dependencies**: Domain and Application interfaces
@@ -187,7 +195,9 @@ infrastructure/
 
 #
 
-## Presentation Layer (`presentation/`)
+#
+
+# Presentation Layer (`presentation/`)
 
 **Purpose**: System entry points
 **Dependencies**: Application layer
@@ -221,10 +231,13 @@ presentation/
 
 #
 
-## Adding a New Feature
+#
+
+# Adding a New Feature
 
 1. **Start with Domain**:
    
+
 ```text
 python
    
@@ -240,12 +253,16 @@ python
            if not name or len(name) < 3:
                raise ValidationError("Name must be at least 3 characters")
    
+
 ```text
+text
 text
 
 2. **Define Repository Interface**:
    
+
 ```text
+text
 python
    
 
@@ -262,12 +279,16 @@ python
        async def find_by_id(self, entity_id: str) -> Optional[NewEntity]:
            pass
    
+
 ```text
+text
 text
 
 3. **Create Use Case**:
    
+
 ```text
+text
 python
    
 
@@ -282,12 +303,16 @@ python
            entity_id = await self.repository.save(entity)
            return CreateNewEntityResponse(entity_id=entity_id)
    
+
 ```text
+text
 text
 
 4. **Implement Repository**:
    
+
 ```text
+text
 python
    
 
@@ -301,12 +326,16 @@ python
 
            pass
    
+
 ```text
+text
 text
 
 5. **Add Presentation Handler**:
    
+
 ```text
+text
 python
    
 
@@ -317,14 +346,19 @@ python
        response = await use_case.execute(request)
        return response
    
+
 ```text
+text
 text
 
 #
 
-## Error Handling Pattern
+#
+
+# Error Handling Pattern
 
 ```text
+text
 python
 from infrastructure.error_handling import handle_errors, ErrorContext
 
@@ -346,7 +380,9 @@ async def execute_task(task_id: str):
 
 #
 
-## Monitoring Pattern
+#
+
+# Monitoring Pattern
 
 ```text
 python
@@ -364,11 +400,17 @@ async def process_data():
 
 #
 
-## Testing Patterns
+#
+
+# Testing Patterns
 
 #
 
-### Unit Testing (Domain)
+#
+
+#
+
+# Unit Testing (Domain)
 
 ```text
 python
@@ -384,7 +426,11 @@ def test_task_creation():
 
 #
 
-### Integration Testing (Application)
+#
+
+#
+
+# Integration Testing (Application)
 
 ```text
 python
@@ -403,7 +449,11 @@ async def test_create_task_use_case():
 
 #
 
-### End-to-End Testing (Presentation)
+#
+
+#
+
+# End-to-End Testing (Presentation)
 
 ```text
 python
@@ -423,7 +473,9 @@ async def test_mcp_create_task():
 
 #
 
-## Service Registration
+#
+
+# Service Registration
 
 ```text
 python
@@ -453,7 +505,9 @@ def configure_services(container: ServiceContainer):
 
 #
 
-## Service Resolution
+#
+
+# Service Resolution
 
 ```text
 python
@@ -478,7 +532,9 @@ use_case = container.get_service(CreateTaskUseCase)
 
 #
 
-## Domain Layer
+#
+
+# Domain Layer
 
 - Keep entities focused on business concepts
 
@@ -490,7 +546,9 @@ use_case = container.get_service(CreateTaskUseCase)
 
 #
 
-## Application Layer
+#
+
+# Application Layer
 
 - Keep use cases focused on single workflows
 
@@ -502,7 +560,9 @@ use_case = container.get_service(CreateTaskUseCase)
 
 #
 
-## Infrastructure Layer
+#
+
+# Infrastructure Layer
 
 - Implement domain interfaces
 
@@ -514,7 +574,9 @@ use_case = container.get_service(CreateTaskUseCase)
 
 #
 
-## Presentation Layer
+#
+
+# Presentation Layer
 
 - Validate input and format output
 
@@ -530,7 +592,9 @@ use_case = container.get_service(CreateTaskUseCase)
 
 #
 
-## Gradual Migration Strategy
+#
+
+# Gradual Migration Strategy
 
 1. **Extract Domain Concepts**: Identify core business logic
 
@@ -544,7 +608,9 @@ use_case = container.get_service(CreateTaskUseCase)
 
 #
 
-## Legacy Adapter Pattern
+#
+
+# Legacy Adapter Pattern
 
 ```text
 python
@@ -572,7 +638,9 @@ class LegacyTaskOrchestratorAdapter:
 
 #
 
-## ❌ Domain Depending on Infrastructure
+#
+
+# ❌ Domain Depending on Infrastructure
 
 ```text
 python
@@ -591,7 +659,9 @@ class Task:
 
 #
 
-## ✅ Domain Using Interfaces
+#
+
+# ✅ Domain Using Interfaces
 
 ```text
 python
@@ -613,7 +683,9 @@ class Task:
 
 #
 
-## ❌ Use Cases with Business Logic
+#
+
+# ❌ Use Cases with Business Logic
 
 ```text
 python
@@ -632,7 +704,9 @@ class CreateTaskUseCase:
 
 #
 
-## ✅ Use Cases Delegating to Domain
+#
+
+# ✅ Use Cases Delegating to Domain
 
 ```text
 python
@@ -655,7 +729,9 @@ class CreateTaskUseCase:
 
 #
 
-## Health Checks
+#
+
+# Health Checks
 
 ```text
 bash
@@ -665,7 +741,9 @@ python tools/diagnostics/health_check.py --health
 
 #
 
-## Performance Monitoring
+#
+
+# Performance Monitoring
 
 ```text
 bash
@@ -675,7 +753,9 @@ python tools/diagnostics/performance_monitor.py --analyze
 
 #
 
-## Architecture Validation
+#
+
+# Architecture Validation
 
 ```text
 bash

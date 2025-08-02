@@ -16,7 +16,9 @@ This guide covers the most common issues when working with the Generic Task Mode
 
 #
 
-## Problem: Task ID Already Exists
+#
+
+# Problem: Task ID Already Exists
 
 ```text
 Error: Task with ID 'feature_auth_123' already exists
@@ -55,7 +57,9 @@ task = GenericTask(
 
 #
 
-## Problem: Invalid Parent Task ID
+#
+
+# Problem: Invalid Parent Task ID
 
 ```text
 
@@ -93,7 +97,9 @@ async def safe_child_task_creation(parent_id: str, child_data: dict):
 
 #
 
-## Problem: Task Validation Errors
+#
+
+# Problem: Task Validation Errors
 
 ```text
 
@@ -150,7 +156,9 @@ def validate_task_data(task_data: dict):
 
 #
 
-## Problem: Circular Dependencies
+#
+
+# Problem: Circular Dependencies
 
 ```text
 
@@ -188,7 +196,9 @@ async def check_circular_dependency(task_id: str, new_dependency_id: str):
 
 #
 
-## Problem: Dependency Task Not Found
+#
+
+# Problem: Dependency Task Not Found
 
 ```text
 
@@ -249,7 +259,9 @@ async def add_dependencies_safely(task_id: str, dependencies: List[dict]):
 
 #
 
-## Problem: Slow Query Performance
+#
+
+# Problem: Slow Query Performance
 
 ```text
 
@@ -299,7 +311,9 @@ hierarchy = await orchestrator.get_task_hierarchy(
 
 #
 
-## Problem: Memory Issues with Large Hierarchies
+#
+
+# Problem: Memory Issues with Large Hierarchies
 
 ```text
 
@@ -352,7 +366,9 @@ async def process_large_hierarchy(root_task_id: str, processor_func):
 
 #
 
-## Problem: Template Parameter Validation
+#
+
+# Problem: Template Parameter Validation
 
 ```text
 
@@ -411,7 +427,9 @@ def validate_template_parameters(template_id: str, parameters: dict):
 
 #
 
-## Problem: Template Not Found
+#
+
+# Problem: Template Not Found
 
 ```text
 
@@ -460,7 +478,9 @@ async def create_from_template_with_fallback(template_id: str, parameters: dict)
 
 #
 
-## Problem: MCP Tool Timeout
+#
+
+# Problem: MCP Tool Timeout
 
 ```text
 
@@ -512,7 +532,9 @@ async def robust_mcp_call(tool_name: str, arguments: dict, max_retries: int = 3,
 
 #
 
-## Problem: Invalid MCP Tool Arguments
+#
+
+# Problem: Invalid MCP Tool Arguments
 
 ```text
 
@@ -570,7 +592,9 @@ def validate_mcp_tool_arguments(tool_name: str, arguments: dict):
 
 #
 
-## Problem: Database Connection Errors
+#
+
+# Problem: Database Connection Errors
 
 ```text
 
@@ -607,7 +631,9 @@ async def ensure_database_connection():
 
 #
 
-## Problem: Task State Corruption
+#
+
+# Problem: Task State Corruption
 
 ```text
 
@@ -654,7 +680,9 @@ async def validate_and_fix_task_state(task_id: str):
 
 #
 
-## Task State Inspector
+#
+
+# Task State Inspector
 
 ```text
 python
@@ -722,7 +750,9 @@ async def inspect_task_state(task_id: str):
 
 #
 
-## Performance Diagnostics
+#
+
+# Performance Diagnostics
 
 ```text
 python
@@ -782,7 +812,9 @@ async def diagnose_performance_issues():
 
 #
 
-## Debug Mode
+#
+
+# Debug Mode
 
 Enable debug mode for detailed logging:
 
@@ -802,7 +834,9 @@ task = await orchestrator.create_task_with_debug(task_data)
 
 #
 
-## Health Check
+#
+
+# Health Check
 
 Run comprehensive health check:
 
@@ -814,7 +848,9 @@ print(f"System health: {health_status}")
 
 #
 
-## Support Information
+#
+
+# Support Information
 
 When reporting issues, include:
 

@@ -16,7 +16,9 @@ The `orchestrator_initialize` tool creates a new orchestration session, analyzes
 
 #
 
-## Required Parameters
+#
+
+# Required Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -25,7 +27,9 @@ The `orchestrator_initialize` tool creates a new orchestration session, analyzes
 
 #
 
-## Optional Parameters
+#
+
+# Optional Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
@@ -40,7 +44,9 @@ The `orchestrator_initialize` tool creates a new orchestration session, analyzes
 
 #
 
-## Basic Task Initialization
+#
+
+# Basic Task Initialization
 
 ```plaintext
 Tool: orchestrator_initialize
@@ -54,7 +60,9 @@ Parameters:
 
 #
 
-## Advanced Project Setup
+#
+
+# Advanced Project Setup
 
 ```text
 plaintext
@@ -77,7 +85,9 @@ Parameters:
 
 #
 
-## Research Task
+#
+
+# Research Task
 
 ```text
 plaintext
@@ -97,7 +107,9 @@ Parameters:
 
 #
 
-## Success Response
+#
+
+# Success Response
 
 ```text
 json
@@ -132,7 +144,9 @@ json
 
 #
 
-## Error Response
+#
+
+# Error Response
 
 ```text
 json
@@ -154,7 +168,9 @@ json
 
 #
 
-## Basic Tasks
+#
+
+# Basic Tasks
 
 - Single component or script
 
@@ -168,7 +184,9 @@ json
 
 #
 
-## Intermediate Tasks
+#
+
+# Intermediate Tasks
 
 - Multiple components working together
 
@@ -182,7 +200,9 @@ json
 
 #
 
-## Advanced Tasks
+#
+
+# Advanced Tasks
 
 - Complex system design
 
@@ -200,7 +220,9 @@ json
 
 #
 
-## Task Description Guidelines
+#
+
+# Task Description Guidelines
 
 ✅ **Good Examples**:
 
@@ -220,7 +242,9 @@ json
 
 #
 
-## Complexity Selection Tips
+#
+
+# Complexity Selection Tips
 
 - **Start smaller**: Choose lower complexity if unsure
 
@@ -232,7 +256,9 @@ json
 
 #
 
-## Context Best Practices
+#
+
+# Context Best Practices
 
 ```text
 json
@@ -253,7 +279,9 @@ json
 
 #
 
-## Common Errors
+#
+
+# Common Errors
 
 | Error Code | Description | Solution |
 |------------|-------------|----------|
@@ -264,7 +292,9 @@ json
 
 #
 
-## Validation Rules
+#
+
+# Validation Rules
 
 - Task description: 10-1000 characters
 
@@ -280,7 +310,9 @@ json
 
 #
 
-## Typical Workflow
+#
+
+# Typical Workflow
 
 1. **Initialize** → `orchestrator_initialize`
 
@@ -296,7 +328,9 @@ json
 
 #
 
-## State Management
+#
+
+# State Management
 
 - Session state is automatically saved to workspace database
 

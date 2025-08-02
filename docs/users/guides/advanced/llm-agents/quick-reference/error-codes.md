@@ -10,7 +10,9 @@
 
 #
 
-## Invalid Task State
+#
+
+# Invalid Task State
 
 - **Error**: "Task not found" / "Invalid task ID"
 
@@ -20,7 +22,9 @@
 
 #
 
-## Planning Errors  
+#
+
+# Planning Errors  
 
 - **Error**: "Invalid subtasks_json format"
 
@@ -30,7 +34,9 @@
 
 #
 
-## Dependency Errors
+#
+
+# Dependency Errors
 
 - **Error**: "Circular dependency detected"  
 
@@ -40,7 +46,9 @@
 
 #
 
-## Session Errors
+#
+
+# Session Errors
 
 - **Error**: "No active session"
 
@@ -54,7 +62,9 @@
 
 #
 
-## Tool Conflicts
+#
+
+# Tool Conflicts
 
 - **Error**: File operation fails during orchestration
 
@@ -64,7 +74,9 @@
 
 #
 
-## Context Loss
+#
+
+# Context Loss
 
 - **Error**: Specialist context missing
 
@@ -74,7 +86,9 @@
 
 #
 
-## State Mismatch
+#
+
+# State Mismatch
 
 - **Error**: Task marked complete but not finished
 
@@ -88,7 +102,9 @@
 
 #
 
-## Graceful Retry
+#
+
+# Graceful Retry
 
 1. Check status with `orchestrator_get_status()`
 
@@ -100,7 +116,9 @@
 
 #
 
-## Workflow Reset
+#
+
+# Workflow Reset
 
 1. Start new session with `orchestrator_initialize_session()`
 
@@ -110,7 +128,9 @@
 
 #
 
-## Best Practices
+#
+
+# Best Practices
 
 - Always check status before major operations
 

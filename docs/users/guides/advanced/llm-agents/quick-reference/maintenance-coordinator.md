@@ -48,7 +48,9 @@
 
 #
 
-## Daily Maintenance
+#
+
+# Daily Maintenance
 
 ```json
 {"action": "scan_cleanup", "scope": "current_session", "validation_level": "basic"}
@@ -57,7 +59,9 @@
 
 #
 
-## Session Handoff
+#
+
+# Session Handoff
 
 ```text
 json
@@ -67,7 +71,9 @@ json
 
 #
 
-## Performance Issues
+#
+
+# Performance Issues
 
 ```text
 json
@@ -77,7 +83,9 @@ json
 
 #
 
-## Before Major Changes
+#
+
+# Before Major Changes
 
 ```text
 json
@@ -87,7 +95,9 @@ json
 
 #
 
-## Troubleshooting Specific Task
+#
+
+# Troubleshooting Specific Task
 
 ```text
 json

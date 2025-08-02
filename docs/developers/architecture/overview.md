@@ -14,7 +14,9 @@ MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design*
 
 #
 
-## Clean Architecture Layers
+#
+
+# Clean Architecture Layers
 
 ```text
 ┌─────────────────────────────────────────┐
@@ -35,7 +37,9 @@ MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design*
 
 #
 
-## Dependency Flow
+#
+
+# Dependency Flow
 
 - Dependencies point inward toward the domain
 
@@ -51,7 +55,9 @@ MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design*
 
 #
 
-## Domain Layer (`domain/`)
+#
+
+# Domain Layer (`domain/`)
 
 **Core Business Logic**:
 
@@ -65,7 +71,9 @@ MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design*
 
 #
 
-## Application Layer (`application/`)
+#
+
+# Application Layer (`application/`)
 
 **Use Case Orchestration**:
 
@@ -77,7 +85,9 @@ MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design*
 
 #
 
-## Infrastructure Layer (`infrastructure/`)
+#
+
+# Infrastructure Layer (`infrastructure/`)
 
 **Technical Implementation**:
 
@@ -91,7 +101,9 @@ MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design*
 
 #
 
-## Presentation Layer (`presentation/`)
+#
+
+# Presentation Layer (`presentation/`)
 
 **External Interfaces**:
 
@@ -105,7 +117,9 @@ MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design*
 
 #
 
-## Repository Pattern
+#
+
+# Repository Pattern
 
 Abstract data access with pluggable implementations:
 
@@ -130,7 +144,9 @@ class SqliteTaskRepository(TaskRepository):
 
 #
 
-## Dependency Injection
+#
+
+# Dependency Injection
 
 Service container with automatic resolution:
 
@@ -150,7 +166,9 @@ service = container.resolve(TaskBreakdownService)
 
 #
 
-## Strategy Pattern
+#
+
+# Strategy Pattern
 
 Pluggable policies for cross-cutting concerns:
 
@@ -174,7 +192,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Typical Request Flow
+#
+
+# Typical Request Flow
 
 1. **MCP Client** → **Presentation Layer**: Request received
 
@@ -190,7 +210,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Task Orchestration Flow
+#
+
+# Task Orchestration Flow
 
 1. **Initialize**: Create orchestration session and workspace
 
@@ -208,7 +230,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Error Handling
+#
+
+# Error Handling
 
 - **Comprehensive Exception Hierarchy**: Domain-specific errors with severity levels
 
@@ -220,7 +244,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Monitoring
+#
+
+# Monitoring
 
 - **Health Checks**: Real-time system component monitoring
 
@@ -232,7 +258,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Testing Strategy
+#
+
+# Testing Strategy
 
 - **Unit Tests**: Domain logic validation
 
@@ -248,7 +276,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Horizontal Scaling
+#
+
+# Horizontal Scaling
 
 - Stateless application layer design
 
@@ -260,7 +290,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Performance Optimization
+#
+
+# Performance Optimization
 
 - Lazy loading of heavy resources
 
@@ -276,7 +308,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Input Validation
+#
+
+# Input Validation
 
 - Request validation at presentation boundaries
 
@@ -288,7 +322,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Data Protection
+#
+
+# Data Protection
 
 - No sensitive data in logs
 
@@ -304,7 +340,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Planned Enhancements
+#
+
+# Planned Enhancements
 
 - Message queue integration for async processing
 
@@ -316,7 +354,9 @@ class SpecialistRecoveryStrategy(RecoveryStrategy): ...
 
 #
 
-## Extension Points
+#
+
+# Extension Points
 
 - Custom repository implementations
 

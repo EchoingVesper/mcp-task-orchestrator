@@ -25,7 +25,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Core Architecture
+#
+
+# Core Architecture
 
 - **[Overview & Benefits](./01-overview-benefits.md)** - Key benefits and dual persistence model
 
@@ -35,7 +37,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Implementation Details  
+#
+
+# Implementation Details  
 
 - **[Markdown Formats](./04-markdown-formats.md)** - File format specifications and templates
 
@@ -45,7 +49,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Advanced Features
+#
+
+# Advanced Features
 
 - **[Conflict Resolution](./07-conflict-resolution.md)** - Handling simultaneous edits
 
@@ -55,7 +61,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Reference Materials
+#
+
+# Reference Materials
 
 - **[API Specifications](./10-api-specs.md)** - Tool parameters and responses
 
@@ -69,7 +77,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## For Humans
+#
+
+# For Humans
 
 - **Readable Project State**: Complete project overview in markdown format
 
@@ -83,7 +93,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## For Systems
+#
+
+# For Systems
 
 - **Performance**: Fast queries and updates through database operations
 
@@ -103,7 +115,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Dual Persistence Model
+#
+
+# Dual Persistence Model
 
 ```text
 User Edits ────→ Markdown Files ────→ Sync Engine ────→ Database

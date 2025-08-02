@@ -44,7 +44,9 @@ I've designed a new generic task model that eliminates the artificial distinctio
 
 #
 
-## Abstract Base Task
+#
+
+# Abstract Base Task
 
 ```python
 class GenericTask:
@@ -172,7 +174,9 @@ class GenericTask:
 
 #
 
-## Task Types and Templates
+#
+
+# Task Types and Templates
 
 ```text
 python
@@ -229,7 +233,9 @@ class TaskType:
 
 #
 
-## Dependency and Chaining System
+#
+
+# Dependency and Chaining System
 
 ```text
 python
@@ -287,7 +293,9 @@ class ChainedTask:
 
 #
 
-## Prerequisites and Completion Criteria
+#
+
+# Prerequisites and Completion Criteria
 
 ```text
 python
@@ -336,7 +344,9 @@ class CompletionCriteria:
 
 #
 
-## Lifecycle Management
+#
+
+# Lifecycle Management
 
 ```text
 python
@@ -403,7 +413,9 @@ class TaskLifecycle:
 
 #
 
-## Supersession Detection
+#
+
+# Supersession Detection
 
 ```text
 python
@@ -463,7 +475,9 @@ class SupersessionRule:
 
 #
 
-## Core Tables
+#
+
+# Core Tables
 
 ```text
 sql
@@ -556,7 +570,9 @@ CREATE TABLE task_templates (
 
 #
 
-## 1. Unified Task Model
+#
+
+# 1. Unified Task Model
 
 - **Decision**: Eliminate subtasks; all tasks can contain other tasks
 
@@ -566,7 +582,9 @@ CREATE TABLE task_templates (
 
 #
 
-## 2. EAV Pattern for Attributes
+#
+
+# 2. EAV Pattern for Attributes
 
 - **Decision**: Use Entity-Attribute-Value pattern for custom attributes
 
@@ -576,7 +594,9 @@ CREATE TABLE task_templates (
 
 #
 
-## 3. Template-Based Repeatability
+#
+
+# 3. Template-Based Repeatability
 
 - **Decision**: Templates are special task types that can be instantiated
 
@@ -586,7 +606,9 @@ CREATE TABLE task_templates (
 
 #
 
-## 4. Event-Driven Lifecycle
+#
+
+# 4. Event-Driven Lifecycle
 
 - **Decision**: All state changes emit events for extensibility
 
@@ -596,7 +618,9 @@ CREATE TABLE task_templates (
 
 #
 
-## 5. Explicit Dependency Tracking
+#
+
+# 5. Explicit Dependency Tracking
 
 - **Decision**: Store dependencies as first-class relationships
 
@@ -610,7 +634,9 @@ CREATE TABLE task_templates (
 
 #
 
-## Phase 1: Compatibility Layer
+#
+
+# Phase 1: Compatibility Layer
 
 1. Create new tables alongside existing ones
 
@@ -620,7 +646,9 @@ CREATE TABLE task_templates (
 
 #
 
-## Phase 2: Gradual Migration
+#
+
+# Phase 2: Gradual Migration
 
 1. Migrate existing tasks to new model
 
@@ -630,7 +658,9 @@ CREATE TABLE task_templates (
 
 #
 
-## Phase 3: Cleanup
+#
+
+# Phase 3: Cleanup
 
 1. Remove old tables and code
 
@@ -644,7 +674,9 @@ CREATE TABLE task_templates (
 
 #
 
-## 1. Feature Development with GitHub Integration
+#
+
+# 1. Feature Development with GitHub Integration
 
 ```text
 python
@@ -684,7 +716,9 @@ feature_task = create_task_from_template(
 
 #
 
-## 2. Deployment Pipeline with Prerequisites
+#
+
+# 2. Deployment Pipeline with Prerequisites
 
 ```python
 deployment_task = GenericTask(
@@ -709,7 +743,9 @@ deployment_task = GenericTask(
 
 #
 
-## 3. Supersession Detection
+#
+
+# 3. Supersession Detection
 
 ```text
 python

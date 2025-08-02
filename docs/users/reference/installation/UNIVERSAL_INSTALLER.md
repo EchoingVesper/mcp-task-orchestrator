@@ -10,7 +10,9 @@ The Universal Installer is a comprehensive installation solution that automatica
 
 #
 
-## ✅ Fully Supported
+#
+
+# ✅ Fully Supported
 
 | Client | Windows | macOS | Linux | WSL | Workspace Support | Notes |
 |--------|---------|--------|--------|-----|------------------|-------|
@@ -23,7 +25,9 @@ The Universal Installer is a comprehensive installation solution that automatica
 
 #
 
-## 🔄 Configuration Methods
+#
+
+# 🔄 Configuration Methods
 
 - **File-based**: Direct JSON configuration file editing
 
@@ -37,11 +41,17 @@ The Universal Installer is a comprehensive installation solution that automatica
 
 #
 
-## Quick Installation (Recommended)
+#
+
+# Quick Installation (Recommended)
 
 #
 
-### For Standard Python Environments
+#
+
+#
+
+# For Standard Python Environments
 
 ```bash
 
@@ -57,7 +67,11 @@ mcp-task-orchestrator-cli setup
 
 #
 
-### For Externally Managed Environments (WSL, Ubuntu 23.04+, etc.)
+#
+
+#
+
+# For Externally Managed Environments (WSL, Ubuntu 23.04+, etc.)
 
 If you get an "externally-managed-environment" error, use one of these methods:
 
@@ -133,7 +147,9 @@ text
 
 #
 
-## Alternative Commands
+#
+
+# Alternative Commands
 
 ```text
 bash
@@ -154,7 +170,9 @@ mcp-task-orchestrator-cli check-deps
 
 #
 
-## 1. Environment Detection
+#
+
+# 1. Environment Detection
 
 The installer automatically detects:
 
@@ -168,7 +186,11 @@ The installer automatically detects:
 
 #
 
-### Important: Cross-Environment Considerations
+#
+
+#
+
+# Important: Cross-Environment Considerations
 
 **WSL (Windows Subsystem for Linux)**:
 
@@ -190,7 +212,9 @@ The installer automatically detects:
 
 #
 
-## 2. Dependency Verification
+#
+
+# 2. Dependency Verification
 
 Checks for all required dependencies:
 
@@ -218,7 +242,9 @@ Checks for all required dependencies:
 
 #
 
-## 3. Server Module Location
+#
+
+# 3. Server Module Location
 
 Automatically finds the MCP Task Orchestrator server module using multiple detection methods:
 
@@ -234,7 +260,9 @@ Automatically finds the MCP Task Orchestrator server module using multiple detec
 
 #
 
-## 4. Client Configuration
+#
+
+# 4. Client Configuration
 
 For each detected client:
 
@@ -252,7 +280,9 @@ For each detected client:
 
 #
 
-## Claude Desktop
+#
+
+# Claude Desktop
 
 **Configuration File Locations:**
 
@@ -287,7 +317,9 @@ text
 
 #
 
-## Claude Code (CLI)
+#
+
+# Claude Code (CLI)
 
 **Configuration Method:** CLI commands (no direct file editing)
 
@@ -317,7 +349,9 @@ text
 
 #
 
-## Cursor IDE
+#
+
+# Cursor IDE
 
 **Configuration File Locations:**
 
@@ -352,7 +386,9 @@ text
 
 #
 
-## Windsurf
+#
+
+# Windsurf
 
 **Configuration File Location:**
 
@@ -387,7 +423,9 @@ text
 
 #
 
-## VS Code (GitHub Copilot)
+#
+
+# VS Code (GitHub Copilot)
 
 **Configuration File Locations:**
 
@@ -426,7 +464,9 @@ text
 
 #
 
-## Continue.dev
+#
+
+# Continue.dev
 
 **Configuration File Locations:**
 
@@ -464,11 +504,17 @@ text
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 #
 
-### 1. "No MCP clients detected"
+#
+
+#
+
+# 1. "No MCP clients detected"
 
 **Cause:** No supported MCP clients are installed or configuration files don't exist yet.
 
@@ -480,7 +526,11 @@ text
 
 #
 
-### 2. "Missing dependencies: pyyaml"
+#
+
+#
+
+# 2. "Missing dependencies: pyyaml"
 
 **Cause:** Bug in dependency detection - PyYAML is installed but imported as `yaml`.
 
@@ -492,7 +542,11 @@ text
 
 #
 
-### 3. "Failed to configure [Client]"
+#
+
+#
+
+# 3. "Failed to configure [Client]"
 
 **Cause:** Client application is running and has locked the configuration file.
 
@@ -506,7 +560,11 @@ text
 
 #
 
-### 4. "Permission denied" errors
+#
+
+#
+
+# 4. "Permission denied" errors
 
 **Cause:** Insufficient permissions to write configuration files.
 
@@ -520,7 +578,11 @@ text
 
 #
 
-### 5. "Externally managed environment" error
+#
+
+#
+
+# 5. "Externally managed environment" error
 
 **Cause:** Modern Python environments (WSL, Ubuntu 23.04+, some Docker containers) prevent direct pip installs to protect system packages.
 
@@ -547,7 +609,11 @@ text
 
 #
 
-### 6. "Claude Desktop not detected in WSL"
+#
+
+#
+
+# 6. "Claude Desktop not detected in WSL"
 
 **Cause:** This is intentional behavior - Claude Desktop runs in Windows, not WSL.
 
@@ -555,12 +621,15 @@ text
 
 - To configure Claude Desktop: Run the installer from Windows (PowerShell/Command Prompt)
   
+
 ```text
 cmd
   pip install mcp-task-orchestrator
   mcp-task-orchestrator-cli setup
   
+
 ```text
+text
 text
 
 - To configure WSL tools only: Run from WSL (current behavior is correct)
@@ -569,15 +638,22 @@ text
 
 #
 
-## Verification
+#
+
+# Verification
 
 After installation, verify the configuration:
 
 #
 
-### Claude Code (Current Environment)
+#
+
+#
+
+# Claude Code (Current Environment)
 
 ```text
+text
 bash
 claude mcp list
 
@@ -585,7 +661,11 @@ claude mcp list
 
 #
 
-### Claude Desktop
+#
+
+#
+
+# Claude Desktop
 
 1. Restart Claude Desktop
 
@@ -595,7 +675,11 @@ claude mcp list
 
 #
 
-### Other Clients
+#
+
+#
+
+# Other Clients
 
 1. Open the MCP configuration panel in the client
 
@@ -609,7 +693,9 @@ claude mcp list
 
 #
 
-## Custom Python Path
+#
+
+# Custom Python Path
 
 If you need to specify a custom Python executable:
 
@@ -626,7 +712,9 @@ export PYTHON_PATH=/path/to/custom/python
 
 #
 
-## Workspace-Specific Installation
+#
+
+# Workspace-Specific Installation
 
 For clients that support workspace configurations:
 
@@ -638,7 +726,9 @@ For clients that support workspace configurations:
 
 #
 
-## Multiple Workspaces
+#
+
+# Multiple Workspaces
 
 The installer can be run in each workspace directory to create workspace-specific configurations. This is particularly useful for:
 
@@ -654,7 +744,9 @@ The installer can be run in each workspace directory to create workspace-specifi
 
 #
 
-## Testing the Installer
+#
+
+# Testing the Installer
 
 ```bash
 
@@ -674,7 +766,9 @@ mcp-task-orchestrator-cli universal-setup
 
 #
 
-## Adding New Clients
+#
+
+# Adding New Clients
 
 To add support for a new MCP client:
 
@@ -692,7 +786,9 @@ To add support for a new MCP client:
 
 #
 
-## Configuration Backups
+#
+
+# Configuration Backups
 
 The installer automatically creates timestamped backups of existing configuration files before making changes:
 
@@ -704,7 +800,9 @@ original_config.json → original_config.backup.1672531200.json
 
 #
 
-## Environment Variables
+#
+
+# Environment Variables
 
 Sensitive information should use environment variables in the MCP configuration:
 
@@ -726,7 +824,9 @@ json
 
 #
 
-## File Permissions
+#
+
+# File Permissions
 
 The installer respects existing file permissions and creates new files with appropriate restrictions:
 
@@ -740,7 +840,9 @@ The installer respects existing file permissions and creates new files with appr
 
 #
 
-## Reporting Issues
+#
+
+# Reporting Issues
 
 When reporting installer issues, please include:
 
@@ -756,7 +858,9 @@ When reporting installer issues, please include:
 
 #
 
-## Testing New Environments
+#
+
+# Testing New Environments
 
 If you're using the installer in a new environment:
 

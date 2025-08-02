@@ -14,7 +14,9 @@ After installation, restart your MCP clients and look for "task-orchestrator" in
 
 #
 
-## Automatic Workspace Detection
+#
+
+# Automatic Workspace Detection
 
 The MCP Task Orchestrator v1.8.0 introduces **workspace-aware task management**. Instead of manual session setup, the orchestrator automatically:
 
@@ -26,7 +28,9 @@ The MCP Task Orchestrator v1.8.0 introduces **workspace-aware task management**.
 
 #
 
-## Initialization (Optional but Recommended)
+#
+
+# Initialization (Optional but Recommended)
 
 You can initialize a workspace to get guidance, but it's no longer required:
 
@@ -39,7 +43,11 @@ This provides the LLM with context about its role as a Task Orchestrator and con
 
 #
 
-### Manual Workspace Override
+#
+
+#
+
+# Manual Workspace Override
 
 In rare cases where automatic detection fails, you can specify a workspace explicitly:
 
@@ -61,7 +69,9 @@ The response will include:
 
 #
 
-## Task Breakdown
+#
+
+# Task Breakdown
 
 When you receive a complex task, analyze it and create a structured JSON representation of subtasks:
 

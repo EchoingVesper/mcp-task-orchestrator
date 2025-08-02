@@ -24,7 +24,9 @@ Capture all significant architectural decisions, rationale, and trade-offs made 
 
 #
 
-## Architectural Decision Record (ADR) Structure
+#
+
+# Architectural Decision Record (ADR) Structure
 
 ```python
 class ArchitecturalDecisionRecord:
@@ -82,7 +84,9 @@ class ArchitecturalDecisionRecord:
 
 #
 
-## Decision Categories and Impact Levels
+#
+
+# Decision Categories and Impact Levels
 
 ```text
 python

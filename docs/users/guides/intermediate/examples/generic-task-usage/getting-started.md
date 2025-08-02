@@ -16,11 +16,17 @@ The Generic Task Model (v2.0) provides a unified approach to task management wit
 
 #
 
-## Basic Task Creation
+#
+
+# Basic Task Creation
 
 #
 
-### Simple Task with Attributes
+#
+
+#
+
+# Simple Task with Attributes
 
 ```python
 
@@ -53,7 +59,11 @@ feature_task = GenericTask(
 
 #
 
-### Task with Child Tasks (Hierarchical Structure)
+#
+
+#
+
+# Task with Child Tasks (Hierarchical Structure)
 
 ```text
 python
@@ -104,7 +114,9 @@ profile_task = GenericTask(
 
 #
 
-## Task Types
+#
+
+# Task Types
 
 - **epic**: Large organizational units containing multiple features
 
@@ -120,7 +132,9 @@ profile_task = GenericTask(
 
 #
 
-## Attributes System
+#
+
+# Attributes System
 
 The flexible attributes system allows you to store any task-specific information:
 
@@ -162,7 +176,9 @@ attributes={
 
 #
 
-## Task Status
+#
+
+# Task Status
 
 All tasks follow a standard lifecycle:
 
@@ -182,7 +198,9 @@ All tasks follow a standard lifecycle:
 
 #
 
-## Step 1: Import the Model
+#
+
+# Step 1: Import the Model
 
 ```text
 python
@@ -192,7 +210,9 @@ from mcp_task_orchestrator.models import GenericTask
 
 #
 
-## Step 2: Define Task Attributes
+#
+
+# Step 2: Define Task Attributes
 
 ```text
 python
@@ -207,7 +227,9 @@ task_attributes = {
 
 #
 
-## Step 3: Create the Task
+#
+
+# Step 3: Create the Task
 
 ```text
 python
@@ -221,7 +243,9 @@ my_task = GenericTask(
 
 #
 
-## Step 4: Save the Task
+#
+
+# Step 4: Save the Task
 
 ```text
 python

@@ -10,7 +10,9 @@
 
 #
 
-## Example 1: First Time Setup and Basic Usage
+#
+
+# Example 1: First Time Setup and Basic Usage
 
 **Scenario**: You just installed the orchestrator and want to try it out.
 
@@ -32,6 +34,7 @@ Expected Response:
 ```text
 
 **Step 2: Create Your First Task Plan**
+
 ```text
 text
 
@@ -48,6 +51,7 @@ What happens:
 - Suggests next steps
 
 ```text
+text
 
 **Step 3: Execute Your First Subtask**
 
@@ -113,7 +117,9 @@ text
 
 #
 
-## Example 2: Daily Maintenance Routine
+#
+
+# Example 2: Daily Maintenance Routine
 
 **Morning Startup Routine:**
 
@@ -157,7 +163,9 @@ text
 
 #
 
-## Example 3: Performance Optimization Workflow
+#
+
+# Example 3: Performance Optimization Workflow
 
 **When System Feels Slow:**
 
@@ -195,7 +203,9 @@ text
 
 #
 
-## Example 4: Weekly Deep Maintenance
+#
+
+# Example 4: Weekly Deep Maintenance
 
 **Complete Weekly System Health Check:**
 
@@ -233,7 +243,9 @@ text
 
 #
 
-## Example 5: Full-Stack Web Application Development
+#
+
+# Example 5: Full-Stack Web Application Development
 
 **Project**: Build a task management web app with React frontend and Node.js backend
 
@@ -316,18 +328,22 @@ text
 # Generate final documentation
 
 "Create comprehensive project documentation including setup, API reference, and deployment instructions"
+
 ```text
 text
 
 #
 
-## Example 6: Data Processing Pipeline
+#
+
+# Example 6: Data Processing Pipeline
 
 **Project**: ETL pipeline for e-commerce analytics
 
 **Interactive Workflow:**
 
 ```text
+text
 python
 
 # Step 1: Initialize with specific context
@@ -392,7 +408,9 @@ text
 
 #
 
-## Example 7: Documentation Project
+#
+
+# Example 7: Documentation Project
 
 **Project**: API documentation overhaul for existing service
 
@@ -459,7 +477,9 @@ text
 
 #
 
-## Example 8: Handling Stale Tasks
+#
+
+# Example 8: Handling Stale Tasks
 
 **Scenario**: You notice tasks that have been "active" for days but aren't progressing.
 
@@ -525,7 +545,9 @@ text
 
 #
 
-## Example 9: Database Performance Issues
+#
+
+# Example 9: Database Performance Issues
 
 **Scenario**: System is responding slowly, many tasks in database.
 
@@ -574,7 +596,9 @@ text
 
 #
 
-## Example 10: Context Limit Prevention
+#
+
+# Example 10: Context Limit Prevention
 
 **Scenario**: Working on large project, approaching context limits.
 
@@ -635,7 +659,9 @@ text
 
 #
 
-## Example 11: CI/CD Integration Workflow
+#
+
+# Example 11: CI/CD Integration Workflow
 
 **Project**: Set up automated testing and deployment pipeline
 
@@ -692,7 +718,9 @@ for task in cicd_workflow:
 
 #
 
-## Example 12: Team Handoff Pattern
+#
+
+# Example 12: Team Handoff Pattern
 
 **Scenario**: Transferring project to another team member.
 
@@ -759,7 +787,9 @@ text
 
 #
 
-## Example 13: Multi-Phase Complex Project
+#
+
+# Example 13: Multi-Phase Complex Project
 
 **Project**: Legacy system modernization (6-month project)
 
@@ -850,7 +880,9 @@ text
 
 #
 
-## Workflow Management
+#
+
+# Workflow Management
 
 1. **Always initialize** before starting any work
 
@@ -864,7 +896,9 @@ text
 
 #
 
-## Maintenance Integration
+#
+
+# Maintenance Integration
 
 1. **Daily basic cleanup** prevents issues
 
@@ -878,7 +912,9 @@ text
 
 #
 
-## Artifact Management
+#
+
+# Artifact Management
 
 1. **Use detailed_work extensively** for comprehensive storage
 
@@ -892,7 +928,9 @@ text
 
 #
 
-## Error Prevention
+#
+
+# Error Prevention
 
 1. **Check status regularly** to monitor progress
 

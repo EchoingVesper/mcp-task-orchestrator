@@ -14,7 +14,9 @@ Single task execution is the simplest workflow in MCP Task Orchestrator. Use thi
 
 #
 
-## Ideal Scenarios
+#
+
+# Ideal Scenarios
 
 - Code reviews or debugging sessions
 
@@ -28,7 +30,9 @@ Single task execution is the simplest workflow in MCP Task Orchestrator. Use thi
 
 #
 
-## Not Suitable For
+#
+
+# Not Suitable For
 
 - Complex multi-component projects
 
@@ -44,7 +48,9 @@ Single task execution is the simplest workflow in MCP Task Orchestrator. Use thi
 
 #
 
-## Step 1: Initialize Simple Task
+#
+
+# Step 1: Initialize Simple Task
 
 ```plaintext
 Use orchestrator_initialize with:
@@ -59,7 +65,9 @@ Use orchestrator_initialize with:
 
 #
 
-## Step 2: Direct Execution
+#
+
+# Step 2: Direct Execution
 
 For simple tasks, you can often skip separate planning:
 
@@ -71,7 +79,9 @@ Use orchestrator_execute immediately after initialization
 
 #
 
-## Step 3: Quick Review
+#
+
+# Step 3: Quick Review
 
 ```text
 plaintext
@@ -85,7 +95,9 @@ Use orchestrator_synthesize to get final results
 
 #
 
-## Task Setup
+#
+
+# Task Setup
 
 ```text
 plaintext
@@ -97,7 +109,9 @@ Expected Output: Security analysis with recommendations
 
 #
 
-## Execution Flow
+#
+
+# Execution Flow
 
 1. **Reviewer specialist** analyzes the code
 
@@ -107,7 +121,9 @@ Expected Output: Security analysis with recommendations
 
 #
 
-## Expected Timeline
+#
+
+# Expected Timeline
 
 - Simple tasks: 5-15 minutes
 
@@ -121,7 +137,9 @@ Expected Output: Security analysis with recommendations
 
 #
 
-## Task Description Tips
+#
+
+# Task Description Tips
 
 - Be specific about scope and requirements
 
@@ -133,7 +151,9 @@ Expected Output: Security analysis with recommendations
 
 #
 
-## Example Good Descriptions
+#
+
+# Example Good Descriptions
 
 ```text
 plaintext
@@ -145,7 +165,9 @@ plaintext
 
 #
 
-## Example Poor Descriptions
+#
+
+# Example Poor Descriptions
 
 ```text
 plaintext
@@ -160,7 +182,9 @@ plaintext
 
 #
 
-## Task Fails to Start
+#
+
+# Task Fails to Start
 
 - Check task description specificity
 
@@ -170,7 +194,9 @@ plaintext
 
 #
 
-## Incomplete Results
+#
+
+# Incomplete Results
 
 - Task may be more complex than expected
 
@@ -180,7 +206,9 @@ plaintext
 
 #
 
-## Quality Issues
+#
+
+# Quality Issues
 
 - Add more context in task description
 

@@ -16,7 +16,9 @@ Legacy modernization requires careful coordination between analysis, refactoring
 
 #
 
-## 🔄 **Monolith to Microservices** (`monolith-decomposition.md`)
+#
+
+# 🔄 **Monolith to Microservices** (`monolith-decomposition.md`)
 
 - Legacy application analysis and service boundary identification
 
@@ -28,7 +30,9 @@ Legacy modernization requires careful coordination between analysis, refactoring
 
 #
 
-## 📦 **Framework Migration** (`framework-upgrade-automation.md`)
+#
+
+# 📦 **Framework Migration** (`framework-upgrade-automation.md`)
 
 - Large-scale dependency upgrades (React 16→18, Angular 12→17)
 
@@ -40,7 +44,9 @@ Legacy modernization requires careful coordination between analysis, refactoring
 
 #
 
-## 🗄️ **Database Modernization** (`database-migration-pipeline.md`)
+#
+
+# 🗄️ **Database Modernization** (`database-migration-pipeline.md`)
 
 - Schema evolution planning and execution
 

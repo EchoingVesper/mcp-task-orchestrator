@@ -10,7 +10,9 @@
 
 #
 
-## Constructor
+#
+
+# Constructor
 
 ```python
 GenericTask(
@@ -29,7 +31,9 @@ GenericTask(
 
 #
 
-## Key Properties
+#
+
+# Key Properties
 
 - `task_id`: Unique identifier for the task
 
@@ -45,7 +49,9 @@ GenericTask(
 
 #
 
-## Common Task Types
+#
+
+# Common Task Types
 
 - `epic`: Large organizational units
 
@@ -65,7 +71,9 @@ GenericTask(
 
 #
 
-## Constructor
+#
+
+# Constructor
 
 ```text
 python
@@ -80,7 +88,9 @@ TaskDependency(
 
 #
 
-## Dependency Types
+#
+
+# Dependency Types
 
 - `DependencyType.COMPLETION`: Task must be completed
 
@@ -94,11 +104,17 @@ TaskDependency(
 
 #
 
-## Task Creation
+#
+
+# Task Creation
 
 #
 
-### orchestrator_create_generic_task
+#
+
+#
+
+# orchestrator_create_generic_task
 
 Create a new generic task.
 
@@ -137,7 +153,11 @@ text
 
 #
 
-### orchestrator_create_from_template
+#
+
+#
+
+# orchestrator_create_from_template
 
 Create tasks from a predefined template.
 
@@ -156,11 +176,17 @@ text
 
 #
 
-## Task Querying
+#
+
+# Task Querying
 
 #
 
-### orchestrator_query_tasks
+#
+
+#
+
+# orchestrator_query_tasks
 
 Query tasks with filters and sorting.
 
@@ -190,7 +216,11 @@ text
 
 #
 
-### orchestrator_get_task_hierarchy
+#
+
+#
+
+# orchestrator_get_task_hierarchy
 
 Get complete task tree.
 
@@ -210,11 +240,17 @@ text
 
 #
 
-## Task Management
+#
+
+# Task Management
 
 #
 
-### orchestrator_update_task
+#
+
+#
+
+# orchestrator_update_task
 
 Update task attributes and status.
 
@@ -236,7 +272,11 @@ text
 
 #
 
-### orchestrator_manage_dependencies
+#
+
+#
+
+# orchestrator_manage_dependencies
 
 Add, remove, or modify task dependencies.
 
@@ -256,11 +296,17 @@ text
 
 #
 
-## Bulk Operations
+#
+
+# Bulk Operations
 
 #
 
-### orchestrator_bulk_update
+#
+
+#
+
+# orchestrator_bulk_update
 
 Update multiple tasks at once.
 
@@ -280,7 +326,11 @@ text
 
 #
 
-### orchestrator_batch_create
+#
+
+#
+
+# orchestrator_batch_create
 
 Create multiple related tasks efficiently.
 
@@ -303,7 +353,9 @@ text
 
 #
 
-## Task Status
+#
+
+# Task Status
 
 - `draft`: Initial creation state
 
@@ -319,7 +371,9 @@ text
 
 #
 
-## Lifecycle Stages
+#
+
+# Lifecycle Stages
 
 - `created`: Task has been created
 
@@ -337,7 +391,9 @@ text
 
 #
 
-## Standard Attributes
+#
+
+# Standard Attributes
 
 ```text
 json
@@ -356,7 +412,9 @@ json
 
 #
 
-## Specialist Task Attributes
+#
+
+# Specialist Task Attributes
 
 ```text
 json
@@ -372,7 +430,9 @@ json
 
 #
 
-## Feature Task Attributes
+#
+
+# Feature Task Attributes
 
 ```text
 json
@@ -388,7 +448,9 @@ json
 
 #
 
-## Bug Fix Attributes
+#
+
+# Bug Fix Attributes
 
 ```text
 json
@@ -410,7 +472,9 @@ json
 
 #
 
-## Common Error Types
+#
+
+# Common Error Types
 
 - `ValidationError`: Invalid task data
 
@@ -424,7 +488,9 @@ json
 
 #
 
-## Error Response Format
+#
+
+# Error Response Format
 
 ```text
 json
@@ -443,7 +509,9 @@ json
 
 #
 
-## Query Optimization
+#
+
+# Query Optimization
 
 - Use specific filters to reduce result sets
 
@@ -455,7 +523,9 @@ json
 
 #
 
-## Batch Operations
+#
+
+# Batch Operations
 
 - Use `orchestrator_batch_create` for multiple related tasks
 
@@ -465,7 +535,9 @@ json
 
 #
 
-## Dependency Management
+#
+
+# Dependency Management
 
 - Validate dependencies before adding
 
@@ -481,7 +553,9 @@ json
 
 #
 
-## Task Modeling
+#
+
+# Task Modeling
 
 1. Use descriptive task types and titles
 
@@ -493,7 +567,9 @@ json
 
 #
 
-## API Usage
+#
+
+# API Usage
 
 1. Validate inputs before API calls
 
@@ -505,7 +581,9 @@ json
 
 #
 
-## Performance
+#
+
+# Performance
 
 1. Use filters to reduce query scope
 

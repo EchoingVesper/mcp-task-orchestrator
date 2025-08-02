@@ -10,7 +10,9 @@
 
 #
 
-## Start a New Project
+#
+
+# Start a New Project
 
 ```text
 "Initialize a new orchestration session and plan a project to [describe your project]"
@@ -19,7 +21,9 @@
 
 #
 
-## Get Current Status
+#
+
+# Get Current Status
 
 ```text
 
@@ -29,7 +33,9 @@
 
 #
 
-## Resume Work
+#
+
+# Resume Work
 
 ```text
 
@@ -39,7 +45,9 @@
 
 #
 
-## Finish and Handoff
+#
+
+# Finish and Handoff
 
 ```text
 
@@ -53,7 +61,9 @@
 
 #
 
-## Daily Cleanup
+#
+
+# Daily Cleanup
 
 ```text
 
@@ -63,7 +73,9 @@
 
 #
 
-## Performance Optimization
+#
+
+# Performance Optimization
 
 ```text
 
@@ -73,7 +85,9 @@
 
 #
 
-## Before Handoffs
+#
+
+# Before Handoffs
 
 ```text
 
@@ -83,7 +97,9 @@
 
 #
 
-## System Health Check
+#
+
+# System Health Check
 
 ```text
 
@@ -97,7 +113,9 @@
 
 #
 
-## For Architecture Work
+#
+
+# For Architecture Work
 
 ```text
 
@@ -107,7 +125,9 @@
 
 #
 
-## For Implementation
+#
+
+# For Implementation
 
 ```text
 
@@ -117,7 +137,9 @@
 
 #
 
-## For Documentation
+#
+
+# For Documentation
 
 ```text
 
@@ -127,7 +149,9 @@
 
 #
 
-## For Testing
+#
+
+# For Testing
 
 ```text
 
@@ -141,7 +165,9 @@
 
 #
 
-## Complete with Files Created
+#
+
+# Complete with Files Created
 
 ```text
 
@@ -151,7 +177,9 @@
 
 #
 
-## Complete Documentation Task
+#
+
+# Complete Documentation Task
 
 ```text
 
@@ -161,7 +189,9 @@
 
 #
 
-## Complete with Issue
+#
+
+# Complete with Issue
 
 ```text
 
@@ -175,7 +205,9 @@
 
 #
 
-## Web Development Project
+#
+
+# Web Development Project
 
 ```text
 
@@ -185,7 +217,9 @@
 
 #
 
-## Data Processing Pipeline
+#
+
+# Data Processing Pipeline
 
 ```text
 
@@ -195,7 +229,9 @@
 
 #
 
-## Documentation Project
+#
+
+# Documentation Project
 
 ```text
 
@@ -205,7 +241,9 @@
 
 #
 
-## Legacy System Migration
+#
+
+# Legacy System Migration
 
 ```text
 
@@ -219,7 +257,9 @@
 
 #
 
-## Check for Issues
+#
+
+# Check for Issues
 
 ```text
 
@@ -229,7 +269,9 @@
 
 #
 
-## Fix Stale Tasks
+#
+
+# Fix Stale Tasks
 
 ```text
 
@@ -239,7 +281,9 @@
 
 #
 
-## Reset Database
+#
+
+# Reset Database
 
 ```text
 
@@ -249,7 +293,9 @@
 
 #
 
-## Get Diagnostic Info
+#
+
+# Get Diagnostic Info
 
 ```text
 
@@ -263,7 +309,9 @@
 
 #
 
-## Custom Specialist Roles
+#
+
+# Custom Specialist Roles
 
 ```text
 
@@ -273,7 +321,9 @@
 
 #
 
-## Large Project Management
+#
+
+# Large Project Management
 
 ```text
 
@@ -283,7 +333,9 @@
 
 #
 
-## Cross-Project Synthesis
+#
+
+# Cross-Project Synthesis
 
 ```text
 
@@ -297,7 +349,9 @@
 
 #
 
-## Daily (5 minutes)
+#
+
+# Daily (5 minutes)
 
 ```text
 
@@ -307,7 +361,9 @@
 
 #
 
-## Weekly (10 minutes)
+#
+
+# Weekly (10 minutes)
 
 ```text
 
@@ -317,7 +373,9 @@
 
 #
 
-## Monthly (20 minutes)
+#
+
+# Monthly (20 minutes)
 
 ```text
 
@@ -327,7 +385,9 @@
 
 #
 
-## Before Major Milestones
+#
+
+# Before Major Milestones
 
 ```text
 
@@ -341,7 +401,9 @@
 
 #
 
-## With Git Workflows
+#
+
+# With Git Workflows
 
 ```text
 
@@ -351,7 +413,9 @@
 
 #
 
-## With CI/CD Pipelines
+#
+
+# With CI/CD Pipelines
 
 ```text
 
@@ -361,7 +425,9 @@
 
 #
 
-## With Team Handoffs
+#
+
+# With Team Handoffs
 
 ```text
 
@@ -375,7 +441,9 @@
 
 #
 
-## For Claude Desktop
+#
+
+# For Claude Desktop
 
 ```text
 
@@ -385,7 +453,9 @@
 
 #
 
-## For Cursor/VS Code
+#
+
+# For Cursor/VS Code
 
 ```text
 
@@ -395,7 +465,9 @@
 
 #
 
-## For General Usage
+#
+
+# For General Usage
 
 ```text
 
@@ -409,7 +481,9 @@
 
 #
 
-## Be Specific
+#
+
+# Be Specific
 
 ```text
 
@@ -420,7 +494,9 @@
 
 #
 
-## Include Context
+#
+
+# Include Context
 
 ```text
 
@@ -431,7 +507,9 @@
 
 #
 
-## Specify Requirements
+#
+
+# Specify Requirements
 
 ```text
 
@@ -442,7 +520,9 @@
 
 #
 
-## Use Action Words
+#
+
+# Use Action Words
 
 ```text
 

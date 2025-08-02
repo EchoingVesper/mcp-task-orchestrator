@@ -10,7 +10,9 @@ This template provides a step-by-step guide for creating and managing new git wo
 
 #
 
-## Step 1: Create the Worktree
+#
+
+# Step 1: Create the Worktree
 
 ```bash
 
@@ -32,7 +34,9 @@ git worktree add worktrees/performance-optimization -b feature/performance-optim
 
 #
 
-## Step 2: Initialize Development Environment
+#
+
+# Step 2: Initialize Development Environment
 
 ```text
 bash
@@ -54,7 +58,9 @@ git status
 
 #
 
-## Step 3: Set Up Worktree Documentation
+#
+
+# Step 3: Set Up Worktree Documentation
 
 Create or update the worktree-specific CLAUDE.md:
 
@@ -110,7 +116,9 @@ python scripts/diagnostics/check_[feature].py
 
 #
 
-## Daily Development
+#
+
+# Daily Development
 
 ```text
 text
@@ -132,7 +140,9 @@ git push -u origin feature/[FEATURE-NAME]
 
 #
 
-## Creating Pull Requests
+#
+
+# Creating Pull Requests
 
 ```text
 bash
@@ -142,6 +152,7 @@ bash
 gh pr create --title "feat: [Feature Name]" --body "
 
 #
+
 # Summary
 
 [Feature description]
@@ -172,7 +183,9 @@ gh pr create --title "feat: [Feature Name]" --body "
 
 #
 
-## Staying Updated
+#
+
+# Staying Updated
 
 ```text
 bash
@@ -194,7 +207,9 @@ git rebase origin/main
 
 #
 
-## Viewing All Worktrees
+#
+
+# Viewing All Worktrees
 
 ```text
 bash
@@ -215,7 +230,9 @@ git log --oneline --all --graph
 
 #
 
-## Working with Multiple Worktrees
+#
+
+# Working with Multiple Worktrees
 
 ```text
 bash
@@ -236,7 +253,9 @@ cd worktrees/api-enhancement && claude
 
 #
 
-## Communication Between Worktrees
+#
+
+# Communication Between Worktrees
 
 - **File Changes**: Each worktree has independent file states
 
@@ -252,7 +271,9 @@ cd worktrees/api-enhancement && claude
 
 #
 
-## After PR is Merged
+#
+
+# After PR is Merged
 
 ```text
 bash
@@ -282,7 +303,9 @@ git remote prune origin
 
 #
 
-## Verification
+#
+
+# Verification
 
 ```text
 bash
@@ -303,7 +326,9 @@ git branch -a
 
 #
 
-## Naming Conventions
+#
+
+# Naming Conventions
 
 - **Worktree Directory**: `worktrees/[feature-name]`
 
@@ -313,7 +338,9 @@ git branch -a
 
 #
 
-## File Organization
+#
+
+# File Organization
 
 ```text
 
@@ -338,7 +365,9 @@ worktrees/
 
 #
 
-## Documentation Standards
+#
+
+# Documentation Standards
 
 - Each worktree should have clear purpose documentation
 
@@ -350,7 +379,9 @@ worktrees/
 
 #
 
-## Git Workflow
+#
+
+# Git Workflow
 
 - Commit early and often within each worktree
 
@@ -362,7 +393,9 @@ worktrees/
 
 #
 
-## Communication
+#
+
+# Communication
 
 - Document active worktrees in team communications
 
@@ -378,11 +411,17 @@ worktrees/
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 #
 
-### Worktree Won't Remove
+#
+
+#
+
+# Worktree Won't Remove
 
 ```text
 bash
@@ -404,7 +443,11 @@ git worktree remove worktrees/[FEATURE-NAME]
 
 #
 
-### Branch Conflicts
+#
+
+#
+
+# Branch Conflicts
 
 ```text
 bash
@@ -421,7 +464,11 @@ git worktree add worktrees/[FEATURE-NAME] feature/existing-branch
 
 #
 
-### Viewing Worktree Status
+#
+
+#
+
+# Viewing Worktree Status
 
 ```text
 bash

@@ -10,7 +10,9 @@
 
 #
 
-## [Architecture Overview](./architecture-overview.md)
+#
+
+# [Architecture Overview](./architecture-overview.md)
 
 High-level system architecture showing how Task Orchestrator and Claude Code MCP work together.
 
@@ -26,7 +28,9 @@ High-level system architecture showing how Task Orchestrator and Claude Code MCP
 
 #
 
-## [Sequential Coordination Flow](./sequential-coordination-flow.md)  
+#
+
+# [Sequential Coordination Flow](./sequential-coordination-flow.md)  
 
 Complete workflow flowchart for the core integration pattern.
 
@@ -42,7 +46,9 @@ Complete workflow flowchart for the core integration pattern.
 
 #
 
-## [Setup Flow](./setup-flow.md)
+#
+
+# [Setup Flow](./setup-flow.md)
 
 Step-by-step installation and configuration process.
 
@@ -58,7 +64,9 @@ Step-by-step installation and configuration process.
 
 #
 
-## [Troubleshooting Tree](./troubleshooting-tree.md)
+#
+
+# [Troubleshooting Tree](./troubleshooting-tree.md)
 
 Decision tree for resolving common integration issues.
 
@@ -74,7 +82,9 @@ Decision tree for resolving common integration issues.
 
 #
 
-## [Integration Patterns](./integration-patterns.md)
+#
+
+# [Integration Patterns](./integration-patterns.md)
 
 Visual representations of all coordination patterns.
 

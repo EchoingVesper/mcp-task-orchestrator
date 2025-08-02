@@ -93,7 +93,9 @@
 
 #
 
-## 1. Single Responsibility
+#
+
+# 1. Single Responsibility
 
 ```text
 
@@ -105,7 +107,9 @@ Claude Code     ──────┘
 
 #
 
-## 2. Sequential Coordination
+#
+
+# 2. Sequential Coordination
 
 ```text
 
@@ -117,7 +121,9 @@ Plan ──▶ Execute ──▶ Track ──▶ Synthesize
 
 #
 
-## 3. Context Preservation
+#
+
+# 3. Context Preservation
 
 ```text
 

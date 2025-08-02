@@ -16,7 +16,9 @@ Use for coordinating development workflows with multiple files, testing, and dep
 
 #
 
-## 1. Architecture Planning (Architect)
+#
+
+# 1. Architecture Planning (Architect)
 
 - System design, component structure, technology selection
 
@@ -24,7 +26,9 @@ Use for coordinating development workflows with multiple files, testing, and dep
 
 #
 
-## 2. Implementation Coordination (Implementer) 
+#
+
+# 2. Implementation Coordination (Implementer) 
 
 - Core functionality, component integration, error handling
 
@@ -32,7 +36,9 @@ Use for coordinating development workflows with multiple files, testing, and dep
 
 #
 
-## 3. Testing Strategy (Tester)
+#
+
+# 3. Testing Strategy (Tester)
 
 - Unit/integration testing, performance and security testing
 
@@ -40,7 +46,9 @@ Use for coordinating development workflows with multiple files, testing, and dep
 
 #
 
-## 4. Review and Quality (Reviewer)
+#
+
+# 4. Review and Quality (Reviewer)
 
 - Code quality, architecture review, documentation completeness
 

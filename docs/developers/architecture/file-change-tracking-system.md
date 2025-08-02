@@ -26,7 +26,9 @@
 
 #
 
-## Core Components
+#
+
+# Core Components
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
@@ -61,11 +63,14 @@
 ```text
 
 #
+
 # 🔧 Implementation Specifications
 
 #
 
-## 1. File Operation Tracker
+#
+
+# 1. File Operation Tracker
 
 ```text
 python
@@ -125,7 +130,9 @@ class VerificationStatus(Enum):
 
 #
 
-## 2. File Verification Engine
+#
+
+# 2. File Verification Engine
 
 ```text
 python

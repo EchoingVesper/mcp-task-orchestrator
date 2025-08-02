@@ -14,7 +14,9 @@ MCP Task Orchestrator is an intelligent task management system that coordinates 
 
 #
 
-## Task Orchestration
+#
+
+# Task Orchestration
 
 The core engine that:
 
@@ -28,7 +30,9 @@ The core engine that:
 
 #
 
-## AI Specialists
+#
+
+# AI Specialists
 
 Role-based AI personas with specific capabilities:
 
@@ -46,7 +50,9 @@ Role-based AI personas with specific capabilities:
 
 #
 
-## Artifact Storage
+#
+
+# Artifact Storage
 
 Enhanced storage system that:
 
@@ -64,7 +70,9 @@ Enhanced storage system that:
 
 #
 
-## Project Management Benefits
+#
+
+# Project Management Benefits
 
 - **Intelligent Task Breakdown**: Automatically decomposes complex work
 
@@ -76,7 +84,9 @@ Enhanced storage system that:
 
 #
 
-## Developer Productivity
+#
+
+# Developer Productivity
 
 - **Reduced Context Switching**: Specialists handle specific domains
 

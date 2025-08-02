@@ -14,7 +14,9 @@ The in-context server reboot mechanism enables seamless MCP Task Orchestrator re
 
 #
 
-## 1. State Serialization Layer
+#
+
+# 1. State Serialization Layer
 
 **Purpose**: Capture and restore complete server state across restarts
 **Location**: `mcp_task_orchestrator/server/state_serializer.py`
@@ -48,7 +50,9 @@ class StateSerializer:
 
 #
 
-## 2. Graceful Shutdown Coordinator
+#
+
+# 2. Graceful Shutdown Coordinator
 
 **Purpose**: Orchestrate clean server shutdown with state preservation
 **Location**: `mcp_task_orchestrator/server/shutdown_coordinator.py`
@@ -77,7 +81,9 @@ class StateSerializer:
 
 #
 
-## 3. Restart Manager
+#
+
+# 3. Restart Manager
 
 **Purpose**: Handle server process restart and state restoration
 **Location**: `mcp_task_orchestrator/server/restart_manager.py`
@@ -106,7 +112,9 @@ class StateSerializer:
 
 #
 
-## 4. Client Connection Bridge
+#
+
+# 4. Client Connection Bridge
 
 **Purpose**: Maintain client connectivity during server restart
 **Location**: `mcp_task_orchestrator/server/connection_bridge.py`
@@ -127,7 +135,9 @@ class StateSerializer:
 
 #
 
-## Serialization Format
+#
+
+# Serialization Format
 
 **File Location**: `.task_orchestrator/server_state/`
 **Format**: JSON with binary attachments for efficiency
@@ -169,7 +179,9 @@ json
 
 #
 
-## Task Suspension Strategy
+#
+
+# Task Suspension Strategy
 
 **Checkpoint-Based Suspension**:
 
@@ -195,7 +207,9 @@ json
 
 #
 
-## Connection State Preservation
+#
+
+# Connection State Preservation
 
 **Challenge**: SQLite connections cannot be serialized
 **Solution**: Metadata-based reconnection
@@ -212,7 +226,9 @@ json
 
 #
 
-## Transaction Handling
+#
+
+# Transaction Handling
 
 **In-Progress Transactions**:
 
@@ -236,7 +252,9 @@ json
 
 #
 
-## Restart Notification
+#
+
+# Restart Notification
 
 **Pre-Shutdown Notification**:
 
@@ -273,7 +291,9 @@ text
 
 #
 
-## Reconnection Handling
+#
+
+# Reconnection Handling
 
 **Client-Side Strategy**:
 
@@ -301,7 +321,9 @@ text
 
 #
 
-## Failure Scenarios
+#
+
+# Failure Scenarios
 
 **Serialization Failures**:
 
@@ -329,7 +351,9 @@ text
 
 #
 
-## Safety Guarantees
+#
+
+# Safety Guarantees
 
 **Data Integrity**:
 
@@ -353,7 +377,9 @@ text
 
 #
 
-## MCP Protocol Extensions
+#
+
+# MCP Protocol Extensions
 
 **New Tool Functions**:
 
@@ -373,7 +399,9 @@ text
 
 #
 
-## Existing System Integration
+#
+
+# Existing System Integration
 
 **StateManager Integration**:
 
@@ -397,7 +425,9 @@ text
 
 #
 
-## File Size Limits
+#
+
+# File Size Limits
 
 **Constraint**: Keep all implementation files under 500 lines
 **Strategy**: 
@@ -410,7 +440,9 @@ text
 
 #
 
-## Performance Requirements
+#
+
+# Performance Requirements
 
 **Restart Time**: <5 seconds total restart cycle
 **State Size**: Optimize for <10MB typical state snapshots
@@ -418,7 +450,9 @@ text
 
 #
 
-## Compatibility Requirements
+#
+
+# Compatibility Requirements
 
 **Client Compatibility**: Support all existing MCP clients
 **Database Compatibility**: Maintain SQLite schema compatibility

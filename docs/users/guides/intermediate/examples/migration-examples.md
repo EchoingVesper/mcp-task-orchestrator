@@ -19,7 +19,9 @@ This document provides step-by-step migration examples for upgrading from the le
 
 #
 
-## Environment Health Check
+#
+
+# Environment Health Check
 
 ```bash
 
@@ -47,7 +49,9 @@ df -h /path/to/database
 
 #
 
-## Data Analysis Pre-Migration
+#
+
+# Data Analysis Pre-Migration
 
 ```text
 python
@@ -128,11 +132,17 @@ print(f"Migration Analysis: {analysis}")
 
 #
 
-## Example 1: Simple Task Migration
+#
+
+# Example 1: Simple Task Migration
 
 #
 
-### Legacy Structure
+#
+
+#
+
+# Legacy Structure
 
 ```text
 json
@@ -168,7 +178,11 @@ json
 
 #
 
-### Migration Script
+#
+
+#
+
+# Migration Script
 
 ```text
 python
@@ -288,11 +302,17 @@ async def migrate_simple_task_example():
 
 #
 
-## Example 2: Complex Hierarchical Migration
+#
+
+# Example 2: Complex Hierarchical Migration
 
 #
 
-### Legacy Structure with Multiple Levels
+#
+
+#
+
+# Legacy Structure with Multiple Levels
 
 ```text
 python
@@ -344,7 +364,11 @@ legacy_data = {
 
 #
 
-### Migration with Hierarchy Optimization
+#
+
+#
+
+# Migration with Hierarchy Optimization
 
 ```text
 python
@@ -628,7 +652,9 @@ async def validate_migrated_hierarchy(root_task_id: str):
 
 #
 
-## Example 3: Preserving Custom Data During Migration
+#
+
+# Example 3: Preserving Custom Data During Migration
 
 ```text
 python
@@ -711,7 +737,9 @@ async def migrate_with_custom_data_preservation():
 
 #
 
-## Example 4: Batch Migration with Progress Tracking
+#
+
+# Example 4: Batch Migration with Progress Tracking
 
 ```text
 python
@@ -875,7 +903,9 @@ async def batch_migrate_with_progress():
 
 #
 
-## Comprehensive Validation Script
+#
+
+# Comprehensive Validation Script
 
 ```text
 python
@@ -1065,7 +1095,9 @@ async def test_new_generic_apis():
 
 #
 
-## Emergency Rollback Script
+#
+
+# Emergency Rollback Script
 
 ```text
 python

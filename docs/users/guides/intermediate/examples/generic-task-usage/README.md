@@ -16,7 +16,9 @@ This guide provides practical examples of using the Generic Task Model (v2.0) wi
 
 #
 
-## Getting Started
+#
+
+# Getting Started
 
 - [📚 **Getting Started**](getting-started.md) - Basic concepts and first steps
 
@@ -26,7 +28,9 @@ This guide provides practical examples of using the Generic Task Model (v2.0) wi
 
 #
 
-## Core Features  
+#
+
+# Core Features  
 
 - [🎯 **Task Types & Templates**](task-types.md) - Different task types and when to use them
 
@@ -36,7 +40,9 @@ This guide provides practical examples of using the Generic Task Model (v2.0) wi
 
 #
 
-## Advanced Usage
+#
+
+# Advanced Usage
 
 - [🏗️ **Complex Workflows**](complex-workflows.md) - Multi-team and enterprise patterns
 
@@ -46,7 +52,9 @@ This guide provides practical examples of using the Generic Task Model (v2.0) wi
 
 #
 
-## Real-World Examples
+#
+
+# Real-World Examples
 
 - [🛒 **E-commerce Platform**](..ecommerce-platform.md) - Complete platform development
 
@@ -58,7 +66,9 @@ This guide provides practical examples of using the Generic Task Model (v2.0) wi
 
 #
 
-## Reference
+#
+
+# Reference
 
 - [📖 **API Quick Reference**](../../../../referenceapi-reference.md) - Common methods and patterns
 

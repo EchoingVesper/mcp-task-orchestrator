@@ -33,11 +33,17 @@ Enable the MCP Task Orchestrator to spawn isolated Claude Code instances for ind
 
 #
 
-## New Tools/Functions
+#
+
+# New Tools/Functions
 
 #
 
-### 1. `orchestrator_execute_subtask_isolated`
+#
+
+#
+
+# 1. `orchestrator_execute_subtask_isolated`
 
 **Purpose**: Execute subtask in isolated Claude Code instance with full context isolation  
 **Parameters**:
@@ -56,10 +62,15 @@ Enable the MCP Task Orchestrator to spawn isolated Claude Code instances for ind
 
 #
 
-### 2. `orchestrator_spawn_isolated_session`
+#
+
+#
+
+# 2. `orchestrator_spawn_isolated_session`
 
 **Purpose**: Create and manage isolated Claude Code sessions for multiple related subtasks  
 **Parameters**:
+
 ```text
 text
 json
@@ -75,10 +86,15 @@ json
 }
 
 ```text
+text
 
 #
 
-### 3. `orchestrator_monitor_isolated_execution` 
+#
+
+#
+
+# 3. `orchestrator_monitor_isolated_execution` 
 
 **Purpose**: Monitor status and progress of isolated subtask execution
 **Parameters**:
@@ -97,15 +113,26 @@ text
 
 #
 
-## Database Changes
+#
+
+# Database Changes
 
 #
 
-### New Tables
+#
 
 #
 
-#### `isolated_sessions`
+# New Tables
+
+#
+
+#
+
+#
+
+#
+# `isolated_sessions`
 
 ```text
 sql
@@ -128,7 +155,12 @@ CREATE TABLE isolated_sessions (
 
 #
 
-#### `isolation_communication`
+#
+
+#
+
+#
+# `isolation_communication`
 
 ```text
 sql
@@ -146,7 +178,12 @@ CREATE TABLE isolation_communication (
 
 #
 
-#### `context_usage_metrics`
+#
+
+#
+
+#
+# `context_usage_metrics`
 
 ```text
 sql
@@ -165,11 +202,17 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Integration Points
+#
+
+# Integration Points
 
 #
 
-### File-Based Communication System
+#
+
+#
+
+# File-Based Communication System
 
 ```text
 
@@ -219,7 +262,11 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-### Enhanced Artifact Integration
+#
+
+#
+
+# Enhanced Artifact Integration
 
 - **Artifact Storage**: Isolated sessions use existing artifact system for result storage
 
@@ -235,7 +282,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Phase 1: Core Infrastructure (Weeks 1-2)
+#
+
+# Phase 1: Core Infrastructure (Weeks 1-2)
 
 **Goal**: Basic isolation capability with file-based communication
 
@@ -257,7 +306,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Phase 2: Enhanced Communication & Monitoring (Weeks 3-4)
+#
+
+# Phase 2: Enhanced Communication & Monitoring (Weeks 3-4)
 
 **Goal**: Robust communication and session management
 
@@ -281,7 +332,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Phase 3: Context Optimization & Metrics (Weeks 5-6)
+#
+
+# Phase 3: Context Optimization & Metrics (Weeks 5-6)
 
 **Goal**: Context efficiency and performance optimization
 
@@ -305,7 +358,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Phase 4: Full Integration & Testing (Weeks 7-8)
+#
+
+# Phase 4: Full Integration & Testing (Weeks 7-8)
 
 **Goal**: well-tested integration with existing orchestrator
 
@@ -333,7 +388,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Immediate Benefits
+#
+
+# Immediate Benefits
 
 - **Context Capacity**: Each subtask gets full ~100k token context space
 
@@ -345,7 +402,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Long-term Benefits  
+#
+
+# Long-term Benefits  
 
 - **Scale**: Handle 5-10x larger projects before hitting context limits
 
@@ -357,7 +416,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Strategic Benefits
+#
+
+# Strategic Benefits
 
 - **Development Velocity**: Significantly faster iteration on complex projects
 
@@ -373,7 +434,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Context Efficiency Metrics
+#
+
+# Context Efficiency Metrics
 
 - **Context Utilization**: Isolated subtasks use 90%+ of available context effectively
 
@@ -383,7 +446,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Performance Metrics  
+#
+
+# Performance Metrics  
 
 - **Execution Time**: Isolated execution within 10% overhead of standard execution
 
@@ -393,7 +458,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## User Experience Metrics
+#
+
+# User Experience Metrics
 
 - **Context Interruptions**: 80% reduction in context limit related workflow interruptions
 
@@ -407,7 +474,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Backward Compatibility
+#
+
+# Backward Compatibility
 
 - **Existing Workflows**: All current orchestrator workflows continue unchanged
 
@@ -417,7 +486,9 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Migration Path
+#
+
+# Migration Path
 
 1. **Phase 1**: Experimental flag for testing isolation on selected subtasks
 
@@ -433,11 +504,17 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Risks and Mitigation
+#
+
+# Risks and Mitigation
 
 #
 
-### **Risk 1: Process Management Complexity**
+#
+
+#
+
+# **Risk 1: Process Management Complexity**
 
 **Description**: Managing multiple Claude Code processes could introduce instability
 **Mitigation**: 
@@ -452,7 +529,11 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-### **Risk 2: File System Coordination**
+#
+
+#
+
+# **Risk 2: File System Coordination**
 
 **Description**: Multiple processes accessing shared files could cause conflicts  
 **Mitigation**:
@@ -467,7 +548,11 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-### **Risk 3: Context Optimization Overhead**
+#
+
+#
+
+# **Risk 3: Context Optimization Overhead**
 
 **Description**: Context management overhead could negate efficiency benefits
 **Mitigation**:
@@ -482,7 +567,11 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-### **Risk 4: User Experience Complexity** 
+#
+
+#
+
+# **Risk 4: User Experience Complexity** 
 
 **Description**: Additional complexity could confuse users or make debugging harder
 **Mitigation**:
@@ -497,11 +586,17 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Dependencies
+#
+
+# Dependencies
 
 #
 
-### **Technical Dependencies**
+#
+
+#
+
+# **Technical Dependencies**
 
 - WSL environment with Claude Code installed and accessible
 
@@ -513,7 +608,11 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-### **Infrastructure Dependencies**  
+#
+
+#
+
+# **Infrastructure Dependencies**  
 
 - Enhanced orchestrator database schema for session tracking
 
@@ -525,7 +624,11 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-### **User Environment Dependencies**
+#
+
+#
+
+# **User Environment Dependencies**
 
 - Windows environment with WSL configured
 
@@ -543,11 +646,17 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-## Critical Hypotheses to Test
+#
+
+# Critical Hypotheses to Test
 
 #
 
-### **Hypothesis 1: Context Limit Improvement**
+#
+
+#
+
+# **Hypothesis 1: Context Limit Improvement**
 
 **Test**: Compare same complex project execution:
 
@@ -561,25 +670,39 @@ CREATE TABLE context_usage_metrics (
 
 #
 
-### **Hypothesis 2: Claude Code Context Handling** 
+#
+
+#
+
+# **Hypothesis 2: Claude Code Context Handling** 
 
 **Test**: Empirical comparison of context management between Claude Desktop and Claude Code
 **Metrics**: Context efficiency, memory usage, session persistence, error rates
 
 #
 
-### **Hypothesis 3: Development Workflow Enhancement**
+#
+
+#
+
+# **Hypothesis 3: Development Workflow Enhancement**
 
 **Test**: Real-world development scenarios with time-to-completion measurement
 **Metrics**: Developer productivity, context interruption frequency, handover quality
 
 #
 
-## Proof of Concept Implementation
+#
+
+# Proof of Concept Implementation
 
 #
 
-### **Minimal Viable Prototype** (Week 1)
+#
+
+#
+
+# **Minimal Viable Prototype** (Week 1)
 
 ```text
 python
@@ -619,7 +742,11 @@ def execute_subtask_isolated_poc(task_id, enable_isolation=False):
 
 #
 
-### **Testing Protocol**
+#
+
+#
+
+# **Testing Protocol**
 
 1. **Baseline Measurement**: Current orchestrator capabilities and limits
 

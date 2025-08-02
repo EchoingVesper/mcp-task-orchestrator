@@ -10,11 +10,17 @@ The MCP Task Orchestrator now features a modern CLI installer with comprehensive
 
 #
 
-## Key Improvements
+#
+
+# Key Improvements
 
 #
 
-### ✅ **Claude Code Support Added**
+#
+
+#
+
+# ✅ **Claude Code Support Added**
 
 - **CLI Integration**: Uses `claude mcp add` command for seamless installation
 
@@ -24,7 +30,11 @@ The MCP Task Orchestrator now features a modern CLI installer with comprehensive
 
 #
 
-### ✅ **Enhanced Multi-Project Support**
+#
+
+#
+
+# ✅ **Enhanced Multi-Project Support**
 
 - **Claude Desktop**: Global installation with dynamic project detection
 
@@ -36,7 +46,11 @@ The MCP Task Orchestrator now features a modern CLI installer with comprehensive
 
 #
 
-### ✅ **Improved Configuration Management**
+#
+
+#
+
+# ✅ **Improved Configuration Management**
 
 - **No Hardcoded Paths**: Avoids locking installations to specific directories
 
@@ -46,11 +60,17 @@ The MCP Task Orchestrator now features a modern CLI installer with comprehensive
 
 #
 
-## Installation Commands
+#
+
+# Installation Commands
 
 #
 
-### Quick Start
+#
+
+#
+
+# Quick Start
 
 ```bash
 
@@ -63,7 +83,11 @@ python -m mcp_task_orchestrator_cli install
 
 #
 
-### Client-Specific Installation
+#
+
+#
+
+# Client-Specific Installation
 
 ```text
 bash
@@ -88,7 +112,11 @@ python -m mcp_task_orchestrator_cli install --client claude_desktop,windsurf,cur
 
 #
 
-### Advanced Options
+#
+
+#
+
+# Advanced Options
 
 ```text
 bash
@@ -109,11 +137,17 @@ python -m mcp_task_orchestrator_cli install --name "my-orchestrator"
 
 #
 
-## Multi-Project Workflow
+#
+
+# Multi-Project Workflow
 
 #
 
-### For Claude Desktop Users (Recommended)
+#
+
+#
+
+# For Claude Desktop Users (Recommended)
 
 1. **Install once**: `python -m mcp_task_orchestrator_cli install --client claude_desktop`
 
@@ -125,7 +159,11 @@ python -m mcp_task_orchestrator_cli install --name "my-orchestrator"
 
 #
 
-### For Claude Code Users (Per-Project Control)
+#
+
+#
+
+# For Claude Code Users (Per-Project Control)
 
 1. **Install per project**: Run installer in each project directory with `--scope project`
 
@@ -137,7 +175,9 @@ python -m mcp_task_orchestrator_cli install --name "my-orchestrator"
 
 #
 
-## Client Support Matrix
+#
+
+# Client Support Matrix
 
 | Client | Auto-Detection | Multi-Project | Configuration Method | Status |
 |--------|----------------|---------------|---------------------|---------|
@@ -149,11 +189,17 @@ python -m mcp_task_orchestrator_cli install --name "my-orchestrator"
 
 #
 
-## Migration from Old Installation
+#
+
+# Migration from Old Installation
 
 #
 
-### For Existing Users
+#
+
+#
+
+# For Existing Users
 
 ```text
 bash
@@ -170,7 +216,11 @@ python -m mcp_task_orchestrator_cli install
 
 #
 
-### What Changed
+#
+
+#
+
+# What Changed
 
 - **Removed hardcoded `cwd`**: No longer locks to specific directories
 
@@ -182,11 +232,17 @@ python -m mcp_task_orchestrator_cli install
 
 #
 
-## Troubleshooting
+#
+
+# Troubleshooting
 
 #
 
-### Common Issues
+#
+
+#
+
+# Common Issues
 
 ```text
 bash
@@ -213,7 +269,11 @@ python -m mcp_task_orchestrator_cli install --force
 
 #
 
-### Getting Help
+#
+
+#
+
+# Getting Help
 
 ```text
 bash
@@ -229,7 +289,9 @@ python -m mcp_task_orchestrator_cli install --no-auto-detect --client claude_des
 
 #
 
-## Benefits
+#
+
+# Benefits
 
 1. **Simplified Installation**: One command for all clients
 

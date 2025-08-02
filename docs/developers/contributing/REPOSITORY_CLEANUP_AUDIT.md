@@ -14,7 +14,9 @@ This comprehensive audit identifies unnecessary files, build artifacts, and impr
 
 #
 
-## 1. Build Artifacts (Already in .gitignore but present in repo)
+#
+
+# 1. Build Artifacts (Already in .gitignore but present in repo)
 
 - `dist/` - Distribution artifacts (400KB)
 
@@ -26,7 +28,9 @@ This comprehensive audit identifies unnecessary files, build artifacts, and impr
 
 #
 
-## 2. Virtual Environments (Major storage impact)
+#
+
+# 2. Virtual Environments (Major storage impact)
 
 - `venv_test/` - Test virtual environment (35MB)
 
@@ -36,7 +40,9 @@ This comprehensive audit identifies unnecessary files, build artifacts, and impr
 
 #
 
-## 3. Database Files
+#
+
+# 3. Database Files
 
 - `data/backups/migration_backup_20250606_041333/task_orchestrator.db`
 
@@ -48,7 +54,9 @@ This comprehensive audit identifies unnecessary files, build artifacts, and impr
 
 #
 
-## 4. Backup Files
+#
+
+# 4. Backup Files
 
 - `mcp_task_orchestrator/orchestrator/core.py.bak`
 
@@ -60,7 +68,9 @@ This comprehensive audit identifies unnecessary files, build artifacts, and impr
 
 #
 
-## 5. Duplicate/Redundant Documentation
+#
+
+# 5. Duplicate/Redundant Documentation
 
 - `PYPI_PUBLISHING.md` - Should be in docs/development/ instead of root
 
@@ -76,7 +86,9 @@ This comprehensive audit identifies unnecessary files, build artifacts, and impr
 
 #
 
-## 6. Development/Internal Files
+#
+
+# 6. Development/Internal Files
 
 - `planning/files-created-this-session.md` - Session-specific file
 
@@ -267,7 +279,9 @@ The largest storage impacts are:
 
 #
 
-## Immediate Actions (Before PyPI Publishing)
+#
+
+# Immediate Actions (Before PyPI Publishing)
 
 1. **Remove all items listed in "Files and Directories to Remove"**
 
@@ -281,7 +295,9 @@ The largest storage impacts are:
 
 #
 
-## Command Sequence for Cleanup
+#
+
+# Command Sequence for Cleanup
 
 ```text
 bash
@@ -324,7 +340,9 @@ git clean -fdx
 
 #
 
-## Long-term Improvements
+#
+
+# Long-term Improvements
 
 1. **Set up pre-commit hooks** to prevent committing build artifacts
 

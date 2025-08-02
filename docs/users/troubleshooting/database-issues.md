@@ -8,7 +8,9 @@
 
 #
 
-## 1. Database Lock Errors
+#
+
+# 1. Database Lock Errors
 
 **Symptoms:**
 
@@ -37,6 +39,7 @@ ls -la .task_orchestrator/locks/
 ```text
 
 **Solutions:**
+
 ```text
 text
 bash
@@ -54,10 +57,13 @@ python scripts/diagnostics/diagnose_db.py --force-unlock
 python scripts/maintenance/run_with_db.py --reset-connections
 
 ```text
+text
 
 #
 
-## 2. Performance Issues
+#
+
+# 2. Performance Issues
 
 **Symptoms:**
 

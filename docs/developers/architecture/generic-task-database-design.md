@@ -19,7 +19,9 @@ This document presents the comprehensive database schema design for the Generic 
 
 #
 
-## 1. Unified Task Model
+#
+
+# 1. Unified Task Model
 
 - Single `generic_tasks` table replaces both `task_breakdowns` and `subtasks`
 
@@ -29,7 +31,9 @@ This document presents the comprehensive database schema design for the Generic 
 
 #
 
-## 2. Extensibility Through EAV Pattern
+#
+
+# 2. Extensibility Through EAV Pattern
 
 - `task_attributes` table enables custom properties without schema changes
 
@@ -39,7 +43,9 @@ This document presents the comprehensive database schema design for the Generic 
 
 #
 
-## 3. Rich Dependency Modeling
+#
+
+# 3. Rich Dependency Modeling
 
 - Multiple dependency types (completion, data, approval, prerequisite, blocks)
 
@@ -49,7 +55,9 @@ This document presents the comprehensive database schema design for the Generic 
 
 #
 
-## 4. Template-Driven Workflows
+#
+
+# 4. Template-Driven Workflows
 
 - Reusable task patterns stored in `task_templates`
 
@@ -59,7 +67,9 @@ This document presents the comprehensive database schema design for the Generic 
 
 #
 
-## 5. Comprehensive Event Tracking
+#
+
+# 5. Comprehensive Event Tracking
 
 - All task lifecycle changes recorded in `task_events`
 
@@ -73,7 +83,9 @@ This document presents the comprehensive database schema design for the Generic 
 
 #
 
-## generic_tasks
+#
+
+# generic_tasks
 
 The central table unifying all task types:
 
@@ -103,7 +115,9 @@ The central table unifying all task types:
 
 #
 
-## task_attributes (EAV Pattern)
+#
+
+# task_attributes (EAV Pattern)
 
 Enables extensible properties without schema modifications:
 
@@ -130,7 +144,9 @@ sql
 
 #
 
-## task_dependencies
+#
+
+# task_dependencies
 
 Models complex task relationships:
 
@@ -157,7 +173,9 @@ sql
 
 #
 
-## task_templates
+#
+
+# task_templates
 
 Enables reusable workflow patterns:
 
@@ -184,7 +202,9 @@ sql
 
 #
 
-## task_events
+#
+
+# task_events
 
 Comprehensive activity tracking:
 
@@ -215,7 +235,9 @@ sql
 
 #
 
-## Indexing Strategy
+#
+
+# Indexing Strategy
 
 ```text
 sql
@@ -235,11 +257,17 @@ WHERE is_indexed = TRUE;
 
 #
 
-## Query Optimization Patterns
+#
+
+# Query Optimization Patterns
 
 #
 
-### Efficient Subtree Queries
+#
+
+#
+
+# Efficient Subtree Queries
 
 ```text
 sql
@@ -251,7 +279,11 @@ WHERE hierarchy_path LIKE '/root/parent/task123/%';
 
 #
 
-### Fast Dependency Resolution
+#
+
+#
+
+# Fast Dependency Resolution
 
 ```text
 sql
@@ -269,7 +301,9 @@ AND is_mandatory = TRUE;
 
 #
 
-## Backward Compatibility Views
+#
+
+# Backward Compatibility Views
 
 ```text
 sql
@@ -286,7 +320,9 @@ FROM generic_tasks WHERE parent_task_id IS NOT NULL;
 
 #
 
-## Migration Tracking
+#
+
+# Migration Tracking
 
 ```text
 sql
@@ -297,7 +333,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Zero-Downtime Migration Path
+#
+
+# Zero-Downtime Migration Path
 
 1. Deploy new schema alongside existing
 
@@ -315,7 +353,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Access Control Ready
+#
+
+# Access Control Ready
 
 - `visibility` field on artifacts for future ACL implementation
 
@@ -325,7 +365,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Data Integrity
+#
+
+# Data Integrity
 
 - Foreign key constraints with appropriate CASCADE rules
 
@@ -339,7 +381,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Prepared for Advanced Features
+#
+
+# Prepared for Advanced Features
 
 1. **Multi-tenancy**: Add `tenant_id` to all tables
 
@@ -353,7 +397,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Plugin Architecture Support
+#
+
+# Plugin Architecture Support
 
 - EAV pattern allows plugin-specific attributes
 
@@ -367,7 +413,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Phase 1: Core Schema
+#
+
+# Phase 1: Core Schema
 
 1. Deploy generic_tasks and dependencies
 
@@ -377,7 +425,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Phase 2: Migration Tools
+#
+
+# Phase 2: Migration Tools
 
 1. Build data conversion utilities
 
@@ -387,7 +437,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Phase 3: Advanced Features
+#
+
+# Phase 3: Advanced Features
 
 1. Implement template system
 
@@ -401,7 +453,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Expected Performance Characteristics
+#
+
+# Expected Performance Characteristics
 
 - Subtree queries: O(log n) with hierarchy_path index
 
@@ -413,7 +467,9 @@ legacy_task_mapping: Old ID → New ID mappings
 
 #
 
-## Scalability Targets
+#
+
+# Scalability Targets
 
 - 1M+ tasks without performance degradation
 

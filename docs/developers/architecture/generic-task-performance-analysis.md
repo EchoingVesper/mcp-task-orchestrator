@@ -12,11 +12,17 @@
 
 #
 
-## 1. Hierarchy Operations
+#
+
+# 1. Hierarchy Operations
 
 #
 
-### Materialized Path Approach
+#
+
+#
+
+# Materialized Path Approach
 
 The `hierarchy_path` column uses a materialized path pattern (e.g., `/root/parent1/parent2/task_id`) for efficient tree operations.
 
@@ -29,7 +35,9 @@ The `hierarchy_path` column uses a materialized path pattern (e.g., `/root/paren
   -- Get all descendants
   SELECT * FROM generic_tasks 
   WHERE hierarchy_path LIKE '/root/parent/%'
-  ```
+  
+
+```text
 
 - **Ancestor Queries**: O(1) by parsing the path
 
@@ -43,7 +51,11 @@ The `hierarchy_path` column uses a materialized path pattern (e.g., `/root/paren
 
 #
 
-### Alternative Considered: Nested Sets
+#
+
+#
+
+# Alternative Considered: Nested Sets
 
 - Pros: Very fast read operations for subtrees
 
@@ -53,15 +65,23 @@ The `hierarchy_path` column uses a materialized path pattern (e.g., `/root/paren
 
 #
 
-## 2. EAV Pattern Performance
+#
+
+# 2. EAV Pattern Performance
 
 #
 
-### Optimized Attribute Access
+#
+
+#
+
+# Optimized Attribute Access
 
 The `task_attributes` table uses selective indexing for performance:
 
 ```text
+text
+text
 sql
 CREATE INDEX idx_task_attributes_indexed 
 ON task_attributes(is_indexed, attribute_name) 
@@ -93,11 +113,17 @@ text
 
 #
 
-## 3. Dependency Resolution
+#
+
+# 3. Dependency Resolution
 
 #
 
-### Graph Traversal Optimization
+#
+
+#
+
+# Graph Traversal Optimization
 
 Dependencies form a directed acyclic graph (DAG) requiring efficient traversal:
 
@@ -132,11 +158,17 @@ text
 
 #
 
-## 4. Event Stream Performance
+#
+
+# 4. Event Stream Performance
 
 #
 
-### Write-Optimized Design
+#
+
+#
+
+# Write-Optimized Design
 
 Events are append-only with minimal indexes for write performance:
 
@@ -158,11 +190,17 @@ CREATE INDEX idx_events_created ON task_events(created_at);
 
 #
 
-## 5. Query Optimization Examples
+#
+
+# 5. Query Optimization Examples
 
 #
 
-### Complex Task Query
+#
+
+#
+
+# Complex Task Query
 
 ```text
 sql
@@ -192,7 +230,11 @@ ORDER BY gt.created_at;
 
 #
 
-### Template Instantiation
+#
+
+#
+
+# Template Instantiation
 
 ```text
 sql
@@ -210,11 +252,17 @@ WHERE template_id = ?;
 
 #
 
-## 6. Scalability Analysis
+#
+
+# 6. Scalability Analysis
 
 #
 
-### Storage Projections
+#
+
+#
+
+# Storage Projections
 
 Based on average task characteristics:
 
@@ -238,7 +286,11 @@ Based on average task characteristics:
 
 #
 
-### Performance Benchmarks
+#
+
+#
+
+# Performance Benchmarks
 
 **Test Environment**: SQLite with 1M tasks
 
@@ -253,11 +305,17 @@ Based on average task characteristics:
 
 #
 
-## 7. Optimization Recommendations
+#
+
+# 7. Optimization Recommendations
 
 #
 
-### Database Configuration
+#
+
+#
+
+# Database Configuration
 
 ```text
 sql
@@ -271,7 +329,11 @@ PRAGMA temp_store = MEMORY;  -- Memory for temp tables
 
 #
 
-### Application-Level Caching
+#
+
+#
+
+# Application-Level Caching
 
 1. **Task Hierarchy Cache**: Cache frequently accessed subtrees
 
@@ -283,7 +345,11 @@ PRAGMA temp_store = MEMORY;  -- Memory for temp tables
 
 #
 
-### Batch Operations
+#
+
+#
+
+# Batch Operations
 
 ```text
 python
@@ -300,11 +366,17 @@ def batch_insert_tasks(tasks: List[GenericTask], batch_size: int = 1000):
 
 #
 
-## 8. Monitoring and Maintenance
+#
+
+# 8. Monitoring and Maintenance
 
 #
 
-### Key Performance Indicators
+#
+
+#
+
+# Key Performance Indicators
 
 1. **Query Performance**
 
@@ -331,7 +403,11 @@ def batch_insert_tasks(tasks: List[GenericTask], batch_size: int = 1000):
 
 #
 
-### Maintenance Tasks
+#
+
+#
+
+# Maintenance Tasks
 
 ```text
 sql

@@ -10,7 +10,9 @@
 
 #
 
-## File Operations Tracking
+#
+
+# File Operations Tracking
 
 ```sql
 CREATE TABLE file_operations (
@@ -32,7 +34,9 @@ CREATE TABLE file_operations (
 
 #
 
-## Verification Results
+#
+
+# Verification Results
 
 ```text
 sql
@@ -54,7 +58,9 @@ CREATE TABLE file_verifications (
 
 #
 
-## Enhanced Subtasks Table
+#
+
+# Enhanced Subtasks Table
 
 ```text
 sql

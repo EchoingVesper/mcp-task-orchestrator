@@ -22,7 +22,9 @@ Welcome! Whether you're tackling your first complex development project or you'r
 
 #
 
-## Foundation
+#
+
+# Foundation
 
 - **[Getting Started](getting-started.md)** - Your first successful workflow in 15 minutes
 
@@ -32,7 +34,9 @@ Welcome! Whether you're tackling your first complex development project or you'r
 
 #
 
-## Real-World Examples 🏢
+#
+
+# Real-World Examples 🏢
 
 *well-tested scenarios with complete implementations*
 
@@ -44,7 +48,9 @@ Welcome! Whether you're tackling your first complex development project or you'r
 
 #
 
-## Workflow Patterns 📊
+#
+
+# Workflow Patterns 📊
 
 *Real-world scenarios with step-by-step guidance*
 
@@ -58,7 +64,9 @@ Welcome! Whether you're tackling your first complex development project or you'r
 
 #
 
-## Visual Guides 🎨
+#
+
+# Visual Guides 🎨
 
 *ASCII diagrams and flowcharts for clear understanding*
 
@@ -74,7 +82,9 @@ Welcome! Whether you're tackling your first complex development project or you'r
 
 #
 
-## Integration Guides 🔗
+#
+
+# Integration Guides 🔗
 
 *Connecting with your favorite tools*
 
@@ -86,7 +96,9 @@ Welcome! Whether you're tackling your first complex development project or you'r
 
 #
 
-## Advanced Techniques 🚀
+#
+
+# Advanced Techniques 🚀
 
 *For when you're ready to push boundaries*
 

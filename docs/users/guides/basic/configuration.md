@@ -47,7 +47,9 @@ quality:
 
 #
 
-## Specialist Preferences
+#
+
+# Specialist Preferences
 
 Customize which specialists are used by default:
 
@@ -79,7 +81,9 @@ specialists:
 
 #
 
-## Timeout Settings
+#
+
+# Timeout Settings
 
 Adjust timeouts for your project complexity:
 
@@ -102,7 +106,9 @@ orchestration:
 
 #
 
-## Workspace Settings
+#
+
+# Workspace Settings
 
 Configure workspace behavior:
 
@@ -124,7 +130,9 @@ workspace:
 
 #
 
-## MCP Client Settings
+#
+
+# MCP Client Settings
 
 Configure MCP server behavior through environment variables:
 
@@ -147,7 +155,9 @@ export MCP_TASK_ORCHESTRATOR_LOG_LEVEL=debug
 
 #
 
-## Project-Specific Settings
+#
+
+# Project-Specific Settings
 
 Create `.env` file in your project root:
 
@@ -168,7 +178,9 @@ MCP_AUTO_SAVE_ARTIFACTS=true
 
 #
 
-## Code-Heavy Projects
+#
+
+# Code-Heavy Projects
 
 ```text
 yaml
@@ -190,7 +202,9 @@ specialists:
 
 #
 
-## Documentation Projects
+#
+
+# Documentation Projects
 
 ```text
 yaml
@@ -209,7 +223,9 @@ specialists:
 
 #
 
-## Research and Analysis
+#
+
+# Research and Analysis
 
 ```text
 yaml
@@ -234,7 +250,9 @@ orchestration:
 
 #
 
-## Check Your Configuration
+#
+
+# Check Your Configuration
 
 ```text
 bash
@@ -249,7 +267,9 @@ python -m mcp_task_orchestrator.tools.diagnostics.validate_config
 
 #
 
-## Common Configuration Errors
+#
+
+# Common Configuration Errors
 
 **Invalid specialist roles**: Check spelling of role names
 **Timeout too low**: Increase for complex tasks
@@ -262,7 +282,9 @@ python -m mcp_task_orchestrator.tools.diagnostics.validate_config
 
 #
 
-## Custom Specialist Definitions
+#
+
+# Custom Specialist Definitions
 
 Create custom specialist roles:
 
@@ -283,7 +305,9 @@ specialists:
 
 #
 
-## Quality Gates
+#
+
+# Quality Gates
 
 Configure automated quality checks:
 
@@ -305,7 +329,9 @@ quality:
 
 #
 
-## Configuration Not Loading
+#
+
+# Configuration Not Loading
 
 - Check YAML syntax with online validator
 
@@ -315,7 +341,9 @@ quality:
 
 #
 
-## Specialists Not Working
+#
+
+# Specialists Not Working
 
 - Verify role names match available specialists
 
@@ -325,7 +353,9 @@ quality:
 
 #
 
-## Performance Issues
+#
+
+# Performance Issues
 
 - Reduce `max_concurrent_tasks` for resource constraints
 

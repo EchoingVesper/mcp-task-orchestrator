@@ -24,11 +24,17 @@
 
 #
 
-## Primary Changes (Recommended)
+#
+
+# Primary Changes (Recommended)
 
 #
 
-### `orchestrator_initialize_session` → `orchestrator_start_workflow`
+#
+
+#
+
+# `orchestrator_initialize_session` → `orchestrator_start_workflow`
 
 - **27 → 24 characters** (shorter, easier to type)
 
@@ -40,7 +46,11 @@
 
 #
 
-### `orchestrator_maintenance_coordinator` → `orchestrator_maintain_system`
+#
+
+#
+
+# `orchestrator_maintenance_coordinator` → `orchestrator_maintain_system`
 
 - **32 → 25 characters** (significantly shorter)
 
@@ -52,7 +62,11 @@
 
 #
 
-### `orchestrator_get_status` → `orchestrator_check_status`
+#
+
+#
+
+# `orchestrator_get_status` → `orchestrator_check_status`
 
 - **More conversational**: "check" vs "get" feels more natural
 
@@ -66,7 +80,9 @@
 
 #
 
-## Phase 1: Dual Support (Months 1-6)
+#
+
+# Phase 1: Dual Support (Months 1-6)
 
 Both old and new names work simultaneously:
 
@@ -79,7 +95,9 @@ Both old and new names work simultaneously:
 
 #
 
-## Phase 2: Deprecation Warnings (Months 4-6)
+#
+
+# Phase 2: Deprecation Warnings (Months 4-6)
 
 Old names return warnings but still function:
 
@@ -94,7 +112,9 @@ json
 
 #
 
-## Phase 3: Legacy Removal (Month 7+)
+#
+
+# Phase 3: Legacy Removal (Month 7+)
 
 Old names removed from system.
 
@@ -104,7 +124,9 @@ Old names removed from system.
 
 #
 
-## For Regular Users
+#
+
+# For Regular Users
 
 **No immediate action required** - old names continue working during transition period.
 
@@ -118,7 +140,9 @@ Old names removed from system.
 
 #
 
-## For Documentation
+#
+
+# For Documentation
 
 **Content creators should:**
 
@@ -132,7 +156,9 @@ Old names removed from system.
 
 #
 
-## For Integration Developers
+#
+
+# For Integration Developers
 
 **API users should:**
 
@@ -150,11 +176,17 @@ Old names removed from system.
 
 #
 
-## Before and After Examples
+#
+
+# Before and After Examples
 
 #
 
-### Starting a Workflow
+#
+
+#
+
+# Starting a Workflow
 
 ```text
 
@@ -165,7 +197,11 @@ After:  "Use orchestrator_start_workflow to begin"
 
 #
 
-### System Maintenance
+#
+
+#
+
+# System Maintenance
 
 ```text
 
@@ -176,7 +212,11 @@ After:  "Run orchestrator_maintain_system to clean up"
 
 #
 
-### Checking Progress
+#
+
+#
+
+# Checking Progress
 
 ```text
 
@@ -187,11 +227,17 @@ After:  "Use orchestrator_check_status to see progress"
 
 #
 
-## Natural Language Examples
+#
+
+# Natural Language Examples
 
 #
 
-### More Intuitive Commands
+#
+
+#
+
+# More Intuitive Commands
 
 ```text
 
@@ -211,7 +257,9 @@ New: "Check the current status of tasks"
 
 #
 
-## For Users
+#
+
+# For Users
 
 - **Easier to remember** - More natural language patterns
 
@@ -223,7 +271,9 @@ New: "Check the current status of tasks"
 
 #
 
-## For System
+#
+
+# For System
 
 - **Improved discoverability** - Shorter names in tool lists
 
@@ -239,31 +289,41 @@ New: "Check the current status of tasks"
 
 #
 
-## Q: Why change names that already work?
+#
+
+# Q: Why change names that already work?
 
 **A:** While the current names are functional, the improvements in user experience and system consistency provide significant long-term benefits. The changes make the tool more accessible to new users and more efficient for existing users.
 
 #
 
-## Q: Will my existing scripts break?
+#
+
+# Q: Will my existing scripts break?
 
 **A:** No. During the transition period (6+ months), both old and new names will work. You'll have plenty of time to update any scripts or integrations.
 
 #
 
-## Q: What if I prefer the old names?
+#
+
+# Q: What if I prefer the old names?
 
 **A:** The old names will continue working during the transition period. However, we encourage adopting the new names for consistency and to benefit from the improved user experience.
 
 #
 
-## Q: How will I know when to stop using old names?
+#
+
+# Q: How will I know when to stop using old names?
 
 **A:** The system will provide deprecation warnings when you use old names, and we'll communicate the removal timeline clearly through release notes and documentation.
 
 #
 
-## Q: Are there performance differences?
+#
+
+# Q: Are there performance differences?
 
 **A:** No. The underlying functionality is identical - only the names change. There's no performance impact from using new vs old names.
 
@@ -284,7 +344,9 @@ New: "Check the current status of tasks"
 
 #
 
-## Getting Help
+#
+
+# Getting Help
 
 - **Documentation**: This guide and the [Tool Naming Architecture](docs/architecture/tool-naming-conventions.md)
 
@@ -294,7 +356,9 @@ New: "Check the current status of tasks"
 
 #
 
-## Feedback
+#
+
+# Feedback
 
 We welcome feedback on the new naming conventions:
 

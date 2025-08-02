@@ -14,7 +14,9 @@ The MCP Task Orchestrator consists of two main components:
 
 #
 
-## Task Model Architecture (v2.0+)
+#
+
+# Task Model Architecture (v2.0+)
 
 The Generic Task Model provides a unified, flexible approach to task management:
 
@@ -50,7 +52,9 @@ task.dependencies.append(dependency)
 
 #
 
-## Installation Architecture
+#
+
+# Installation Architecture
 
 The unified MCP Task Orchestrator uses a modular plugin architecture for client configuration:
 
@@ -105,7 +109,9 @@ installer/
 
 #
 
-## MCPClient (Abstract Base)
+#
+
+# MCPClient (Abstract Base)
 
 ```text
 python
@@ -121,7 +127,9 @@ class MCPClient(ABC):
 
 #
 
-## UnifiedInstaller
+#
+
+# UnifiedInstaller
 
 Main orchestrator that:
 
@@ -135,7 +143,9 @@ Main orchestrator that:
 
 #
 
-## ClientDetector
+#
+
+# ClientDetector
 
 Utility for:
 
@@ -153,7 +163,9 @@ Each MCP client requires different configuration formats:
 
 #
 
-## Claude Desktop
+#
+
+# Claude Desktop
 
 ```text
 json
@@ -171,7 +183,9 @@ json
 
 #
 
-## Cursor IDE  
+#
+
+# Cursor IDE  
 
 ```text
 json
@@ -205,7 +219,9 @@ json
 
 #
 
-## Overview
+#
+
+# Overview
 
 The Task Orchestration system uses an LLM-powered approach to break down complex tasks into specialized subtasks. Instead of using pattern matching, it leverages the intelligence of the calling LLM to analyze tasks and create structured breakdowns.
 
@@ -256,11 +272,17 @@ mcp_task_orchestrator/
 
 #
 
-## Core Components
+#
+
+# Core Components
 
 #
 
-### TaskOrchestrator
+#
+
+#
+
+# TaskOrchestrator
 
 The `TaskOrchestrator` class manages the task breakdown and specialist coordination process:
 
@@ -291,7 +313,11 @@ class TaskOrchestrator:
 
 #
 
-### StateManager
+#
+
+#
+
+# StateManager
 
 The `StateManager` class handles persistence of tasks, subtasks, and results using SQLite:
 
@@ -318,7 +344,11 @@ class StateManager:
 
 #
 
-### SpecialistManager
+#
+
+#
+
+# SpecialistManager
 
 The `SpecialistManager` class provides role-specific prompts and contexts:
 
@@ -337,7 +367,9 @@ class SpecialistManager:
 
 #
 
-## Data Flow
+#
+
+# Data Flow
 
 1. **Initialization**: LLM calls `initialize_session` to get context about task orchestration
 
@@ -357,7 +389,9 @@ class SpecialistManager:
 
 #
 
-## Adding New Specialist Types
+#
+
+# Adding New Specialist Types
 
 1. Add new enum value to `SpecialistType` in models.py
 

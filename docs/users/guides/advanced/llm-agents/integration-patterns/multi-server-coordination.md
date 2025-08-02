@@ -16,7 +16,9 @@ Coordinate workflows across multiple specialized MCP servers (orchestrator, clau
 
 #
 
-## Phase 1: Multi-Server Planning
+#
+
+# Phase 1: Multi-Server Planning
 
 ```text
 
@@ -30,7 +32,9 @@ Coordinate workflows across multiple specialized MCP servers (orchestrator, clau
 
 #
 
-## Phase 2: Coordinated Execution
+#
+
+# Phase 2: Coordinated Execution
 
 ```text
 
@@ -46,7 +50,9 @@ Coordinate workflows across multiple specialized MCP servers (orchestrator, clau
 
 #
 
-## Phase 3: Cross-Server Synthesis
+#
+
+# Phase 3: Cross-Server Synthesis
 
 ```text
 
@@ -63,7 +69,9 @@ Coordinate workflows across multiple specialized MCP servers (orchestrator, clau
 
 #
 
-## Database + File Operations
+#
+
+# Database + File Operations
 
 - **Database Server**: Query data, manage schemas, transactions
 
@@ -73,7 +81,9 @@ Coordinate workflows across multiple specialized MCP servers (orchestrator, clau
 
 #
 
-## Web Research + Documentation
+#
+
+# Web Research + Documentation
 
 - **Web Fetch**: Research current information, API documentation
 

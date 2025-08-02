@@ -151,7 +151,9 @@
 
 #
 
-## Resource Ownership
+#
+
+# Resource Ownership
 
 ```text
 
@@ -162,7 +164,9 @@ Claude Code       ────► File Operations & Implementation
 
 #
 
-## Error Handling Strategy
+#
+
+# Error Handling Strategy
 
 ```text
 
@@ -181,7 +185,9 @@ Claude Code       ────► File Operations & Implementation
 
 #
 
-## Context Flow
+#
+
+# Context Flow
 
 ```text
 

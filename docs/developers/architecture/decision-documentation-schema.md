@@ -10,7 +10,9 @@
 
 #
 
-## Architectural Decisions
+#
+
+# Architectural Decisions
 
 ```sql
 CREATE TABLE architectural_decisions (
@@ -62,7 +64,9 @@ CREATE TABLE architectural_decisions (
 
 #
 
-## Decision Evolution Tracking
+#
+
+# Decision Evolution Tracking
 
 ```text
 sql

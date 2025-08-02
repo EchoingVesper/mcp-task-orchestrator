@@ -16,7 +16,9 @@ Task dependencies define relationships between tasks that affect execution order
 
 #
 
-## Completion Dependencies
+#
+
+# Completion Dependencies
 
 Tasks that must finish before another can start:
 
@@ -56,7 +58,9 @@ implementation_task = GenericTask(
 
 #
 
-## Approval Dependencies
+#
+
+# Approval Dependencies
 
 Tasks that require explicit approval before proceeding:
 
@@ -90,7 +94,9 @@ deployment_task = GenericTask(
 
 #
 
-## Information Dependencies
+#
+
+# Information Dependencies
 
 Tasks that need information or artifacts from other tasks:
 
@@ -123,7 +129,9 @@ testing_task = GenericTask(
 
 #
 
-## Sequential Workflow
+#
+
+# Sequential Workflow
 
 ```text
 python
@@ -174,7 +182,9 @@ tasks = [
 
 #
 
-## Parallel Dependencies
+#
+
+# Parallel Dependencies
 
 ```text
 python
@@ -216,7 +226,9 @@ production_deploy = GenericTask(
 
 #
 
-## Diamond Dependencies
+#
+
+# Diamond Dependencies
 
 ```text
 python
@@ -265,7 +277,9 @@ integration_task = GenericTask(
 
 #
 
-## Adding Dependencies
+#
+
+# Adding Dependencies
 
 ```text
 json
@@ -298,7 +312,9 @@ json
 
 #
 
-## Removing Dependencies
+#
+
+# Removing Dependencies
 
 ```text
 json
@@ -316,7 +332,9 @@ json
 
 #
 
-## Querying Dependencies
+#
+
+# Querying Dependencies
 
 ```text
 json
@@ -337,7 +355,9 @@ json
 
 #
 
-## Circular Dependency Detection
+#
+
+# Circular Dependency Detection
 
 ```text
 python
@@ -365,7 +385,9 @@ async def validate_no_circular_dependencies(task_id: str, new_dependency_id: str
 
 #
 
-## Dependency Status Validation
+#
+
+# Dependency Status Validation
 
 ```text
 python
@@ -408,7 +430,9 @@ async def check_dependency_readiness(task_id: str):
 
 #
 
-## Conditional Dependencies
+#
+
+# Conditional Dependencies
 
 ```text
 python
@@ -442,7 +466,9 @@ conditional_task = GenericTask(
 
 #
 
-## Time-Based Dependencies
+#
+
+# Time-Based Dependencies
 
 ```text
 python
@@ -472,7 +498,9 @@ time_sensitive_task = GenericTask(
 
 #
 
-## Cross-Project Dependencies
+#
+
+# Cross-Project Dependencies
 
 ```text
 python
@@ -504,7 +532,9 @@ cross_project_task = GenericTask(
 
 #
 
-## Dependency Design Guidelines
+#
+
+# Dependency Design Guidelines
 
 1. **Clear Descriptions**: Always provide clear descriptions explaining why the dependency exists
 
@@ -516,7 +546,9 @@ cross_project_task = GenericTask(
 
 #
 
-## Performance Considerations
+#
+
+# Performance Considerations
 
 ```text
 python

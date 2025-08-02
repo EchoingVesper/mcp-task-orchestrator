@@ -44,7 +44,9 @@ Implement a robust database-backed persistence mechanism for the MCP Task Orches
 
 #
 
-## 1. Update Dependencies
+#
+
+# 1. Update Dependencies
 
 Add to requirements.txt:
 
@@ -58,7 +60,9 @@ alembic>=1.10.0
 
 #
 
-## 2. Database Models
+#
+
+# 2. Database Models
 
 Create models that map directly to the current data structures:
 
@@ -70,7 +74,9 @@ Create models that map directly to the current data structures:
 
 #
 
-## 3. Connection Management
+#
+
+# 3. Connection Management
 
 - Implement connection pooling for efficient resource usage
 
@@ -80,7 +86,9 @@ Create models that map directly to the current data structures:
 
 #
 
-## 4. API Compatibility
+#
+
+# 4. API Compatibility
 
 - Maintain the same method signatures in the `PersistenceManager` class
 
@@ -90,7 +98,9 @@ Create models that map directly to the current data structures:
 
 #
 
-## 5. Error Handling
+#
+
+# 5. Error Handling
 
 - Implement proper exception handling with specific error types
 

@@ -23,7 +23,9 @@ The MCP Task Orchestrator is designed as both a standalone MCP server and the co
 
 #
 
-## Current Vespera Atelier Components
+#
+
+# Current Vespera Atelier Components
 
 - **Obsidian Plugin**: Document processing and chunking (JS/TS)
   - File chunking tools for large document processing
@@ -41,7 +43,9 @@ The MCP Task Orchestrator is designed as both a standalone MCP server and the co
 
 #
 
-## Clean Architecture Enablement
+#
+
+# Clean Architecture Enablement
 
 The Clean Architecture implementation in MCP Task Orchestrator makes dual-purpose operation seamless:
 
@@ -71,7 +75,9 @@ Presentation Layer (Flexible)
 
 #
 
-## Shared Components
+#
+
+# Shared Components
 
 - **Core Orchestration Engine**: Task management, specialist coordination
 
@@ -85,7 +91,9 @@ Presentation Layer (Flexible)
 
 #
 
-## Standalone Specializations
+#
+
+# Standalone Specializations
 
 - **Development Templates**: Software workflows (feature development, code review, deployment)
 
@@ -97,7 +105,9 @@ Presentation Layer (Flexible)
 
 #
 
-## Vespera Atelier Specializations  
+#
+
+# Vespera Atelier Specializations  
 
 - **Creative Workflow Templates**: Art creation, writing, content generation, storytelling
 
@@ -113,7 +123,9 @@ Presentation Layer (Flexible)
 
 #
 
-## Document Processing Integration
+#
+
+# Document Processing Integration
 
 **From Obsidian Plugin → Task Orchestrator**:
 
@@ -127,7 +139,9 @@ Presentation Layer (Flexible)
 
 #
 
-## A2A Framework Migration
+#
+
+# A2A Framework Migration
 
 **From Obsidian Plugin → Clean Architecture**:
 
@@ -141,7 +155,9 @@ Presentation Layer (Flexible)
 
 #
 
-## Template System Synergies
+#
+
+# Template System Synergies
 
 **Creative Templates** (Vespera-specific):
 
@@ -206,7 +222,9 @@ text
 
 #
 
-## Standalone Deployment
+#
+
+# Standalone Deployment
 
 - **Package**: `mcp-task-orchestrator` PyPI package
 
@@ -218,7 +236,9 @@ text
 
 #
 
-## Vespera Atelier Integration
+#
+
+# Vespera Atelier Integration
 
 - **Package**: Internal component within Vespera Atelier monorepo
 
@@ -234,7 +254,9 @@ text
 
 #
 
-## Shared Development Process
+#
+
+# Shared Development Process
 
 1. **Core Features**: Developed in MCP Task Orchestrator repo
 
@@ -246,7 +268,9 @@ text
 
 #
 
-## Feature Development Priorities
+#
+
+# Feature Development Priorities
 
 ```text
 
@@ -263,7 +287,9 @@ P2: Advanced integrations
 
 #
 
-## Git Automation Template (Addresses User's Concern)
+#
+
+# Git Automation Template (Addresses User's Concern)
 
 **Purpose**: Automatically handle git operations after tasks to prevent uncommitted file accumulation
 
@@ -296,7 +322,9 @@ tasks:
 
 #
 
-## Creative Workflow Template
+#
+
+# Creative Workflow Template
 
 **Purpose**: Structured creative content development with review cycles
 
@@ -328,7 +356,9 @@ tasks:
 
 #
 
-## For Standalone Users
+#
+
+# For Standalone Users
 
 - **Immediate Value**: Full orchestration capabilities out of the box
 
@@ -340,7 +370,9 @@ tasks:
 
 #
 
-## For Vespera Atelier Users  
+#
+
+# For Vespera Atelier Users  
 
 - **Integrated Experience**: Seamless creative workflow automation
 
@@ -352,7 +384,9 @@ tasks:
 
 #
 
-## For Development Team
+#
+
+# For Development Team
 
 - **Shared Codebase**: Single codebase serves both audiences
 
@@ -368,7 +402,9 @@ tasks:
 
 #
 
-## Phase 1 (2.0.0): Foundation
+#
+
+# Phase 1 (2.0.0): Foundation
 
 - Core orchestration engine stable
 
@@ -378,7 +414,9 @@ tasks:
 
 #
 
-## Phase 2 (2.1.0): Enhanced Integration
+#
+
+# Phase 2 (2.1.0): Enhanced Integration
 
 - A2A framework migration from Obsidian plugin
 
@@ -388,7 +426,9 @@ tasks:
 
 #
 
-## Phase 3 (2.2.0): Advanced Features
+#
+
+# Phase 3 (2.2.0): Advanced Features
 
 - Multi-modal content workflows
 

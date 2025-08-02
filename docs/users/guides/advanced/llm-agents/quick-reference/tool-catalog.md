@@ -10,7 +10,9 @@
 
 #
 
-## `orchestrator_initialize_session()` *(→ orchestrator_start_workflow)*
+#
+
+# `orchestrator_initialize_session()` *(→ orchestrator_start_workflow)*
 
 - **Purpose**: Initialize orchestration context and begin workflow
 
@@ -22,7 +24,9 @@
 
 #
 
-## `orchestrator_plan_task(description, subtasks_json, complexity_level?, context?)`
+#
+
+# `orchestrator_plan_task(description, subtasks_json, complexity_level?, context?)`
 
 - **Purpose**: Create structured task breakdown
 
@@ -36,7 +40,9 @@
 
 #
 
-## `orchestrator_execute_subtask(task_id)`
+#
+
+# `orchestrator_execute_subtask(task_id)`
 
 - **Purpose**: Get specialist context for subtask execution
 
@@ -48,7 +54,9 @@
 
 #
 
-## `orchestrator_complete_subtask(task_id, summary, detailed_work, next_action, file_paths?, artifact_type?)`
+#
+
+# `orchestrator_complete_subtask(task_id, summary, detailed_work, next_action, file_paths?, artifact_type?)`
 
 - **Purpose**: Mark subtask complete with artifact storage
 
@@ -60,7 +68,9 @@
 
 #
 
-## `orchestrator_synthesize_results(parent_task_id)`
+#
+
+# `orchestrator_synthesize_results(parent_task_id)`
 
 - **Purpose**: Combine all subtask results into final output
 
@@ -72,7 +82,9 @@
 
 #
 
-## `orchestrator_get_status(include_completed?)`  *(→ orchestrator_check_status)*
+#
+
+# `orchestrator_get_status(include_completed?)`  *(→ orchestrator_check_status)*
 
 - **Purpose**: Check progress of active tasks and system health
 
@@ -86,7 +98,9 @@
 
 #
 
-## `orchestrator_maintenance_coordinator(action, scope?, validation_level?)`  *(→ orchestrator_maintain_system)*
+#
+
+# `orchestrator_maintenance_coordinator(action, scope?, validation_level?)`  *(→ orchestrator_maintain_system)*
 
 - **Purpose**: Automated system maintenance and optimization
 

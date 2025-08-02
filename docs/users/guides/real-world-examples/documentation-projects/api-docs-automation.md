@@ -18,7 +18,9 @@ Generate comprehensive API documentation from code annotations, including OpenAP
 
 #
 
-## Step 1: Initialize and Plan
+#
+
+# Step 1: Initialize and Plan
 
 ```bash
 orchestrator_initialize_session()
@@ -44,7 +46,9 @@ orchestrator_plan_task({
 
 #
 
-## Step 2: Code Analysis
+#
+
+# Step 2: Code Analysis
 
 ```text
 bash
@@ -68,7 +72,9 @@ text
 
 #
 
-## Step 3: OpenAPI Generation
+#
+
+# Step 3: OpenAPI Generation
 
 ```text
 bash
@@ -91,7 +97,9 @@ text
 
 #
 
-## Step 4: Example Testing and Validation
+#
+
+# Step 4: Example Testing and Validation
 
 ```text
 bash
@@ -114,7 +122,9 @@ text
 
 #
 
-## Step 5: Multi-Format Publishing
+#
+
+# Step 5: Multi-Format Publishing
 
 ```text
 bash

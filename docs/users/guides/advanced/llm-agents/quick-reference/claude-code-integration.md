@@ -35,7 +35,9 @@
 
 #
 
-## File Operations
+#
+
+# File Operations
 
 - **Orchestrator**: Plans which files to work on, manages dependencies
 
@@ -43,7 +45,9 @@
 
 #
 
-## State Management  
+#
+
+# State Management  
 
 - **Orchestrator**: Task progress, dependencies, workflow state
 
@@ -51,7 +55,9 @@
 
 #
 
-## Error Handling
+#
+
+# Error Handling
 
 - **Orchestrator**: Workflow-level recovery, retry coordination
 

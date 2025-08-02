@@ -10,7 +10,9 @@
 
 #
 
-## architect
+#
+
+# architect
 
 - **Expertise**: System design, architecture patterns, scalability
 
@@ -20,7 +22,9 @@
 
 #
 
-## implementer  
+#
+
+# implementer  
 
 - **Expertise**: Code development, feature implementation, integration
 
@@ -30,7 +34,9 @@
 
 #
 
-## documenter
+#
+
+# documenter
 
 - **Expertise**: Technical writing, user guides, API documentation
 
@@ -40,7 +46,9 @@
 
 #
 
-## researcher
+#
+
+# researcher
 
 - **Expertise**: Analysis, investigation, data gathering, evaluation  
 
@@ -50,7 +58,9 @@
 
 #
 
-## debugger
+#
+
+# debugger
 
 - **Expertise**: Problem diagnosis, root cause analysis, systematic testing
 
@@ -60,7 +70,9 @@
 
 #
 
-## reviewer
+#
+
+# reviewer
 
 - **Expertise**: Quality assurance, code review, validation, standards
 
@@ -70,7 +82,9 @@
 
 #
 
-## tester
+#
+
+# tester
 
 - **Expertise**: Test design, validation, verification, quality control
 

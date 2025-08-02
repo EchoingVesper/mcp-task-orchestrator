@@ -8,7 +8,9 @@
 
 #
 
-## System Requirements
+#
+
+# System Requirements
 
 - Python 3.8 or higher
 
@@ -18,7 +20,9 @@
 
 #
 
-## Environment Setup
+#
+
+# Environment Setup
 
 Ensure you have a compatible MCP client installed:
 
@@ -36,7 +40,9 @@ Ensure you have a compatible MCP client installed:
 
 #
 
-## Method 1: PyPI Installation (Recommended)
+#
+
+# Method 1: PyPI Installation (Recommended)
 
 ```bash
 
@@ -52,7 +58,9 @@ pip install mcp-task-orchestrator[dev]
 
 #
 
-## Method 2: Development Installation
+#
+
+# Method 2: Development Installation
 
 ```text
 bash
@@ -74,7 +82,9 @@ pip install -e ".[dev]"
 
 #
 
-## Claude Desktop Setup
+#
+
+# Claude Desktop Setup
 
 1. Open Claude Desktop settings
 
@@ -98,7 +108,9 @@ json
 
 #
 
-## Cursor/Windsurf Setup
+#
+
+# Cursor/Windsurf Setup
 
 Add to your MCP configuration file:
 
@@ -115,7 +127,9 @@ servers:
 
 #
 
-## VS Code Setup
+#
+
+# VS Code Setup
 
 Install the MCP extension and configure the server in your workspace settings.
 
@@ -125,7 +139,9 @@ Install the MCP extension and configure the server in your workspace settings.
 
 #
 
-## Test Installation
+#
+
+# Test Installation
 
 1. Restart your MCP client
 
@@ -143,7 +159,9 @@ python -m mcp_task_orchestrator.tools.diagnostics.health_check
 
 #
 
-## Expected Tools
+#
+
+# Expected Tools
 
 You should see these MCP tools available:
 
@@ -165,7 +183,9 @@ You should see these MCP tools available:
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 **Tools not appearing**: Restart MCP client after configuration changes
 
@@ -177,7 +197,9 @@ You should see these MCP tools available:
 
 #
 
-## Getting Help
+#
+
+# Getting Help
 
 - [Common Issues Guide](../troubleshooting/common-issues/installation-problems.md)
 

@@ -30,7 +30,9 @@ The Maintenance Coordinator is an automated system that helps keep your MCP Task
 
 #
 
-## Basic Usage
+#
+
+# Basic Usage
 
 ```text
 "Use the maintenance coordinator to scan and cleanup the current session"
@@ -39,7 +41,9 @@ The Maintenance Coordinator is an automated system that helps keep your MCP Task
 
 #
 
-## Advanced Usage
+#
+
+# Advanced Usage
 
 ```text
 
@@ -53,7 +57,9 @@ The Maintenance Coordinator is an automated system that helps keep your MCP Task
 
 #
 
-## 1. Scan and Cleanup (`scan_cleanup`)
+#
+
+# 1. Scan and Cleanup (`scan_cleanup`)
 
 Identifies and automatically resolves common task management issues.
 
@@ -94,7 +100,9 @@ text
 
 #
 
-## 2. Structure Validation (`validate_structure`)
+#
+
+# 2. Structure Validation (`validate_structure`)
 
 Validates task hierarchies, dependencies, and data consistency.
 
@@ -135,7 +143,9 @@ text
 
 #
 
-## 3. Documentation Update (`update_documentation`)
+#
+
+# 3. Documentation Update (`update_documentation`)
 
 Synchronizes task state with documentation and updates project status.
 
@@ -174,7 +184,9 @@ text
 
 #
 
-## 4. Handover Preparation (`prepare_handover`)
+#
+
+# 4. Handover Preparation (`prepare_handover`)
 
 Prepares comprehensive handover documentation and cleans up temporary data.
 
@@ -217,7 +229,9 @@ text
 
 #
 
-## Current Session (`current_session`)
+#
+
+# Current Session (`current_session`)
 
 - **Focus**: Active tasks in the current conversation
 
@@ -229,7 +243,9 @@ text
 
 #
 
-## Full Project (`full_project`)
+#
+
+# Full Project (`full_project`)
 
 - **Focus**: All tasks across the entire project
 
@@ -241,7 +257,9 @@ text
 
 #
 
-## Specific Subtask (`specific_subtask`)
+#
+
+# Specific Subtask (`specific_subtask`)
 
 - **Focus**: Single task and its immediate dependencies
 
@@ -259,7 +277,9 @@ text
 
 #
 
-## Basic (`basic`)
+#
+
+# Basic (`basic`)
 
 - **Speed**: Fast
 
@@ -271,7 +291,9 @@ text
 
 #
 
-## Comprehensive (`comprehensive`)
+#
+
+# Comprehensive (`comprehensive`)
 
 - **Speed**: Moderate
 
@@ -283,7 +305,9 @@ text
 
 #
 
-## Full Audit (`full_audit`)
+#
+
+# Full Audit (`full_audit`)
 
 - **Speed**: Slower
 
@@ -299,7 +323,9 @@ text
 
 #
 
-## Regular Maintenance Schedule
+#
+
+# Regular Maintenance Schedule
 
 ```text
 
@@ -312,7 +338,9 @@ Quarterly: Full_project full_audit validation
 
 #
 
-## Before Handoffs
+#
+
+# Before Handoffs
 
 1. Run `prepare_handover` with comprehensive validation
 
@@ -324,7 +352,9 @@ Quarterly: Full_project full_audit validation
 
 #
 
-## Performance Optimization
+#
+
+# Performance Optimization
 
 - Use `scan_cleanup` when system feels slow
 
@@ -336,7 +366,9 @@ Quarterly: Full_project full_audit validation
 
 #
 
-## Troubleshooting Integration
+#
+
+# Troubleshooting Integration
 
 - Start with `validate_structure` for unexplained errors
 
@@ -350,7 +382,9 @@ Quarterly: Full_project full_audit validation
 
 #
 
-## Scan Results
+#
+
+# Scan Results
 
 ```text
 json
@@ -366,7 +400,9 @@ json
 
 #
 
-## Cleanup Actions
+#
+
+# Cleanup Actions
 
 ```text
 json
@@ -385,7 +421,9 @@ json
 
 #
 
-## Recommendations
+#
+
+# Recommendations
 
 ```text
 json
@@ -421,7 +459,9 @@ Every maintenance operation is recorded with:
 
 #
 
-## Viewing Operation History
+#
+
+# Viewing Operation History
 
 Use `orchestrator_get_status` with `include_completed: true` to see recent maintenance operations.
 
@@ -431,11 +471,17 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 #
 
-### "No maintenance actions needed"
+#
+
+#
+
+# "No maintenance actions needed"
 
 - **Cause**: System is already clean and well-maintained
 
@@ -445,7 +491,11 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-### "Operation timed out"
+#
+
+#
+
+# "Operation timed out"
 
 - **Cause**: Large dataset or system resource constraints
 
@@ -455,7 +505,11 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-### "Target task not found"
+#
+
+#
+
+# "Target task not found"
 
 - **Cause**: Invalid `target_task_id` for specific_subtask scope
 
@@ -465,7 +519,11 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-### "Database connection errors"
+#
+
+#
+
+# "Database connection errors"
 
 - **Cause**: Database connectivity or permission issues
 
@@ -475,11 +533,17 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-## Performance Optimization
+#
+
+# Performance Optimization
 
 #
 
-### Slow Maintenance Operations
+#
+
+#
+
+# Slow Maintenance Operations
 
 1. Start with `basic` validation level
 
@@ -491,7 +555,11 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-### High Memory Usage
+#
+
+#
+
+# High Memory Usage
 
 - Maintenance operations are designed to be memory-efficient
 
@@ -501,11 +569,17 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-## Recovery Procedures
+#
+
+# Recovery Procedures
 
 #
 
-### Interrupted Maintenance
+#
+
+#
+
+# Interrupted Maintenance
 
 - Operations are atomic - either complete or rollback
 
@@ -515,7 +589,11 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-### Accidental Archival
+#
+
+#
+
+# Accidental Archival
 
 - Archived tasks are preserved for 30 days
 
@@ -529,7 +607,9 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-## With Development Workflows
+#
+
+# With Development Workflows
 
 ```text
 
@@ -547,7 +627,9 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-## With CI/CD Pipelines
+#
+
+# With CI/CD Pipelines
 
 - Integrate maintenance checks into release processes
 
@@ -557,7 +639,9 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-## With Team Collaboration
+#
+
+# With Team Collaboration
 
 - Run handover preparation before context switches
 
@@ -571,7 +655,9 @@ Use `orchestrator_get_status` with `include_completed: true` to see recent maint
 
 #
 
-## Batch Operations
+#
+
+# Batch Operations
 
 For large projects, consider breaking maintenance into smaller operations:
 
@@ -589,7 +675,9 @@ text
 
 #
 
-## Custom Maintenance Workflows
+#
+
+# Custom Maintenance Workflows
 
 Combine maintenance actions for specific scenarios:
 
@@ -617,7 +705,9 @@ Combine maintenance actions for specific scenarios:
 
 #
 
-## Safe Operations
+#
+
+# Safe Operations
 
 - All maintenance operations preserve data before cleanup
 
@@ -627,7 +717,9 @@ Combine maintenance actions for specific scenarios:
 
 #
 
-## Data Protection
+#
+
+# Data Protection
 
 - Original task data is preserved in archives
 
@@ -637,7 +729,9 @@ Combine maintenance actions for specific scenarios:
 
 #
 
-## Access Control
+#
+
+# Access Control
 
 - Maintenance operations respect existing permissions
 

@@ -16,7 +16,9 @@ These examples demonstrate how to orchestrate complex documentation projects usi
 
 #
 
-## 1. **API Documentation Generation** (`api-docs-automation.md`)
+#
+
+# 1. **API Documentation Generation** (`api-docs-automation.md`)
 
 - Auto-generate API docs from code comments
 
@@ -28,7 +30,9 @@ These examples demonstrate how to orchestrate complex documentation projects usi
 
 #
 
-## 2. **Multi-Repository Documentation Sync** (`multi-repo-sync.md`)
+#
+
+# 2. **Multi-Repository Documentation Sync** (`multi-repo-sync.md`)
 
 - Synchronize docs across multiple repositories
 
@@ -40,7 +44,9 @@ These examples demonstrate how to orchestrate complex documentation projects usi
 
 #
 
-## 3. **Large-Scale Documentation Restructure** (`docs-restructure.md`)
+#
+
+# 3. **Large-Scale Documentation Restructure** (`docs-restructure.md`)
 
 - **⭐ Featured**: Complete documentation reorganization project
 
@@ -52,7 +58,9 @@ These examples demonstrate how to orchestrate complex documentation projects usi
 
 #
 
-## 4. **Interactive Tutorial Creation** (`interactive-tutorials.md`)
+#
+
+# 4. **Interactive Tutorial Creation** (`interactive-tutorials.md`)
 
 - Create step-by-step tutorials with code validation
 

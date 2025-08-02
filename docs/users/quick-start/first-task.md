@@ -14,7 +14,9 @@ This tutorial walks you through creating and executing your first task orchestra
 
 #
 
-## Step 1: Initialize Orchestration
+#
+
+# Step 1: Initialize Orchestration
 
 Start by initializing a new orchestration session:
 
@@ -33,7 +35,9 @@ Use the orchestrator_initialize tool with:
 
 #
 
-## Step 2: Create Task Plan
+#
+
+# Step 2: Create Task Plan
 
 Generate a breakdown of your task:
 
@@ -53,7 +57,9 @@ Use the orchestrator_plan tool with your session ID
 
 #
 
-## Step 3: Execute Tasks
+#
+
+# Step 3: Execute Tasks
 
 Run the orchestrated execution:
 
@@ -73,7 +79,9 @@ Use the orchestrator_execute tool with your session ID
 
 #
 
-## Step 4: Synthesize Results
+#
+
+# Step 4: Synthesize Results
 
 Combine all specialist outputs:
 
@@ -93,7 +101,9 @@ Use the orchestrator_synthesize tool with your session ID
 
 #
 
-## Step 5: Complete Orchestration
+#
+
+# Step 5: Complete Orchestration
 
 Finalize and save the session:
 
@@ -117,7 +127,9 @@ Use the orchestrator_complete tool with your session ID
 
 #
 
-## What Happened Behind the Scenes
+#
+
+# What Happened Behind the Scenes
 
 1. **Architect** analyzed requirements and created implementation plan
 
@@ -131,7 +143,9 @@ Use the orchestrator_complete tool with your session ID
 
 #
 
-## Key Benefits Demonstrated
+#
+
+# Key Benefits Demonstrated
 
 - **Automatic Task Breakdown**: Complex task split into manageable pieces
 
@@ -147,7 +161,9 @@ Use the orchestrator_complete tool with your session ID
 
 #
 
-## Verify Outputs
+#
+
+# Verify Outputs
 
 Look for these deliverables:
 
@@ -161,7 +177,9 @@ Look for these deliverables:
 
 #
 
-## Test the Calculator
+#
+
+# Test the Calculator
 
 ```text
 python
@@ -183,7 +201,9 @@ result = calc.add(5, 3)
 
 #
 
-## Learn More Workflows
+#
+
+# Learn More Workflows
 
 - [Basic Workflows](../guides/basic/) - Simple single-task patterns
 
@@ -193,7 +213,9 @@ result = calc.add(5, 3)
 
 #
 
-## Try Advanced Features
+#
+
+# Try Advanced Features
 
 - [Multi-step Projects](../guides/intermediate/project-planning.md)
 
@@ -207,7 +229,9 @@ result = calc.add(5, 3)
 
 #
 
-## Common First-Time Issues
+#
+
+# Common First-Time Issues
 
 **Orchestration fails to start**: Check MCP client configuration
 **Specialists not responding**: Verify tool availability
@@ -216,7 +240,9 @@ result = calc.add(5, 3)
 
 #
 
-## Getting Help
+#
+
+# Getting Help
 
 - [Installation Problems](../troubleshooting/common-issues/installation-problems.md)
 

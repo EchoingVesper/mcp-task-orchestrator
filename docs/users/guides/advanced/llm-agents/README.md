@@ -24,7 +24,9 @@ This documentation tree is specifically designed for LLM agents and AI assistant
 
 #
 
-## Quick Reference (1200-1600 chars)
+#
+
+# Quick Reference (1200-1600 chars)
 
 - `core-commands.md` - All orchestrator tools with signatures
 
@@ -36,7 +38,9 @@ This documentation tree is specifically designed for LLM agents and AI assistant
 
 #
 
-## Workflow Contexts (1800-2000 chars)
+#
+
+# Workflow Contexts (1800-2000 chars)
 
 - `documentation-context.md` - Documentation generation workflows
 
@@ -48,7 +52,9 @@ This documentation tree is specifically designed for LLM agents and AI assistant
 
 #
 
-## Integration Patterns (1600-1800 chars)
+#
+
+# Integration Patterns (1600-1800 chars)
 
 - `sequential-coordination.md` - Step-by-step cross-server patterns
 
@@ -60,7 +66,9 @@ This documentation tree is specifically designed for LLM agents and AI assistant
 
 #
 
-## Troubleshooting (1400-1600 chars)
+#
+
+# Troubleshooting (1400-1600 chars)
 
 - `connection-issues.md` - Server connectivity problems
 

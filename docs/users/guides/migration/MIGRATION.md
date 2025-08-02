@@ -24,7 +24,9 @@ If you previously installed MCP Task Orchestrator using the old methods, follow 
 
 #
 
-## 1. Clean Up Old Installation
+#
+
+# 1. Clean Up Old Installation
 
 ```bash
 
@@ -36,7 +38,9 @@ python installer/cleanup.py
 
 #
 
-## 2. Run New Unified Installer  
+#
+
+# 2. Run New Unified Installer  
 
 ```text
 bash
@@ -46,7 +50,9 @@ python install.py
 
 #
 
-## 3. Verify Migration
+#
+
+# 3. Verify Migration
 
 ```text
 bash

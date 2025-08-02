@@ -10,17 +10,27 @@ This document provides practical examples of using the MCP Task Orchestrator in 
 
 #
 
-## Example 0: Complete Workflow with LLM-Powered Task Breakdown
+#
+
+# Example 0: Complete Workflow with LLM-Powered Task Breakdown
 
 #
 
-### Task Description
+#
+
+#
+
+# Task Description
 
 Build a REST API with user authentication, data validation, and comprehensive documentation.
 
 #
 
-### Step 1: Initialize Session
+#
+
+#
+
+# Step 1: Initialize Session
 
 ```python
 
@@ -58,7 +68,11 @@ response = await call_tool("orchestrator_initialize_session", {})
 
 #
 
-### Step 2: Analyze Task and Create JSON-Formatted Subtasks
+#
+
+#
+
+# Step 2: Analyze Task and Create JSON-Formatted Subtasks
 
 ```text
 python
@@ -121,7 +135,11 @@ subtasks_json = [
 
 #
 
-### Step 3: Plan Task with Subtasks
+#
+
+#
+
+# Step 3: Plan Task with Subtasks
 
 ```text
 python
@@ -164,7 +182,11 @@ response = await call_tool("orchestrator_plan_task", {
 
 #
 
-### Step 4: Execute Subtasks
+#
+
+#
+
+# Step 4: Execute Subtasks
 
 ```text
 python
@@ -240,7 +262,11 @@ response = await call_tool("orchestrator_complete_subtask", {
 
 #
 
-### Step 5: Synthesize Results
+#
+
+#
+
+# Step 5: Synthesize Results
 
 ```python
 
@@ -278,17 +304,27 @@ response = await call_tool("orchestrator_synthesize_results", {
 
 #
 
-## Example 1: Web Development Project (Legacy)
+#
+
+# Example 1: Web Development Project (Legacy)
 
 #
 
-### Task Description (Web App)
+#
+
+#
+
+# Task Description (Web App)
 
 Build a responsive web application with user authentication, data visualization, and API integration.
 
 #
 
-### Task Planning
+#
+
+#
+
+# Task Planning
 
 ```text
 python
@@ -366,7 +402,11 @@ response = await call_tool("orchestrator_plan_task", {
 
 #
 
-### Subtask Execution - Architecture
+#
+
+#
+
+# Subtask Execution - Architecture
 
 ```text
 python
@@ -445,7 +485,11 @@ Remember: You are the architect specialist for this task. Apply your expertise a
 
 #
 
-### Subtask Completion
+#
+
+#
+
+# Subtask Completion
 
 ```text
 python
@@ -476,7 +520,11 @@ response = await call_tool("orchestrator_complete_subtask", {
 
 #
 
-### Result Synthesis
+#
+
+#
+
+# Result Synthesis
 
 After completing all subtasks, the results can be synthesized:
 
@@ -513,17 +561,27 @@ response = await call_tool("orchestrator_synthesize_results", {
 
 #
 
-## Example 2: Code Review and Optimization
+#
+
+# Example 2: Code Review and Optimization
 
 #
 
-### Task Description (Code Review)
+#
+
+#
+
+# Task Description (Code Review)
 
 Review a Python codebase and suggest performance improvements.
 
 #
 
-### Task Planning (Code Review)
+#
+
+#
+
+# Task Planning (Code Review)
 
 ```text
 python
@@ -585,17 +643,27 @@ response = await call_tool("orchestrator_plan_task", {
 
 #
 
-## Example 3: Research Project
+#
+
+# Example 3: Research Project
 
 #
 
-### Task Description (Research)
+#
+
+#
+
+# Task Description (Research)
 
 Research the latest advancements in quantum computing and prepare a comprehensive report.
 
 #
 
-### Task Planning (Research)
+#
+
+#
+
+# Task Planning (Research)
 
 ```text
 python

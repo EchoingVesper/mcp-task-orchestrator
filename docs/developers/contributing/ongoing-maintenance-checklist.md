@@ -8,7 +8,9 @@
 
 #
 
-## Before Starting Any Claude Code Session:
+#
+
+# Before Starting Any Claude Code Session:
 
 - [ ] **Check root directory**: `ls -la | wc -l` (should be ≤15)
 
@@ -20,7 +22,9 @@
 
 #
 
-## During Development:
+#
+
+# During Development:
 
 - [ ] **Think before creating files**: "Does this belong in root?" (Usually NO)
 
@@ -32,7 +36,9 @@
 
 #
 
-## End of Each Session:
+#
+
+# End of Each Session:
 
 - [ ] **Root directory check**: Count files, move any misplaced items
 
@@ -50,7 +56,9 @@
 
 #
 
-## Project Structure Audit:
+#
+
+# Project Structure Audit:
 
 ```bash
 
@@ -75,7 +83,9 @@ ls build/ dist/ *.egg-info/ 2>/dev/null
 
 #
 
-## Documentation Organization:
+#
+
+# Documentation Organization:
 
 - [ ] **All development docs** in `docs/development/`
 
@@ -89,7 +99,9 @@ ls build/ dist/ *.egg-info/ 2>/dev/null
 
 #
 
-## Script Organization:
+#
+
+# Script Organization:
 
 - [ ] **Build scripts** in `scripts/build/`
 
@@ -105,7 +117,9 @@ ls build/ dist/ *.egg-info/ 2>/dev/null
 
 #
 
-## Complete Structure Review:
+#
+
+# Complete Structure Review:
 
 ```text
 bash
@@ -126,7 +140,9 @@ git status --porcelain | grep "^??" | head -10
 
 #
 
-## Performance Cleanup:
+#
+
+# Performance Cleanup:
 
 - [ ] **Remove old virtual environments**: Keep only `venv_mcp/`
 
@@ -140,7 +156,9 @@ git status --porcelain | grep "^??" | head -10
 
 #
 
-## Documentation Maintenance:
+#
+
+# Documentation Maintenance:
 
 - [ ] **Update README.md**: Ensure current with latest features
 
@@ -158,7 +176,9 @@ git status --porcelain | grep "^??" | head -10
 
 #
 
-## Create Project Structure Validator:
+#
+
+# Create Project Structure Validator:
 
 ```text
 python
@@ -281,7 +301,9 @@ if __name__ == "__main__":
 
 #
 
-## Pre-commit Hook Setup:
+#
+
+# Pre-commit Hook Setup:
 
 ```text
 bash
@@ -303,7 +325,9 @@ echo "✅ Pre-commit checks passed!"
 
 #
 
-## GitHub Actions Integration:
+#
+
+# GitHub Actions Integration:
 
 ```text
 yaml
@@ -335,7 +359,9 @@ jobs:
 
 #
 
-## Monthly Metrics:
+#
+
+# Monthly Metrics:
 
 | Metric | Target | Current | Trend |
 |--------|--------|---------|-------|
@@ -347,7 +373,9 @@ jobs:
 
 #
 
-## Developer Experience Metrics:
+#
+
+# Developer Experience Metrics:
 
 - **Onboarding time**: Time for new developer to understand structure
 
@@ -363,7 +391,9 @@ jobs:
 
 #
 
-## Immediate Action Required:
+#
+
+# Immediate Action Required:
 
 - Root directory >20 files
 
@@ -377,7 +407,9 @@ jobs:
 
 #
 
-## Weekly Attention Needed:
+#
+
+# Weekly Attention Needed:
 
 - Root directory 15-20 files
 
@@ -389,7 +421,9 @@ jobs:
 
 #
 
-## Monthly Review Items:
+#
+
+# Monthly Review Items:
 
 - Overall project organization
 
@@ -405,7 +439,9 @@ jobs:
 
 #
 
-## Well-Organized Project Signs:
+#
+
+# Well-Organized Project Signs:
 
 - ✅ New developers can navigate structure intuitively
 
@@ -421,7 +457,9 @@ jobs:
 
 #
 
-## Organizational Excellence:
+#
+
+# Organizational Excellence:
 
 - Zero misplaced files in root
 

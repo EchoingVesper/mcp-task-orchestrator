@@ -18,7 +18,9 @@ The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, 
 
 #
 
-## Legacy Workflow Management (v1.x)
+#
+
+# Legacy Workflow Management (v1.x)
 
 - [`orchestrator_initialize_session`](#orchestrator_initialize_session) - Start orchestration workflow
 
@@ -32,7 +34,9 @@ The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, 
 
 #
 
-## Generic Task API (v2.0+) 🚀
+#
+
+# Generic Task API (v2.0+) 🚀
 
 - [`orchestrator_create_generic_task`](#orchestrator_create_generic_task) - Create flexible tasks
 
@@ -46,7 +50,9 @@ The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, 
 
 #
 
-## Status & Maintenance  
+#
+
+# Status & Maintenance  
 
 - [`orchestrator_get_status`](#orchestrator_get_status) - Check workflow progress
 
@@ -58,7 +64,9 @@ The MCP Task Orchestrator provides 7 core tools for intelligent task breakdown, 
 
 #
 
-## orchestrator_initialize_session
+#
+
+# orchestrator_initialize_session
 
 **Purpose**: Initialize a new task orchestration session with specialist context.
 
@@ -124,7 +132,9 @@ text
 
 #
 
-## orchestrator_plan_task
+#
+
+# orchestrator_plan_task
 
 **Purpose**: Create a structured breakdown of complex tasks into manageable subtasks.
 
@@ -206,7 +216,9 @@ text
 
 #
 
-## orchestrator_execute_subtask
+#
+
+# orchestrator_execute_subtask
 
 **Purpose**: Retrieve specialist context and guidance for executing a specific subtask.
 
@@ -261,7 +273,9 @@ text
 
 #
 
-## orchestrator_complete_subtask
+#
+
+# orchestrator_complete_subtask
 
 **Purpose**: Mark a subtask as complete and store detailed work with artifact management.
 
@@ -275,7 +289,10 @@ json
     "detailed_work": "
 
 # Scraper Architecture Design\n\n
-## Overview\n...",
+
+#
+
+# Overview\n...",
 
     "file_paths": ["/project/architecture.md", "/project/diagrams/system.png"],
     "artifact_type": "design",
@@ -345,7 +362,9 @@ text
 
 #
 
-## orchestrator_synthesize_results
+#
+
+# orchestrator_synthesize_results
 
 **Purpose**: Combine all completed subtask results into a comprehensive final output.
 
@@ -403,7 +422,9 @@ text
 
 #
 
-## orchestrator_get_status
+#
+
+# orchestrator_get_status
 
 **Purpose**: Check the current progress of workflows and system health.
 
@@ -471,7 +492,9 @@ text
 
 #
 
-## orchestrator_maintenance_coordinator
+#
+
+# orchestrator_maintenance_coordinator
 
 **Purpose**: Automated system maintenance, cleanup, and optimization.
 
@@ -504,7 +527,11 @@ json
 
 #
 
-### scan_cleanup
+#
+
+#
+
+# scan_cleanup
 
 Identifies and cleans up stale or problematic tasks.
 
@@ -541,19 +568,31 @@ json
 
 #
 
-### validate_structure  
+#
+
+#
+
+# validate_structure  
 
 Checks task hierarchies and data consistency.
 
 #
 
-### update_documentation
+#
+
+#
+
+# update_documentation
 
 Synchronizes task state with documentation.
 
 #
 
-### prepare_handover
+#
+
+#
+
+# prepare_handover
 
 Prepares comprehensive handover documentation.
 
@@ -582,11 +621,17 @@ text
 
 #
 
-## Common Error Types
+#
+
+# Common Error Types
 
 #
 
-### Tool Not Found
+#
+
+#
+
+# Tool Not Found
 
 ```text
 json
@@ -599,7 +644,11 @@ json
 
 #
 
-### Invalid Parameters
+#
+
+#
+
+# Invalid Parameters
 
 ```text
 json
@@ -613,7 +662,11 @@ json
 
 #
 
-### Task Not Found
+#
+
+#
+
+# Task Not Found
 
 ```text
 json
@@ -626,7 +679,11 @@ json
 
 #
 
-### Timeout Errors
+#
+
+#
+
+# Timeout Errors
 
 ```text
 json
@@ -640,7 +697,9 @@ json
 
 #
 
-## Error Recovery
+#
+
+# Error Recovery
 
 1. **Invalid Task IDs**: Use `orchestrator_get_status` to get valid task IDs
 
@@ -656,7 +715,9 @@ json
 
 #
 
-## Workflow Management
+#
+
+# Workflow Management
 
 1. **Always initialize** sessions before creating task plans
 
@@ -670,7 +731,9 @@ json
 
 #
 
-## Artifact Management
+#
+
+# Artifact Management
 
 1. **Use detailed_work parameter** for comprehensive content storage
 
@@ -682,7 +745,9 @@ json
 
 #
 
-## Maintenance & Performance
+#
+
+# Maintenance & Performance
 
 1. **Run regular maintenance** - daily basic cleanup recommended
 
@@ -694,7 +759,9 @@ json
 
 #
 
-## Error Prevention
+#
+
+# Error Prevention
 
 1. **Validate task IDs** before operations
 
@@ -710,7 +777,9 @@ json
 
 #
 
-## Basic Workflow
+#
+
+# Basic Workflow
 
 ```text
 json
@@ -733,7 +802,9 @@ json
 
 #
 
-## Maintenance Workflow
+#
+
+# Maintenance Workflow
 
 ```text
 json
@@ -756,7 +827,9 @@ The new Generic Task API provides unified task management with templates, depend
 
 #
 
-## orchestrator_create_generic_task
+#
+
+# orchestrator_create_generic_task
 
 **Purpose**: Create a new generic task with flexible attributes and optional template instantiation.
 
@@ -815,7 +888,9 @@ text
 
 #
 
-## orchestrator_create_from_template
+#
+
+# orchestrator_create_from_template
 
 **Purpose**: Instantiate a task hierarchy from a predefined template with parameters.
 
@@ -888,7 +963,9 @@ text
 
 #
 
-## orchestrator_manage_dependencies
+#
+
+# orchestrator_manage_dependencies
 
 **Purpose**: Add, update, or remove dependencies between tasks.
 
@@ -960,7 +1037,9 @@ text
 
 #
 
-## orchestrator_manage_lifecycle
+#
+
+# orchestrator_manage_lifecycle
 
 **Purpose**: Transition tasks through lifecycle stages with validation.
 
@@ -1014,7 +1093,9 @@ text
 
 #
 
-## orchestrator_query_tasks
+#
+
+# orchestrator_query_tasks
 
 **Purpose**: Query tasks with flexible filtering and sorting options.
 

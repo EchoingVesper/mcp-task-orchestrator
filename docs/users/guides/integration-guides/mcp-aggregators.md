@@ -18,7 +18,9 @@ MCP aggregators like [mcp-aggregator](https://github.com/EchoingVesper/mcp-aggre
 
 #
 
-## The Proxy Pattern
+#
+
+# The Proxy Pattern
 
 ```text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -33,7 +35,10 @@ MCP aggregators like [mcp-aggregator](https://github.com/EchoingVesper/mcp-aggre
 ```text
 
 #
-## Unified Tool Access
+
+#
+
+# Unified Tool Access
 
 Instead of configuring multiple servers individually:
 
@@ -78,7 +83,9 @@ json
 
 #
 
-## Pattern 1: Development Suite Integration
+#
+
+# Pattern 1: Development Suite Integration
 
 Combine complementary development tools through aggregator:
 
@@ -137,7 +144,9 @@ routing:
 
 #
 
-## Pattern 2: Load-Balanced Processing
+#
+
+# Pattern 2: Load-Balanced Processing
 
 For CPU-intensive tasks across multiple instances:
 
@@ -187,7 +196,9 @@ load_balancing:
 
 #
 
-## Capability-Based Routing
+#
+
+# Capability-Based Routing
 
 Route based on required capabilities:
 
@@ -205,7 +216,10 @@ routing_rules:
 ```text
 
 #
-## Performance-Based Selection
+
+#
+
+# Performance-Based Selection
 
 Choose tools based on performance characteristics:
 
@@ -228,7 +242,9 @@ performance_profiles:
 
 #
 
-## 1. Design for Redundancy
+#
+
+# 1. Design for Redundancy
 
 Always configure fallback servers for critical capabilities:
 
@@ -246,7 +262,9 @@ critical_capabilities:
 
 #
 
-## 2. Monitor Resource Usage
+#
+
+# 2. Monitor Resource Usage
 
 Track server performance to optimize routing:
 
@@ -264,7 +282,9 @@ monitoring:
 
 #
 
-## 3. Use Semantic Tool Names
+#
+
+# 3. Use Semantic Tool Names
 
 Name aggregated tools based on their purpose:
 

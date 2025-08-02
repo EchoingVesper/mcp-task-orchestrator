@@ -25,7 +25,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Core Documentation
+#
+
+# Core Documentation
 
 - **[Overview & Architecture](./01-overview-architecture.md)** - Current vs Enhanced tool suite comparison
 
@@ -43,7 +45,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Implementation Details
+#
+
+# Implementation Details
 
 - **[Technical Implementation](./08-technical-implementation.md)** - Error handling, validation, performance
 
@@ -53,7 +57,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Reference Materials
+#
+
+# Reference Materials
 
 - **[API Reference](./11-api-reference.md)** - Complete parameter specifications
 
@@ -67,7 +73,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Current Tools (v1.4.1)
+#
+
+# Current Tools (v1.4.1)
 
 ```text
 6 Basic Tools:
@@ -82,7 +90,9 @@ This specification has been split into focused sections for better maintainabili
 
 #
 
-## Enhanced Tool Suite (v2.0)
+#
+
+# Enhanced Tool Suite (v2.0)
 
 ```text
 

@@ -20,7 +20,9 @@ Session management tools enable multiple concurrent sessions, session lifecycle 
 
 #
 
-## Parameters
+#
+
+# Parameters
 
 ```json
 {
@@ -68,7 +70,9 @@ Session management tools enable multiple concurrent sessions, session lifecycle 
 
 #
 
-## Response
+#
+
+# Response
 
 ```text
 json
@@ -86,7 +90,9 @@ json
 
 #
 
-## Error Conditions
+#
+
+# Error Conditions
 
 - `DirectoryNotAccessible`: Project root path invalid or inaccessible
 
@@ -107,7 +113,9 @@ json
 
 #
 
-## Parameters
+#
+
+# Parameters
 
 ```text
 json
@@ -136,7 +144,9 @@ json
 
 #
 
-## Response
+#
+
+# Response
 
 ```text
 json
@@ -160,7 +170,9 @@ json
 
 #
 
-## Parameters
+#
+
+# Parameters
 
 ```text
 json
@@ -200,7 +212,9 @@ json
 
 #
 
-## Response
+#
+
+# Response
 
 ```text
 json
@@ -234,7 +248,9 @@ json
 
 #
 
-## Parameters
+#
+
+# Parameters
 
 ```text
 json
@@ -270,7 +286,9 @@ json
 
 #
 
-## Parameters
+#
+
+# Parameters
 
 ```text
 json
@@ -306,7 +324,9 @@ json
 
 #
 
-## Parameters
+#
+
+# Parameters
 
 ```text
 json
@@ -347,7 +367,9 @@ json
 
 #
 
-## Parameters
+#
+
+# Parameters
 
 ```text
 json

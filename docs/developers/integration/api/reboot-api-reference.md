@@ -16,7 +16,9 @@ The reboot system integrates with the standard MCP protocol, exposing tools that
 
 #
 
-## Tool Discovery
+#
+
+# Tool Discovery
 
 Clients can discover available reboot tools through the standard MCP tool listing:
 
@@ -57,13 +59,19 @@ text
 
 #
 
-## orchestrator_restart_server
+#
+
+# orchestrator_restart_server
 
 Triggers a graceful server restart with comprehensive state preservation.
 
 #
 
-### Input Schema
+#
+
+#
+
+# Input Schema
 
 ```text
 json
@@ -107,7 +115,11 @@ json
 
 #
 
-### Response Schema
+#
+
+#
+
+# Response Schema
 
 ```text
 json
@@ -177,7 +189,11 @@ json
 
 #
 
-### Examples
+#
+
+#
+
+# Examples
 
 **Basic Restart:**
 
@@ -247,13 +263,19 @@ text
 
 #
 
-## orchestrator_health_check
+#
+
+# orchestrator_health_check
 
 Performs comprehensive health checking of server components and restart readiness.
 
 #
 
-### Input Schema
+#
+
+#
+
+# Input Schema
 
 ```text
 json
@@ -283,7 +305,11 @@ json
 
 #
 
-### Response Schema
+#
+
+#
+
+# Response Schema
 
 ```text
 json
@@ -341,13 +367,19 @@ json
 
 #
 
-## orchestrator_shutdown_prepare
+#
+
+# orchestrator_shutdown_prepare
 
 Validates server readiness for graceful shutdown, identifying any blocking conditions.
 
 #
 
-### Input Schema
+#
+
+#
+
+# Input Schema
 
 ```text
 json
@@ -377,7 +409,11 @@ json
 
 #
 
-### Response Schema
+#
+
+#
+
+# Response Schema
 
 ```text
 json
@@ -435,13 +471,19 @@ json
 
 #
 
-## orchestrator_restart_status
+#
+
+# orchestrator_restart_status
 
 Retrieves current restart operation status and optionally historical restart information.
 
 #
 
-### Input Schema
+#
+
+#
+
+# Input Schema
 
 ```text
 json
@@ -466,7 +508,11 @@ json
 
 #
 
-### Response Schema
+#
+
+#
+
+# Response Schema
 
 ```text
 json
@@ -540,13 +586,19 @@ json
 
 #
 
-## orchestrator_reconnect_test
+#
+
+# orchestrator_reconnect_test
 
 Tests client reconnection capabilities and connection management functionality.
 
 #
 
-### Input Schema
+#
+
+#
+
+# Input Schema
 
 ```text
 json
@@ -575,7 +627,11 @@ json
 
 #
 
-### Response Schema
+#
+
+#
+
+# Response Schema
 
 ```text
 json
@@ -646,7 +702,9 @@ json
 
 #
 
-## Error Response Format
+#
+
+# Error Response Format
 
 All tools follow consistent error response formatting:
 
@@ -665,7 +723,9 @@ json
 
 #
 
-## Common Error Codes
+#
+
+# Common Error Codes
 
 - **INITIALIZATION_FAILED**: Reboot manager not properly initialized
 
@@ -683,7 +743,9 @@ json
 
 #
 
-## Error Recovery
+#
+
+# Error Recovery
 
 When tools return errors:
 
@@ -703,7 +765,9 @@ When tools return errors:
 
 #
 
-## Async/Await Pattern
+#
+
+# Async/Await Pattern
 
 ```text
 python
@@ -745,7 +809,9 @@ async def restart_with_monitoring():
 
 #
 
-## Error Handling Pattern
+#
+
+# Error Handling Pattern
 
 ```text
 python
@@ -777,7 +843,9 @@ async def safe_restart():
 
 #
 
-## Client Integration Pattern
+#
+
+# Client Integration Pattern
 
 ```text
 javascript
@@ -825,7 +893,9 @@ class RebootManager {
 
 #
 
-## Request Limits
+#
+
+# Request Limits
 
 - **Health Checks**: No limit (monitoring operations)
 
@@ -837,7 +907,9 @@ class RebootManager {
 
 #
 
-## Throttling Behavior
+#
+
+# Throttling Behavior
 
 When rate limits are exceeded:
 
@@ -859,13 +931,17 @@ text
 
 #
 
-## API Version
+#
+
+# API Version
 
 Current API version: `1.0`
 
 #
 
-## Backward Compatibility
+#
+
+# Backward Compatibility
 
 - All parameters are optional with sensible defaults
 
@@ -877,7 +953,9 @@ Current API version: `1.0`
 
 #
 
-## Version Detection
+#
+
+# Version Detection
 
 ```text
 python

@@ -18,13 +18,17 @@ The MCP Task Orchestrator uses several types of configuration:
 
 4. **Database Configuration**: State persistence and task tracking
 
-## Client Configuration
+#
+
+# Client Configuration
 
 The MCP Task Orchestrator CLI automatically configures your MCP clients during installation. Each client has a different configuration format and location:
 
 #
 
-## Claude Desktop
+#
+
+# Claude Desktop
 
 **Location**:
 
@@ -51,7 +55,9 @@ The MCP Task Orchestrator CLI automatically configures your MCP clients during i
 
 #
 
-## Windsurf
+#
+
+# Windsurf
 
 **Location**: `~/.windsurf/settings.json`
 
@@ -71,7 +77,9 @@ json
 
 #
 
-## Cursor
+#
+
+# Cursor
 
 **Location**: `~/.cursor/settings.json`
 
@@ -79,7 +87,9 @@ json
 
 #
 
-## VS Code
+#
+
+# VS Code
 
 **Location**:
 
@@ -91,13 +101,17 @@ json
 
 **Format**: Depends on the VS Code MCP extension being used
 
-## Specialist Templates
+#
+
+# Specialist Templates
 
 The MCP Task Orchestrator uses specialist templates to define the roles and prompts for different specialist types. You can customize these templates to better suit your needs.
 
 #
 
-## Template Location
+#
+
+# Template Location
 
 Specialist templates are stored in the `config` directory of your installation:
 
@@ -115,7 +129,9 @@ This allows you to have different sets of specialist roles for different project
 
 #
 
-## Template Format
+#
+
+# Template Format
 
 Specialist templates are defined in YAML format:
 
@@ -129,12 +145,14 @@ specialists:
       
 
 #
+
 # Role
 
       You are a System Architect focused on designing robust, scalable systems
       
 
 #
+
 # Your Expertise
 
       • System design patterns and best practices
@@ -148,6 +166,7 @@ specialists:
       
 
 #
+
 # Your Approach
 
       • Start with a high-level overview of the system
@@ -161,6 +180,7 @@ specialists:
       
 
 #
+
 # Expected Output Format
 
       Comprehensive architectural documents with diagrams, component descriptions, and implementation guidance
@@ -168,6 +188,7 @@ specialists:
       
 
 #
+
 # Current Task
 
       **Title:** {{task_title}}
@@ -176,6 +197,7 @@ specialists:
       
 
 #
+
 # Instructions
 
       You are now operating in ARCHITECT MODE. Focus entirely on this role and apply your specialized expertise to complete the task described above.
@@ -191,40 +213,53 @@ specialists:
 
 #
 
-## Customizing Templates
+#
+
+# Customizing Templates
 
 To customize a specialist template:
 
 1. Create a copy of the default template in your user directory:
 
    
+
 ```text
 bash
    mkdir -p ~/.mcp_task_orchestrator
    cp mcp_task_orchestrator/config/specialists.yaml ~/.mcp_task_orchestrator/
    
+
 ```text
+text
 text
 
 2. Edit the template to suit your needs:
 
    
+
 ```text
+text
 bash
    nano ~/.mcp_task_orchestrator/specialists.yaml
    
+
 ```text
+text
 text
 
 3. Restart the MCP Task Orchestrator server for the changes to take effect
 
-## Server Configuration
+#
+
+# Server Configuration
 
 The MCP Task Orchestrator server can be configured using environment variables or a configuration file.
 
 #
 
-## Environment Variables
+#
+
+# Environment Variables
 
 - `MCP_TASK_ORCHESTRATOR_DB_PATH`: Path to the SQLite database file (default: `~/.mcp_task_orchestrator/task_orchestrator.db`)
 
@@ -234,11 +269,14 @@ The MCP Task Orchestrator server can be configured using environment variables o
 
 #
 
-## Configuration File
+#
+
+# Configuration File
 
 You can create a `config.yaml` file in the configuration directory to override default settings:
 
 ```text
+text
 yaml
 
 # Server configuration
@@ -268,7 +306,9 @@ The MCP Task Orchestrator uses SQLite for state persistence and task tracking. T
 
 #
 
-## Database Schema
+#
+
+# Database Schema
 
 The database schema includes tables for:
 
@@ -282,7 +322,9 @@ The database schema includes tables for:
 
 #
 
-## Backup and Recovery
+#
+
+# Backup and Recovery
 
 It's a good practice to periodically back up the database file:
 
@@ -312,7 +354,9 @@ cp ~/.mcp_task_orchestrator/task_orchestrator.db.backup ~/.mcp_task_orchestrator
 
 #
 
-## Custom Specialist Types
+#
+
+# Custom Specialist Types
 
 You can add your own specialist types by adding them to the `default_roles.yaml` file or creating a project-specific role file:
 
@@ -332,13 +376,19 @@ my_custom_specialist:
 
 #
 
-## Project-Specific Role Files
+#
+
+# Project-Specific Role Files
 
 You can create project-specific role files to customize the specialist roles for a particular project. These files should be named with a suffix of `_roles.yaml` and placed in the project directory.
 
 #
 
-### Automatic Example File Creation
+#
+
+#
+
+# Automatic Example File Creation
 
 When the MCP Task Orchestrator is run in a directory without any role definition files, it will automatically create an `example_roles.yaml` file in that directory. This file contains a commented-out version of the default roles that you can use as a template for creating your own custom roles.
 
@@ -402,6 +452,8 @@ When the MCP Task Orchestrator is run in a directory containing this file, it wi
 
 #
 
-## Task Planning Customization
+#
+
+# Task Planning Customization
 
 You can customize how tasks are broken down by modifying the task planning templates in the configuration file.

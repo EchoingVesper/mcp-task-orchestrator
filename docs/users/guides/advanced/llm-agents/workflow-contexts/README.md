@@ -16,7 +16,9 @@ Each workflow context provides specialist assignments, coordination patterns, an
 
 #
 
-## 📁 [Development Context](development-context.md)
+#
+
+# 📁 [Development Context](development-context.md)
 
 **Use for**: Full-stack apps, APIs, libraries, microservices
 **Key Patterns**: Architecture → Implementation → Testing → Review
@@ -24,7 +26,9 @@ Each workflow context provides specialist assignments, coordination patterns, an
 
 #
 
-## 📚 [Documentation Context](documentation-context.md)  
+#
+
+# 📚 [Documentation Context](documentation-context.md)  
 
 **Use for**: API docs, user guides, knowledge bases, technical wikis
 **Key Patterns**: Research → Architecture → Content → Implementation
@@ -32,7 +36,9 @@ Each workflow context provides specialist assignments, coordination patterns, an
 
 #
 
-## 🔄 [Data Processing Context](data-processing-context.md)
+#
+
+# 🔄 [Data Processing Context](data-processing-context.md)
 
 **Use for**: ETL pipelines, data migration, analytics automation, reporting
 **Key Patterns**: Research → Architecture → Implementation → Validation
@@ -40,7 +46,9 @@ Each workflow context provides specialist assignments, coordination patterns, an
 
 #
 
-## 🔧 [Legacy Modernization Context](modernization-context.md)
+#
+
+# 🔧 [Legacy Modernization Context](modernization-context.md)
 
 **Use for**: Monolith decomposition, framework upgrades, infrastructure modernization
 **Key Patterns**: Analysis → Architecture → Implementation → Quality Assurance
@@ -48,7 +56,9 @@ Each workflow context provides specialist assignments, coordination patterns, an
 
 #
 
-## 🤝 [Multi-Team Context](multi-team-context.md)
+#
+
+# 🤝 [Multi-Team Context](multi-team-context.md)
 
 **Use for**: Feature rollouts, organizational changes, shared library updates
 **Key Patterns**: Research → Coordination → Implementation → Review

@@ -8,7 +8,9 @@
 
 #
 
-## **What Changed?**
+#
+
+# **What Changed?**
 
 - ✅ **File-based output** prevents truncation
 
@@ -20,7 +22,9 @@
 
 #
 
-## **New Testing Pattern**
+#
+
+# **New Testing Pattern**
 
 ```python
 
@@ -62,7 +66,9 @@ async def my_operation():
 
 #
 
-## **Validation Commands**
+#
+
+# **Validation Commands**
 
 ```text
 bash
@@ -90,7 +96,9 @@ python tests/enhanced_migration_test.py
 
 #
 
-## **Documentation**
+#
+
+# **Documentation**
 
 - [TESTING_BEST_PRACTICES.md](docs/TESTING_BEST_PRACTICES.md) - Quick guide
 
@@ -100,6 +108,8 @@ python tests/enhanced_migration_test.py
 
 #
 
-## **Need Help?**
+#
+
+# **Need Help?**
 
 Check troubleshooting section in [TESTING_IMPROVEMENTS.md](docs/TESTING_IMPROVEMENTS.md)

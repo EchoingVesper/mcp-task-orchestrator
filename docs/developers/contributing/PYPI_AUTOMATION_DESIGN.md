@@ -26,7 +26,9 @@ A secure, automated system for publishing packages to PyPI without manual token 
 
 #
 
-## 1. Environment Variable Configuration
+#
+
+# 1. Environment Variable Configuration
 
 ```text
 PYPI_API_TOKEN     - Production PyPI token
@@ -37,7 +39,9 @@ MCP_VERSION        - Override version (optional)
 
 #
 
-## 2. Release Script Architecture
+#
+
+# 2. Release Script Architecture
 
 ```text
 
@@ -66,7 +70,9 @@ scripts/release/
 
 #
 
-## 3. GitHub Actions Integration (Optional)
+#
+
+# 3. GitHub Actions Integration (Optional)
 
 - Automated releases on tag push
 
@@ -80,7 +86,9 @@ scripts/release/
 
 #
 
-## Layer 1: Local Development
+#
+
+# Layer 1: Local Development
 
 - `.env` file for local tokens (never committed)
 
@@ -90,7 +98,9 @@ scripts/release/
 
 #
 
-## Layer 2: CI/CD Pipeline
+#
+
+# Layer 2: CI/CD Pipeline
 
 - GitHub Secrets for token storage
 
@@ -100,7 +110,9 @@ scripts/release/
 
 #
 
-## Layer 3: Version Control
+#
+
+# Layer 3: Version Control
 
 - `.env.example` template without real values
 
@@ -114,7 +126,9 @@ scripts/release/
 
 #
 
-## Manual Release Flow
+#
+
+# Manual Release Flow
 
 ```text
 bash
@@ -143,7 +157,9 @@ python scripts/release/release.py --major
 
 #
 
-## Automated Release Flow (GitHub Actions)
+#
+
+# Automated Release Flow (GitHub Actions)
 
 ```text
 yaml
@@ -168,7 +184,9 @@ yaml
 
 #
 
-## Phase 1: Core Scripts
+#
+
+# Phase 1: Core Scripts
 
 1. Create release script structure
 
@@ -180,7 +198,9 @@ yaml
 
 #
 
-## Phase 2: Validation Layer
+#
+
+# Phase 2: Validation Layer
 
 1. Package integrity checks
 
@@ -192,7 +212,9 @@ yaml
 
 #
 
-## Phase 3: CI/CD Integration
+#
+
+# Phase 3: CI/CD Integration
 
 1. GitHub Actions workflow
 
@@ -206,7 +228,9 @@ yaml
 
 #
 
-## .env.example
+#
+
+# .env.example
 
 ```text
 bash
@@ -231,7 +255,9 @@ CLEAN_BUILD_ARTIFACTS=true
 
 #
 
-## pyproject.toml Enhancement
+#
+
+# pyproject.toml Enhancement
 
 ```text
 toml

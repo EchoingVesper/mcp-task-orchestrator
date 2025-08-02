@@ -16,11 +16,17 @@ This guide helps you migrate from the legacy TaskBreakdown/SubTask system to the
 
 #
 
-## 1. Preparation Phase
+#
+
+# 1. Preparation Phase
 
 #
 
-### Backup Existing Data
+#
+
+#
+
+# Backup Existing Data
 
 ```bash
 
@@ -36,7 +42,11 @@ python scripts/maintenance/export_tasks.py --format json --output tasks_backup.j
 
 #
 
-### Analyze Current Task Structure
+#
+
+#
+
+# Analyze Current Task Structure
 
 ```text
 python
@@ -82,11 +92,17 @@ async def analyze_current_tasks():
 
 #
 
-## 2. Migration Execution
+#
+
+# 2. Migration Execution
 
 #
 
-### Automated Migration Script
+#
+
+#
+
+# Automated Migration Script
 
 ```text
 python
@@ -258,11 +274,17 @@ async def migrate_legacy_tasks_to_generic():
 
 #
 
-## 3. Post-Migration Validation
+#
+
+# 3. Post-Migration Validation
 
 #
 
-### Data Integrity Verification
+#
+
+#
+
+# Data Integrity Verification
 
 ```text
 python
@@ -332,7 +354,11 @@ async def validate_migration_integrity():
 
 #
 
-### Performance Comparison
+#
+
+#
+
+# Performance Comparison
 
 ```text
 python
@@ -382,11 +408,17 @@ async def compare_pre_post_migration_performance():
 
 #
 
-## 4. Legacy System Cleanup
+#
+
+# 4. Legacy System Cleanup
 
 #
 
-### Safe Legacy Data Archival
+#
+
+#
+
+# Safe Legacy Data Archival
 
 ```text
 python
@@ -453,11 +485,17 @@ async def archive_legacy_data():
 
 #
 
-## 5. Code Migration
+#
+
+# 5. Code Migration
 
 #
 
-### Update Application Code
+#
+
+#
+
+# Update Application Code
 
 ```text
 python
@@ -495,7 +533,11 @@ async def create_epic_task(title: str, description: str, complexity: str):
 
 #
 
-### Update API Calls
+#
+
+#
+
+# Update API Calls
 
 ```text
 python
@@ -522,11 +564,17 @@ result = await mcp_call("orchestrator_create_generic_task", {
 
 #
 
-## 6. Migration Rollback Plan
+#
+
+# 6. Migration Rollback Plan
 
 #
 
-### Emergency Rollback Procedure
+#
+
+#
+
+# Emergency Rollback Procedure
 
 ```text
 python
@@ -592,7 +640,9 @@ async def emergency_rollback_migration():
 
 #
 
-## Pre-Migration
+#
+
+# Pre-Migration
 
 - [ ] Create complete database backup
 
@@ -610,7 +660,9 @@ async def emergency_rollback_migration():
 
 #
 
-## During Migration
+#
+
+# During Migration
 
 - [ ] Execute migration script
 
@@ -624,7 +676,9 @@ async def emergency_rollback_migration():
 
 #
 
-## Post-Migration
+#
+
+# Post-Migration
 
 - [ ] Run comprehensive validation tests
 
@@ -646,7 +700,9 @@ async def emergency_rollback_migration():
 
 #
 
-## Rollback Criteria
+#
+
+# Rollback Criteria
 
 Execute rollback if any of the following occur:
 
@@ -668,7 +724,9 @@ Execute rollback if any of the following occur:
 
 #
 
-## Enhanced Functionality
+#
+
+# Enhanced Functionality
 
 - Flexible attribute system for custom metadata
 
@@ -682,7 +740,9 @@ Execute rollback if any of the following occur:
 
 #
 
-## Better Performance
+#
+
+# Better Performance
 
 - Optimized database schema
 
@@ -694,7 +754,9 @@ Execute rollback if any of the following occur:
 
 #
 
-## Developer Experience
+#
+
+# Developer Experience
 
 - Unified API for all task operations
 

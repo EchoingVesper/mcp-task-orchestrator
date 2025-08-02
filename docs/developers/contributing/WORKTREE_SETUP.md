@@ -17,7 +17,9 @@
 
 #
 
-## 1. Database Migration System
+#
+
+# 1. Database Migration System
 
 - **Path**: `worktrees/db-migration/`
 
@@ -29,7 +31,9 @@
 
 #
 
-## 2. In-Context Server Reboot  
+#
+
+# 2. In-Context Server Reboot  
 
 - **Path**: `worktrees/server-reboot/`
 
@@ -45,7 +49,9 @@
 
 #
 
-## **Start Development in a Worktree**
+#
+
+# **Start Development in a Worktree**
 
 ```bash
 
@@ -67,7 +73,9 @@ cd worktrees/server-reboot && claude
 
 #
 
-## **Parallel Development Workflow**
+#
+
+# **Parallel Development Workflow**
 
 **Terminal 1** (Database Migration):
 
@@ -93,7 +101,9 @@ claude
 
 #
 
-## **Development Environment Setup**
+#
+
+# **Development Environment Setup**
 
 Each worktree includes:
 
@@ -111,7 +121,9 @@ Each worktree includes:
 
 #
 
-## **Database Migration System** (`task_0b13127d`)
+#
+
+# **Database Migration System** (`task_0b13127d`)
 
 1. **architect_f74a18**: Design migration detection engine (8 hours)
 
@@ -125,7 +137,9 @@ Each worktree includes:
 
 #
 
-## **Server Reboot Mechanism** (`task_2f047d36`)
+#
+
+# **Server Reboot Mechanism** (`task_2f047d36`)
 
 1. **architect_9e06a9**: Design state serialization/shutdown (6 hours)
 

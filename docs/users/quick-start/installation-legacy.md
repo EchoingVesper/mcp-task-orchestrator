@@ -8,7 +8,9 @@
 
 #
 
-## Option 1: Install from PyPI (Recommended)
+#
+
+# Option 1: Install from PyPI (Recommended)
 
 ```bash
 pip install mcp-task-orchestrator
@@ -20,28 +22,37 @@ python -m mcp_task_orchestrator_cli install
 
 #
 
-## Option 2: Install from Source
+#
+
+# Option 2: Install from Source
 
 1. **Clone repository**
 
    
+
 ```text
 bash
    git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
    cd mcp-task-orchestrator
    
+
 ```text
+text
 text
 
 2. **Install dependencies and run installer**
 
    
+
 ```text
+text
 bash
    pip install -e .
    python -m mcp_task_orchestrator_cli install
    
+
 ```text
+text
 text
 
 3. **Restart MCP clients** (Claude Desktop, Claude Code, Cursor, Windsurf)
@@ -54,9 +65,12 @@ text
 
 #
 
-## Auto-detect Installation (Recommended)
+#
+
+# Auto-detect Installation (Recommended)
 
 ```text
+text
 bash
 python -m mcp_task_orchestrator_cli install
 
@@ -65,7 +79,9 @@ Automatically detects and configures all compatible MCP clients.
 
 #
 
-## Client-Specific Installation
+#
+
+# Client-Specific Installation
 
 **Claude Desktop (Global Multi-Project)**
 
@@ -108,7 +124,9 @@ text
 
 #
 
-## Advanced Options
+#
+
+# Advanced Options
 
 **Set Default Working Directory**
 
@@ -143,7 +161,9 @@ text
 
 #
 
-## PyPI Installation (Recommended)
+#
+
+# PyPI Installation (Recommended)
 
 The `pip install` method is recommended for most users because it:
 
@@ -157,7 +177,9 @@ The `pip install` method is recommended for most users because it:
 
 #
 
-## Source Installation (run_installer.py)
+#
+
+# Source Installation (run_installer.py)
 
 The `run_installer.py` method is the recommended installation approach because it:
 
@@ -193,7 +215,9 @@ The `run_installer.py` method is the recommended installation approach because i
 
 #
 
-## Claude Desktop Approach (Recommended)
+#
+
+# Claude Desktop Approach (Recommended)
 
 1. **Install once globally**: `python -m mcp_task_orchestrator_cli install --client claude_desktop`
 
@@ -205,7 +229,9 @@ The `run_installer.py` method is the recommended installation approach because i
 
 #
 
-## Claude Code Approach (Per-Project)
+#
+
+# Claude Code Approach (Per-Project)
 
 1. **Install per project**: `cd /path/to/project && python -m mcp_task_orchestrator_cli install --client claude_code --scope project`
 
@@ -217,7 +243,9 @@ The `run_installer.py` method is the recommended installation approach because i
 
 #
 
-## How Project Detection Works
+#
+
+# How Project Detection Works
 
 The orchestrator automatically detects your project directory using:
 
@@ -290,13 +318,17 @@ python installer/cleanup.py
 
 #
 
-## Step 1: Basic Tool Availability
+#
+
+# Step 1: Basic Tool Availability
 
 In your MCP client, look for `task-orchestrator` in the available tools/servers list.
 
 #
 
-## Step 2: Test Core Functionality
+#
+
+# Step 2: Test Core Functionality
 
 Try this command in your MCP client:
 
@@ -313,7 +345,9 @@ text
 
 #
 
-## Common Installation Issues
+#
+
+# Common Installation Issues
 
 **Claude Code not detected**
 
@@ -377,7 +411,9 @@ text
 
 #
 
-## Client-Specific Notes
+#
+
+# Client-Specific Notes
 
 **Claude Desktop**: 
 
@@ -405,7 +441,9 @@ text
 
 #
 
-## Getting Help
+#
+
+# Getting Help
 
 **View installer options**
 
@@ -438,7 +476,9 @@ Expected response should include:
 
 #
 
-## Step 3: Verify Database Setup
+#
+
+# Step 3: Verify Database Setup
 
 Check that the database was created:
 
@@ -454,7 +494,9 @@ text
 
 #
 
-## Step 4: Test Maintenance Features
+#
+
+# Step 4: Test Maintenance Features
 
 Try the maintenance coordinator:
 
@@ -475,7 +517,9 @@ Expected response should include:
 
 #
 
-## Step 5: Verify Persistence
+#
+
+# Step 5: Verify Persistence
 
 1. Create a simple task breakdown
 
@@ -485,7 +529,9 @@ Expected response should include:
 
 #
 
-## Verification Checklist
+#
+
+# Verification Checklist
 
 - [ ] Tool appears in MCP client
 
@@ -513,7 +559,9 @@ If automatic installation fails, see manual configuration examples in each clien
 
 #
 
-## Common Issues Resolved by run_installer.py
+#
+
+# Common Issues Resolved by run_installer.py
 
 - **ImportError with relative imports**: Automatically handled by proper path configuration
 
@@ -527,7 +575,9 @@ If automatic installation fails, see manual configuration examples in each clien
 
 #
 
-## General Troubleshooting
+#
+
+# General Troubleshooting
 
 - **No clients detected**: Ensure clients are installed and run once
 
@@ -543,7 +593,9 @@ If automatic installation fails, see manual configuration examples in each clien
 
 #
 
-## Database-Specific Issues
+#
+
+# Database-Specific Issues
 
 - **SQLite errors**: Ensure sufficient disk space and write permissions
 
@@ -555,7 +607,9 @@ If automatic installation fails, see manual configuration examples in each clien
 
 #
 
-## Advanced Diagnostics
+#
+
+# Advanced Diagnostics
 
 ```text
 bash
@@ -598,7 +652,9 @@ python run_installer.py
 
 #
 
-## New Features Verification
+#
+
+# New Features Verification
 
 ```text
 bash

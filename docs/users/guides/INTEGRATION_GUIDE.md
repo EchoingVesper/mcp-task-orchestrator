@@ -14,7 +14,9 @@ The automatic database migration system has been successfully integrated into th
 
 #
 
-## 1. Server Import Added
+#
+
+# 1. Server Import Added
 
 ```python
 
@@ -26,7 +28,9 @@ from .db.auto_migration import execute_startup_migration
 
 #
 
-## 2. Migration Function Added
+#
+
+# 2. Migration Function Added
 
 ```text
 python
@@ -37,7 +41,9 @@ def initialize_database_with_migration(base_dir: str = None, db_path: str = None
 
 #
 
-## 3. StateManager Integration
+#
+
+# 3. StateManager Integration
 
 The `get_state_manager()` function now calls migration before database initialization:
 
@@ -59,7 +65,9 @@ text
 
 #
 
-## Automatic Migration Flow
+#
+
+# Automatic Migration Flow
 
 1. **Server Startup** → `get_state_manager()` called
 
@@ -73,7 +81,9 @@ text
 
 #
 
-## Migration Behavior
+#
+
+# Migration Behavior
 
 - **First Run**: Creates all tables and initial schema
 
@@ -91,7 +101,9 @@ text
 
 #
 
-## Automatic Safeguards
+#
+
+# Automatic Safeguards
 
 - **Backup Creation**: Database backed up before any migration
 
@@ -105,7 +117,9 @@ text
 
 #
 
-## Error Handling
+#
+
+# Error Handling
 
 - **Migration Failures**: Server logs warning but continues (graceful degradation)
 
@@ -121,7 +135,9 @@ text
 
 #
 
-## Environment Variables
+#
+
+# Environment Variables
 
 ```text
 bash
@@ -144,7 +160,9 @@ export MCP_TASK_ORCHESTRATOR_MIGRATION_TIMEOUT="15000"
 
 #
 
-## Migration System Settings
+#
+
+# Migration System Settings
 
 The migration system uses conservative defaults for server startup:
 
@@ -160,7 +178,9 @@ The migration system uses conservative defaults for server startup:
 
 #
 
-## Log Messages
+#
+
+# Log Messages
 
 ```text
 
@@ -173,7 +193,9 @@ INFO - Backup created: backup_20241206_143052_789
 
 #
 
-## Migration Status
+#
+
+# Migration Status
 
 The system logs detailed information about:
 
@@ -189,7 +211,9 @@ The system logs detailed information about:
 
 #
 
-## Health Monitoring
+#
+
+# Health Monitoring
 
 Future enhancement: Add MCP tools for migration health monitoring:
 
@@ -203,25 +227,34 @@ Future enhancement: Add MCP tools for migration health monitoring:
 
 #
 
-## Basic Functionality Test
+#
+
+# Basic Functionality Test
 
 1. **Start server with empty database**:
    
+
 ```text
 bash
    python -m mcp_task_orchestrator.server
    
+
 ```text
+text
 text
    Expected: Creates all tables, logs migration completion
 
 2. **Restart server**:
    
+
 ```text
+text
 bash
    python -m mcp_task_orchestrator.server
    
+
 ```text
+text
 text
    Expected: Quick check, "Database schema is up to date"
 
@@ -231,9 +264,12 @@ text
 
 #
 
-## Advanced Testing
+#
+
+# Advanced Testing
 
 ```text
+text
 python
 
 # Test migration system directly
@@ -253,11 +289,17 @@ print(f"Time: {result.execution_time_ms}ms")
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 #
 
-### Migration Timeout
+#
+
+#
+
+# Migration Timeout
 
 ```text
 
@@ -274,7 +316,11 @@ ERROR - Database migration failed: Estimated execution time (35s) exceeds maximu
 
 #
 
-### Schema Conflicts
+#
+
+#
+
+# Schema Conflicts
 
 ```text
 
@@ -291,7 +337,11 @@ ERROR - Database migration failed: SQL rollback failed: ...
 
 #
 
-### Missing Dependencies
+#
+
+#
+
+# Missing Dependencies
 
 ```text
 
@@ -302,7 +352,11 @@ ERROR - Database initialization failed: No module named 'sqlalchemy'
 
 #
 
-### Backup Space Issues
+#
+
+#
+
+# Backup Space Issues
 
 ```text
 
@@ -313,11 +367,17 @@ WARNING - Large backup storage usage - consider cleanup
 
 #
 
-## Recovery Procedures
+#
+
+# Recovery Procedures
 
 #
 
-### Manual Migration
+#
+
+#
+
+# Manual Migration
 
 ```text
 python
@@ -340,7 +400,11 @@ result = migration_system.execute_auto_migration(force_backup=True)
 
 #
 
-### Rollback Last Migration
+#
+
+#
+
+# Rollback Last Migration
 
 ```text
 python
@@ -363,7 +427,9 @@ rollback_result = migration_system.rollback_last_migration(use_backup=True)
 
 #
 
-## Startup Performance
+#
+
+# Startup Performance
 
 - **Empty Database**: ~500ms (creates all tables)
 
@@ -375,7 +441,9 @@ rollback_result = migration_system.rollback_last_migration(use_backup=True)
 
 #
 
-## Resource Usage
+#
+
+# Resource Usage
 
 - **Memory**: Minimal overhead during migration
 
@@ -385,7 +453,9 @@ rollback_result = migration_system.rollback_last_migration(use_backup=True)
 
 #
 
-## Production Considerations
+#
+
+# Production Considerations
 
 - Migration runs during server startup (affects startup time)
 
@@ -411,7 +481,9 @@ rollback_result = migration_system.rollback_last_migration(use_backup=True)
 
 #
 
-## Planned Features
+#
+
+# Planned Features
 
 1. **Configuration Options**: Environment variable control for all settings
 
@@ -425,7 +497,9 @@ rollback_result = migration_system.rollback_last_migration(use_backup=True)
 
 #
 
-## Integration Points
+#
+
+# Integration Points
 
 1. **CI/CD Integration**: Pre-deployment migration validation
 

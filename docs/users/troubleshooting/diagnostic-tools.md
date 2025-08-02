@@ -14,11 +14,17 @@ The MCP Task Orchestrator includes comprehensive diagnostic tools to help troubl
 
 #
 
-## Database Diagnostics (`scripts/diagnostics/`)
+#
+
+# Database Diagnostics (`scripts/diagnostics/`)
 
 #
 
-### `diagnose_db.py`
+#
+
+#
+
+# `diagnose_db.py`
 
 Comprehensive database analysis and health checking.
 
@@ -46,11 +52,16 @@ python scripts/diagnostics/diagnose_db.py --force-unlock
 
 #
 
-### `check_status.py`
+#
+
+#
+
+# `check_status.py`
 
 System status monitoring and basic health checks.
 
 **Usage:**
+
 ```text
 text
 bash
@@ -68,10 +79,15 @@ python scripts/diagnostics/check_status.py --monitor
 python scripts/diagnostics/check_status.py --cleanup-locks
 
 ```text
+text
 
 #
 
-### `verify_tools.py`
+#
+
+#
+
+# `verify_tools.py`
 
 Verification that all required tools and dependencies are available.
 
@@ -92,10 +108,16 @@ text
 
 #
 
-## Server Diagnostics
+#
+
+# Server Diagnostics
 
 #
 
-### `diagnose_server.py`
+#
+
+#
+
+# `diagnose_server.py`
 
 Server-specific diagnostic capabilities.

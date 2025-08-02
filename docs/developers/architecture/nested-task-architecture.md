@@ -20,7 +20,9 @@ The Nested Task Architecture enhances the MCP Task Orchestrator's ability to han
 
 #
 
-## Existing Task Model
+#
+
+# Existing Task Model
 
 ```text
 Current Task Structure:
@@ -33,7 +35,9 @@ Current Task Structure:
 
 #
 
-## Current Limitations
+#
+
+# Current Limitations
 
 - Single-level parent-child relationships only
 
@@ -53,7 +57,9 @@ Current Task Structure:
 
 #
 
-## Multi-Level Hierarchy Support
+#
+
+# Multi-Level Hierarchy Support
 
 ```text
 
@@ -75,7 +81,9 @@ Project Task (Level 0)
 
 #
 
-## Task Hierarchy Tree Model
+#
+
+# Task Hierarchy Tree Model
 
 ```text
 python
@@ -111,7 +119,9 @@ class TaskNode:
 
 #
 
-## Core Task Hierarchy Table
+#
+
+# Core Task Hierarchy Table
 
 ```text
 sql
@@ -176,7 +186,9 @@ CREATE TABLE task_hierarchy_rules (
 
 #
 
-## Materialized Path for Efficient Queries
+#
+
+# Materialized Path for Efficient Queries
 
 ```text
 sql
@@ -210,7 +222,9 @@ SELECT * FROM ancestors;
 
 #
 
-## Task Creation with Hierarchy
+#
+
+# Task Creation with Hierarchy
 
 ```text
 python
@@ -272,7 +286,9 @@ class NestedTaskOrchestrator:
 
 #
 
-## Progress Aggregation
+#
+
+# Progress Aggregation
 
 ```text
 python
@@ -322,7 +338,9 @@ async def calculate_recursive_progress(self, task_id):
 
 #
 
-## Cross-Hierarchy Dependencies
+#
+
+# Cross-Hierarchy Dependencies
 
 ```text
 python
@@ -385,7 +403,9 @@ class DependencyManager:
 
 #
 
-## Depth-First Execution
+#
+
+# Depth-First Execution
 
 ```text
 python
@@ -441,7 +461,9 @@ async def build_depth_first_plan(self, root_task_id):
 
 #
 
-## Breadth-First Execution
+#
+
+# Breadth-First Execution
 
 ```text
 python
@@ -471,7 +493,9 @@ async def execute_breadth_first(self, root_task_id):
 
 #
 
-## Hierarchical State Transitions
+#
+
+# Hierarchical State Transitions
 
 ```text
 python
@@ -556,7 +580,9 @@ class HierarchicalStateManager:
 
 #
 
-## Lazy Loading and Caching
+#
+
+# Lazy Loading and Caching
 
 ```text
 python
@@ -603,7 +629,9 @@ class HierarchyCache:
 
 #
 
-## Hierarchical Task Distribution
+#
+
+# Hierarchical Task Distribution
 
 ```text
 python
@@ -653,7 +681,9 @@ async def distribute_hierarchy_across_agents(self, root_task_id):
 
 #
 
-## Hierarchy-Specific Test Cases
+#
+
+# Hierarchy-Specific Test Cases
 
 ```text
 python
@@ -711,7 +741,9 @@ class NestedTaskTests:
 
 #
 
-## Backward Compatibility
+#
+
+# Backward Compatibility
 
 - Existing single-level tasks continue to work unchanged
 
@@ -723,7 +755,9 @@ class NestedTaskTests:
 
 #
 
-## Migration Tools
+#
+
+# Migration Tools
 
 ```text
 python
@@ -769,7 +803,9 @@ async def migrate_flat_to_nested(self, task_ids, grouping_strategy):
 
 #
 
-## Phase 1: Core Hierarchy (v1.5.0)
+#
+
+# Phase 1: Core Hierarchy (v1.5.0)
 
 - Multi-level parent-child relationships
 
@@ -781,7 +817,9 @@ async def migrate_flat_to_nested(self, task_ids, grouping_strategy):
 
 #
 
-## Phase 2: Advanced Dependencies (v1.6.0)
+#
+
+# Phase 2: Advanced Dependencies (v1.6.0)
 
 - Cross-hierarchy dependency support
 
@@ -793,7 +831,9 @@ async def migrate_flat_to_nested(self, task_ids, grouping_strategy):
 
 #
 
-## Phase 3: Performance & Scale (v1.7.0)
+#
+
+# Phase 3: Performance & Scale (v1.7.0)
 
 - Hierarchy caching and optimization
 

@@ -30,7 +30,9 @@ Several documentation files exceed the 500-line safety limit for Claude Code:
 
 #
 
-## 1. Modular Document Structure
+#
+
+# 1. Modular Document Structure
 
 - **Maximum file size**: 400 lines (with 500-line hard limit)
 
@@ -42,7 +44,9 @@ Several documentation files exceed the 500-line safety limit for Claude Code:
 
 #
 
-## 2. Navigation Architecture
+#
+
+# 2. Navigation Architecture
 
 - **Central index files**: Act as navigation hubs (under 200 lines)
 
@@ -54,11 +58,17 @@ Several documentation files exceed the 500-line safety limit for Claude Code:
 
 #
 
-## 3. Content Organization Patterns
+#
+
+# 3. Content Organization Patterns
 
 #
 
-### Pattern A: Topic-Based Splitting
+#
+
+#
+
+# Pattern A: Topic-Based Splitting
 
 For comprehensive guides (like generic-task-usage-guide.md):
 
@@ -77,9 +87,14 @@ docs/examples/generic-task-usage/
 
 #
 
-### Pattern B: Feature-Based Splitting  
+#
+
+#
+
+# Pattern B: Feature-Based Splitting  
 
 For API references:
+
 ```text
 text
 
@@ -98,10 +113,15 @@ docs/api/
     └── helper-methods.md (<300 lines)
 
 ```text
+text
 
 #
 
-### Pattern C: Progressive Disclosure
+#
+
+#
+
+# Pattern C: Progressive Disclosure
 
 For implementation guides:
 
@@ -129,7 +149,9 @@ text
 
 #
 
-## 1. Master Index Structure
+#
+
+# 1. Master Index Structure
 
 ```text
 markdown
@@ -172,7 +194,9 @@ markdown
 
 #
 
-## 2. Cross-Reference System
+#
+
+# 2. Cross-Reference System
 
 Every split file will include:
 
@@ -186,7 +210,9 @@ Every split file will include:
 
 #
 
-## 3. Automated Link Validation
+#
+
+# 3. Automated Link Validation
 
 - Script to validate all internal links
 
@@ -200,7 +226,9 @@ Every split file will include:
 
 #
 
-## Phase 1: Critical Files (Immediate)
+#
+
+# Phase 1: Critical Files (Immediate)
 
 1. `generic-task-usage-guide.md` (1,172 lines) → Topic-based split (6-8 files)
 
@@ -210,7 +238,9 @@ Every split file will include:
 
 #
 
-## Phase 2: High-Risk Files
+#
+
+# Phase 2: High-Risk Files
 
 4. `generic-task-implementation-guide.md` (754 lines) → Progressive disclosure (6-8 files)
 
@@ -218,7 +248,9 @@ Every split file will include:
 
 #
 
-## Phase 3: Medium-Risk Files
+#
+
+# Phase 3: Medium-Risk Files
 
 6. 500-600 line files → Targeted optimization to stay under 500 lines
 
@@ -228,7 +260,9 @@ Every split file will include:
 
 #
 
-## Directory Structure
+#
+
+# Directory Structure
 
 - **Descriptive names**: Clear purpose indication
 
@@ -238,7 +272,9 @@ Every split file will include:
 
 #
 
-## File Naming
+#
+
+# File Naming
 
 - **kebab-case**: Consistent with existing patterns
 
@@ -248,7 +284,9 @@ Every split file will include:
 
 #
 
-## Cross-Reference Format
+#
+
+# Cross-Reference Format
 
 ```text
 markdown
@@ -274,7 +312,9 @@ markdown
 
 #
 
-## Content Integrity
+#
+
+# Content Integrity
 
 - All content preserved during splits
 
@@ -284,7 +324,9 @@ markdown
 
 #
 
-## Navigation Testing
+#
+
+# Navigation Testing
 
 - All links functional after restructuring  
 
@@ -296,7 +338,9 @@ markdown
 
 #
 
-## Maintenance Automation
+#
+
+# Maintenance Automation
 
 - Automated link checking
 
@@ -312,7 +356,9 @@ markdown
 
 #
 
-## For Claude Code Safety
+#
+
+# For Claude Code Safety
 
 - ✅ All files under 500-line limit
 
@@ -322,7 +368,9 @@ markdown
 
 #
 
-## For User Experience  
+#
+
+# For User Experience  
 
 - ✅ Easier to find specific information
 
@@ -334,7 +382,9 @@ markdown
 
 #
 
-## For Maintenance
+#
+
+# For Maintenance
 
 - ✅ Easier to update specific sections
 

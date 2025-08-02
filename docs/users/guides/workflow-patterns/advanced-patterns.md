@@ -28,7 +28,9 @@ Moving beyond basic task coordination, these advanced patterns unlock the full p
 
 #
 
-## Pattern 1: Hierarchical Task Decomposition
+#
+
+# Pattern 1: Hierarchical Task Decomposition
 
 *Breaking down complex projects into manageable specialist-focused layers*
 
@@ -86,7 +88,9 @@ orchestrator_plan_task(
 
 #
 
-## Pattern 2: Cross-Functional Integration Workflows
+#
+
+# Pattern 2: Cross-Functional Integration Workflows
 
 *Coordinating multiple technology stacks and teams*
 
@@ -152,7 +156,9 @@ orchestrator_plan_task(
 
 #
 
-## Pattern 3: Quality-First Development Pipeline
+#
+
+# Pattern 3: Quality-First Development Pipeline
 
 *Embedding quality assurance and performance optimization throughout development*
 
@@ -180,11 +186,14 @@ orchestrator_plan_task(
 ```text
 
 #
+
 # 🚀 Performance Optimization Strategies
 
 #
 
-## Strategy 1: Parallel Execution with Dependency Management
+#
+
+# Strategy 1: Parallel Execution with Dependency Management
 
 When subtasks have complex interdependencies but some can run in parallel:
 
@@ -214,7 +223,9 @@ orchestrator_plan_task(
 
 #
 
-## Strategy 2: Incremental Complexity Scaling
+#
+
+# Strategy 2: Incremental Complexity Scaling
 
 Start simple, add complexity systematically:
 
@@ -254,16 +265,20 @@ orchestrator_plan_task(
         {"title": "Load Balancing", "specialist_type": "infrastructure_specialist"}
     ]'
 )
+
 ```text
 text
 
 #
 
-## Strategy 3: Context-Aware Resource Management
+#
+
+# Strategy 3: Context-Aware Resource Management
 
 Optimize task execution based on available resources and context:
 
 ```text
+text
 python
 
 # Before starting intensive subtasks, analyze context:
@@ -293,7 +308,9 @@ orchestrator_plan_task(
 
 #
 
-## Pattern 1: Progressive Diagnosis
+#
+
+# Pattern 1: Progressive Diagnosis
 
 When facing complex system issues that require systematic investigation:
 
@@ -316,7 +333,10 @@ orchestrator_plan_task(
 ```text
 
 #
-## Pattern 2: Error Recovery and Resilience
+
+#
+
+# Pattern 2: Error Recovery and Resilience
 
 Building systems that gracefully handle failures:
 
@@ -342,7 +362,9 @@ orchestrator_plan_task(
 
 #
 
-## Pattern 1: MCP Aggregator Coordination
+#
+
+# Pattern 1: MCP Aggregator Coordination
 
 When working with multiple MCP servers that need coordination:
 
@@ -377,11 +399,14 @@ orchestrator_plan_task(
 ```text
 
 #
+
 # 🔒 Security and Compliance Patterns
 
 #
 
-## Pattern 1: Security-First Development
+#
+
+# Pattern 1: Security-First Development
 
 Embedding security throughout the development lifecycle:
 
@@ -407,7 +432,9 @@ orchestrator_plan_task(
 
 #
 
-## Performance Indicators for Complex Projects
+#
+
+# Performance Indicators for Complex Projects
 
 **Time to Value Metrics:**
 

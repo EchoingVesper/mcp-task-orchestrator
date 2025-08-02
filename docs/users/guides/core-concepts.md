@@ -12,7 +12,9 @@ Think of task orchestration like conducting a symphony orchestra. Instead of try
 
 #
 
-## Before: The "Hero Developer" Approach
+#
+
+# Before: The "Hero Developer" Approach
 
 You're a one-person band:
 
@@ -28,7 +30,9 @@ You're a one-person band:
 
 #
 
-## After: The "Specialist Team" Approach
+#
+
+# After: The "Specialist Team" Approach
 
 You become the conductor:
 
@@ -52,7 +56,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## 🏗️ The Architect
+#
+
+# 🏗️ The Architect
 
 **Thinks like:** A city planner designing for the future
 **Focuses on:** Structure, scalability, patterns, trade-offs
@@ -61,7 +67,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## 👩‍💻 The Implementer  
+#
+
+# 👩‍💻 The Implementer  
 
 **Thinks like:** A master craftsperson building to last
 **Focuses on:** Clean code, best practices, maintainability
@@ -70,7 +78,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## 🔍 The Tester
+#
+
+# 🔍 The Tester
 
 **Thinks like:** A detective looking for what could break
 **Focuses on:** Quality, edge cases, validation, reliability
@@ -79,7 +89,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## 📝 The Documenter
+#
+
+# 📝 The Documenter
 
 **Thinks like:** A teacher explaining to future learners
 **Focuses on:** Clarity, usefulness, completeness
@@ -88,7 +100,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## 🐛 The Debugger
+#
+
+# 🐛 The Debugger
 
 **Thinks like:** A performance coach optimizing athletes
 **Focuses on:** Efficiency, bottlenecks, optimization
@@ -97,7 +111,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## 🔧 The Maintenance Coordinator (Automated)
+#
+
+# 🔧 The Maintenance Coordinator (Automated)
 
 **Thinks like:** A facility manager keeping everything running smoothly
 **Focuses on:** System health, cleanup, optimization, handover preparation
@@ -110,7 +126,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## The Workflow Lifecycle
+#
+
+# The Workflow Lifecycle
 
 1. **🎯 Task Analysis**: "Build a user authentication system"
 
@@ -148,7 +166,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## Key Benefits
+#
+
+# Key Benefits
 
 **🎯 Systematic Coverage**: No more "oops, forgot to handle errors"
 **🧠 Expert Thinking**: Each phase gets specialist-level consideration  
@@ -164,7 +184,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## Perfect For:
+#
+
+# Perfect For:
 
 - **Complex features** with multiple components
 
@@ -178,7 +200,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## Maybe Skip For:
+#
+
+# Maybe Skip For:
 
 - **Quick fixes** or simple scripts
 
@@ -188,7 +212,9 @@ Think of these as different "hats" you wear, each with specific expertise and pe
 
 #
 
-## The "Orchestration Threshold"
+#
+
+# The "Orchestration Threshold"
 
 Ask yourself: "If I mess this up, will it cost more time to fix than to plan properly?"
 
@@ -201,7 +227,9 @@ If no → Direct implementation might be faster
 
 #
 
-## Task Persistence
+#
+
+# Task Persistence
 
 Your work doesn't disappear when you close your MCP client:
 
@@ -215,7 +243,9 @@ Your work doesn't disappear when you close your MCP client:
 
 #
 
-## Automated Maintenance
+#
+
+# Automated Maintenance
 
 The system takes care of itself:
 
@@ -229,7 +259,9 @@ The system takes care of itself:
 
 #
 
-## Context Continuity
+#
+
+# Context Continuity
 
 - **Artifact Storage**: Detailed work stored separately from conversation context
 

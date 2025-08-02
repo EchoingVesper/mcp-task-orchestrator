@@ -12,7 +12,9 @@ The installation method has been updated to resolve import errors and improve re
 
 #
 
-## Old Method (Deprecated)
+#
+
+# Old Method (Deprecated)
 
 ```bash
 
@@ -25,7 +27,9 @@ python installer/main_installer.py
 
 #
 
-## New Method (Recommended)
+#
+
+# New Method (Recommended)
 
 ```text
 bash
@@ -58,7 +62,9 @@ The new `run_installer.py` method provides:
 
 #
 
-## For Individual Users
+#
+
+# For Individual Users
 
 1. **Current Scripts Work**: Your existing `python install.py` commands will continue to work
 
@@ -68,7 +74,9 @@ The new `run_installer.py` method provides:
 
 #
 
-## For Documentation/Scripts
+#
+
+# For Documentation/Scripts
 
 Replace these patterns:
 
@@ -91,7 +99,9 @@ python run_installer.py --clients claude-desktop
 
 #
 
-## For CI/CD Pipelines
+#
+
+# For CI/CD Pipelines
 
 Update your automation scripts:
 
@@ -116,7 +126,9 @@ yaml
 
 #
 
-## If You Get Import Errors with Old Method
+#
+
+# If You Get Import Errors with Old Method
 
 **Error Message**: `ImportError: attempted relative import with no known parent package`
 
@@ -133,7 +145,9 @@ text
 
 #
 
-## If You Get Version Conflicts
+#
+
+# If You Get Version Conflicts
 
 **Error Message**: References to `mcp==1.4.0` or version conflicts
 
@@ -145,7 +159,9 @@ text
 
 #
 
-## If Legacy Scripts Fail
+#
+
+# If Legacy Scripts Fail
 
 **Issue**: Automated scripts using old installation commands fail
 
@@ -171,7 +187,9 @@ text
 
 #
 
-## Gradual Migration Approach
+#
+
+# Gradual Migration Approach
 
 1. **Phase 1**: Legacy methods redirect to new method with helpful messages
 
@@ -181,7 +199,9 @@ text
 
 #
 
-## Backward Compatibility Promise
+#
+
+# Backward Compatibility Promise
 
 - **Current**: `python install.py` continues to work via intelligent wrapper
 
@@ -209,7 +229,9 @@ text
 
 #
 
-## Quick Solutions
+#
+
+# Quick Solutions
 
 - **Installation Issues**: Use `python run_installer.py` instead of old methods
 
@@ -219,7 +241,9 @@ text
 
 #
 
-## Getting Support
+#
+
+# Getting Support
 
 - **GitHub Issues**: [Report problems](https://github.com/EchoingVesper/mcp-task-orchestrator/issues)
 

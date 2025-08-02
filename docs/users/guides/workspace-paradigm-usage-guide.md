@@ -18,7 +18,9 @@ The **Workspace Paradigm** is MCP Task Orchestrator's revolutionary approach to 
 
 #
 
-## Key Benefits at a Glance
+#
+
+# Key Benefits at a Glance
 
 - ✅ **Zero Configuration**: Works immediately without setup
 
@@ -36,7 +38,9 @@ The **Workspace Paradigm** is MCP Task Orchestrator's revolutionary approach to 
 
 #
 
-## Step 1: Navigate to Your Project
+#
+
+# Step 1: Navigate to Your Project
 
 ```bash
 cd /path/to/your/project
@@ -45,13 +49,17 @@ cd /path/to/your/project
 
 #
 
-## Step 2: Start Using the Orchestrator
+#
+
+# Step 2: Start Using the Orchestrator
 
 The workspace paradigm activates automatically when you use any MCP Task Orchestrator tool. No initialization required!
 
 #
 
-## Step 3: Verify Workspace Creation
+#
+
+# Step 3: Verify Workspace Creation
 
 After your first task, check for the `.task_orchestrator` directory:
 
@@ -74,13 +82,19 @@ text
 
 #
 
-## Automatic Project Root Detection
+#
+
+# Automatic Project Root Detection
 
 The orchestrator uses a sophisticated detection system to find your project root:
 
 #
 
-### Priority 1: Git Repository Root ⭐ Highest Confidence
+#
+
+#
+
+# Priority 1: Git Repository Root ⭐ Highest Confidence
 
 ```bash
 
@@ -95,7 +109,11 @@ my-project/
 
 #
 
-### Priority 2: Project Configuration Files ⭐ High Confidence  
+#
+
+#
+
+# Priority 2: Project Configuration Files ⭐ High Confidence  
 
 ```text
 bash
@@ -113,7 +131,11 @@ my-project/
 
 #
 
-### Priority 3: Environment Context ⭐ Medium Confidence
+#
+
+#
+
+# Priority 3: Environment Context ⭐ Medium Confidence
 
 - Current working directory when MCP client started
 
@@ -121,7 +143,11 @@ my-project/
 
 #
 
-### Priority 4: Fallback Options ⭐ Basic Confidence
+#
+
+#
+
+# Priority 4: Fallback Options ⭐ Basic Confidence
 
 - Current directory where you run commands
 
@@ -129,7 +155,9 @@ my-project/
 
 #
 
-## Detection Confidence Levels
+#
+
+# Detection Confidence Levels
 
 | Confidence | Detection Method | Typical Accuracy |
 |------------|-----------------|------------------|
@@ -147,7 +175,9 @@ my-project/
 
 #
 
-## Complete Directory Layout
+#
+
+# Complete Directory Layout
 
 ```text
 
@@ -176,13 +206,19 @@ your-project/
 
 #
 
-## Artifact Organization Intelligence
+#
+
+# Artifact Organization Intelligence
 
 The orchestrator automatically organizes artifacts using a specialist-based system:
 
 #
 
-### Specialist Types and Their Artifacts
+#
+
+#
+
+# Specialist Types and Their Artifacts
 
 - **architect_**: System design documents, architecture decisions, diagrams
 
@@ -200,7 +236,11 @@ The orchestrator automatically organizes artifacts using a specialist-based syst
 
 #
 
-### Naming Convention
+#
+
+#
+
+# Naming Convention
 
 ```text
 
@@ -220,11 +260,17 @@ specialist-type_task-id/
 
 #
 
-## Basic Workspace Operations
+#
+
+# Basic Workspace Operations
 
 #
 
-### Finding Your Current Workspace
+#
+
+#
+
+# Finding Your Current Workspace
 
 ```text
 bash
@@ -238,7 +284,11 @@ ls -la .task_orchestrator/
 
 #
 
-### Checking Workspace Status
+#
+
+#
+
+# Checking Workspace Status
 
 Use the orchestrator's built-in status command:
 
@@ -261,7 +311,11 @@ This will show:
 
 #
 
-### Understanding Workspace Isolation
+#
+
+#
+
+# Understanding Workspace Isolation
 
 Each workspace is completely isolated:
 
@@ -287,11 +341,17 @@ text
 
 #
 
-## Advanced Workspace Management
+#
+
+# Advanced Workspace Management
 
 #
 
-### Working with Multiple Projects
+#
+
+#
+
+# Working with Multiple Projects
 
 ```text
 bash
@@ -324,7 +384,11 @@ Each project maintains completely separate:
 
 #
 
-### Workspace Discovery Commands
+#
+
+#
+
+# Workspace Discovery Commands
 
 ```bash
 
@@ -354,7 +418,9 @@ ls -lt .task_orchestrator/artifacts/*/
 
 #
 
-## Project-Specific Role Configuration
+#
+
+# Project-Specific Role Configuration
 
 Create custom specialist roles for your project type:
 
@@ -380,7 +446,9 @@ python_implementer:
 
 #
 
-## Workspace Configuration
+#
+
+# Workspace Configuration
 
 Configure workspace behavior:
 
@@ -416,13 +484,19 @@ performance:
 
 #
 
-## Understanding Workspace Performance
+#
+
+# Understanding Workspace Performance
 
 Based on comprehensive testing, workspace performance characteristics:
 
 #
 
-### Excellent Performance (Target Metrics)
+#
+
+#
+
+# Excellent Performance (Target Metrics)
 
 - **Directory Access**: <5ms
 
@@ -434,7 +508,11 @@ Based on comprehensive testing, workspace performance characteristics:
 
 #
 
-### Performance Monitoring
+#
+
+#
+
+# Performance Monitoring
 
 ```text
 bash
@@ -461,11 +539,17 @@ ls -lh .task_orchestrator/task_orchestrator.db
 
 #
 
-## Optimization Strategies
+#
+
+# Optimization Strategies
 
 #
 
-### Artifact Management
+#
+
+#
+
+# Artifact Management
 
 ```bash
 
@@ -482,7 +566,11 @@ find .task_orchestrator/artifacts/ -type d -mtime +30 -name "*_*"
 
 #
 
-### Database Optimization
+#
+
+#
+
+# Database Optimization
 
 The orchestrator automatically optimizes the database, but you can monitor:
 
@@ -508,11 +596,17 @@ text
 
 #
 
-## Common Issues and Solutions
+#
+
+# Common Issues and Solutions
 
 #
 
-### Issue: Workspace Not Detected in Expected Location
+#
+
+#
+
+# Issue: Workspace Not Detected in Expected Location
 
 **Symptoms**: Orchestrator creates workspace in home directory instead of project root
 
@@ -520,6 +614,7 @@ text
 
 1. **Check Git Status**: Ensure you're in a Git repository
    
+
 ```text
 bash
    git status
@@ -528,12 +623,16 @@ bash
 # Should show: On branch main...
 
    
+
 ```text
+text
 text
 
 2. **Add Project Markers**: Create a project configuration file
    
+
 ```text
+text
 bash
    
 
@@ -556,22 +655,32 @@ bash
 # Initialize Git repository
 
    
+
 ```text
+text
 text
 
 3. **Manual Override**: Specify working directory explicitly
    
+
 ```text
+text
 
    Use MCP tool: orchestrator_initialize_session
    Parameters: {"working_directory": "/full/path/to/your/project"}
    
+
 ```text
+text
 text
 
 #
 
-### Issue: Large Workspace Size Causing Slow Performance
+#
+
+#
+
+# Issue: Large Workspace Size Causing Slow Performance
 
 **Symptoms**: Operations taking >1 second, large .task_orchestrator directory
 
@@ -579,7 +688,9 @@ text
 
 1. **Artifact Cleanup**: Archive old artifacts
    
+
 ```text
+text
 bash
    
 
@@ -587,22 +698,32 @@ bash
 
    find .task_orchestrator/artifacts/ -type d -mtime +30 -exec mv {} .task_orchestrator/archive/ \;
    
+
 ```text
+text
 text
 
 2. **Database Cleanup**: Use maintenance coordinator
    
+
 ```text
+text
 
    Use MCP tool: orchestrator_maintenance_coordinator
    Parameters: {"action": "scan_cleanup", "scope": "current_session"}
    
+
 ```text
+text
 text
 
 #
 
-### Issue: Multiple Workspaces for Same Project
+#
+
+#
+
+# Issue: Multiple Workspaces for Same Project
 
 **Symptoms**: Finding .task_orchestrator in multiple locations for one project
 
@@ -610,16 +731,22 @@ text
 
 1. **Identify Primary Workspace**: Find the one with the most recent activity
    
+
 ```text
+text
 bash
    find . -name ".task_orchestrator" -type d -exec ls -la {}/task_orchestrator.db \;
    
+
 ```text
+text
 text
 
 2. **Consolidate Workspaces**: Move artifacts from secondary to primary
    
+
 ```text
+text
 bash
    
 
@@ -633,12 +760,18 @@ bash
 
    rm -rf secondary/.task_orchestrator/
    
+
 ```text
+text
 text
 
 #
 
-### Issue: Hidden Directory Not Discoverable
+#
+
+#
+
+# Issue: Hidden Directory Not Discoverable
 
 **Symptoms**: Can't find .task_orchestrator directory
 
@@ -646,7 +779,9 @@ text
 
 1. **Show Hidden Files**:
    
+
 ```text
+text
 bash
    
 
@@ -663,12 +798,16 @@ bash
 # Press Ctrl+H in most Linux file managers
 
    
+
 ```text
+text
 text
 
 2. **Create Workspace Alias**: Add to your shell profile
    
+
 ```text
+text
 bash
    
 
@@ -676,18 +815,27 @@ bash
 
    alias workspace='cd .task_orchestrator && ls -la'
    
+
 ```text
+text
 text
 
 #
 
-## Recovery Procedures
+#
+
+# Recovery Procedures
 
 #
 
-### Corrupted Workspace Recovery
+#
+
+#
+
+# Corrupted Workspace Recovery
 
 ```text
+text
 bash
 
 # 1. Backup existing workspace
@@ -710,7 +858,11 @@ cp -r .task_orchestrator.backup/artifacts/* .task_orchestrator/artifacts/
 
 #
 
-### Database Corruption Recovery
+#
+
+#
+
+# Database Corruption Recovery
 
 ```text
 bash
@@ -739,11 +891,17 @@ rm .task_orchestrator/task_orchestrator.db
 
 #
 
-## Workspace Organization
+#
+
+# Workspace Organization
 
 #
 
-### Do's ✅
+#
+
+#
+
+# Do's ✅
 
 - **Use Git repositories**: Provides the most reliable workspace detection
 
@@ -757,7 +915,11 @@ rm .task_orchestrator/task_orchestrator.db
 
 #
 
-### Don'ts ❌
+#
+
+#
+
+# Don'ts ❌
 
 - **Don't manually edit database**: Use orchestrator tools for all task management
 
@@ -769,11 +931,17 @@ rm .task_orchestrator/task_orchestrator.db
 
 #
 
-## Development Workflow Integration
+#
+
+# Development Workflow Integration
 
 #
 
-### Git Integration
+#
+
+#
+
+# Git Integration
 
 ```bash
 
@@ -797,7 +965,11 @@ echo ".task_orchestrator/" >> .gitignore
 
 #
 
-### CI/CD Integration
+#
+
+#
+
+# CI/CD Integration
 
 ```text
 yaml
@@ -828,11 +1000,17 @@ yaml
 
 #
 
-## Multi-Developer Workflows
+#
+
+# Multi-Developer Workflows
 
 #
 
-### Shared Project Artifacts
+#
+
+#
+
+# Shared Project Artifacts
 
 ```text
 bash
@@ -849,7 +1027,11 @@ ln -s ../shared_orchestrator_artifacts/ .task_orchestrator/shared/
 
 #
 
-### Team Configuration
+#
+
+#
+
+# Team Configuration
 
 ```text
 yaml
@@ -880,11 +1062,17 @@ senior_developer:
 
 #
 
-## Workspace Intelligence
+#
+
+# Workspace Intelligence
 
 #
 
-### Automatic Project Type Detection
+#
+
+#
+
+# Automatic Project Type Detection
 
 The orchestrator analyzes your project and suggests optimal configurations:
 
@@ -905,7 +1093,11 @@ Recommended Workflow: web_development_pipeline
 
 #
 
-### Smart Artifact Recommendations
+#
+
+#
+
+# Smart Artifact Recommendations
 
 Based on project type and current artifacts, the orchestrator suggests:
 
@@ -919,11 +1111,17 @@ Based on project type and current artifacts, the orchestrator suggests:
 
 #
 
-## Cross-Workspace Operations
+#
+
+# Cross-Workspace Operations
 
 #
 
-### Workspace Templates
+#
+
+#
+
+# Workspace Templates
 
 ```text
 bash
@@ -941,7 +1139,11 @@ mcp-task-orchestrator-cli workspace apply-template --template python_web_app
 
 #
 
-### Workspace Analytics
+#
+
+#
+
+# Workspace Analytics
 
 ```text
 bash
@@ -972,7 +1174,9 @@ mcp-task-orchestrator-cli workspace analytics --period 30days
 
 #
 
-## Essential Commands
+#
+
+# Essential Commands
 
 | Operation | Command/Tool |
 |-----------|-------------|
@@ -984,7 +1188,9 @@ mcp-task-orchestrator-cli workspace analytics --period 30days
 
 #
 
-## File Locations
+#
+
+# File Locations
 
 | Content | Location |
 |---------|----------|
@@ -996,7 +1202,9 @@ mcp-task-orchestrator-cli workspace analytics --period 30days
 
 #
 
-## Performance Targets
+#
+
+# Performance Targets
 
 | Metric | Target | Action if Exceeded |
 |--------|--------|-------------------|
@@ -1013,7 +1221,9 @@ mcp-task-orchestrator-cli workspace analytics --period 30days
 
 #
 
-## Learning Path
+#
+
+# Learning Path
 
 1. **Basic Usage** (15 minutes): Follow getting started guide
 
@@ -1027,7 +1237,9 @@ mcp-task-orchestrator-cli workspace analytics --period 30days
 
 #
 
-## Advanced Topics
+#
+
+# Advanced Topics
 
 - **Multi-project coordination**: Managing related workspaces
 
@@ -1039,7 +1251,9 @@ mcp-task-orchestrator-cli workspace analytics --period 30days
 
 #
 
-## Getting Help
+#
+
+# Getting Help
 
 - **Documentation**: Complete guides in `docs/user-guide/`
 

@@ -22,7 +22,9 @@
 
 #
 
-## "Could not connect to MCP server" / "Claude was unable to connect"
+#
+
+# "Could not connect to MCP server" / "Claude was unable to connect"
 
 **Most Common Cause**: Client needs restart after configuration changes
 
@@ -42,7 +44,9 @@
 
 #
 
-## ImportError: "attempted relative import with no known parent package"
+#
+
+# ImportError: "attempted relative import with no known parent package"
 
 **Cause**: Using deprecated installation method
 
@@ -56,7 +60,9 @@
 
 #
 
-## Installation Method Issues ⚠️ RESOLVED
+#
+
+# Installation Method Issues ⚠️ RESOLVED
 
 **Previous Issue**: "'SpecialistManager' object has no attribute 'project_dir'"
 
@@ -79,7 +85,9 @@ If you encounter this error, you may be using an outdated installation method or
 
 #
 
-## "'StateManager' object has no attribute '_get_parent_task_id'"
+#
+
+# "'StateManager' object has no attribute '_get_parent_task_id'"
 
 **Cause**: Missing method in StateManager class
 
@@ -89,14 +97,18 @@ If you encounter this error, you may be using an outdated installation method or
 
 #
 
-## "spawn npx ENOENT" (Windows)
+#
+
+# "spawn npx ENOENT" (Windows)
 
 **Cause**: Node.js not in PATH for GUI applications
 
 **Solutions**:
 
 1. Use absolute path to node in configuration:
-   ```
+   
+
+```text
 
 json
    {
@@ -106,6 +118,8 @@ json
    
 
 ```text
+text
+text
 
 2. Add Node.js to system PATH (not just user PATH)
 
@@ -113,7 +127,9 @@ json
 
 #
 
-## "No MCP clients detected"
+#
+
+# "No MCP clients detected"
 
 **Solutions**:
 
@@ -125,18 +141,24 @@ json
 
 #
 
-## "Module not found" / Import Errors
+#
+
+# "Module not found" / Import Errors
 
 **Solutions**:
 
 1. Delete virtual environment and reinstall:
-   ```
+   
+
+```text
 
 bash
    rm -rf venv_mcp && python install.py
    
 
 ```text
+text
+text
 
 2. Check Python version is 3.8+
 
@@ -148,7 +170,9 @@ bash
 
 #
 
-## Windows
+#
+
+# Windows
 
 - Use Command Prompt (not PowerShell) for installation
 
@@ -160,7 +184,9 @@ bash
 
 #
 
-## macOS
+#
+
+# macOS
 
 - May need to allow apps to run from "System Preferences > Security"
 
@@ -170,7 +196,9 @@ bash
 
 #
 
-## Linux
+#
+
+# Linux
 
 - Ensure Python 3.8+ and pip are installed
 

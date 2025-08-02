@@ -10,11 +10,17 @@
 
 #
 
-## Creating Tasks with the Generic API
+#
+
+# Creating Tasks with the Generic API
 
 #
 
-### Basic Task Creation
+#
+
+#
+
+# Basic Task Creation
 
 ```json
 {
@@ -35,7 +41,11 @@
 
 #
 
-### Creating Nested Task Hierarchies
+#
+
+#
+
+# Creating Nested Task Hierarchies
 
 ```text
 json
@@ -83,7 +93,9 @@ json
 
 #
 
-## Querying Tasks with Complex Filters
+#
+
+# Querying Tasks with Complex Filters
 
 ```text
 json
@@ -111,7 +123,9 @@ json
 
 #
 
-## Getting Task Hierarchies
+#
+
+# Getting Task Hierarchies
 
 ```text
 json
@@ -132,7 +146,9 @@ json
 
 #
 
-## Updating Task Attributes
+#
+
+# Updating Task Attributes
 
 ```text
 json
@@ -155,7 +171,9 @@ json
 
 #
 
-## Changing Task Status
+#
+
+# Changing Task Status
 
 ```text
 json
@@ -176,7 +194,9 @@ json
 
 #
 
-## Creating Multiple Related Tasks
+#
+
+# Creating Multiple Related Tasks
 
 ```text
 python
@@ -245,7 +265,9 @@ async def create_feature_tasks_batch():
 
 #
 
-## Bulk Status Updates
+#
+
+# Bulk Status Updates
 
 ```text
 json
@@ -271,7 +293,9 @@ json
 
 #
 
-## Feature Development Pattern
+#
+
+# Feature Development Pattern
 
 ```text
 python
@@ -339,7 +363,9 @@ async def create_standard_feature(feature_name: str, complexity: str = "moderate
 
 #
 
-## Bug Fix Pattern
+#
+
+# Bug Fix Pattern
 
 ```text
 python
@@ -426,7 +452,9 @@ async def create_bug_fix_workflow(bug_info: dict):
 
 #
 
-## Common Validation Errors
+#
+
+# Common Validation Errors
 
 ```text
 python
@@ -463,7 +491,9 @@ except ParentTaskNotFoundError as e:
 
 #
 
-## Best Practices for Error Handling
+#
+
+# Best Practices for Error Handling
 
 ```text
 python

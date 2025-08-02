@@ -8,7 +8,9 @@
 
 #
 
-## Symptoms
+#
+
+# Symptoms
 
 - MCP Task Orchestrator tools don't show up in your MCP client
 
@@ -18,7 +20,9 @@
 
 #
 
-## Solution Steps
+#
+
+# Solution Steps
 
 1. **Verify Installation**
 
@@ -60,7 +64,9 @@ json
 
 #
 
-## Common Fixes
+#
+
+# Common Fixes
 
 **Wrong Python path**: Use full path to Python executable
 **Missing environment variables**: Add required env vars to config
@@ -72,7 +78,9 @@ json
 
 #
 
-## Symptoms
+#
+
+# Symptoms
 
 - "Database locked" or "Database access denied" errors
 
@@ -82,7 +90,9 @@ json
 
 #
 
-## Solution Steps
+#
+
+# Solution Steps
 
 1. **Check Workspace Directory**
 
@@ -123,7 +133,9 @@ python -m mcp_task_orchestrator.tools.diagnostics.init_workspace
 
 #
 
-## Prevention
+#
+
+# Prevention
 
 - Don't run multiple instances simultaneously
 
@@ -137,7 +149,9 @@ python -m mcp_task_orchestrator.tools.diagnostics.init_workspace
 
 #
 
-## Symptoms
+#
+
+# Symptoms
 
 - "Module not found" errors
 
@@ -147,7 +161,9 @@ python -m mcp_task_orchestrator.tools.diagnostics.init_workspace
 
 #
 
-## Solution Steps
+#
+
+# Solution Steps
 
 1. **Check Python Environment**
 
@@ -199,7 +215,9 @@ pip install mcp-task-orchestrator
 
 #
 
-## Common Causes
+#
+
+# Common Causes
 
 **Wrong Python version**: Requires Python 3.8+
 **Conflicting packages**: Check for package conflicts
@@ -211,7 +229,9 @@ pip install mcp-task-orchestrator
 
 #
 
-## Symptoms
+#
+
+# Symptoms
 
 - "Invalid configuration" errors
 
@@ -221,7 +241,9 @@ pip install mcp-task-orchestrator
 
 #
 
-## Solution Steps
+#
+
+# Solution Steps
 
 1. **Validate YAML Syntax**
 
@@ -272,7 +294,9 @@ specialists:
 
 #
 
-## Symptoms
+#
+
+# Symptoms
 
 - Timeouts during task execution
 
@@ -282,7 +306,9 @@ specialists:
 
 #
 
-## Solution Steps
+#
+
+# Solution Steps
 
 1. **Check Network Connectivity**
 
@@ -332,7 +358,9 @@ export MCP_TASK_ORCHESTRATOR_OFFLINE=true
 
 #
 
-## Symptoms
+#
+
+# Symptoms
 
 - Very slow task execution
 
@@ -342,7 +370,9 @@ export MCP_TASK_ORCHESTRATOR_OFFLINE=true
 
 #
 
-## Solution Steps
+#
+
+# Solution Steps
 
 1. **Check System Resources**
 
@@ -396,7 +426,9 @@ python -m mcp_task_orchestrator.tools.maintenance.cleanup_artifacts
 
 #
 
-## Diagnostic Commands
+#
+
+# Diagnostic Commands
 
 ```text
 bash
@@ -413,7 +445,9 @@ python -m mcp_task_orchestrator.tools.diagnostics.generate_report
 
 #
 
-## Log Analysis
+#
+
+# Log Analysis
 
 ```text
 bash
@@ -429,7 +463,9 @@ python -c "import mcp_task_orchestrator; print(mcp_task_orchestrator.get_log_pat
 
 #
 
-## Community Support
+#
+
+# Community Support
 
 - Check [GitHub Issues](https://github.com/your-org/mcp-task-orchestrator/issues)
 

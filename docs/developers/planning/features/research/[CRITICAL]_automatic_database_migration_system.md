@@ -35,7 +35,9 @@ An automatic database migration system that detects schema changes on server sta
 
 #
 
-## New Tools/Functions
+#
+
+# New Tools/Functions
 
 - `migration_manager.py`: Core migration detection and execution engine
 
@@ -47,7 +49,9 @@ An automatic database migration system that detects schema changes on server sta
 
 #
 
-## Database Changes
+#
+
+# Database Changes
 
 ```sql
 -- New migration_history table
@@ -68,7 +72,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Integration Points
+#
+
+# Integration Points
 
 1. **Server Startup**: Hook into `server.py` initialization to run migrations before accepting connections
 
@@ -84,7 +90,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Phase 1: Core Migration Engine (1 day)
+#
+
+# Phase 1: Core Migration Engine (1 day)
 
 - Implement schema comparison logic using SQLAlchemy inspection
 
@@ -96,7 +104,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Phase 2: Automatic Execution (1 day)
+#
+
+# Phase 2: Automatic Execution (1 day)
 
 - Integrate migration checks into server startup sequence
 
@@ -108,7 +118,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Phase 3: Safety and Monitoring (1 day)
+#
+
+# Phase 3: Safety and Monitoring (1 day)
 
 - Add backup creation before migrations
 
@@ -124,7 +136,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Immediate Benefits
+#
+
+# Immediate Benefits
 
 - Eliminate "disk I/O error" and schema mismatch errors
 
@@ -136,7 +150,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Long-term Benefits
+#
+
+# Long-term Benefits
 
 - Seamless upgrades across orchestrator versions
 
@@ -184,7 +200,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Risks and Mitigation
+#
+
+# Risks and Mitigation
 
 - **Risk 1**: Data loss during migration - Mitigation: Always create backup before migration, implement dry-run mode
 
@@ -194,7 +212,9 @@ ALTER TABLE subtasks ADD COLUMN schema_version STRING DEFAULT '1.0.0';
 
 #
 
-## Dependencies
+#
+
+# Dependencies
 
 - SQLAlchemy metadata introspection capabilities
 

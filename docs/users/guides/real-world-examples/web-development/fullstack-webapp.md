@@ -18,7 +18,9 @@
 
 #
 
-## Phase 1: Project Setup and Architecture
+#
+
+# Phase 1: Project Setup and Architecture
 
 ```bash
 orchestrator_initialize_session()
@@ -48,7 +50,9 @@ orchestrator_plan_task({
 
 #
 
-## Phase 2: Architecture and Environment Setup
+#
+
+# Phase 2: Architecture and Environment Setup
 
 ```text
 bash

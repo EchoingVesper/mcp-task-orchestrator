@@ -8,7 +8,9 @@
 
 #
 
-## E001-E010: System and Permission Errors
+#
+
+# E001-E010: System and Permission Errors
 
 **E001: Permission Denied**
 
@@ -76,7 +78,9 @@
 
 #
 
-## E011-E020: Configuration and Validation Errors
+#
+
+# E011-E020: Configuration and Validation Errors
 
 **E011: Configuration Schema Validation Failed**
 
@@ -120,7 +124,9 @@
 
 #
 
-## E021-E030: Installation Process Errors
+#
+
+# E021-E030: Installation Process Errors
 
 **E021: Installation Process Timeout**
 
@@ -152,7 +158,9 @@
 
 #
 
-## R001-R010: Restart and Reboot Errors
+#
+
+# R001-R010: Restart and Reboot Errors
 
 **R001: Initialization Failed**
 
@@ -204,7 +212,9 @@
 
 #
 
-## T001-T010: Task Management Errors
+#
+
+# T001-T010: Task Management Errors
 
 **T001: Task Creation Failed**
 
@@ -248,7 +258,9 @@
 
 #
 
-## D001-D010: Database Errors
+#
+
+# D001-D010: Database Errors
 
 **D001: Database Connection Failed**
 
@@ -288,7 +300,9 @@
 
 #
 
-## C001-C010: Client Connection Errors
+#
+
+# C001-C010: Client Connection Errors
 
 **C001: Client Connection Timeout**
 
@@ -328,7 +342,9 @@
 
 #
 
-## Installation Errors (E001-E030)
+#
+
+# Installation Errors (E001-E030)
 
 ```bash
 
@@ -352,7 +368,9 @@ python scripts/diagnostics/test_connectivity.py
 
 #
 
-## Server Errors (R001-R010, T001-T010, D001-D010)
+#
+
+# Server Errors (R001-R010, T001-T010, D001-D010)
 
 ```text
 bash
@@ -373,7 +391,9 @@ python scripts/diagnostics/test_task_system.py
 
 #
 
-## Client Errors (C001-C010)
+#
+
+# Client Errors (C001-C010)
 
 ```text
 bash
@@ -394,7 +414,9 @@ python scripts/diagnostics/test_mcp_protocol.py
 
 #
 
-## Installation Recovery
+#
+
+# Installation Recovery
 
 ```text
 bash
@@ -415,7 +437,9 @@ python -m mcp_task_orchestrator_cli.secure_installer_cli --force --skip-validati
 
 #
 
-## Server Recovery
+#
+
+# Server Recovery
 
 ```text
 bash
@@ -436,7 +460,9 @@ python scripts/recovery/state_recovery.py
 
 #
 
-## Client Recovery
+#
+
+# Client Recovery
 
 ```text
 bash
@@ -457,7 +483,9 @@ python scripts/recovery/clear_client_cache.py
 
 #
 
-## Pre-Installation Checks
+#
+
+# Pre-Installation Checks
 
 - Verify Python version: `python --version`
 
@@ -469,7 +497,9 @@ python scripts/recovery/clear_client_cache.py
 
 #
 
-## Regular Maintenance
+#
+
+# Regular Maintenance
 
 - Update client software regularly
 
@@ -481,7 +511,9 @@ python scripts/recovery/clear_client_cache.py
 
 #
 
-## Monitoring
+#
+
+# Monitoring
 
 - Set up log rotation for large log files
 
@@ -497,7 +529,9 @@ python scripts/recovery/clear_client_cache.py
 
 #
 
-## Automated Diagnostics
+#
+
+# Automated Diagnostics
 
 ```text
 bash
@@ -522,7 +556,9 @@ python scripts/diagnostics/generate_full_report.py
 
 #
 
-## Support Resources
+#
+
+# Support Resources
 
 - Documentation: Check relevant sections for error category
 

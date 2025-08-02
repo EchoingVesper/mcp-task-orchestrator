@@ -8,7 +8,9 @@
 
 #
 
-## 1. Project Structure Awareness
+#
+
+# 1. Project Structure Awareness
 
 ```text
 mcp-task-orchestrator/
@@ -65,11 +67,17 @@ mcp-task-orchestrator/
 
 #
 
-## 2. File Creation Rules
+#
+
+# 2. File Creation Rules
 
 #
 
-### ✅ ALWAYS Do:
+#
+
+#
+
+# ✅ ALWAYS Do:
 
 - **Place documentation** in `docs/` subdirectories
 
@@ -83,7 +91,11 @@ mcp-task-orchestrator/
 
 #
 
-### ❌ NEVER Do:
+#
+
+#
+
+# ❌ NEVER Do:
 
 - **Create files in project root** unless absolutely essential
 
@@ -97,7 +109,9 @@ mcp-task-orchestrator/
 
 #
 
-## 3. Directory Mapping Reference
+#
+
+# 3. Directory Mapping Reference
 
 | File Type | Destination | Examples |
 |-----------|-------------|----------|
@@ -116,7 +130,9 @@ mcp-task-orchestrator/
 
 #
 
-## Phase 1: Session Initialization
+#
+
+# Phase 1: Session Initialization
 
 ```text
 bash
@@ -140,11 +156,17 @@ mkdir -p temp
 
 #
 
-## Phase 2: File Creation Guidelines
+#
+
+# Phase 2: File Creation Guidelines
 
 #
 
-### For Development Documentation:
+#
+
+#
+
+# For Development Documentation:
 
 ```text
 bash
@@ -163,7 +185,11 @@ touch FEATURE_IMPLEMENTATION.md
 
 #
 
-### For Scripts:
+#
+
+#
+
+# For Scripts:
 
 ```text
 bash
@@ -187,7 +213,11 @@ touch validate_build.py
 
 #
 
-### For Temporary Work:
+#
+
+#
+
+# For Temporary Work:
 
 ```text
 bash
@@ -207,11 +237,17 @@ touch session-notes.md
 
 #
 
-## Phase 3: Development Work
+#
+
+# Phase 3: Development Work
 
 #
 
-### Code Changes:
+#
+
+#
+
+# Code Changes:
 
 - **Primary code**: Modify files in `mcp_task_orchestrator/`
 
@@ -221,7 +257,11 @@ touch session-notes.md
 
 #
 
-### Documentation:
+#
+
+#
+
+# Documentation:
 
 - **Implementation notes**: Create in `docs/development/`
 
@@ -231,7 +271,11 @@ touch session-notes.md
 
 #
 
-### Scripts and Utilities:
+#
+
+#
+
+# Scripts and Utilities:
 
 - **Build automation**: Create in `scripts/build/`
 
@@ -245,7 +289,9 @@ touch session-notes.md
 
 #
 
-## Documentation Files:
+#
+
+# Documentation Files:
 
 ```text
 
@@ -265,7 +311,9 @@ touch session-notes.md
 
 #
 
-## Script Files:
+#
+
+# Script Files:
 
 ```text
 
@@ -285,7 +333,9 @@ touch session-notes.md
 
 #
 
-## Temporary Files:
+#
+
+# Temporary Files:
 
 ```text
 
@@ -309,7 +359,9 @@ touch session-notes.md
 
 #
 
-## 1. File Review Checklist:
+#
+
+# 1. File Review Checklist:
 
 ```text
 bash
@@ -331,7 +383,9 @@ find . -maxdepth 1 -type f -name "*.md" | grep -v -E "(README|CONTRIBUTING|TROUB
 
 #
 
-## 2. Cleanup Actions:
+#
+
+# 2. Cleanup Actions:
 
 ```text
 bash
@@ -354,7 +408,9 @@ rm -rf build/ dist/ *.egg-info/
 
 #
 
-## 3. Final Validation:
+#
+
+# 3. Final Validation:
 
 ```text
 bash
@@ -377,7 +433,9 @@ python scripts/diagnostics/check-project-structure.py
 
 #
 
-## 4. Git Commit Best Practices:
+#
+
+# 4. Git Commit Best Practices:
 
 ```text
 bash
@@ -408,7 +466,9 @@ Refs: #issue-number"
 
 #
 
-## Before Creating Any File:
+#
+
+# Before Creating Any File:
 
 - [ ] Is this an essential root file? (99% of time: NO)
 
@@ -420,7 +480,9 @@ Refs: #issue-number"
 
 #
 
-## Before Ending Session:
+#
+
+# Before Ending Session:
 
 - [ ] Root directory has ≤15 files
 
@@ -434,7 +496,9 @@ Refs: #issue-number"
 
 #
 
-## Common Mistakes to Avoid:
+#
+
+# Common Mistakes to Avoid:
 
 - ❌ Creating `test_*.py` files in root
 
@@ -454,7 +518,9 @@ Refs: #issue-number"
 
 #
 
-## Project Health Indicators:
+#
+
+# Project Health Indicators:
 
 - **Root file count**: ≤15 files
 
@@ -468,7 +534,9 @@ Refs: #issue-number"
 
 #
 
-## Session Success Criteria:
+#
+
+# Session Success Criteria:
 
 - All created files in appropriate directories
 

@@ -14,7 +14,9 @@ This document describes the major improvements made to the MCP Task Orchestrator
 
 #
 
-## 1. Output Truncation Issues
+#
+
+# 1. Output Truncation Issues
 
 **Problem**: LLM systems reading test results before tests finished writing, causing truncated or incomplete output.
 
@@ -22,7 +24,9 @@ This document describes the major improvements made to the MCP Task Orchestrator
 
 #
 
-## 2. Resource Warning Issues  
+#
+
+# 2. Resource Warning Issues  
 
 **Problem**: SQLite connections and SQLAlchemy engines not properly disposed, generating ResourceWarnings.
 
@@ -30,7 +34,9 @@ This document describes the major improvements made to the MCP Task Orchestrator
 
 #
 
-## 3. Test Hanging Issues
+#
+
+# 3. Test Hanging Issues
 
 **Problem**: Tests and MCP operations hanging indefinitely without timeout mechanisms.
 
@@ -38,7 +44,9 @@ This document describes the major improvements made to the MCP Task Orchestrator
 
 #
 
-## 4. Pytest Limitations
+#
+
+# 4. Pytest Limitations
 
 **Problem**: pytest truncating output and unreliable execution in complex scenarios.
 
@@ -50,7 +58,9 @@ This document describes the major improvements made to the MCP Task Orchestrator
 
 #
 
-## File-Based Output System
+#
+
+# File-Based Output System
 
 The core improvement is a robust file-based output system that prevents timing issues:
 
@@ -80,13 +90,19 @@ if reader.wait_for_completion(latest_file, timeout=30.0):
 
 #
 
-## Alternative Test Runners
+#
+
+# Alternative Test Runners
 
 Multiple specialized test runners are available:
 
 #
 
-### DirectFunctionRunner
+#
+
+#
+
+# DirectFunctionRunner
 
 ```text
 python
@@ -99,7 +115,11 @@ result = runner.execute_test(my_test_function, "test_name")
 
 #
 
-### MigrationTestRunner
+#
+
+#
+
+# MigrationTestRunner
 
 ```text
 python
@@ -112,7 +132,11 @@ result = runner.run_migration_test()
 
 #
 
-### ComprehensiveTestRunner
+#
+
+#
+
+# ComprehensiveTestRunner
 
 ```text
 python
@@ -130,7 +154,9 @@ results = runner.run_all_tests([test_directory])
 
 #
 
-## Hang Detection System
+#
+
+# Hang Detection System
 
 Automatic hang detection and prevention:
 
@@ -160,7 +186,9 @@ async with hang_protected_operation("context_op", timeout=60.0):
 
 #
 
-## Resource Management
+#
+
+# Resource Management
 
 Enhanced database persistence with proper cleanup:
 
@@ -189,7 +217,9 @@ with managed_sqlite_connection("test.db") as conn:
 
 #
 
-## From Old Testing Patterns
+#
+
+# From Old Testing Patterns
 
 **Old Pattern** (prone to truncation):
 
@@ -219,7 +249,9 @@ text
 
 #
 
-## From Direct Database Connections
+#
+
+# From Direct Database Connections
 
 **Old Pattern** (resource warnings):
 
@@ -258,7 +290,9 @@ text
 
 #
 
-## 1. Always Use File-Based Output
+#
+
+# 1. Always Use File-Based Output
 
 For any test that generates substantial output:
 
@@ -278,7 +312,9 @@ def my_test_function():
 
 #
 
-## 2. Use Alternative Runners for Complex Tests
+#
+
+# 2. Use Alternative Runners for Complex Tests
 
 Instead of pytest for complex scenarios:
 
@@ -295,7 +331,9 @@ assert result.status == "passed"
 
 #
 
-## 3. Implement Hang Protection
+#
+
+# 3. Implement Hang Protection
 
 For any potentially long-running operations:
 
@@ -313,7 +351,9 @@ async def run_migration():
 
 #
 
-## 4. Use Context Managers for Resources
+#
+
+# 4. Use Context Managers for Resources
 
 Always use context managers for database connections:
 
@@ -342,7 +382,9 @@ with managed_sqlite_connection(db_path) as conn:
 
 #
 
-## Output Files Not Created
+#
+
+# Output Files Not Created
 
 **Symptom**: No output files appear in expected directory.
 
@@ -356,7 +398,9 @@ with managed_sqlite_connection(db_path) as conn:
 
 #
 
-## Tests Still Hanging
+#
+
+# Tests Still Hanging
 
 **Symptom**: Operations hang despite hang detection.
 
@@ -372,7 +416,9 @@ with managed_sqlite_connection(db_path) as conn:
 
 #
 
-## Resource Warnings Still Appearing
+#
+
+# Resource Warnings Still Appearing
 
 **Symptom**: ResourceWarnings still generated during tests.
 
@@ -388,7 +434,9 @@ with managed_sqlite_connection(db_path) as conn:
 
 #
 
-## Truncated Output
+#
+
+# Truncated Output
 
 **Symptom**: Test output appears incomplete.
 
@@ -459,7 +507,9 @@ text
 
 #
 
-## Timeout Settings
+#
+
+# Timeout Settings
 
 Configure hang detection timeouts:
 
@@ -477,7 +527,9 @@ configure_hang_detection(
 
 #
 
-## Output Directory Settings
+#
+
+# Output Directory Settings
 
 Configure test output locations:
 
@@ -499,7 +551,9 @@ config = TestRunnerConfig(
 
 #
 
-## File System Performance
+#
+
+# File System Performance
 
 - Use SSD storage for output directories when possible
 
@@ -509,7 +563,9 @@ config = TestRunnerConfig(
 
 #
 
-## Memory Usage
+#
+
+# Memory Usage
 
 - File-based output reduces memory pressure compared to in-memory buffering
 
@@ -519,7 +575,9 @@ config = TestRunnerConfig(
 
 #
 
-## Scaling
+#
+
+# Scaling
 
 - Alternative test runners can execute tests in parallel
 

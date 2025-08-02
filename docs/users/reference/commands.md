@@ -8,7 +8,9 @@
 
 #
 
-## Secure Installer
+#
+
+# Secure Installer
 
 ```bash
 
@@ -28,7 +30,9 @@ python -m mcp_task_orchestrator_cli.secure_installer_cli --dev --enhanced-securi
 
 #
 
-## Universal Installer
+#
+
+# Universal Installer
 
 ```text
 bash
@@ -45,7 +49,9 @@ python -m mcp_task_orchestrator_cli.universal_installer --deployment-type enterp
 
 #
 
-## Uninstaller
+#
+
+# Uninstaller
 
 ```text
 bash
@@ -70,7 +76,9 @@ python -m mcp_task_orchestrator_cli.secure_uninstaller_cli --create-backup
 
 #
 
-## Start Server
+#
+
+# Start Server
 
 ```text
 bash
@@ -91,11 +99,17 @@ python -m mcp_task_orchestrator.server --test
 
 #
 
-## Orchestrator Commands (MCP Tools)
+#
+
+# Orchestrator Commands (MCP Tools)
 
 #
 
-### Session Management
+#
+
+#
+
+# Session Management
 
 ```text
 python
@@ -112,7 +126,11 @@ orchestrator_get_status()
 
 #
 
-### Task Planning
+#
+
+#
+
+# Task Planning
 
 ```text
 python
@@ -145,7 +163,11 @@ orchestrator_synthesize_results(parent_task_id="parent_id")
 
 #
 
-### Server Management
+#
+
+#
+
+# Server Management
 
 ```text
 python
@@ -178,7 +200,9 @@ orchestrator_reconnect_test()
 
 #
 
-## System Diagnostics
+#
+
+# System Diagnostics
 
 ```text
 bash
@@ -203,7 +227,9 @@ python scripts/diagnostics/diagnose_db.py
 
 #
 
-## Testing Commands
+#
+
+# Testing Commands
 
 ```text
 bash
@@ -232,7 +258,9 @@ python -m pytest tests/test_specific.py -v
 
 #
 
-## Database Management
+#
+
+# Database Management
 
 ```text
 bash
@@ -253,7 +281,9 @@ python scripts/maintenance/migrate_schema.py
 
 #
 
-## File Management
+#
+
+# File Management
 
 ```text
 bash
@@ -278,7 +308,9 @@ python scripts/maintenance/backup_configs.py
 
 #
 
-## Project Setup
+#
+
+# Project Setup
 
 ```text
 bash
@@ -299,7 +331,9 @@ pre-commit install
 
 #
 
-## Release Management
+#
+
+# Release Management
 
 ```text
 bash
@@ -328,7 +362,9 @@ python scripts/release/pypi_release_automation.py
 
 #
 
-## Server Configuration
+#
+
+# Server Configuration
 
 ```text
 bash
@@ -349,7 +385,9 @@ export MCP_TASK_ORCHESTRATOR_STATE_DIR=/custom/state/dir
 
 #
 
-## Development Settings
+#
+
+# Development Settings
 
 ```text
 bash
@@ -374,7 +412,9 @@ export MCP_TASK_ORCHESTRATOR_DEBUG_FEATURES=true
 
 #
 
-## Most Common Commands
+#
+
+# Most Common Commands
 
 ```text
 bash
@@ -399,7 +439,9 @@ python simple_test_runner.py
 
 #
 
-## Emergency Procedures
+#
+
+# Emergency Procedures
 
 ```text
 bash

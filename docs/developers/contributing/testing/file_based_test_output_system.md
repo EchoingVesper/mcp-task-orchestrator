@@ -32,7 +32,9 @@ The File-Based Test Output System provides:
 
 #
 
-## Core Features
+#
+
+# Core Features
 
 - **Atomic File Writes**: Prevents reading partially written files
 
@@ -46,11 +48,17 @@ The File-Based Test Output System provides:
 
 #
 
-## Key Components
+#
+
+# Key Components
 
 #
 
-### 1. TestOutputWriter
+#
+
+#
+
+# 1. TestOutputWriter
 
 Handles writing test output to files with atomic operations:
 
@@ -70,7 +78,11 @@ with writer.write_test_output("my_test", "text") as session:
 
 #
 
-### 2. TestOutputReader
+#
+
+#
+
+# 2. TestOutputReader
 
 Safely reads completed test output files:
 
@@ -92,7 +104,11 @@ if reader.wait_for_completion("test_output.txt", timeout=30):
 
 #
 
-### 3. Pytest Integration
+#
+
+#
+
+# 3. Pytest Integration
 
 Seamless integration with existing pytest tests:
 
@@ -114,7 +130,9 @@ def test_example():
 
 #
 
-## Basic Usage
+#
+
+# Basic Usage
 
 ```text
 python
@@ -153,7 +171,9 @@ else:
 
 #
 
-## Integration with Existing Tests
+#
+
+# Integration with Existing Tests
 
 For the migration test that was experiencing truncation:
 
@@ -214,7 +234,9 @@ test_outputs/
 
 #
 
-## File Types
+#
+
+# File Types
 
 - **`.txt`**: Main test output content
 
@@ -230,7 +252,9 @@ test_outputs/
 
 #
 
-## Custom Output Directory
+#
+
+# Custom Output Directory
 
 ```text
 python
@@ -244,7 +268,9 @@ configure_pytest_integration("/custom/test/outputs")
 
 #
 
-## Timeout Settings
+#
+
+# Timeout Settings
 
 ```text
 python
@@ -311,7 +337,9 @@ if content is None:
 
 #
 
-## From Direct pytest Output
+#
+
+# From Direct pytest Output
 
 **Before** (problematic):
 
@@ -353,7 +381,9 @@ def test_migration():
 
 #
 
-## From Custom Test Runners
+#
+
+# From Custom Test Runners
 
 **Before**:
 
@@ -405,7 +435,9 @@ text
 
 #
 
-## Common Issues
+#
+
+# Common Issues
 
 **Issue**: Files not being created
 **Solution**: Check output directory permissions and disk space
@@ -418,7 +450,9 @@ text
 
 #
 
-## Debug Information
+#
+
+# Debug Information
 
 ```text
 python
@@ -439,7 +473,9 @@ print(f"Output directory: {stats['output_directory']}")
 
 #
 
-## Custom Output Formats
+#
+
+# Custom Output Formats
 
 ```text
 python
@@ -462,7 +498,9 @@ with writer.write_test_output("test", "structured") as session:
 
 #
 
-## Concurrent Test Monitoring
+#
+
+# Concurrent Test Monitoring
 
 ```text
 python

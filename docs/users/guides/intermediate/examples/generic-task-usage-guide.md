@@ -14,7 +14,9 @@ This comprehensive guide has been split into focused sections for easier reading
 
 #
 
-## Quick Access
+#
+
+# Quick Access
 
 - **🚀 [Getting Started](generic-task-usage/getting-started.md)** - Basic concepts and first steps
 

@@ -16,7 +16,9 @@ Data processing workflows require careful coordination between extraction, trans
 
 #
 
-## 🔄 **ETL Pipeline Orchestration** (`etl-pipeline-automation.md`)
+#
+
+# 🔄 **ETL Pipeline Orchestration** (`etl-pipeline-automation.md`)
 
 - Multi-source data extraction
 
@@ -30,7 +32,9 @@ Data processing workflows require careful coordination between extraction, trans
 
 #
 
-## 📈 **Sales Analytics Workflow** (`sales-analytics-pipeline.md`)
+#
+
+# 📈 **Sales Analytics Workflow** (`sales-analytics-pipeline.md`)
 
 - CSV/Excel data ingestion
 
@@ -44,7 +48,9 @@ Data processing workflows require careful coordination between extraction, trans
 
 #
 
-## 🧪 **Data Quality Assurance** (`data-quality-pipeline.md`)
+#
+
+# 🧪 **Data Quality Assurance** (`data-quality-pipeline.md`)
 
 - Schema validation automation
 

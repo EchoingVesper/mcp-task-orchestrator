@@ -16,7 +16,9 @@ The Generic Task Model provides a comprehensive MCP API for creating, managing, 
 
 #
 
-## orchestrator_create_generic_task
+#
+
+# orchestrator_create_generic_task
 
 Create a new generic task with flexible attributes:
 
@@ -57,7 +59,9 @@ text
 
 #
 
-## orchestrator_create_from_template
+#
+
+# orchestrator_create_from_template
 
 Create tasks from predefined templates:
 
@@ -100,7 +104,9 @@ text
 
 #
 
-## orchestrator_query_tasks
+#
+
+# orchestrator_query_tasks
 
 Powerful querying with filters, sorting, and pagination:
 
@@ -132,7 +138,9 @@ json
 
 #
 
-## orchestrator_get_task_hierarchy
+#
+
+# orchestrator_get_task_hierarchy
 
 Get complete task trees:
 
@@ -176,7 +184,9 @@ text
 
 #
 
-## orchestrator_update_task
+#
+
+# orchestrator_update_task
 
 Update task attributes and metadata:
 
@@ -205,7 +215,9 @@ json
 
 #
 
-## orchestrator_manage_dependencies
+#
+
+# orchestrator_manage_dependencies
 
 Add, remove, or modify task dependencies:
 
@@ -246,7 +258,9 @@ json
 
 #
 
-## orchestrator_create_template
+#
+
+# orchestrator_create_template
 
 Create reusable task templates:
 
@@ -317,7 +331,9 @@ json
 
 #
 
-## orchestrator_list_templates
+#
+
+# orchestrator_list_templates
 
 Browse available templates:
 
@@ -340,7 +356,9 @@ json
 
 #
 
-## orchestrator_analyze_dependencies
+#
+
+# orchestrator_analyze_dependencies
 
 Analyze dependency relationships and bottlenecks:
 
@@ -387,7 +405,9 @@ text
 
 #
 
-## orchestrator_get_metrics
+#
+
+# orchestrator_get_metrics
 
 Get project and task metrics:
 
@@ -411,7 +431,9 @@ json
 
 #
 
-## orchestrator_bulk_update
+#
+
+# orchestrator_bulk_update
 
 Update multiple tasks at once:
 
@@ -439,7 +461,9 @@ json
 
 #
 
-## orchestrator_batch_create
+#
+
+# orchestrator_batch_create
 
 Create multiple related tasks efficiently:
 
@@ -478,7 +502,9 @@ json
 
 #
 
-## Claude Code Integration
+#
+
+# Claude Code Integration
 
 Using MCP tools within Claude Code workflows:
 
@@ -549,7 +575,9 @@ async def create_feature_with_claude_code():
 
 #
 
-## Error Handling in MCP Tools
+#
+
+# Error Handling in MCP Tools
 
 MCP tools return structured error responses for validation failures and other issues. See [Troubleshooting](troubleshooting.md) for detailed error handling patterns.
 
@@ -559,7 +587,9 @@ MCP tools return structured error responses for validation failures and other is
 
 #
 
-## Efficient API Usage
+#
+
+# Efficient API Usage
 
 1. **Batch Operations**: Use bulk tools when operating on multiple tasks
 
@@ -571,7 +601,9 @@ MCP tools return structured error responses for validation failures and other is
 
 #
 
-## Tool Selection Guidelines
+#
+
+# Tool Selection Guidelines
 
 - **Creating single tasks**: Use `orchestrator_create_generic_task`
 
