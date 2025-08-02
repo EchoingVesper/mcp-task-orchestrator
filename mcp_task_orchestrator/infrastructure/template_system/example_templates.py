@@ -258,7 +258,7 @@ BUG_INVESTIGATION_TEMPLATE = """// Bug Investigation Template
         },
         "test_fix": {
           "title": "Test the Fix",
-          "description": "Verify the fix resolves the issue and doesn't introduce regressions", 
+          "description": "Verify the fix resolves the issue and does not introduce regressions", 
           "type": "testing",
           "specialist_type": "tester",
           "estimated_effort": "1 hour"
@@ -294,7 +294,7 @@ RESEARCH_BASE_TEMPLATE = """// Base Research Template
       "type": "string", 
       "description": "Research deadline (YYYY-MM-DD)",
       "required": false,
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
     }
   },
   

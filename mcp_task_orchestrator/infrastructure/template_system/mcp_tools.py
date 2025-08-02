@@ -15,6 +15,7 @@ from .storage_manager import TemplateStorageManager, TemplateStorageError
 from .template_engine import TemplateEngine, TemplateValidationError, ParameterSubstitutionError
 from .json5_parser import JSON5Parser, JSON5ValidationError
 from .example_templates import EXAMPLE_TEMPLATES, get_example_template
+from .template_installer import get_template_installer
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ def get_template_tools() -> List[types.Tool]:
                     "overwrite": {
                         "type": "boolean",
                         "description": "Whether to overwrite existing template",
-                        "default": false
+                        "default": False
                     }
                 },
                 "required": ["template_id", "template_content"]
@@ -65,7 +66,7 @@ def get_template_tools() -> List[types.Tool]:
                     "include_metadata": {
                         "type": "boolean",
                         "description": "Include full template metadata",
-                        "default": false
+                        "default": False
                     }
                 }
             }
@@ -106,7 +107,7 @@ def get_template_tools() -> List[types.Tool]:
                     "create_tasks": {
                         "type": "boolean",
                         "description": "Whether to create actual tasks in the orchestrator",
-                        "default": false
+                        "default": False
                     }
                 },
                 "required": ["template_id", "parameters"]
@@ -179,9 +180,71 @@ def get_template_tools() -> List[types.Tool]:
                     "overwrite": {
                         "type": "boolean",
                         "description": "Whether to overwrite existing examples",
-                        "default": false
+                        "default": False
                     }
                 }
+            }
+        ),
+        types.Tool(
+            name="template_install_default_library",
+            description="Install the default template library",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "enum": ["all", "development", "research", "creative", "business", "self_development"],
+                        "description": "Category of templates to install",
+                        "default": "all"
+                    },
+                    "overwrite": {
+                        "type": "boolean",
+                        "description": "Whether to overwrite existing templates",
+                        "default": False
+                    }
+                }
+            }
+        ),
+        types.Tool(
+            name="template_get_installation_status",
+            description="Get status of template installations and coverage",
+            inputSchema={
+                "type": "object",
+                "properties": {}
+            }
+        ),
+        types.Tool(
+            name="template_validate_all",
+            description="Validate all installed templates for security and syntax",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "enum": ["builtin", "user", "shared"],
+                        "description": "Specific category to validate (optional)"
+                    }
+                }
+            }
+        ),
+        types.Tool(
+            name="template_uninstall",
+            description="Uninstall a template",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "template_id": {
+                        "type": "string",
+                        "description": "Template ID to uninstall"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": ["user", "shared"],
+                        "description": "Template category",
+                        "default": "user"
+                    }
+                },
+                "required": ["template_id"]
             }
         )
     ]
@@ -499,6 +562,82 @@ async def handle_template_install_examples(args: Dict[str, Any]) -> List[types.T
         return [types.TextContent(type="text", text=json.dumps(error_response, indent=2))]
 
 
+async def handle_template_install_default_library(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle installation of default template library."""
+    try:
+        category = args.get("category", "all")
+        overwrite = args.get("overwrite", False)
+        
+        installer = get_template_installer()
+        result = await installer.install_default_library(category, overwrite)
+        
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+        
+    except Exception as e:
+        error_response = {
+            "status": "error",
+            "error_type": type(e).__name__,
+            "message": f"Failed to install default library: {str(e)}"
+        }
+        return [types.TextContent(type="text", text=json.dumps(error_response, indent=2))]
+
+
+async def handle_template_get_installation_status(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle getting template installation status."""
+    try:
+        installer = get_template_installer()
+        result = await installer.get_installation_status()
+        
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+        
+    except Exception as e:
+        error_response = {
+            "status": "error",
+            "error_type": type(e).__name__,
+            "message": f"Failed to get installation status: {str(e)}"
+        }
+        return [types.TextContent(type="text", text=json.dumps(error_response, indent=2))]
+
+
+async def handle_template_validate_all(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle validation of all templates."""
+    try:
+        category = args.get("category")
+        
+        installer = get_template_installer()
+        result = await installer.validate_all_templates(category)
+        
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+        
+    except Exception as e:
+        error_response = {
+            "status": "error",
+            "error_type": type(e).__name__,
+            "message": f"Failed to validate templates: {str(e)}"
+        }
+        return [types.TextContent(type="text", text=json.dumps(error_response, indent=2))]
+
+
+async def handle_template_uninstall(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Handle template uninstallation."""
+    try:
+        template_id = args["template_id"]
+        category = args.get("category", "user")
+        
+        installer = get_template_installer()
+        result = await installer.uninstall_template(template_id, category)
+        
+        return [types.TextContent(type="text", text=json.dumps(result, indent=2))]
+        
+    except Exception as e:
+        error_response = {
+            "status": "error",
+            "error_type": type(e).__name__,
+            "message": f"Failed to uninstall template: {str(e)}"
+        }
+        return [types.TextContent(type="text", text=json.dumps(error_response, indent=2))]
+
+
 # Template tool handlers mapping
 TEMPLATE_TOOL_HANDLERS = {
     "template_create": handle_template_create,
@@ -508,5 +647,9 @@ TEMPLATE_TOOL_HANDLERS = {
     "template_validate": handle_template_validate,
     "template_delete": handle_template_delete,
     "template_info": handle_template_info,
-    "template_install_examples": handle_template_install_examples
+    "template_install_examples": handle_template_install_examples,
+    "template_install_default_library": handle_template_install_default_library,
+    "template_get_installation_status": handle_template_get_installation_status,
+    "template_validate_all": handle_template_validate_all,
+    "template_uninstall": handle_template_uninstall
 }

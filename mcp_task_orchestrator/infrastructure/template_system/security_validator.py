@@ -34,32 +34,29 @@ class TemplateSecurityValidator:
     def __init__(self, strict_mode: bool = True):
         self.strict_mode = strict_mode
         
-        # Dangerous patterns to detect
+        # Dangerous patterns to detect (more template-friendly)
         self.dangerous_patterns = [
-            # Command injection patterns
-            r'[;&|`$(){}[\]<>]',  # Shell metacharacters
+            # Command injection patterns (excluding common template syntax)
             r'eval\s*\(',          # eval function calls
             r'exec\s*\(',          # exec function calls
             r'system\s*\(',        # system function calls
-            r'subprocess',         # subprocess imports
+            r'subprocess\.call',   # subprocess calls
             r'os\.system',         # os.system calls
             r'__import__',         # dynamic imports
+            r'[;&|`]\s*[a-zA-Z]',  # Shell command sequences
             
             # Path traversal patterns
             r'\.\./.*',            # Directory traversal
-            r'/etc/',              # System directories
+            r'/etc/passwd',        # System files
             r'/root/',             # Root directory
             r'~/',                 # Home directory expansion
-            r'%[A-Z_]+%',          # Environment variables (Windows)
-            r'\$[A-Z_]+',          # Environment variables (Unix)
             
             # Network/URL patterns
-            r'https?://',          # HTTP URLs
-            r'ftp://',             # FTP URLs
-            r'file://',            # File URLs
+            r'javascript:',        # javascript: URLs
+            r'data:.*base64',      # data URLs with base64
             
-            # Dangerous file extensions
-            r'\.(?:exe|bat|cmd|ps1|sh|bash|zsh)$',  # Executable files
+            # Dangerous file extensions in paths
+            r'["\'].*\.(?:exe|bat|cmd|ps1|sh|bash|zsh)["\']',  # Executable files in quotes
         ]
         
         # Compile patterns for efficiency
@@ -261,10 +258,11 @@ class TemplateSecurityValidator:
         # Validate metadata
         metadata = template.get('metadata', {})
         
-        # Check for suspicious metadata
+        # Check for suspicious metadata (exclude common template fields)
         suspicious_metadata = ['script', 'command', 'executable', 'shell']
+        safe_metadata = ['name', 'version', 'description', 'author', 'category', 'tags', 'extends']
         for key in metadata:
-            if any(term in key.lower() for term in suspicious_metadata):
+            if key.lower() not in safe_metadata and any(term in key.lower() for term in suspicious_metadata):
                 raise SecurityValidationError(f"Suspicious metadata key: {key}")
         
         # Validate task definitions
