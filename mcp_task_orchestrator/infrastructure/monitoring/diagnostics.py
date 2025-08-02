@@ -294,9 +294,9 @@ class DiagnosticRunner:
                         with open(config_file) as f:
                             json.load(f)
                     elif config_file.suffix == '.toml':
-                        import tomli
+                        import tomllib
                         with open(config_file, 'rb') as f:
-                            tomli.load(f)
+                            tomllib.load(f)
                             
                 except Exception as e:
                     issues.append(f"Invalid config file {config_file}: {str(e)}")

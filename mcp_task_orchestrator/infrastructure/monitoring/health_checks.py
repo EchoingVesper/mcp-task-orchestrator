@@ -132,7 +132,9 @@ class HealthChecker:
                 name="database_connectivity",
                 healthy=False,
                 message="No task repository configured",
-                details={}
+                details={},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
         
         try:
@@ -143,7 +145,9 @@ class HealthChecker:
                 name="database_connectivity",
                 healthy=True,
                 message="Database connection successful",
-                details={"task_count": len(tasks)}
+                details={"task_count": len(tasks)},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
             
         except Exception as e:
@@ -151,7 +155,9 @@ class HealthChecker:
                 name="database_connectivity",
                 healthy=False,
                 message=f"Database connection failed: {str(e)}",
-                details={"error": str(e)}
+                details={"error": str(e)},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
     
     async def _check_task_repository(self) -> HealthCheckResult:
@@ -161,7 +167,9 @@ class HealthChecker:
                 name="task_repository",
                 healthy=False,
                 message="Task repository not available",
-                details={}
+                details={},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
         
         try:
@@ -176,7 +184,9 @@ class HealthChecker:
                 details={
                     "total_tasks": len(tasks),
                     "active_tasks": active_count
-                }
+                },
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
             
         except Exception as e:
@@ -184,7 +194,9 @@ class HealthChecker:
                 name="task_repository",
                 healthy=False,
                 message=f"Task repository error: {str(e)}",
-                details={"error": str(e)}
+                details={"error": str(e)},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
     
     async def _check_state_repository(self) -> HealthCheckResult:
@@ -194,7 +206,9 @@ class HealthChecker:
                 name="state_repository",
                 healthy=False,
                 message="State repository not available",
-                details={}
+                details={},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
         
         try:
@@ -207,7 +221,9 @@ class HealthChecker:
                 message="State repository operational",
                 details={
                     "active_sessions": len(sessions)
-                }
+                },
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
             
         except Exception as e:
@@ -215,7 +231,9 @@ class HealthChecker:
                 name="state_repository",
                 healthy=False,
                 message=f"State repository error: {str(e)}",
-                details={"error": str(e)}
+                details={"error": str(e)},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
     
     async def _check_memory_usage(self) -> HealthCheckResult:
@@ -238,7 +256,9 @@ class HealthChecker:
                     "memory_percent": memory_percent,
                     "memory_rss_mb": memory_info.rss / (1024 * 1024),
                     "memory_vms_mb": memory_info.vms / (1024 * 1024)
-                }
+                },
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
             
         except ImportError:
@@ -246,14 +266,18 @@ class HealthChecker:
                 name="memory_usage",
                 healthy=True,
                 message="psutil not available, memory check skipped",
-                details={}
+                details={},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
         except Exception as e:
             return HealthCheckResult(
                 name="memory_usage",
                 healthy=False,
                 message=f"Memory check failed: {str(e)}",
-                details={"error": str(e)}
+                details={"error": str(e)},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
     
     async def _check_disk_space(self) -> HealthCheckResult:
@@ -276,7 +300,9 @@ class HealthChecker:
                     "free_percent": free_percent,
                     "free_gb": usage.free / (1024**3),
                     "total_gb": usage.total / (1024**3)
-                }
+                },
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
             
         except Exception as e:
@@ -284,7 +310,9 @@ class HealthChecker:
                 name="disk_space",
                 healthy=False,
                 message=f"Disk space check failed: {str(e)}",
-                details={"error": str(e)}
+                details={"error": str(e)},
+                timestamp=datetime.utcnow(),
+                duration_ms=0.0
             )
     
     def register_check(self, name: str, check_func):
