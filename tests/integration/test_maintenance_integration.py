@@ -85,6 +85,7 @@ class TestMaintenanceIntegration:
         # Step 1: Create and plan a complex task
         parent_task = await orchestrator.plan_task(
             description="Build a web application with user authentication",
+            complexity="complex",
             subtasks_json=json.dumps([
                 {
                     "title": "Design database schema",
@@ -110,19 +111,19 @@ class TestMaintenanceIntegration:
         )
         
         # Verify task was created
-        assert parent_task["success"] is True
-        parent_id = parent_task["task_id"]
+        assert parent_task is not None
+        parent_id = parent_task.task_id
         
         # Step 2: Execute subtasks with streaming artifacts
-        subtasks = parent_task["subtasks"]
+        subtasks = parent_task.children
         
         # Execute first subtask (Design)
         design_task = subtasks[0]
-        design_result = await orchestrator.execute_subtask(design_task["id"])
+        design_result = await orchestrator.execute_subtask(design_task.task_id)
         
         # Create streaming artifact for design
         design_session = await streaming.create_streaming_session(
-            task_id=design_task["id"],
+            task_id=design_task.task_id,
             summary="Database schema design",
             artifact_type="design"
         )
