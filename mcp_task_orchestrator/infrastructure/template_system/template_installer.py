@@ -146,7 +146,7 @@ class TemplateInstaller:
             # Check if template already exists
             if not overwrite:
                 try:
-                    existing = await self.storage_manager.load_template(template_id, category)
+                    existing = self.storage_manager.load_template(template_id, category)
                     if existing:
                         return {
                             "status": "skipped",
@@ -174,8 +174,8 @@ class TemplateInstaller:
                     "error": f"Security validation failed: {str(e)}"
                 }
             
-            # Save template
-            await self.storage_manager.save_template(template_id, template_content, category)
+            # Save template (parsed_template is the correct Dict[str, Any] format)
+            self.storage_manager.save_template(template_id, parsed_template, category)
             
             return {
                 "status": "installed",
@@ -237,7 +237,7 @@ class TemplateInstaller:
         
         # Check if template exists
         try:
-            existing = await self.storage_manager.load_template(template_id, category)
+            existing = self.storage_manager.load_template(template_id, category)
             if not existing:
                 return {
                     "status": "error",
@@ -277,18 +277,12 @@ class TemplateInstaller:
         logger.info(f"Uninstalling template: {template_id}")
         
         try:
-            success = await self.storage_manager.delete_template(template_id, category)
-            
-            if success:
-                return {
-                    "status": "success",
-                    "message": f"Template {template_id} uninstalled successfully"
-                }
-            else:
-                return {
-                    "status": "error",
-                    "error": f"Template {template_id} not found"
-                }
+            # delete_template returns None on success, raises exception on failure
+            self.storage_manager.delete_template(template_id, category)
+            return {
+                "status": "success",
+                "message": f"Template {template_id} uninstalled successfully"
+            }
                 
         except Exception as e:
             logger.error(f"Failed to uninstall template {template_id}: {e}")
@@ -309,8 +303,9 @@ class TemplateInstaller:
             installed = {}
             for category in ["builtin", "user", "shared"]:
                 try:
-                    templates = await self.storage_manager.list_templates(category)
-                    installed[category] = templates
+                    template_list = self.storage_manager.list_templates(category)
+                    # Extract template IDs from the list of dictionaries
+                    installed[category] = [t["id"] for t in template_list]
                 except:
                     installed[category] = []
             
@@ -405,14 +400,14 @@ class TemplateInstaller:
             
             for cat in categories:
                 try:
-                    templates = await self.storage_manager.list_templates(cat)
+                    template_list = self.storage_manager.list_templates(cat)
                     
-                    for template_id in templates:
+                    for template_info in template_list:
+                        template_id = template_info["id"]
                         try:
-                            # Load and validate template
-                            content = await self.storage_manager.load_template(template_id, cat)
-                            parsed = self.json5_parser.parse(content)
-                            self.security_validator.validate_template(parsed)
+                            # Load and validate template (load_template returns parsed Dict[str, Any])
+                            parsed_template = self.storage_manager.load_template(template_id, cat)
+                            self.security_validator.validate_template(parsed_template)
                             
                             results["validated"].append(f"{cat}/{template_id}")
                             
