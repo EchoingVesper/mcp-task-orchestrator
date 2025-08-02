@@ -195,19 +195,76 @@ class JSON5Parser:
         # Remove trailing commas
         content = re.sub(r',(\s*[}\]])', r'\1', content)
         
-        # Convert unquoted object keys to quoted keys
-        # Match word characters followed by colon (but not in strings)
-        def quote_keys(match):
-            key = match.group(1)
-            return f'"{key}":'
-            
-        # This regex looks for unquoted keys: word followed by colon
-        content = re.sub(r'([a-zA-Z_][a-zA-Z0-9_]*)\s*:', quote_keys, content)
+        # Convert unquoted object keys to quoted keys (string-aware)
+        content = self._quote_unquoted_keys(content)
         
         # Convert single quotes to double quotes (outside of strings)
         content = self._convert_single_quotes(content)
         
         return content
+    
+    def _quote_unquoted_keys(self, content: str) -> str:
+        """Convert unquoted object keys to quoted keys (string-aware)."""
+        result = []
+        i = 0
+        in_string = False
+        string_delimiter = None
+        
+        while i < len(content):
+            char = content[i]
+            
+            # Handle string delimiters
+            if not in_string and char in ('"', "'"):
+                in_string = True
+                string_delimiter = char
+                result.append(char)
+                i += 1
+                continue
+            elif in_string and char == string_delimiter:
+                # Check if it's escaped
+                if i > 0 and content[i-1] == '\\':
+                    result.append(char)
+                    i += 1
+                    continue
+                else:
+                    in_string = False
+                    string_delimiter = None
+                    result.append(char)
+                    i += 1
+                    continue
+            
+            # If we're inside a string, just copy the character
+            if in_string:
+                result.append(char)
+                i += 1
+                continue
+            
+            # Look for unquoted keys outside of strings
+            if char.isalpha() or char == '_':
+                # Start of potential unquoted key
+                key_start = i
+                while i < len(content) and (content[i].isalnum() or content[i] == '_'):
+                    i += 1
+                
+                # Skip whitespace after potential key
+                while i < len(content) and content[i].isspace():
+                    i += 1
+                
+                # Check if followed by colon (indicating it's a key)
+                if i < len(content) and content[i] == ':':
+                    # This is an unquoted key - add quotes
+                    key = content[key_start:i].rstrip()
+                    result.append(f'"{key}"')
+                    # Don't increment i here as we need to process the colon
+                else:
+                    # Not a key, add the content as-is
+                    result.append(content[key_start:i])
+                    # Don't increment i here as we're already at the right position
+            else:
+                result.append(char)
+                i += 1
+        
+        return ''.join(result)
     
     def _convert_single_quotes(self, content: str) -> str:
         """Convert single-quoted strings to double-quoted strings."""

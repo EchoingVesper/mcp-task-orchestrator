@@ -6,6 +6,7 @@ business processes, and specialized use cases.
 """
 
 import logging
+from typing import Dict, List
 
 logger = logging.getLogger(__name__)
 
