@@ -163,7 +163,7 @@ class TestTemplateEngine:
     
     def test_instantiate_template_with_defaults(self):
         """Test template instantiation using default parameter values."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = self.valid_template
             
             # Only provide required parameter
@@ -178,7 +178,7 @@ class TestTemplateEngine:
     
     def test_instantiate_template_missing_required_parameter(self):
         """Test template instantiation with missing required parameter."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = self.valid_template
             
             # Missing required project_name
@@ -189,7 +189,7 @@ class TestTemplateEngine:
     
     def test_instantiate_template_invalid_parameter_value(self):
         """Test template instantiation with invalid parameter value."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = self.valid_template
             
             parameters = {
@@ -202,7 +202,7 @@ class TestTemplateEngine:
     
     def test_instantiate_template_string_length_validation(self):
         """Test string parameter length validation."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = self.valid_template
             
             # Test too short
@@ -216,7 +216,7 @@ class TestTemplateEngine:
     
     def test_instantiate_template_number_range_validation(self):
         """Test number parameter range validation."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = self.valid_template
             
             parameters = {"project_name": "ValidProject"}
@@ -233,7 +233,7 @@ class TestTemplateEngine:
     
     def test_instantiate_template_enum_validation(self):
         """Test enum parameter validation."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = self.valid_template
             
             parameters = {
@@ -241,12 +241,12 @@ class TestTemplateEngine:
                 "complexity": "invalid_complexity"
             }
             
-            with pytest.raises(ParameterSubstitutionError, match="not in allowed values"):
+            with pytest.raises(ParameterSubstitutionError, match="must be one of"):
                 self.engine.instantiate_template("test_template", parameters)
     
     def test_instantiate_template_nonexistent(self):
         """Test instantiation of non-existent template."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.side_effect = TemplateStorageError("Template not found")
             
             with pytest.raises(TemplateValidationError, match="Template not found"):
@@ -318,7 +318,7 @@ class TestTemplateEngine:
     
     def test_get_template_parameters_valid(self):
         """Test getting template parameters from valid template."""
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = self.valid_template
             
             parameters = self.engine.get_template_parameters("test_template")
@@ -353,7 +353,7 @@ class TestTemplateEngine:
             "tasks": {"task1": {"title": "Task", "description": "A task"}}
         }
         
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = template_no_params
             
             parameters = self.engine.get_template_parameters("test_template")
@@ -369,7 +369,7 @@ class TestTemplateEngine:
             "pattern": r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         }
         
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = template_with_pattern
             
             # Valid email
@@ -399,7 +399,7 @@ class TestTemplateEngine:
             "description": "Feature enabled: {{enable_feature}}"
         }
         
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = template_with_bool
             
             # Test with explicit boolean
@@ -422,7 +422,7 @@ class TestTemplateEngine:
             "default": ["development", "project"]
         }
         
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = template_with_array
             
             # Array parameters should be converted to string for substitution
@@ -446,7 +446,7 @@ class TestTemplateEngine:
         }
         
         # Verify that templates can be loaded and instantiated independently
-        with patch.object(self.engine.storage_manager, 'load_template') as mock_load:
+        with patch.object(self.engine, 'load_template') as mock_load:
             mock_load.return_value = base_template
             
             parameters = {"common_param": "test_value"}

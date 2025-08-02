@@ -271,11 +271,11 @@ class TemplateEngine:
                     required=param_def.get('required', True),
                     default=param_def.get('default'),
                     validation_pattern=param_def.get('pattern'),
-                    allowed_values=param_def.get('allowed_values'),
+                    allowed_values=param_def.get('allowed_values') or param_def.get('enum'),
                     min_length=param_def.get('min_length'),
                     max_length=param_def.get('max_length'),
-                    min_value=param_def.get('min_value'),
-                    max_value=param_def.get('max_value')
+                    min_value=param_def.get('min_value') or param_def.get('min'),
+                    max_value=param_def.get('max_value') or param_def.get('max')
                 ))
         
         return parameters
@@ -285,18 +285,23 @@ class TemplateEngine:
         """Validate provided parameters against definitions."""
         validated = {}
         
-        # Check required parameters
+        # Check all parameters (required and optional)
         for param_def in param_definitions:
             param_name = param_def.name
             
-            if param_def.required and param_name not in provided_params:
+            if param_name in provided_params:
+                # Parameter was provided - validate it
+                value = provided_params[param_name]
+                validated[param_name] = self._validate_parameter_value(param_def, value)
+            elif param_def.required:
+                # Required parameter is missing
                 if param_def.default is not None:
                     validated[param_name] = param_def.default
                 else:
                     raise ParameterSubstitutionError(f"Required parameter missing: {param_name}")
-            elif param_name in provided_params:
-                value = provided_params[param_name]
-                validated[param_name] = self._validate_parameter_value(param_def, value)
+            elif param_def.default is not None:
+                # Optional parameter with default - use the default
+                validated[param_name] = param_def.default
         
         # Check for extra parameters
         extra_params = set(provided_params.keys()) - {p.name for p in param_definitions}
