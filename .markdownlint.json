@@ -1,0 +1,77 @@
+{
+  "default": true,
+  "MD003": {
+    "style": "atx"
+  },
+  "MD007": {
+    "indent": 2,
+    "start_indented": false
+  },
+  "MD013": {
+    "line_length": 120,
+    "heading_line_length": 120,
+    "code_block_line_length": 150,
+    "code_blocks": false,
+    "tables": false,
+    "headings": false
+  },
+  "MD022": {
+    "lines_above": 1,
+    "lines_below": 1
+  },
+  "MD024": {
+    "siblings_only": true
+  },
+  "MD026": {
+    "punctuation": ".,;:!?"
+  },
+  "MD029": {
+    "style": "ordered"
+  },
+  "MD031": {
+    "list_items": true
+  },
+  "MD032": false,
+  "MD033": {
+    "allowed_elements": [
+      "details",
+      "summary", 
+      "br",
+      "sup",
+      "sub",
+      "code"
+    ]
+  },
+  "MD040": {
+    "allowed_languages": [
+      "bash",
+      "shell", 
+      "console",
+      "text",
+      "json",
+      "yaml",
+      "python",
+      "javascript",
+      "typescript",
+      "markdown",
+      "sql",
+      "dockerfile",
+      "xml",
+      "html",
+      "css",
+      "mermaid",
+      "powershell",
+      "cmd",
+      "toml",
+      "json5",
+      "directory"
+    ],
+    "language_only": false
+  },
+  "MD046": {
+    "style": "fenced"
+  },
+  "MD048": {
+    "style": "backtick"
+  }
+}
