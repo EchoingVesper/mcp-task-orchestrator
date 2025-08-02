@@ -1,0 +1,20 @@
+Tool Status Summary
+==================
+Format: Tool Name: Basic EdgeCases Integration - Overall
+
+orchestrator_cancel_task: ❌ ✅ ❌ - FAIL
+orchestrator_complete_task: ❌ ❌ ❌ - FAIL
+orchestrator_delete_task: ❌ ✅ ❌ - FAIL
+orchestrator_execute_task: ❌ ❌ ❌ - FAIL
+orchestrator_get_status: ❌ ❌ ❌ - FAIL
+orchestrator_health_check: ✅ ❌ ✅ - FAIL
+orchestrator_initialize_session: ❌ ❌ ❌ - FAIL
+orchestrator_maintenance_coordinator: ❌ ❌ ❌ - FAIL
+orchestrator_plan_task: ❌ ✅ ❌ - FAIL
+orchestrator_query_tasks: ❌ ✅ ❌ - FAIL
+orchestrator_reconnect_test: ✅ ❌ ✅ - FAIL
+orchestrator_restart_server: ❌ ✅ ❌ - FAIL
+orchestrator_restart_status: ✅ ❌ ✅ - FAIL
+orchestrator_shutdown_prepare: ✅ ❌ ✅ - FAIL
+orchestrator_synthesize_results: ❌ ❌ ❌ - FAIL
+orchestrator_update_task: ❌ ✅ ❌ - FAIL

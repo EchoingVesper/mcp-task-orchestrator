@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Test script for the task orchestrator subtask execution.
+Test script for the task orchestrator task execution.
 
-This script creates a simple task and attempts to execute a subtask
-to verify that the orchestrator_execute_subtask function works correctly.
+This script creates a simple task and attempts to execute a task
+to verify that the orchestrator_execute_task function works correctly.
 """
 
 import asyncio
@@ -33,9 +33,9 @@ from .orchestrator.specialist_management_service import SpecialistManager
 from .orchestrator.task_orchestration_service import TaskOrchestrator
 
 
-async def test_subtask_execution():
-    """Test the subtask execution mechanism."""
-    print("\n=== Testing subtask execution mechanism ===\n")
+async def test_task_execution():
+    """Test the task execution mechanism."""
+    print("\n=== Testing task execution mechanism ===\n")
     
     # Initialize managers
     base_dir = Path(__file__).parent
@@ -47,8 +47,8 @@ async def test_subtask_execution():
     # Create a test task
     parent_task_id = f"test_task_{uuid.uuid4().hex[:8]}"
     
-    # Create subtasks
-    subtasks = [
+    # Create tasks
+    tasks = [
         SubTask(
             task_id=f"architect_{uuid.uuid4().hex[:6]}",
             title="Design Test Architecture",
@@ -70,10 +70,10 @@ async def test_subtask_execution():
     # Create task breakdown
     breakdown = TaskBreakdown(
         parent_task_id=parent_task_id,
-        description="Test task for subtask execution",
+        description="Test task for task execution",
         complexity=ComplexityLevel.SIMPLE,
-        subtasks=subtasks,
-        context="Testing subtask execution"
+        tasks=tasks,
+        context="Testing task execution"
     )
     
     # Save task breakdown
@@ -90,14 +90,14 @@ async def test_subtask_execution():
         print("❌ Task was not saved to persistent storage")
         return
     
-    # Try to execute the first subtask
-    subtask_id = subtasks[0].task_id
-    print(f"\nExecuting subtask {subtask_id}...")
+    # Try to execute the first task
+    task_id = tasks[0].task_id
+    print(f"\nExecuting task {task_id}...")
     
     try:
         # Set a timeout for the execution
         specialist_context = await asyncio.wait_for(
-            orchestrator.get_specialist_context(subtask_id),
+            orchestrator.get_specialist_context(task_id),
             timeout=10  # 10 seconds timeout
         )
         
@@ -105,21 +105,21 @@ async def test_subtask_execution():
         print(f"Specialist context length: {len(specialist_context)}")
         print(f"Context preview: {specialist_context[:100]}...")
         
-        # Verify that the subtask status was updated
-        subtask = await state_manager.get_subtask(subtask_id)
-        print(f"Subtask status: {subtask.status}")
+        # Verify that the task status was updated
+        task = await state_manager.get_task(task_id)
+        print(f"Subtask status: {task.status}")
         
-        if subtask.status == TaskStatus.ACTIVE:
+        if task.status == TaskStatus.ACTIVE:
             print("✅ Subtask status was correctly updated to ACTIVE")
         else:
-            print(f"❌ Subtask status was not updated correctly: {subtask.status}")
+            print(f"❌ Subtask status was not updated correctly: {task.status}")
         
-        # Complete the subtask
-        print("\nCompleting subtask...")
+        # Complete the task
+        print("\nCompleting task...")
         completion_result = await asyncio.wait_for(
-            orchestrator.complete_subtask(
-                subtask_id,
-                "Test results for subtask execution",
+            orchestrator.complete_task(
+                task_id,
+                "Test results for task execution",
                 ["test_artifact.md"],
                 "continue"
             ),
@@ -129,19 +129,19 @@ async def test_subtask_execution():
         print("✅ Subtask completion successful")
         print(f"Completion result: {json.dumps(completion_result, indent=2)}")
         
-        # Verify that the subtask status was updated
-        subtask = await state_manager.get_subtask(subtask_id)
-        print(f"Subtask status after completion: {subtask.status}")
+        # Verify that the task status was updated
+        task = await state_manager.get_task(task_id)
+        print(f"Subtask status after completion: {task.status}")
         
-        if subtask.status == TaskStatus.COMPLETED:
+        if task.status == TaskStatus.COMPLETED:
             print("✅ Subtask status was correctly updated to COMPLETED")
         else:
-            print(f"❌ Subtask status was not updated correctly: {subtask.status}")
+            print(f"❌ Subtask status was not updated correctly: {task.status}")
         
     except asyncio.TimeoutError:
         print("❌ Subtask execution timed out")
         
-        # Check if the subtask is locked
+        # Check if the task is locked
         lock_file = persistence.get_lock_file_path(f"task_{parent_task_id}")
         if lock_file.exists():
             print(f"⚠️ Lock file exists: {lock_file}")
@@ -151,13 +151,13 @@ async def test_subtask_execution():
             print(f"Lock cleanup {'successful' if cleaned else 'failed'}")
         
     except Exception as e:
-        print(f"❌ Error during subtask execution: {str(e)}")
+        print(f"❌ Error during task execution: {str(e)}")
     
     print("\nSubtask execution test completed.")
 
 async def main():
     """Main entry point."""
-    await test_subtask_execution()
+    await test_task_execution()
 
 if __name__ == "__main__":
     asyncio.run(main())

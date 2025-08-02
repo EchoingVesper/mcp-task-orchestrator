@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test the orchestrator complete_subtask operation that was hanging."""
+"""Test the orchestrator complete_task operation that was hanging."""
 
 import sys
 import os
@@ -9,9 +9,9 @@ import asyncio
 import json
 import time
 
-async def test_complete_subtask_operation():
+async def test_complete_task_operation():
     """Test the specific operation that was causing hangs."""
-    print("Testing complete_subtask operation...")
+    print("Testing complete_task operation...")
     
     try:
         from .orchestrator.orchestration_state_manager import StateManager
@@ -37,11 +37,11 @@ async def test_complete_subtask_operation():
             test_task = all_tasks[0]
             print(f"Testing with task: {test_task.task_id}")
             
-            # Test the complete_subtask operation with timeout
+            # Test the complete_task operation with timeout
             start_time = time.time()
             try:
                 completion_result = await asyncio.wait_for(
-                    orchestrator.complete_subtask(
+                    orchestrator.complete_task(
                         test_task.task_id,
                         "Synchronization test - verifying fixes work",
                         ["sync_test_result.txt"],
@@ -50,13 +50,13 @@ async def test_complete_subtask_operation():
                     timeout=30.0  # 30 second timeout
                 )
                 elapsed = time.time() - start_time
-                print(f"CRITICAL TEST PASSED: complete_subtask completed in {elapsed:.2f}s")
+                print(f"CRITICAL TEST PASSED: complete_task completed in {elapsed:.2f}s")
                 print(f"Result: {completion_result}")
                 return True
                 
             except asyncio.TimeoutError:
                 elapsed = time.time() - start_time
-                print(f"CRITICAL TEST FAILED: complete_subtask timed out after {elapsed:.2f}s")
+                print(f"CRITICAL TEST FAILED: complete_task timed out after {elapsed:.2f}s")
                 return False
                 
         else:
@@ -91,11 +91,11 @@ async def test_complete_subtask_operation():
                 task_id = breakdown.subtasks[0].task_id
                 print(f"Created test task: {task_id}")
                 
-                # Now test complete_subtask
+                # Now test complete_task
                 start_time = time.time()
                 try:
                     completion_result = await asyncio.wait_for(
-                        orchestrator.complete_subtask(
+                        orchestrator.complete_task(
                             task_id,
                             "Test completed successfully - synchronization fixes verified",
                             ["test_output.txt"],
@@ -104,13 +104,13 @@ async def test_complete_subtask_operation():
                         timeout=30.0
                     )
                     elapsed = time.time() - start_time
-                    print(f"CRITICAL TEST PASSED: complete_subtask completed in {elapsed:.2f}s")
+                    print(f"CRITICAL TEST PASSED: complete_task completed in {elapsed:.2f}s")
                     print(f"Result: {completion_result}")
                     return True
                     
                 except asyncio.TimeoutError:
                     elapsed = time.time() - start_time
-                    print(f"CRITICAL TEST FAILED: complete_subtask timed out after {elapsed:.2f}s")
+                    print(f"CRITICAL TEST FAILED: complete_task timed out after {elapsed:.2f}s")
                     return False
             else:
                 print("Failed to create test subtasks")
@@ -123,15 +123,15 @@ async def test_complete_subtask_operation():
         return False
 
 if __name__ == "__main__":
-    print("Starting critical synchronization test (complete_subtask operation)...")
+    print("Starting critical synchronization test (complete_task operation)...")
     
-    success = asyncio.run(test_complete_subtask_operation())
+    success = asyncio.run(test_complete_task_operation())
     
     if success:
-        print("SUCCESS: The hanging issue in complete_subtask has been FIXED!")
+        print("SUCCESS: The hanging issue in complete_task has been FIXED!")
         print("The synchronization improvements are working correctly.")
     else:
-        print("FAILURE: The complete_subtask operation is still hanging.")
+        print("FAILURE: The complete_task operation is still hanging.")
         print("Additional synchronization work may be needed.")
         
     sys.exit(0 if success else 1)
