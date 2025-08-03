@@ -54,16 +54,13 @@ The Universal Installer is a comprehensive installation solution that automatica
 # For Standard Python Environments
 
 ```bash
+# Clone repository and run universal installer
+git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
+cd mcp-task-orchestrator
+python install.py
 
-# Install from PyPI
-
-pip install mcp-task-orchestrator
-
-# Run universal setup
-
-mcp-task-orchestrator-cli setup
-
-```text
+# Auto-detects and configures all compatible MCP clients
+```
 
 #
 
@@ -77,26 +74,16 @@ If you get an "externally-managed-environment" error, use one of these methods:
 
 **Option 1: Virtual Environment (Recommended)**
 
-```text
-bash
-
+```bash
 # Create and activate virtual environment
-
 python -m venv mcp-orchestrator-env
-source mcp-orchestrator-env/bin/activate  
+source mcp-orchestrator-env/bin/activate  # Linux/WSL/macOS
+# OR: mcp-orchestrator-env\Scripts\activate  # Windows
 
-# Linux/WSL/macOS
-
-# OR
-
-mcp-orchestrator-env\Scripts\activate     
-
-# Windows
-
-# Install and setup
-
-pip install mcp-task-orchestrator
-mcp-task-orchestrator-cli setup
+# Clone and install
+git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
+cd mcp-task-orchestrator
+python install.py --venv ../mcp-orchestrator-env
 
 ```text
 text
@@ -127,7 +114,7 @@ pip install --user pipx
 # Install and run
 
 pipx install mcp-task-orchestrator
-pipx run mcp-task-orchestrator-cli setup
+pipx run python install.py
 
 ```text
 text
@@ -140,7 +127,7 @@ bash
 # Only if you understand the risks
 
 pip install --break-system-packages mcp-task-orchestrator
-mcp-task-orchestrator-cli setup
+python install.py
 
 ```text
 text
@@ -156,11 +143,11 @@ bash
 
 # Use the dedicated universal installer
 
-mcp-task-orchestrator-cli universal-setup
+python install.py
 
 # Check dependencies first
 
-mcp-task-orchestrator-cli check-deps
+python install.py --verify
 
 ```text
 
@@ -597,12 +584,12 @@ bash
 python -m venv mcp-orchestrator-env
 source mcp-orchestrator-env/bin/activate
 pip install mcp-task-orchestrator
-mcp-task-orchestrator-cli setup
+python install.py
 
 # OR pipx method
 
 pipx install mcp-task-orchestrator
-pipx run mcp-task-orchestrator-cli setup
+pipx run python install.py
 
 ```text
 text
@@ -625,7 +612,7 @@ text
 ```text
 cmd
   pip install mcp-task-orchestrator
-  mcp-task-orchestrator-cli setup
+  python install.py
   
 
 ```text
@@ -760,7 +747,7 @@ python -c "from mcp_task_orchestrator_cli.universal_installer import UniversalIn
 
 # Run dry-run (detection only)
 
-mcp-task-orchestrator-cli universal-setup
+python install.py
 
 ```text
 

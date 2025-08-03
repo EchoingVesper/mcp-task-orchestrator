@@ -4,14 +4,29 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
-[![Version 1.8.0](https://img.shields.io/badge/version-1.8.0-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v1.8.0)
+[![Version 2.0.0](https://img.shields.io/badge/version-2.0.0-green.svg)](https://github.com/EchoingVesper/mcp-task-orchestrator/releases/tag/v2.0.0)
 
-A Model Context Protocol server that breaks down complex tasks into structured workflows with specialized AI roles.
-Features workspace-aware task management that automatically detects your project context and saves artifacts in the
-right locations.
+A Model Context Protocol server that transforms how you work with AI by automatically documenting every decision, implementation, and test as you build. Think of it as the memory layer for AI-assisted development that ensures no context is ever lost.
+
+## Key Features
+
+- **Documentation Automation**: Every task generates comprehensive, searchable artifacts
+- **Specialist AI Roles**: Architect, Implementer, Tester, Reviewer, Documenter, and more
+- **Persistent Memory**: Never lose context - all decisions and implementations are preserved
+- **Workspace Awareness**: Automatically detects project structure and saves artifacts appropriately
+- **Template System**: 13 tools for creating reusable task templates
+- **Clean Architecture**: Built with modern software design principles
 
 #
-# What it does - Input to Output Example
+## Quick Start
+
+1. **Install**: `pip install mcp-task-orchestrator`
+2. **Configure**: Add to your MCP client (Claude Desktop, Cursor, etc.)
+3. **Use**: "Initialize task orchestrator session and help me build a REST API"
+
+See the [Quick Start Guide](docs/users/quick-start/) for detailed setup instructions.
+
+## What it does - Input to Output Example
 
 **Instead of this:**
 
@@ -95,91 +110,88 @@ Each step provides specialist context and expertise rather than generic response
 ## Installation
 
 #
-### Modern CLI Installation (Recommended)
+### Universal Installer (Recommended)
 
-The MCP Task Orchestrator features a modern CLI installer with support for all major MCP clients and flexible installation options.
+The MCP Task Orchestrator features a universal installer with comprehensive support for all major MCP clients and flexible installation options.
 
 **Quick Install - Auto-detect all clients:**
 
 ```bash
-pip install mcp-task-orchestrator
-python -m mcp_task_orchestrator_cli install
+# Download and run the universal installer
+git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
+cd mcp-task-orchestrator
+python install.py
 
 # Auto-detects and configures all compatible MCP clients
-
 # Restart your MCP clients - the orchestrator tools will be available automatically
+```
 
-```text
+**PyPI Installation with Manual Configuration:**
+
+```bash
+# Install from PyPI
+pip install mcp-task-orchestrator
+
+# Then configure your MCP client manually (see configuration section below)
+```
 
 **Install to specific clients:**
 
 ```bash
+# Configure specific clients only
+python install.py --clients claude,cursor
 
-# Claude Desktop (global, works across multiple projects)
+# Skip MCP configuration entirely (manual setup)
+python install.py --no-clients
 
-python -m mcp_task_orchestrator_cli install --client claude_desktop
+# Development installation with all tools
+python install.py --dev
 
-# Claude Code (project-specific installation)
+# Install in user directory
+python install.py --user
+```
 
-python -m mcp_task_orchestrator_cli install --client claude_code --scope project
+**Advanced installation options:**
 
-# Windsurf and Cursor (project-aware)
+```bash
+# Force PyPI installation even in development
+python install.py --source pypi
 
-python -m mcp_task_orchestrator_cli install --client windsurf,cursor
+# Install specific version
+python install.py --version 2.0.0
 
-# Install to all desktop clients at once
+# Install from git repository
+python install.py --git https://github.com/EchoingVesper/mcp-task-orchestrator.git
 
-python -m mcp_task_orchestrator_cli install --client claude_desktop,windsurf,cursor
+# Install in custom virtual environment
+python install.py --venv /path/to/venv
 
-```text
-
-**Advanced options:**
-
-```text
-bash
-
-# Set a default working directory for Claude Desktop
-
-python -m mcp_task_orchestrator_cli install --client claude_desktop --working-dir "/path/to/default/project"
-
-# Force reconfiguration of already configured clients
-
-python -m mcp_task_orchestrator_cli install --force
-
-# Install with custom server name
-
-python -m mcp_task_orchestrator_cli install --name "my-task-orchestrator"
-
-```text
+# Force overwrite existing installation
+python install.py --force
+```
 
 **For Externally Managed Environments (WSL, Ubuntu 23.04+):**
 
-```text
-bash
-
+```bash
 # Create virtual environment first
-
 python -m venv mcp-orchestrator-env
-source mcp-orchestrator-env/bin/activate  
-# Linux/WSL/macOS
-
+source mcp-orchestrator-env/bin/activate  # Linux/WSL/macOS
 # OR: mcp-orchestrator-env\Scripts\activate  # Windows
 
-# Then install normally
-
-pip install mcp-task-orchestrator
-python -m mcp_task_orchestrator_cli.secure_installer_cli
-
-```text
+# Clone and install
+git clone https://github.com/EchoingVesper/mcp-task-orchestrator.git
+cd mcp-task-orchestrator
+python install.py --venv ../mcp-orchestrator-env
+```
 
 **Alternative with pipx:**
 
-```text
-bash
+```bash
+# Install via pipx for isolation
 pipx install mcp-task-orchestrator
-python -m mcp_task_orchestrator_cli.secure_installer_cli
 
-```text
+# Manual MCP configuration required (see configuration section)
+```
 
 #
 ## Installation Features
@@ -214,22 +226,19 @@ python -m mcp_task_orchestrator_cli.secure_installer_cli
 
 **Quick Diagnostics:**
 
-```text
-bash
+```bash
+# View installation help and options
+python install.py --help
 
-# Check which clients are detected
-
-python -m mcp_task_orchestrator_cli install --no-auto-detect --client claude_desktop --help
-
-# View installation help
-
-python -m mcp_task_orchestrator_cli install --help
+# Check installation status
+python install.py --status
 
 # Force reconfiguration if already installed
+python install.py --force
 
-python -m mcp_task_orchestrator_cli install --force
-
-```text
+# Test dry-run mode to see what would be done
+python install.py --dry-run --verbose
+```
 
 **Common Issues:**
 
@@ -245,7 +254,7 @@ python -m mcp_task_orchestrator_cli install --force
 
 - **Claude Desktop**: Works globally across multiple projects using dynamic detection
 
-- **Claude Code**: Install per-project using `--scope project` for best experience  
+- **Claude Code**: Works automatically with per-project detection for best experience  
 
 - **Windsurf/Cursor**: Automatically detect project context when opened in project folders
 
