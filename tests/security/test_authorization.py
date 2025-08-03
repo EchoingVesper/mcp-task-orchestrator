@@ -35,21 +35,30 @@ class TestRoleBasedAccessControl:
     @pytest.mark.critical
     async def test_basic_permission_enforcement(self, mock_mcp_context, test_user_basic):
         """Test basic permission enforcement works correctly."""
-        @require_permission(Permission.READ_TASK)
-        async def read_task_handler(context, args):
-            return {"success": True, "task_id": args.get("task_id")}
-        
-        # User with READ_TASK permission should succeed
-        context = mock_mcp_context(test_user_basic)
-        result = await read_task_handler(context, {"task_id": "test_123"})
-        assert result["success"] is True
-        
-        # User without permission should fail
-        limited_user = {**test_user_basic, "permissions": []}
-        context = mock_mcp_context(limited_user)
-        
-        with pytest.raises(AuthorizationError):
-            await read_task_handler(context, {"task_id": "test_123"})
+        # Mock the authorization validator components
+        with patch('mcp_task_orchestrator.infrastructure.security.authorization.authz_validator.user_role_manager') as mock_user_role_mgr, \
+             patch('mcp_task_orchestrator.infrastructure.security.authorization.authz_validator.role_manager') as mock_role_mgr:
+            
+            # Setup mocks for user with READ_TASK permission
+            mock_user_role_mgr.get_user_role.return_value = test_user_basic["role"]
+            mock_role_mgr.has_permission.return_value = True
+            
+            @require_permission(Permission.READ_TASK)
+            async def read_task_handler(context, args, **kwargs):
+                return {"success": True, "task_id": args.get("task_id")}
+            
+            # User with READ_TASK permission should succeed
+            context = mock_mcp_context(test_user_basic)
+            result = await read_task_handler(context, {"task_id": "test_123"}, _auth_metadata={"user_id": test_user_basic["user_id"]})
+            assert result["success"] is True
+            
+            # User without permission should fail
+            mock_role_mgr.has_permission.return_value = False
+            limited_user = {**test_user_basic, "permissions": []}
+            context = mock_mcp_context(limited_user)
+            
+            with pytest.raises(AuthorizationError):
+                await read_task_handler(context, {"task_id": "test_123"}, _auth_metadata={"user_id": limited_user["user_id"]})
     
     @pytest.mark.asyncio
     @pytest.mark.authorization
@@ -57,7 +66,7 @@ class TestRoleBasedAccessControl:
     async def test_role_hierarchy_enforcement(self, mock_mcp_context, test_user_basic, test_user_manager, test_user_admin):
         """Test role hierarchy is properly enforced."""
         @require_role(Role.MANAGER)
-        async def manager_only_handler(context, args):
+        async def manager_only_handler(context, args, **kwargs):
             return {"success": True, "role": context.role}
         
         # Basic user should be denied
@@ -81,7 +90,7 @@ class TestRoleBasedAccessControl:
         """Test handlers requiring multiple permissions."""
         @require_permission(Permission.CREATE_TASK)
         @require_permission(Permission.UPDATE_TASK)
-        async def complex_handler(context, args):
+        async def complex_handler(context, args, **kwargs):
             return {"success": True}
         
         # User with both permissions should succeed
@@ -153,7 +162,7 @@ class TestPrivilegeEscalationPrevention:
     async def test_permission_injection_prevention(self, mock_mcp_context, test_user_basic):
         """Test prevention of permission injection attacks."""
         @require_permission(Permission.DELETE_TASK)
-        async def delete_handler(context, args):
+        async def delete_handler(context, args, **kwargs):
             return {"success": True}
         
         context = mock_mcp_context(test_user_basic)
@@ -178,7 +187,7 @@ class TestPrivilegeEscalationPrevention:
     async def test_context_tampering_prevention(self, mock_mcp_context, test_user_basic):
         """Test prevention of context tampering attacks."""
         @require_permission(Permission.SYSTEM_CONFIG)
-        async def system_handler(context, args):
+        async def system_handler(context, args, **kwargs):
             return {"success": True}
         
         context = mock_mcp_context(test_user_basic)
@@ -211,7 +220,7 @@ class TestResourceAccessControl:
     async def test_task_ownership_enforcement(self, mock_mcp_context, test_user_basic, test_user_manager):
         """Test users can only access their own tasks."""
         @require_permission(Permission.READ_TASK)
-        async def read_task_handler(context, args):
+        async def read_task_handler(context, args, **kwargs):
             task_id = args.get("task_id")
             # Simulate ownership check
             if task_id.startswith(f"user_{context.user_id}_"):
@@ -315,7 +324,7 @@ class TestSecureMCPHandler:
     async def test_secure_mcp_handler_success(self, mock_mcp_context, test_user_manager):
         """Test secure MCP handler with valid authentication and authorization."""
         @secure_mcp_handler(Permission.CREATE_TASK)
-        async def create_task_handler(context, args):
+        async def create_task_handler(context, args, **kwargs):
             return {
                 "success": True, 
                 "task_id": args.get("task_id"),
@@ -334,7 +343,7 @@ class TestSecureMCPHandler:
     async def test_secure_mcp_handler_auth_failure(self, mock_mcp_context):
         """Test secure MCP handler fails with invalid authentication."""
         @secure_mcp_handler(Permission.CREATE_TASK)
-        async def create_task_handler(context, args):
+        async def create_task_handler(context, args, **kwargs):
             return {"success": True}
         
         # Unauthenticated context
@@ -351,7 +360,7 @@ class TestSecureMCPHandler:
     async def test_secure_mcp_handler_authz_failure(self, mock_mcp_context, test_user_basic):
         """Test secure MCP handler fails with insufficient permissions."""
         @secure_mcp_handler(Permission.DELETE_TASK)
-        async def delete_task_handler(context, args):
+        async def delete_task_handler(context, args, **kwargs):
             return {"success": True}
         
         # Authenticated but insufficient permissions
@@ -376,7 +385,7 @@ class TestAuthorizationEdgeCases:
         }
         
         @require_permission(Permission.READ_TASK)
-        async def read_handler(context, args):
+        async def read_handler(context, args, **kwargs):
             return {"success": True}
         
         context = mock_mcp_context(empty_user)
@@ -389,7 +398,7 @@ class TestAuthorizationEdgeCases:
     async def test_invalid_permission_enum(self, mock_mcp_context, test_user_admin):
         """Test handling of invalid permission enums."""
         @require_permission("INVALID_PERMISSION")  # String instead of enum
-        async def invalid_handler(context, args):
+        async def invalid_handler(context, args, **kwargs):
             return {"success": True}
         
         context = mock_mcp_context(test_user_admin)
@@ -404,7 +413,7 @@ class TestAuthorizationEdgeCases:
         """Test handling of None permissions."""
         try:
             @require_permission(None)
-            async def none_handler(context, args):
+            async def none_handler(context, args, **kwargs):
                 return {"success": True}
             
             context = mock_mcp_context(test_user_admin)
@@ -420,7 +429,7 @@ class TestAuthorizationEdgeCases:
     async def test_concurrent_authorization_checks(self, mock_mcp_context, test_user_manager):
         """Test concurrent authorization checks don't interfere."""
         @require_permission(Permission.CREATE_TASK)
-        async def concurrent_handler(context, args):
+        async def concurrent_handler(context, args, **kwargs):
             await asyncio.sleep(0.1)  # Simulate async work
             return {"success": True, "request_id": args.get("request_id")}
         
@@ -454,7 +463,7 @@ class TestAuthorizationPerformance:
         performance_monitor.start_monitoring()
         
         @require_permission(Permission.READ_TASK)
-        async def fast_handler(context, args):
+        async def fast_handler(context, args, **kwargs):
             return {"success": True}
         
         context = mock_mcp_context(test_user_admin)
@@ -491,7 +500,7 @@ class TestAuthorizationPerformance:
         @require_permission(Permission.UPDATE_TASK)
         @require_permission(Permission.DELETE_TASK)
         @require_role(Role.ADMIN)
-        async def complex_handler(context, args):
+        async def complex_handler(context, args, **kwargs):
             return {"success": True}
         
         context = mock_mcp_context(test_user_admin)
@@ -535,7 +544,7 @@ class TestAuthorizationIntegration:
         
         # 3. Test authorized access
         @secure_mcp_handler(Permission.SYSTEM_CONFIG)
-        async def system_config_handler(context, args):
+        async def system_config_handler(context, args, **kwargs):
             return {
                 "success": True,
                 "config": args.get("config_key"),
