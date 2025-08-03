@@ -35,11 +35,11 @@ def configure_infrastructure_services(registrar: ServiceRegistrar,
         The registrar for chaining
     """
     # Repository Factory
-    def create_repository_factory(container: ServiceContainer) -> RepositoryFactory:
+    def create_repository_factory_instance(container: ServiceContainer) -> RepositoryFactory:
         from ..database.repository_factory import create_repository_factory
         return create_repository_factory(config)
     
-    registrar.register_factory(RepositoryFactory, create_repository_factory).as_singleton()
+    registrar.register_factory(RepositoryFactory, create_repository_factory_instance).as_singleton()
     
     # Repositories
     def create_task_repository(container: ServiceContainer) -> TaskRepository:
