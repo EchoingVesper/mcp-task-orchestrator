@@ -10,21 +10,7 @@ import asyncio
 from unittest.mock import Mock, patch, AsyncMock
 from typing import Dict, Any, List
 
-from mcp_task_orchestrator.infrastructure.security import (
-    Permission,
-    Role,
-    RoleManager,
-    UserRoleManager,
-    AuthorizationValidator,
-    AuthorizationError,
-    role_manager,
-    user_role_manager,
-    authz_validator,
-    require_permission,
-    require_role,
-    has_permission,
-    secure_mcp_handler
-)
+# from mcp_task_orchestrator.infrastructure.security import  # TODO: Complete this import
 
 
 class TestRoleBasedAccessControl:
@@ -529,7 +515,7 @@ class TestAuthorizationIntegration:
         """Test complete security flow from API key to resource access."""
         performance_monitor.start_monitoring()
         
-        # 1. Validate API key (authentication)
+        # 1. Validate API key
         auth_result = await test_api_key_manager.validate_api_key(admin_api_key)
         assert auth_result["valid"] is True
         

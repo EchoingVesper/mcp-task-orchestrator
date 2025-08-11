@@ -96,7 +96,7 @@ async def test_orchestrator_performance():
             print(f"{status:6} {op_name:25} {duration:8.4f}s")
         
         print(f"\nTotal operations: {len(results)}")
-        print(f"Slow operations (>5s): {len(slow_operations)}")
+        print(f"Slow operations: {len(slow_operations)}")
         
         if slow_operations:
             print(f"\nSLOW OPERATIONS:")

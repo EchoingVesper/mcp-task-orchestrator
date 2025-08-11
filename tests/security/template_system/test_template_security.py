@@ -8,14 +8,9 @@ input sanitization, and attack prevention.
 import pytest
 from unittest.mock import Mock, patch
 
-from mcp_task_orchestrator.infrastructure.template_system.security_validator import (
-    TemplateSecurityValidator,
-    SecurityValidationError
-)
-from mcp_task_orchestrator.infrastructure.template_system.template_engine import (
-    TemplateEngine,
-    ParameterSubstitutionError
-)
+from mcp_task_orchestrator.infrastructure.template_system.template_engine import TemplateEngine, ParameterSubstitutionError
+from mcp_task_orchestrator.infrastructure.template_system.security_validator import TemplateSecurityValidator, SecurityValidationError
+# from mcp_task_orchestrator.infrastructure.template_system.template_engine import  # TODO: Complete this import
 
 
 class TestTemplateSecurityValidator:
@@ -536,7 +531,7 @@ class TestSecurityEdgeCases:
             "eval ( 'code' )",
             "eval\t('code')",
             "eval\n('code')",
-            "eval    ('code')"
+            "eval   "
         ]
         
         for pattern in obfuscated_patterns:

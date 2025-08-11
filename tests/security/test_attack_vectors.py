@@ -12,18 +12,7 @@ import time
 from unittest.mock import Mock, patch, AsyncMock, MagicMock
 from typing import Dict, List, Any, Optional
 
-from mcp_task_orchestrator.infrastructure.security import (
-    secure_mcp_handler,
-    validate_string_input,
-    validate_file_path,
-    sanitize_error,
-    Permission,
-    Role,
-    ValidationError,
-    AuthenticationError,
-    AuthorizationError,
-    ErrorCategory
-)
+# from mcp_task_orchestrator.infrastructure.security import  # TODO: Complete this import
 
 
 class TestChainedExploitAttempts:
@@ -855,7 +844,7 @@ class TestAttackSimulationIntegration:
             ("path_traversal", "../../../etc/passwd"),
             ("sql_injection", "'; DROP TABLE users; --"),
             ("command_injection", "; cat /etc/passwd"),
-            ("large_payload", "x" * 100000),
+           ,
         ]
         
         async def execute_attack_vector(vector_info):

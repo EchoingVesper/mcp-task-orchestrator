@@ -12,16 +12,7 @@ from unittest.mock import Mock, patch, AsyncMock
 from datetime import datetime, timedelta
 from typing import Dict, Any
 
-from mcp_task_orchestrator.infrastructure.security import (
-    APIKeyManager,
-    AuthenticationValidator,
-    AuthenticationError,
-    generate_api_key,
-    validate_api_key,
-    require_auth,
-    api_key_manager,
-    security_audit_logger
-)
+# from mcp_task_orchestrator.infrastructure.security import  # TODO: Complete this import
 
 
 class TestAPIKeyValidation:
@@ -358,7 +349,7 @@ class TestAuthenticationEdgeCases:
         tasks = [authenticate() for _ in range(10)]
         results = await asyncio.gather(*tasks)
         
-        # All should succeed (or fail consistently)
+        # All should succeed
         success_count = sum(1 for r in results if r.get("valid") is True)
         error_count = sum(1 for r in results if "error" in r)
         

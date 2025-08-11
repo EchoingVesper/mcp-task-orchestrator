@@ -339,9 +339,7 @@ def run_mcp_integration_tests():
         print(f"  ✅ Paradigm Benefits: {benefits_count} major advantages")
     
     # Overall integration status
-    integration_success = (workspace_quality in ['excellent', 'good'] and 
-                          intel_score >= 60 and 
-                          pitfall_status in ['excellent', 'good_with_concerns'])
+    integration_success =
     
     results['overall_integration'] = {
         'status': 'PASS' if integration_success else 'CONCERNS',

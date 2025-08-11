@@ -123,7 +123,7 @@ async def test_complete_task_operation():
         return False
 
 if __name__ == "__main__":
-    print("Starting critical synchronization test (complete_task operation)...")
+    print("Starting critical synchronization test...")
     
     success = asyncio.run(test_complete_task_operation())
     

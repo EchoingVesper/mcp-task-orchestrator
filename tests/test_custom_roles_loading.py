@@ -13,7 +13,7 @@ from pathlib import Path
 # Add the project root to the Python path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from mcp_task_orchestrator.orchestrator.role_loader import get_roles
+# Role loader functions moved to Clean Architecture service layer get_roles
 
 
 def test_custom_roles_loading():

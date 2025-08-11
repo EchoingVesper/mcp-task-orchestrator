@@ -11,16 +11,8 @@ from unittest.mock import patch, Mock, AsyncMock
 from typing import Dict, Any
 
 # Import migration components
-from mcp_task_orchestrator.infrastructure.mcp.handlers.migration_config import (
-    HandlerMigrationManager,
-    get_migration_manager,
-    get_handler_for_tool,
-    get_migration_status
-)
-from mcp_task_orchestrator.infrastructure.mcp.tool_router import (
-    route_tool_call,
-    get_handler_migration_info
-)
+# from mcp_task_orchestrator.infrastructure.mcp.handlers.migration_config import  # TODO: Complete this import
+# from mcp_task_orchestrator.infrastructure.mcp.tool_router import  # TODO: Complete this import
 
 
 class TestHandlerMigrationManager:

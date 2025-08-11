@@ -279,7 +279,7 @@ def run_comprehensive_test():
         'status': 'PASS' if passed_tests >= 4 else 'FAIL'
     }
     
-    print(f"\n🎯 Test Results: {passed_tests}/{total_tests} tests passed ({results['overall']['success_rate']:.1f}%)")
+    print(f"\n🎯 Test Results: {passed_tests}/{total_tests} tests passed")
     print(f"Overall Status: {results['overall']['status']}")
     
     return results

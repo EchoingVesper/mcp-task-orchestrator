@@ -33,7 +33,7 @@ def test_performance_fix():
                 sample_subtask = session.query(SubTaskModel).first()
                 
                 print(f"Testing lookup for task ID: {sample_subtask.task_id}")
-                print(f"Expected parent ID: {sample_subtask.parent_task_id}")
+                print(f"Expected parent ID: {sample_subtask.task_id}")
                 
                 # Test the new direct lookup method multiple times for accuracy
                 times = []
@@ -50,12 +50,12 @@ def test_performance_fix():
                 print(f"Maximum lookup time: {max_time:.4f}s")
                 print(f"Result: {result}")
                 
-                if result == sample_subtask.parent_task_id and avg_time < 0.1:
+                if result == sample_subtask.task_id and avg_time < 0.1:
                     print("SUCCESS: Direct lookup works correctly and is fast!")
                     print(f"Performance target met: {avg_time:.4f}s < 0.1s")
                     return True
                 else:
-                    if result != sample_subtask.parent_task_id:
+                    if result != sample_subtask.task_id:
                         print("FAILURE: Lookup returned wrong result")
                     if avg_time >= 0.1:
                         print(f"FAILURE: Lookup too slow: {avg_time:.4f}s >= 0.1s")

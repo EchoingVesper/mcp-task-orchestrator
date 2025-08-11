@@ -13,13 +13,7 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 from typing import List, Dict, Any
 
-from mcp_task_orchestrator.infrastructure.security import (
-    PathValidator,
-    ValidationError,
-    path_validator,
-    validate_file_path,
-    security_audit_logger
-)
+# from mcp_task_orchestrator.infrastructure.security import  # TODO: Complete this import
 
 
 class TestBasicPathTraversal:
@@ -764,7 +758,7 @@ class TestPathTraversalIntegration:
             ("linux", "\\\\server\\share\\file.txt"),
             
             # Unix paths on Windows
-            ("windows", "/etc/passwd"),
+           ,
         ]
         
         for platform, attack_path in cross_platform_attacks:

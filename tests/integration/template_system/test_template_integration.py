@@ -12,28 +12,10 @@ from pathlib import Path
 from unittest.mock import Mock, patch, AsyncMock
 import asyncio
 
-from mcp_task_orchestrator.infrastructure.template_system.storage_manager import (
-    TemplateStorageManager, 
-    TemplateStorageError
-)
-from mcp_task_orchestrator.infrastructure.template_system.template_engine import (
-    TemplateEngine,
-    TemplateValidationError,
-    ParameterSubstitutionError
-)
-from mcp_task_orchestrator.infrastructure.template_system.template_installer import (
-    TemplateInstaller,
-    TemplateInstallationError
-)
-from mcp_task_orchestrator.infrastructure.template_system.mcp_tools import (
-    handle_template_create,
-    handle_template_list,
-    handle_template_load,
-    handle_template_instantiate,
-    handle_template_validate,
-    handle_template_delete,
-    handle_template_install_default_library
-)
+# from mcp_task_orchestrator.infrastructure.template_system.storage_manager import  # TODO: Complete this import
+# from mcp_task_orchestrator.infrastructure.template_system.template_engine import  # TODO: Complete this import
+# from mcp_task_orchestrator.infrastructure.template_system.template_installer import  # TODO: Complete this import
+# from mcp_task_orchestrator.infrastructure.template_system.mcp_tools import  # TODO: Complete this import
 
 
 class TestTemplateSystemIntegration:
@@ -679,7 +661,7 @@ class TestTemplateSystemPerformance:
         instantiated = self.template_engine.instantiate_template(template_id, parameters)
         end_time = time.time()
         
-        # Should complete in reasonable time (less than 5 seconds for 100 parameters/tasks)
+        # Should complete in reasonable time
         assert end_time - start_time < 5.0
         
         # Verify substitution worked

@@ -14,7 +14,7 @@ from pathlib import Path
 # Add installer directory to path
 sys.path.insert(0, str(Path(__file__).parent / "installer"))
 
-from installer.client_detector import ClientDetector
+from mcp_task_orchestrator_cli.platforms.client_detector import ClientDetector
 
 def validate_config(client_id, config_path):
     """Validate a client configuration file."""

@@ -19,12 +19,7 @@ async def test_comprehensive_integration():
         print("=== Comprehensive Real Implementation Integration Test ===\n")
         
         # Import real implementations
-        from mcp_task_orchestrator.infrastructure.mcp.handlers.db_integration import (
-            get_generic_task_use_case,
-            get_execute_task_use_case,
-            get_complete_task_use_case,
-            health_check
-        )
+#         from mcp_task_orchestrator.infrastructure.mcp.handlers.db_integration import  # TODO: Complete this import
         
         print("1. Testing health check...")
         health_result = health_check()
@@ -133,7 +128,7 @@ async def test_comprehensive_integration():
                 print("⚠️  Completion returned error (expected without database)")
                 
         except Exception as e:
-            print(f"⚠️  Task completion failed (expected in test environment): {str(e)}")
+            print(f"⚠️  Task completion failed: {str(e)}")
             print("   This is normal without full database setup")
         
         print("\n6. Testing artifact storage...")

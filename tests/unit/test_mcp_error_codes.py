@@ -12,39 +12,13 @@ from unittest.mock import Mock, patch
 from datetime import datetime
 from typing import Dict, Any
 
-from mcp_task_orchestrator.infrastructure.mcp.error_codes import (
-    MCPErrorCode,
-    MCPErrorResponse,
-    ERROR_CATEGORY_TO_MCP_CODE,
-    EXCEPTION_TYPE_TO_MCP_CODE,
-    get_mcp_error_code,
-    create_mcp_error_response,
-    create_validation_error,
-    create_not_found_error,
-    create_authentication_error,
-    create_permission_error
-)
+# from mcp_task_orchestrator.infrastructure.mcp.error_codes import  # TODO: Complete this import
 
-from mcp_task_orchestrator.infrastructure.mcp.error_handling import (
-    mcp_error_handler,
-    mcp_validation_handler,
-    format_mcp_success_response,
-    format_mcp_error_response,
-    validate_task_id,
-    validate_tool_arguments
-)
+# from mcp_task_orchestrator.infrastructure.mcp.error_handling import  # TODO: Complete this import
 
-from mcp_task_orchestrator.infrastructure.security.error_sanitization import (
-    ErrorCategory,
-    SafeErrorResponse,
-    sanitize_error
-)
+# from mcp_task_orchestrator.infrastructure.security.error_sanitization import  # TODO: Complete this import
 
-from mcp_task_orchestrator.domain.exceptions import (
-    OrchestrationError,
-    ValidationError,
-    TaskError
-)
+# from mcp_task_orchestrator.domain.exceptions import  # TODO: Complete this import
 
 
 class TestMCPErrorCodes:
@@ -273,7 +247,7 @@ class TestErrorSanitizationIntegration:
             (ValueError("test"), MCPErrorCode.INVALID_PARAMS),
             (FileNotFoundError("test"), MCPErrorCode.TASK_NOT_FOUND),
             (PermissionError("test"), MCPErrorCode.PERMISSION_DENIED),
-            (ConnectionError("test"), MCPErrorCode.DATABASE_ERROR),
+           , MCPErrorCode.DATABASE_ERROR),
         ]
         
         for exception, expected_code in test_cases:

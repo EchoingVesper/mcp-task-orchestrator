@@ -699,7 +699,7 @@ class ValidationFramework:
                 "total_tests": total_tests,
                 "passed_tests": passed_tests,
                 "failed_tests": failed_tests,
-                "pass_rate": (passed_tests / total_tests * 100) if total_tests > 0 else 0
+                "pass_rate": if total_tests > 0 else 0
             },
             "tool_results": {},
             "failed_tests": [],

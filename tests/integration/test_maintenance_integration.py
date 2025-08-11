@@ -22,7 +22,10 @@ from mcp_task_orchestrator.orchestrator.specialist_management_service import Spe
 from mcp_task_orchestrator.orchestrator.task_lifecycle import TaskLifecycleManager
 from mcp_task_orchestrator.orchestrator.streaming_artifacts import StreamingArtifactManager
 from mcp_task_orchestrator.orchestrator.artifacts import ArtifactManager
-from mcp_task_orchestrator.orchestrator.models import TaskStatus, SpecialistType
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
@@ -464,7 +467,7 @@ class TestMaintenanceIntegration:
         end_time = datetime.utcnow()
         duration = (end_time - start_time).total_seconds()
         
-        # Verify performance (should complete within reasonable time)
+        # Verify performance
         assert duration < 30  # 30 seconds for 50 tasks
         assert scan_result["scan_results"]["tasks_scanned"] == task_count
     

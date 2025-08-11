@@ -14,9 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Import our file tracking components
 from mcp_task_orchestrator.db.models import Base
-from mcp_task_orchestrator.orchestrator.file_tracking_integration import (
-    initialize_file_tracking, create_file_tracker_for_subtask
-)
+# from mcp_task_orchestrator.orchestrator.file_tracking_integration import  # TODO: Complete this import
 
 
 async def test_file_tracking_system():

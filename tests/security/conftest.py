@@ -18,19 +18,8 @@ from typing import Dict, List, Any, Generator, AsyncGenerator
 from pathlib import Path
 
 # Import security infrastructure
-from mcp_task_orchestrator.infrastructure.security import (
-    APIKeyManager, 
-    Role, 
-    Permission,
-    ValidationError,
-    AuthenticationError,
-    AuthorizationError,
-    security_audit_logger,
-    api_key_manager,
-    role_manager,
-    generate_api_key,
-    validate_api_key
-)
+from mcp_task_orchestrator.infrastructure.security.authentication import APIKeyManager
+from mcp_task_orchestrator.infrastructure.security.authorization import Permission, Role
 
 # Import domain entities for testing
 from mcp_task_orchestrator.domain.entities.task import Task
@@ -570,7 +559,7 @@ def pytest_collection_modifyitems(config, items):
             test_name = item.name.lower()
             if "auth" in test_name and "authentication" in test_name:
                 item.add_marker(pytest.mark.authentication)
-            elif "auth" in test_name and ("authorization" in test_name or "permission" in test_name):
+            elif "authorization" in test_name:
                 item.add_marker(pytest.mark.authorization)
             elif "xss" in test_name:
                 item.add_marker(pytest.mark.xss)

@@ -13,19 +13,7 @@ import traceback
 from unittest.mock import Mock, patch, MagicMock
 from typing import Dict, List, Any, Optional
 
-from mcp_task_orchestrator.infrastructure.security import (
-    ErrorCategory,
-    SafeErrorResponse,
-    ErrorSanitizer,
-    error_sanitizer,
-    sanitize_error,
-    safe_error_response,
-    mcp_error_response,
-    sanitize_handler_errors,
-    ValidationError,
-    AuthenticationError,
-    AuthorizationError
-)
+# from mcp_task_orchestrator.infrastructure.security import  # TODO: Complete this import
 
 
 class TestErrorMessageSanitization:
@@ -727,5 +715,5 @@ class TestInformationDisclosureIntegration:
         
         # But should follow consistent sanitization rules
         message_lengths = [len(r.message) for r in sanitized_responses]
-        # Messages should be reasonably similar in length (within 50 chars)
+        # Messages should be reasonably similar in length
         assert max(message_lengths) - min(message_lengths) < 50

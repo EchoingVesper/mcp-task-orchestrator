@@ -13,24 +13,10 @@ from datetime import datetime
 from mcp import types
 
 # Import new Pydantic handlers
-from mcp_task_orchestrator.infrastructure.mcp.handlers.task_handlers_v2 import (
-    handle_create_task_v2,
-    handle_update_task_v2,
-    handle_delete_task_v2,
-    handle_cancel_task_v2,
-    handle_query_tasks_v2,
-    handle_execute_task_v2,
-    handle_complete_task_v2
-)
+# from mcp_task_orchestrator.infrastructure.mcp.handlers.task_handlers_v2 import  # TODO: Complete this import
 
 # Import DTOs for validation
-from mcp_task_orchestrator.infrastructure.mcp.dto import (
-    CreateTaskRequest,
-    CreateTaskResponse,
-    UpdateTaskRequest,
-    UpdateTaskResponse,
-    MCPErrorResponse
-)
+# from mcp_task_orchestrator.infrastructure.mcp.dto import  # TODO: Complete this import
 
 # Import domain models and exceptions
 from mcp_task_orchestrator.domain.entities.task import Task, TaskType, TaskStatus
@@ -492,7 +478,7 @@ class TestPerformanceAndValidation:
         
         serialization_time = time.time() - start_time
         
-        # Serialization should be fast (less than 1 second for 100 iterations)
+        # Serialization should be fast
         assert serialization_time < 1.0, f"Serialization too slow: {serialization_time:.2f}s"
 
 

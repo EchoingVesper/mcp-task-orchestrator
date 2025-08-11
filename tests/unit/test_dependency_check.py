@@ -56,7 +56,7 @@ def test_dependency_logic():
 
 def test_workspace_detection_dependency():
     """Test if workspace detection can work with available dependencies."""
-    print(f"\n🎯 Testing Workspace Detection Dependency (pydantic)...")
+    print(f"\n🎯 Testing Workspace Detection Dependency...")
     
     try:
         import pydantic

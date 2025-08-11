@@ -10,10 +10,7 @@ from pathlib import Path
 import tempfile
 import json
 
-from mcp_task_orchestrator.infrastructure.template_system.json5_parser import (
-    JSON5Parser, 
-    JSON5ValidationError
-)
+from mcp_task_orchestrator.infrastructure.template_system.json5_parser import JSON5Parser, JSON5ValidationError
 
 
 class TestJSON5Parser:
@@ -194,7 +191,7 @@ class TestJSON5Parser:
             try:
                 temp_path.chmod(0o644)
                 temp_path.unlink()
-            except (OSError, PermissionError):
+            except:
                 pass
     
     def test_invalid_json5_syntax(self):

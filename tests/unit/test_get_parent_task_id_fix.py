@@ -23,9 +23,10 @@ async def test_get_parent_task_id_fix():
         os.environ["MCP_TASK_ORCHESTRATOR_BASE_DIR"] = base_dir
         
         from .orchestrator.orchestration_state_manager import StateManager
-        from mcp_task_orchestrator.orchestrator.models import (
-            TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
-        )
+        # Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
         
         # Initialize StateManager with explicit paths
         state_manager = StateManager(db_path=db_path, base_dir=base_dir)
@@ -98,7 +99,7 @@ async def test_get_parent_task_id_fix():
             )
             print("SUCCESS: Empty string handled gracefully")
             
-            # Test with None (should be caught by type checking)
+            # Test with None
             # This would normally raise a TypeError in real usage
             
         except Exception as e:

@@ -86,7 +86,7 @@ summary = f"""
 ### Critical Issues Found
 1. **Database Integration Error**: `cannot access local variable 'operation' where it is not associated with a value`
 2. **Missing Methods**: Several tools missing implementation methods (update_task, delete_task, etc.)
-3. **DatabasePersistenceManager**: Missing required methods (get_all_active_tasks, cleanup_stale_locks)
+3. **DatabasePersistenceManager**: Missing required methods
 
 ### Next Steps
 1. Fix the database integration bug in db_integration.py

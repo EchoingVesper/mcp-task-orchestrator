@@ -14,15 +14,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from unittest.mock import Mock, patch, AsyncMock
 from typing import Dict, List, Any, Optional
 
-from mcp_task_orchestrator.infrastructure.security import (
-    validate_string_input,
-    validate_file_path,
-    api_key_manager,
-    ValidationError,
-    AuthenticationError,
-    secure_mcp_handler,
-    Permission
-)
+# from mcp_task_orchestrator.infrastructure.security import  # TODO: Complete this import
 
 
 class TestDoSAttackProtection:
@@ -1013,7 +1005,7 @@ class TestPerformanceSecurityIntegration:
             blocked = stats["blocked"]
             
             if result_type == "normal":
-                success_rate = (total - blocked) / total
+                success_rate = / total
                 assert success_rate > 0.9, f"Sustained normal request success rate: {success_rate:.2%}"
             else:
                 block_rate = blocked / total

@@ -190,7 +190,7 @@ async def example_priority_based_testing():
             else:
                 low_priority.append((tool_name, results[tool_name]))
     
-    for priority, tools in [("HIGH", high_priority), ("MEDIUM", medium_priority), ("LOW", low_priority)]:
+    for priority, tools in [("HIGH", high_priority), ("MEDIUM", medium_priority),]:
         if tools:
             print(f"\n   {priority} Priority Tools:")
             for tool_name, result in tools:

@@ -62,7 +62,7 @@ async def test_mcp_protocol():
             )
             
             specialist_context = result[0].text
-            print(f"[OK] Specialist context generated ({len(specialist_context)} chars)")
+            print(f"[OK] Specialist context generated {len(specialist_context)} chars)")
         
         # Test get_status
         print("\nTesting orchestrator_get_status...")

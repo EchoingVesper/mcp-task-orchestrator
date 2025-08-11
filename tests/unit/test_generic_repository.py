@@ -11,16 +11,8 @@ from typing import List
 import tempfile
 import os
 
-from mcp_task_orchestrator.db.generic_repository import (
-    GenericTaskRepository, CycleDetectedError
-)
-from mcp_task_orchestrator.orchestrator.generic_models import (
-    GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
-    TaskTemplate, TemplateParameter,
-    TaskType, TaskStatus, LifecycleStage, DependencyType, DependencyStatus,
-    EventType, EventCategory, AttributeType, ArtifactType,
-    ComplexityLevel, SpecialistType
-)
+# from mcp_task_orchestrator.db.generic_repository import  # TODO: Complete this import
+# from mcp_task_orchestrator.orchestrator.generic_models import  # TODO: Complete this import
 
 
 @pytest.fixture
@@ -631,7 +623,7 @@ class TestPerformance:
         
         elapsed = time.time() - start_time
         
-        # Should complete in reasonable time (< 5 seconds for 100 tasks)
+        # Should complete in reasonable time
         assert elapsed < 5.0
         
         # Verify all created

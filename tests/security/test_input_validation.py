@@ -11,19 +11,7 @@ import json
 from unittest.mock import Mock, patch
 from typing import Dict, List, Any
 
-from mcp_task_orchestrator.infrastructure.security import (
-    XSSValidator,
-    PathValidator,
-    ParameterValidator,
-    ValidationError,
-    xss_validator,
-    path_validator,
-    parameter_validator,
-    validate_string_input,
-    validate_file_path,
-    validate_task_id,
-    is_safe_input
-)
+# from mcp_task_orchestrator.infrastructure.security import  # TODO: Complete this import
 
 from mcp_task_orchestrator.domain.entities.task import Task
 
@@ -684,7 +672,7 @@ class TestInputValidationIntegration:
         for safe_input, context in safe_inputs:
             try:
                 result = validate_string_input(safe_input, context, max_length=500)
-                # Should return string (possibly sanitized)
+                # Should return string
                 assert isinstance(result, str)
                 assert len(result) > 0
             except ValidationError as e:

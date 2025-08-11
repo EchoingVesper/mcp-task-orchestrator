@@ -36,7 +36,7 @@ async def test_quick_operations():
             print(f"Retrieved specific task in {elapsed:.2f}s")
             
             if task:
-                # Test updating a task (this was part of the hanging issue)
+                # Test updating a task
                 start_time = time.time()
                 await asyncio.wait_for(
                     state_manager.update_subtask(task), 

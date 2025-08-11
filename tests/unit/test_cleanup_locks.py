@@ -62,7 +62,7 @@ def test_cleanup_stale_locks():
             logger.error(f"✗ cleanup_stale_locks(120) failed: {str(e)}")
             return False
         
-        # Test 4: Test with very large max_age (should clean up all locks)
+        # Test 4: Test with very large max_age
         try:
             result = persistence.cleanup_stale_locks(max_age_seconds=0)  # Clean up all
             logger.info(f"✓ cleanup_stale_locks(0) returned: {result}")

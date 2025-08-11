@@ -305,7 +305,7 @@ def run_edge_case_tests():
     # Check performance
     total_perf_time = sum(results['edge_case_tests']['performance'].values())
     perf_status = "EXCELLENT" if total_perf_time < 100 else "GOOD" if total_perf_time < 500 else "SLOW"
-    print(f"  ⚡ Performance: {perf_status} ({total_perf_time:.2f}ms)")
+    print(f"  ⚡ Performance: {perf_status}")
     
     # Check benefits
     benefits_count = len(results['edge_case_tests']['paradigm_comparison']['workspace_benefits'])

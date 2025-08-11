@@ -13,7 +13,7 @@ import yaml
 import asyncio
 import json
 
-from mcp_task_orchestrator.orchestrator.role_loader import create_example_roles_file, get_roles
+# create_example_roles_file moved to role management service, get_roles
 
 
 async def simulate_mcp_request(project_dir):

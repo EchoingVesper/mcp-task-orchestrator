@@ -56,7 +56,7 @@ async def test_state_manager_with_correct_db():
                     print("SUCCESS: update_subtask completed quickly!")
                     return True
                 else:
-                    print(f"WARNING: update_subtask took {elapsed:.2f}s (> 2.0s target)")
+                    print(f"WARNING: update_subtask took {elapsed:.2f}s")
                     return False
             else:
                 print("Could not retrieve specific task")

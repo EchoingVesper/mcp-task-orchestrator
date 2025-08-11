@@ -13,11 +13,11 @@ import json
 from pathlib import Path
 
 from mcp_task_orchestrator.orchestrator.maintenance import MaintenanceCoordinator
-from mcp_task_orchestrator.orchestrator.models import TaskStatus, SpecialistType
-from mcp_task_orchestrator.db.models import (
-    TaskBreakdownModel, SubTaskModel, MaintenanceOperationModel,
-    TaskLifecycleModel, StaleTaskTrackingModel, TaskArchiveModel
-)
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
+# from mcp_task_orchestrator.db.models import  # TODO: Complete this import
 
 
 class TestMaintenanceCoordinator:

@@ -12,14 +12,12 @@ from unittest.mock import Mock, AsyncMock, patch, MagicMock
 import json
 from pathlib import Path
 
-from mcp_task_orchestrator.orchestrator.task_lifecycle import (
-    TaskLifecycleManager, TaskLifecycleState, StaleTaskReason
-)
-from mcp_task_orchestrator.orchestrator.models import TaskStatus, SpecialistType
-from mcp_task_orchestrator.db.models import (
-    TaskBreakdownModel, SubTaskModel, TaskLifecycleModel,
-    StaleTaskTrackingModel, TaskArchiveModel
-)
+# from mcp_task_orchestrator.orchestrator.task_lifecycle import  # TODO: Complete this import
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
+# from mcp_task_orchestrator.db.models import  # TODO: Complete this import
 
 
 class TestTaskLifecycleManager:

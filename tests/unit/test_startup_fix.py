@@ -19,7 +19,7 @@ def test_state_manager_cleanup():
         
         logger.info("Testing StateManager cleanup integration...")
         
-        # Create a state manager (this should trigger the cleanup call)
+        # Create a state manager
         # We'll catch any AttributeError that would occur if cleanup_stale_locks is missing
         try:
             # This will call _cleanup_stale_locks() which calls persistence.cleanup_stale_locks()

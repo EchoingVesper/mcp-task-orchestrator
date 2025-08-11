@@ -189,7 +189,7 @@ async def main():
     
     for test_name, result in results.items():
         status = "✅ PASS" if result["success"] else "❌ FAIL"
-        logger.info(f"{status:8} {test_name:30} ({result['elapsed']:.2f}s)")
+        logger.info(f"{status:8} {test_name:30}")
     
     logger.info(f"\nResults: {passed}/{total} tests passed")
     logger.info(f"Total time: {total_elapsed:.2f}s")

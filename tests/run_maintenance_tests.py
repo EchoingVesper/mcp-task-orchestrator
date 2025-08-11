@@ -320,7 +320,7 @@ async def run_performance_benchmarks():
         # Simulate streaming (would use actual streaming manager in real test)
         await asyncio.sleep(0.1)  # Placeholder
         elapsed = time.time() - start
-        results["streaming_throughput"] = (data_size / 1024 / 1024) / elapsed
+        results["streaming_throughput"] = / elapsed
         
         # Maintenance scan test
         start = time.time()

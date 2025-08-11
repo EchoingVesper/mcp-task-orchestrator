@@ -24,9 +24,10 @@ logging.basicConfig(
 )
 
 # Import after configuring logging
-from mcp_task_orchestrator.orchestrator.models import (
-    TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
-)
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 from mcp_task_orchestrator.persistence import PersistenceManager
 from .orchestrator.orchestration_state_manager import StateManager
 from .orchestrator.specialist_management_service import SpecialistManager
@@ -49,7 +50,7 @@ async def test_task_execution():
     
     # Create tasks
     tasks = [
-        SubTask(
+        Task(
             task_id=f"architect_{uuid.uuid4().hex[:6]}",
             title="Design Test Architecture",
             description="Design a simple test architecture",
@@ -57,7 +58,7 @@ async def test_task_execution():
             dependencies=[],
             estimated_effort="10 minutes"
         ),
-        SubTask(
+        Task(
             task_id=f"implementer_{uuid.uuid4().hex[:6]}",
             title="Implement Test Feature",
             description="Implement a simple test feature",
@@ -68,7 +69,7 @@ async def test_task_execution():
     ]
     
     # Create task breakdown
-    breakdown = TaskBreakdown(
+    breakdown = Task(
         parent_task_id=parent_task_id,
         description="Test task for task execution",
         complexity=ComplexityLevel.SIMPLE,

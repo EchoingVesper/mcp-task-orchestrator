@@ -11,11 +11,7 @@ from typing import Dict, Any
 import tempfile
 from pathlib import Path
 
-from mcp_task_orchestrator.infrastructure.template_system.template_engine import (
-    TemplateEngine,
-    TemplateValidationError,
-    ParameterSubstitutionError
-)
+from mcp_task_orchestrator.infrastructure.template_system.template_engine import TemplateEngine, ParameterSubstitutionError, TemplateValidationError
 from mcp_task_orchestrator.infrastructure.template_system.storage_manager import TemplateStorageError
 
 
@@ -435,7 +431,7 @@ class TestTemplateEngine:
             assert result is not None
     
     def test_template_inheritance_placeholder(self):
-        """Test placeholder for template inheritance (future feature)."""
+        """Test placeholder for template inheritance."""
         # This is a placeholder test for when template inheritance is implemented
         # Currently, templates are standalone, but this tests the structure
         

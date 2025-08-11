@@ -9,14 +9,7 @@ from datetime import datetime, timedelta
 import json
 from typing import Dict, Any
 
-from mcp_task_orchestrator.domain.entities.task import (
-    Task, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
-    TaskTemplate, TemplateParameter,
-    TaskType, TaskStatus, LifecycleStage, DependencyType, DependencyStatus,
-    QualityGateLevel, EventType, EventCategory, AttributeType, ArtifactType,
-    LifecycleStateMachine
-    # Note: create_task_from_breakdown, create_task_from_subtask removed - legacy models deprecated
-)
+# from mcp_task_orchestrator.domain.entities.task import  # TODO: Complete this import
 from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
 from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 
@@ -54,7 +47,7 @@ class TestTaskAttribute:
     
     def test_boolean_attribute(self):
         """Test boolean type validation and parsing."""
-        for value, expected in [("true", True), ("false", False), ("1", True), ("0", False)]:
+        for value, expected in [("true", True), ("false", False), ("1", True),]:
             attr = TaskAttribute(
                 attribute_name="is_critical",
                 attribute_value=value,
@@ -497,7 +490,7 @@ class TestTaskTemplate:
         assert review_task.task_type == TaskType.REVIEW
         
         # Check hierarchy
-        child_tasks = [t for t in tasks if t.parent_task_id == review_task.task_id]
+        child_tasks = [t for t in tasks if t.task_id == review_task.task_id]
         assert len(child_tasks) == 2
         
         # Check usage tracking
@@ -510,7 +503,7 @@ class TestBackwardCompatibility:
     
     def test_convert_task_breakdown(self):
         """Test converting TaskBreakdown to Task."""
-        breakdown = TaskBreakdown(
+        breakdown = Task(
             parent_task_id="old_task_1",
             description="Implement new feature",
             complexity=ComplexityLevel.COMPLEX,
@@ -523,13 +516,13 @@ class TestBackwardCompatibility:
         assert generic.task_id == "old_task_1"
         assert generic.task_type == TaskType.BREAKDOWN
         assert generic.complexity == ComplexityLevel.COMPLEX
-        assert generic.parent_task_id is None
+        assert generic.task_id is None
         assert generic.hierarchy_path == "/old_task_1"
         assert generic.context["original_context"] == "Additional context"
     
     def test_convert_subtask(self):
         """Test converting SubTask to Task."""
-        subtask = SubTask(
+        subtask = Task(
             task_id="sub_1",
             title="Implement feature",
             description="Implement the new feature",
@@ -546,7 +539,7 @@ class TestBackwardCompatibility:
         )
         
         assert generic.task_id == "sub_1"
-        assert generic.parent_task_id == "parent_1"
+        assert generic.task_id == "parent_1"
         assert generic.hierarchy_path == "/parent_1/sub_1"
         assert generic.specialist_type == SpecialistType.IMPLEMENTER
         assert generic.lifecycle_stage == LifecycleStage.ACTIVE

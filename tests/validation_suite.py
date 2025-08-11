@@ -614,9 +614,7 @@ class HangDetectionValidator:
         start_time = time.time()
         
         try:
-            from mcp_task_orchestrator.monitoring.hang_detection import (
-                HangDetector, with_hang_detection, get_hang_detection_statistics
-            )
+#             from mcp_task_orchestrator.monitoring.hang_detection import  # TODO: Complete this import
             
             # Test basic hang detector functionality
             detector = HangDetector(operation_timeout=5.0, warning_timeout=2.0)
@@ -696,10 +694,7 @@ class HangDetectionValidator:
             # but doesn't actually test their integration with MCP (which would require a full server)
             
             try:
-                from mcp_task_orchestrator.mcp_request_handlers import (
-                    handle_complete_subtask_enhanced,
-                    handle_execute_subtask_enhanced
-                )
+#                 from mcp_task_orchestrator.mcp_request_handlers import  # TODO: Complete this import
                 handlers_available = True
             except ImportError:
                 handlers_available = False
@@ -748,7 +743,7 @@ class IntegrationValidator:
             output_dir = Path(tempfile.mkdtemp(prefix="validation_e2e_"))
             
             try:
-                # Step 1: Write test output (simulating test execution)
+                # Step 1: Write test output
                 writer = TestOutputWriter(output_dir)
                 
                 with writer.write_test_output("e2e_validation_test", "text") as session:
