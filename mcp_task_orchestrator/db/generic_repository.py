@@ -276,34 +276,45 @@ class GenericTaskRepository(TaskRepository):
     
     
     # ============================================
-    # Abstract method implementations (sync wrappers)
+    # Abstract method implementations (database-backed)
     # ============================================
     
-    def create_task(self, task_data: Dict[str, Any]) -> str:
-        """Create a new task (sync wrapper)."""
-        import uuid
-        task_id = task_data.get('task_id') or str(uuid.uuid4())
+    def __init__(self, db_url: Optional[str] = None):
+        """Initialize repository with database connection."""
+        from ..infrastructure.database.connection_manager import DatabaseConnectionManager
+        from ..infrastructure.database.sqlite.sqlite_task_repository import SQLiteTaskRepository
         
-        # Simple placeholder implementation
-        # In a real implementation, this would persist to database
-        logger.info(f"Creating task with ID: {task_id}")
-        return task_id
+        if db_url is None:
+            # Default to memory database for testing, or workspace database
+            import os
+            workspace_dir = os.getcwd()
+            if os.path.exists('.task_orchestrator'):
+                db_url = f"sqlite:///{workspace_dir}/.task_orchestrator/tasks.db"
+            else:
+                db_url = "sqlite:///:memory:"
+        
+        # Initialize the underlying SQLite repository
+        connection_manager = DatabaseConnectionManager(db_url)
+        self._sqlite_repo = SQLiteTaskRepository(connection_manager)
+        
+        # Call parent init for async functionality
+        super().__init__()
+    
+    def create_task(self, task_data: Dict[str, Any]) -> str:
+        """Create a new task using SQLite backend."""
+        return self._sqlite_repo.create_task(task_data)
 
     def get_task(self, task_id: str) -> Optional[Dict[str, Any]]:
-        """Get a task by ID (sync wrapper)."""
-        # Simple placeholder implementation
-        logger.info(f"Getting task with ID: {task_id}")
-        return None  # Would return actual task data from database
+        """Get a task by ID using SQLite backend."""
+        return self._sqlite_repo.get_task(task_id)
 
     def update_task(self, task_id: str, updates: Dict[str, Any]) -> bool:
-        """Update an existing task (sync wrapper)."""
-        logger.info(f"Updating task {task_id} with {updates}")
-        return True  # Would update actual task in database
+        """Update an existing task using SQLite backend."""
+        return self._sqlite_repo.update_task(task_id, updates)
 
     def delete_task(self, task_id: str) -> bool:
-        """Delete a task (sync wrapper)."""
-        logger.info(f"Deleting task with ID: {task_id}")
-        return True  # Would delete actual task from database
+        """Delete a task using SQLite backend.""" 
+        return self._sqlite_repo.delete_task(task_id)
 
     def list_tasks(self, 
                    session_id: Optional[str] = None,
@@ -311,60 +322,45 @@ class GenericTaskRepository(TaskRepository):
                    status: Optional[str] = None,
                    limit: Optional[int] = None,
                    offset: Optional[int] = None) -> List[Dict[str, Any]]:
-        """List tasks with optional filtering (sync wrapper)."""
-        logger.info(f"Listing tasks with filters: session_id={session_id}, parent_task_id={parent_task_id}, status={status}")
-        return []  # Would return actual task list from database
+        """List tasks with optional filtering using SQLite backend."""
+        return self._sqlite_repo.list_tasks(session_id, parent_task_id, status, limit, offset)
 
     def get_subtasks(self, parent_task_id: str) -> List[Dict[str, Any]]:
-        """Get all subtasks of a parent task (sync wrapper)."""
-        logger.info(f"Getting subtasks for parent: {parent_task_id}")
-        return []  # Would return subtasks from database
+        """Get all subtasks of a parent task using SQLite backend."""
+        return self._sqlite_repo.list_tasks(parent_task_id=parent_task_id)
 
     def update_task_status(self, task_id: str, status: str) -> bool:
-        """Update the status of a task (sync wrapper)."""
-        logger.info(f"Updating task {task_id} status to: {status}")
-        return True  # Would update status in database
+        """Update the status of a task using SQLite backend."""
+        return self._sqlite_repo.update_task(task_id, {'status': status})
 
     def add_task_artifact(self, task_id: str, artifact: Dict[str, Any]) -> bool:
-        """Add an artifact to a task (sync wrapper)."""
-        logger.info(f"Adding artifact to task {task_id}: {artifact.get('name', 'unnamed')}")
-        return True  # Would add artifact to database
+        """Add an artifact to a task using SQLite backend."""
+        return self._sqlite_repo.add_task_artifact(task_id, artifact)
 
     def get_task_artifacts(self, task_id: str) -> List[Dict[str, Any]]:
-        """Get all artifacts for a task (sync wrapper)."""
-        logger.info(f"Getting artifacts for task: {task_id}")
-        return []  # Would return artifacts from database
+        """Get all artifacts for a task using SQLite backend."""
+        return self._sqlite_repo.get_task_artifacts(task_id)
 
     def search_tasks(self, query: str, fields: Optional[List[str]] = None) -> List[Dict[str, Any]]:
-        """Search tasks by text query (sync wrapper)."""
-        logger.info(f"Searching tasks with query: {query}")
-        return []  # Would return search results from database
+        """Search tasks by text query using SQLite backend."""
+        return self._sqlite_repo.search_tasks(query, fields)
 
     def get_task_dependencies(self, task_id: str) -> List[str]:
-        """Get task IDs that this task depends on (sync wrapper)."""
-        logger.info(f"Getting dependencies for task: {task_id}")
-        return []  # Would return dependency IDs from database
+        """Get task IDs that this task depends on using SQLite backend."""
+        return self._sqlite_repo.get_task_dependencies(task_id)
 
     def add_task_dependency(self, task_id: str, dependency_id: str) -> bool:
-        """Add a dependency between tasks (sync wrapper)."""
-        logger.info(f"Adding dependency: {task_id} depends on {dependency_id}")
-        return True  # Would add dependency to database
+        """Add a dependency between tasks using SQLite backend."""
+        return self._sqlite_repo.add_task_dependency(task_id, dependency_id)
 
     def cleanup_old_tasks(self, older_than: datetime, 
                          exclude_sessions: Optional[List[str]] = None) -> int:
-        """Clean up tasks older than a specified date (sync wrapper)."""
-        logger.info(f"Cleaning up tasks older than: {older_than}")
-        return 0  # Would return number of deleted tasks
+        """Clean up tasks older than a specified date using SQLite backend."""
+        return self._sqlite_repo.cleanup_old_tasks(older_than, exclude_sessions)
 
     def get_task_metrics(self, session_id: Optional[str] = None) -> Dict[str, Any]:
-        """Get metrics about tasks (sync wrapper)."""
-        logger.info(f"Getting task metrics for session: {session_id}")
-        return {
-            'total_tasks': 0,
-            'status_counts': {},
-            'type_counts': {},
-            'session_id': session_id
-        }  # Would return actual metrics from database
+        """Get metrics about tasks using SQLite backend."""
+        return self._sqlite_repo.get_task_metrics(session_id)
 
     async def dispose(self):
         """Clean up database connections."""
