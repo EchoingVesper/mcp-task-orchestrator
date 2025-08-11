@@ -295,78 +295,9 @@ When creating or editing markdown files, follow these rules to prevent markdownl
 - Use `bash`/`shell` for commands, `text` for plain content, `console` for terminal output, `yaml` for configuration, `json` for JSON examples, `python` for Python code
 - Add blank lines before and after code blocks
 
-## Status Tagging System
-
-### File Status Tags
-
-Use status tags in square brackets at the beginning of filenames for systematic lifecycle tracking:
-
-**Status Tag Categories:**
-- `[CURRENT]` - Active, up-to-date files
-- `[IN-PROGRESS]` - Currently being worked on
-- `[DRAFT]` - Planned but not yet started
-- `[NEEDS-VALIDATION]` - Implementation complete, requires testing
-- `[NEEDS-UPDATE]` - Requires updates due to system changes
-- `[DEPRECATED]` - Legacy files maintained for reference
-- `[COMPLETED]` - Finished work (typically in completed/ folders)
-
-**Files That Should Use Status Tags:**
-- PRPs: `[IN-PROGRESS]foundation-stabilization.md`
-- Planning documents: `[DRAFT]feature-roadmap.md`
-- Implementation guides: `[NEEDS-UPDATE]installation-guide.md`
-- Migration documents: `[COMPLETED]v1-to-v2-migration.md`
-- Architecture decisions: `[CURRENT]clean-architecture-guide.md`
-
-**Tag Update Requirements:**
-- Update tags when file status changes
-- Move completed PRPs to completed/ folder with [COMPLETED] tag
-- Use [NEEDS-VALIDATION] for implementations requiring testing
-- Archive outdated files with [DEPRECATED] before creating new versions
-
-### Status Tag Examples
-
-```bash
-# PRPs with lifecycle tracking
-PRPs/[IN-PROGRESS]foundation-stabilization-workflow-automation.md
-PRPs/[DRAFT]agent-to-agent-architecture-implementation.md
-PRPs/completed/[COMPLETED]codebase-standards-modernization.md
-
-# Documentation with maintenance status
-docs/[CURRENT]installation-guide.md
-docs/[NEEDS-UPDATE]migration-guide-v1.md
-docs/[DEPRECATED]legacy-api-reference.md
-
-# Planning and roadmap files
-docs/developers/planning/[DRAFT]v3-roadmap.md
-docs/developers/planning/[IN-PROGRESS]database-migration-plan.md
-```
-
-### Claude Code Hooks Integration
-
-The project includes Claude Code hooks to validate status tag usage:
-
-```bash
-# Status tag validator hook
-.claude/hooks/status-tag-validator.sh
-
-# Hook configuration in .claude/config.json
-{
-  "hooks": {
-    "post-command": [".claude/hooks/status-tag-validator.sh"]
-  }
-}
-```
-
 ## Important Instruction Reminders
 
 Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.
 ALWAYS prefer editing an existing file to creating a new one.
 NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
-
-### Status Tag Compliance
-
-- ALWAYS include appropriate status tags in filenames for PRPs, planning documents, and lifecycle-managed files
-- UPDATE status tags when file status changes during development
-- USE Claude Code hooks to validate and remind about status tag maintenance
-- MOVE completed PRPs to appropriate folders with [COMPLETED] tags
