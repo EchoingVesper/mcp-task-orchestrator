@@ -8,10 +8,32 @@ The AI agent only gets the context you are appending to the PRP and its own trai
 access to the codebase and the same knowledge cutoff as you, so its important that your research findings are included
 or referenced in the PRP. The Agent has Websearch capabilities, so pass urls to documentation and examples.
 
+## Orchestrator Integration Check
+
+**MANDATORY FIRST STEP:**
+```bash
+# Verify orchestrator is connected
+claude mcp list | grep task-orchestrator || (echo "ORCHESTRATOR NOT CONNECTED - Fixing..." && claude mcp restart task-orchestrator)
+
+# Initialize orchestrator session for PRP development
+# Use orchestrator_initialize_session with working_directory
+```
+
+If orchestrator fails, STOP and spawn fix agent per CLAUDE.md protocol.
+
 ## Research Process
 
 > During the research process, create clear tasks and spawn as many agents and subagents as needed using the batch
 tools. The deeper research we do here the better the PRP will be. we optminize for chance of success and not for speed.
+
+**Use Orchestrator for Research Coordination:**
+```yaml
+orchestrator_tasks:
+  - orchestrator_plan_task: "Research existing patterns for {feature}"
+  - orchestrator_plan_task: "External documentation research" 
+  - orchestrator_plan_task: "Security requirements analysis"
+  - orchestrator_get_status: Track all research progress
+```
 
 1. **Codebase Analysis in depth**
    - Create clear todos and spawn subagents to search the codebase for similar features/patterns Think hard and plan
@@ -82,23 +104,29 @@ tools. The deeper research we do here the better the PRP will be. we optminize f
 
 ### Enhanced Multi-Stage Validation Framework (Must be Executable by AI agent)
 
-**CRITICAL: Implement 5-Stage Validation (reference PRPs/validation/validation-framework.md):**
+**CRITICAL: Implement 5-Stage Validation (adapted for MCP Task Orchestrator):**
 
 ```bash
-# Stage 1: Syntax & Security Validation
-ruff check . --fix && mypy src/ && bandit -r src/ && safety check
+# Stage 1: Syntax & Formatting Validation
+black mcp_task_orchestrator/ && isort mcp_task_orchestrator/ && pytest -m unit
 
-# Stage 2: Unit Testing with Security Focus
-pytest tests/unit/ -v --cov=src --cov-fail-under=80 -m security
+# Stage 2: Unit Testing with Coverage
+pytest tests/unit/ -v --cov=mcp_task_orchestrator --cov-fail-under=70
 
 # Stage 3: Integration & Database Testing
-pytest tests/integration/ -v && python scripts/validate_database_schema.py
+pytest tests/integration/ -v && python tools/diagnostics/health_check.py
 
-# Stage 4: Security & Performance Validation  
-python scripts/security_audit.py && python scripts/performance_benchmark.py
+# Stage 4: Performance & Resource Validation  
+python tools/diagnostics/performance_monitor.py --duration 60
 
-# Stage 5: Production Readiness Validation
-python scripts/e2e_validation.py && python scripts/production_readiness_check.py
+# Stage 5: Orchestrator Integration Validation
+orchestrator_health_check && orchestrator_get_status
+```
+
+**Git Commit After Validation:**
+
+```bash
+git add -A && git commit -m "feat(prp): implement {feature-name} with validation"
 ```
 
 **Security-Specific Validation Requirements:**
@@ -108,9 +136,11 @@ python scripts/e2e_validation.py && python scripts/production_readiness_check.py
 - Error message sanitization verification
 - Authentication/authorization testing
 
-**_ CRITICAL AFTER YOU ARE DONE RESEARCHING AND EXPLORING THE CODEBASE BEFORE YOU START WRITING THE PRP _**
+### Critical Planning Phase
 
-**_ ULTRATHINK ABOUT THE PRP AND PLAN YOUR APPROACH IN DETAILED TODOS THEN START WRITING THE PRP _**
+**CRITICAL AFTER YOU ARE DONE RESEARCHING AND EXPLORING THE CODEBASE BEFORE YOU START WRITING THE PRP:**
+
+**ULTRATHINK ABOUT THE PRP AND PLAN YOUR APPROACH IN DETAILED TODOS THEN START WRITING THE PRP**
 
 ## Output
 
@@ -119,24 +149,28 @@ Save as: `PRPs/{feature-name}.md`
 ## Enhanced Quality Checklist
 
 ### Context Engineering Validation
+
 - [ ] All enhanced AI documentation referenced (ai_docs/)
 - [ ] Security-first design integrated throughout
 - [ ] Prescriptive implementation with file paths and line numbers
 - [ ] Context completeness verified using PRPs/ai_docs/context-engineering-guide.md
 
 ### Security Integration
+
 - [ ] Input validation requirements specified
 - [ ] Authentication/authorization requirements defined
 - [ ] Error sanitization requirements documented
 - [ ] Security testing requirements included
 
 ### Multi-Stage Validation
+
 - [ ] All 5 validation stages implemented and executable
 - [ ] Security validation gates included
 - [ ] Performance benchmarks specified
 - [ ] Production readiness criteria defined
 
 ### Pattern Integration
+
 - [ ] References existing patterns from PRPs/patterns/
 - [ ] Clear implementation path with security considerations
 - [ ] Error handling with security-safe messages documented

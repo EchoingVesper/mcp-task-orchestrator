@@ -2,14 +2,17 @@
 # CLI PROMPT: Comprehensive Security Test Suite for MCP Task Orchestrator
 
 #
+
 # MISSION
 
 Build a complete security test suite for the MCP Task Orchestrator's security infrastructure, covering authentication, authorization, input validation, path traversal prevention, and audit logging. Implement rigorous testing until all components are proven to work in actual use.
 
 #
+
 # PROJECT CONTEXT
 
 #
+
 ## Architecture Overview
 
 The MCP Task Orchestrator follows Clean Architecture with these layers:
@@ -23,6 +26,7 @@ The MCP Task Orchestrator follows Clean Architecture with these layers:
 - **Presentation**: `mcp_task_orchestrator/presentation/` - MCP server and CLI
 
 #
+
 ## Security Infrastructure Location
 
 All security components are in `mcp_task_orchestrator/infrastructure/security/`:
@@ -40,6 +44,7 @@ All security components are in `mcp_task_orchestrator/infrastructure/security/`:
 6. **`__init__.py`** - Unified security framework exports
 
 #
+
 ## Existing Test Structure
 
 Current tests are in `tests/` directory with:
@@ -51,9 +56,11 @@ Current tests are in `tests/` directory with:
 - `tests/CLAUDE.md` - Testing guidance
 
 #
+
 # DETAILED IMPLEMENTATION REQUIREMENTS
 
 #
+
 ## Phase 1: Test Structure Creation
 
 Create the following directory structure:

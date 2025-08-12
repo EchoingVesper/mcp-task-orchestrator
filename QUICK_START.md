@@ -1,10 +1,10 @@
 
-
 # MCP Task Orchestrator - Quick Start Guide
 
 Get up and running with AI-powered task orchestration
 
 #
+
 # 🎯 What This Does
 
 Transform Claude (or other MCP clients) into an intelligent project manager that breaks down complex tasks into
@@ -15,9 +15,11 @@ right locations!
 with architect, implementer, and tester specialists working together, with all artifacts saved in your project directory.
 
 #
+
 # ⚡ Quick Start
 
 #
+
 ## Step 1: Prerequisites Check
 
 ```bash
@@ -166,6 +168,7 @@ bash
    ```
 
 #
+
 ## Database/Maintenance Issues
 
 1. **Database errors**: Delete `.task_orchestrator/` folder and restart
@@ -175,6 +178,7 @@ bash
 1. **Task persistence not working**: Verify `.task_orchestrator/database/` directory exists
 
 #
+
 ## Windows-Specific Issues
 
 1. Run Command Prompt as Administrator (not PowerShell)
@@ -184,6 +188,7 @@ bash
 1. Use absolute paths in configuration
 
 #
+
 # 📚 What's Next
 
 Once you have it working:
@@ -199,6 +204,7 @@ Once you have it working:
 1. **Read the full docs**: [Complete documentation](docs/) for advanced features including the [Maintenance Coordinator Guide](docs/user-guide/maintenance-coordinator-guide.md)
 
 #
+
 # 🆘 Still Need Help
 
 1. **Run diagnostics**: `python scripts/diagnostics/verify_tools.py`

@@ -6,11 +6,13 @@
 📋 **Quick Reference**: See [CLAUDE.md](./CLAUDE.md) for essential commands and quick navigation
 
 #
+
 # Clean Architecture Overview
 
 The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Design** principles with a complete layered structure:
 
 #
+
 ## Architecture Layers
 
 **1. Domain Layer** (`mcp_task_orchestrator/domain/`):
@@ -54,6 +56,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 - **CLI Interface**: Command-line tools with health checks and configuration management
 
 #
+
 ## Key Architectural Components
 
 **1. Dependency Injection System**:
@@ -123,6 +126,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 - Comprehensive hang detection and resource management
 
 #
+
 ## Domain-Driven Design Implementation
 
 **Ubiquitous Language**: Core domain concepts consistently used across all layers
@@ -150,6 +154,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 - `OrchestrationCoordinator`: Composes all services for complete workflows
 
 #
+
 ## Clean Architecture Task Flow
 
 1. **Presentation** → **Application**: MCP request received, validated, and routed to use case
@@ -165,6 +170,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 6. **Presentation** ← **Application**: Clean response returned to MCP client
 
 #
+
 ## SOLID Principles Implementation
 
 - **Single Responsibility**: Each service has one clear purpose (task breakdown, specialist assignment, etc.)
@@ -178,6 +184,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 - **Dependency Inversion**: High-level modules depend on abstractions, not concretions
 
 #
+
 ## Key Design Patterns
 
 - **Clean Architecture**: Dependency flow always points inward toward domain
@@ -199,9 +206,11 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 - **Adapter Pattern**: Infrastructure adapters for external services
 
 #
+
 # Clean Architecture Development Practices
 
 #
+
 ## Adding a New Domain Entity
 
 1. Create entity in `domain/entities/` with business logic and invariants
@@ -217,6 +226,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 6. Register services in DI container configuration
 
 #
+
 ## Adding a New Use Case
 
 1. Create use case in `application/usecases/` following command pattern
@@ -232,6 +242,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 6. Update MCP server tool definitions
 
 #
+
 ## Adding a New MCP Tool (Clean Architecture Way)
 
 1. Create use case in `application/usecases/` for the business logic
@@ -245,6 +256,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 5. Document tool usage and examples
 
 #
+
 ## Adding Error Handling
 
 1. Define domain exceptions in `domain/exceptions/` with appropriate severity
@@ -258,6 +270,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 5. Test error scenarios and recovery paths
 
 #
+
 ## Adding Monitoring
 
 1. Add metrics using `record_metric()`, `increment_counter()`, or `track_performance()`
@@ -269,6 +282,7 @@ The MCP Task Orchestrator follows **Clean Architecture** and **Domain-Driven Des
 4. Include component in diagnostic runner for troubleshooting
 
 #
+
 ## Debugging Issues (Modern Tools)
 
 ```bash

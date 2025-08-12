@@ -12,6 +12,67 @@ Available MCP servers provide search, development, and automation capabilities. 
 
 The MCP Task Orchestrator is a Model Context Protocol server that provides intelligent task orchestration, specialized AI roles, and persistent memory for AI-assisted development. It follows Clean Architecture and Domain-Driven Design principles with a complete layered structure.
 
+## Critical Directives
+
+### ***CRITICAL***: Task Orchestrator Failure Protocol
+
+**If the MCP Task Orchestrator ever fails to function:**
+
+1. **STOP** - Do not proceed with current task or "work around" the issue
+2. **DIAGNOSE** - Immediately spawn a diagnostic agent to identify the issue:
+   ```bash
+   # Check MCP connection
+   claude mcp list 2>/dev/null | grep task-orchestrator || echo "Not connected"
+   
+   # Run health check
+   python tools/diagnostics/health_check.py
+   
+   # Check server logs
+   tail -n 50 ~/.claude/logs/mcp-*.log 2>/dev/null || echo "No logs found"
+   ```
+3. **FIX** - Spawn a dedicated fix agent with these priorities:
+   - Follow detailed procedures in `PRPs/protocols/orchestrator-fix-protocol.md`
+   - Fix known issues in the orchestrator code
+   - Restart the MCP server if needed: `claude mcp restart task-orchestrator`
+   - If changes were made to server code: `pip install -e . && claude mcp restart task-orchestrator`
+   - Update documentation if Claude Code restart is required
+4. **VERIFY** - Test the fix with `orchestrator_health_check` tool
+5. **RESUME** - Only continue original task after verification
+
+**Never say "the orchestrator isn't working, let's continue without it"**
+
+### ***CRITICAL***: Git Commit After Every Task
+
+**After completing ANY development task:**
+
+1. **ALWAYS** review changes: `git status && git diff`
+2. **COMMIT** with descriptive message:
+   ```bash
+   git add -A
+   git commit -m "type(scope): description"
+   # Examples:
+   # fix(orchestrator): resolve connection timeout issue
+   # feat(prp): add orchestrator integration to PRP process
+   # docs(claude): add critical failure protocol
+   ```
+3. Include orchestrator task ID in commit if applicable
+4. Never leave uncommitted changes between tasks
+
+### ***CRITICAL***: Auto-Recovery for Orchestrator Changes
+
+**When modifying orchestrator code:**
+
+1. After any change to `mcp_task_orchestrator/` files:
+   ```bash
+   # Reinstall and restart
+   pip install -e . && claude mcp restart task-orchestrator
+   
+   # Verify connection
+   claude mcp list | grep task-orchestrator
+   ```
+2. If restart fails, notify user that Claude Code restart may be needed
+3. Test with health check before proceeding
+
 ## Commands
 
 ### Building and Testing
@@ -252,6 +313,7 @@ Keep the root directory clean. Only place essential files directly in the reposi
 ### Proper File Placement
 
 **Test Files and Artifacts:**
+
 ```bash
 tests/                          # All test files
 docs/archives/test-artifacts/   # Test validation reports (*.json)
@@ -259,6 +321,7 @@ docs/archives/migration-reports/  # Migration summaries and reports
 ```
 
 **Documentation:**
+
 ```bash
 docs/users/           # User-facing documentation
 docs/developers/      # Developer/contributor documentation  
@@ -266,6 +329,7 @@ docs/archives/        # Historical docs, migration reports, test artifacts
 ```
 
 **Scripts and Tools:**
+
 ```bash
 scripts/             # Utility scripts organized by purpose
 tools/               # Production diagnostic tools

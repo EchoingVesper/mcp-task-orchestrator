@@ -1,17 +1,18 @@
 
-
 # Contributing to MCP Task Orchestrator
 
 Thank you for your interest in contributing to the MCP Task Orchestrator! This document provides guidelines and
 instructions for contributing to this project.
 
 #
+
 # Code of Conduct
 
 Please be respectful and considerate of others when contributing to this project. We aim to foster an inclusive
 and welcoming community.
 
 #
+
 # How to Contribute
 
 There are many ways to contribute to the MCP Task Orchestrator:
@@ -27,6 +28,7 @@ There are many ways to contribute to the MCP Task Orchestrator:
 1. **Testing**: Help test the software on different platforms and configurations.
 
 #
+
 # Development Setup
 
 1. Fork the repository

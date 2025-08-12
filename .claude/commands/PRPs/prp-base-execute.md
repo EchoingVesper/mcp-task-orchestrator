@@ -4,6 +4,18 @@ Implement a feature using the enhanced PRP file with security-first design and m
 
 ## PRP File: $ARGUMENTS
 
+## Pre-Execution Orchestrator Check
+
+**MANDATORY:**
+
+```bash
+# Verify orchestrator connection
+claude mcp list | grep task-orchestrator || (echo "FIXING ORCHESTRATOR..." && claude mcp restart task-orchestrator)
+
+# If orchestrator fails, STOP and follow CLAUDE.md protocol
+# DO NOT PROCEED without working orchestrator
+```
+
 ## Execution Process
 
 1. **Load Enhanced PRP**
@@ -18,14 +30,16 @@ Implement a feature using the enhanced PRP file with security-first design and m
    - Ultrathink before you execute the plan. Create a comprehensive plan addressing all requirements.
    - Break down the PRP into clear todos using the TodoWrite tool.
    - Use agents subagents and batchtool to enhance the process.
-   - **Important** YOU MUST ENSURE YOU HAVE EXTREMELY CLEAR TASKS FOR SUBAGENTS AND REFERENCE CONTEXT AND MAKE SURE EACH SUBAGENT READS THE PRP AND UNDERSTANDS ITS CONTEXT.
+   - **Important** ENSURE CLEAR TASKS FOR SUBAGENTS WITH CONTEXT
+   - Each subagent MUST read the PRP and understand its context
    - Identify implementation patterns from existing code to follow.
    - Never guess about imports, file names funtion names etc, ALWAYS be based in reality and real context gathering
 
-3. ## **Execute the plan**
-
-   ## Execute the PRP step by step
+3. **Execute the plan**
+   - Execute the PRP step by step
    - Implement all the code
+   - Use orchestrator_execute_task for complex subtasks
+   - Track progress with orchestrator_get_status
 
 4. **Enhanced Multi-Stage Validation**
    - **Stage 1**: Syntax & Security (ruff, mypy, bandit, safety)
@@ -50,4 +64,11 @@ Implement a feature using the enhanced PRP file with security-first design and m
    - Use context engineering guide for systematic validation
    - Apply security patterns for any additional requirements
 
-**Note**: Enhanced validation includes security-first design. If validation fails, reference PRPs/validation/security-validation.md for security-specific debugging and PRPs/patterns/ for implementation patterns.
+7. **Git Commit on Completion**
+   - ALWAYS commit changes after successful implementation
+   - Use descriptive commit message from PRP
+   - Never leave uncommitted work
+
+**Note**: Enhanced validation includes security-first design. If validation fails:
+- Reference PRPs/validation/ for debugging procedures
+- If orchestrator fails, STOP and fix per CLAUDE.md protocol

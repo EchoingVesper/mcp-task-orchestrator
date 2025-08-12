@@ -75,9 +75,16 @@ archives/
 # Local configuration
 .local/
 local_settings.py
-.claude/*
-!.claude/commands/
 .tools/
+
+# Claude Code - Include commands and settings in version control
+# Exclude only temporary files and user-specific state
+.claude/logs/
+.claude/temp/
+.claude/cache/
+.claude/session/
+.claude/.mcp-session-*
+.claude/*-session.md
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -93,9 +100,6 @@ site/
 # Development artifacts
 *.tmp
 *.temp
-.pytest_cache/
-htmlcov/
-.coverage.*
 .benchmark_results/
 .temp_cleanup/
 
@@ -136,46 +140,10 @@ dev-temp/
 scratch/
 .working/
 
-# PRP-specific files
-PRPs/completed/
-PRPs/in-progress/
+# PRP-specific files (temporary/cache only - PRPs themselves should be committed)
 PRPs/*.tmp
 PRPs/.cache/
 .prp-session/
 
-# Supabase local development
-supabase/.temp/
-supabase/logs/
-supabase/docker/
-supabase/.branches/
-supabase/.gitignore
-
-# Local database files (Docker volumes handle the data)
-*.db
-*.db-shm 
-*.db-wal
-
-# Secrets and keys - NEVER commit these
-.env.rag
-supabase/*.log
-supabase/config.toml
-.env
-.env.local
-.env.production
-
-# Supabase CLI generated files that contain secrets
-supabase/.temp/
-supabase/docker-compose.yml
-
-# But DO commit these important files:
-# supabase/config.toml.example (template without secrets)
-# supabase/migrations/ (database schema)
-# supabase/seed.sql (sample data)
-# supabase/functions/ (edge functions)
-# .env.rag.example (template without secrets)mcp-orchestrator-env/
-mcp-orchestrator-env/
-venv/
-venv_mcp/
-mcp-orchestrator-env/
-mcp-orchestrator-env/
-mcp-orchestrator-env/
+# Note: This project doesn't use Supabase - entries removed
+# Note: Duplicate database and venv entries cleaned up above

@@ -52,6 +52,16 @@ async def main():
         # Log server initialization
         logger.info("Starting MCP Task Orchestrator server...")
         
+        # Check if auto-reload should be enabled (only in development)
+        enable_auto_reload = os.environ.get("MCP_AUTO_RELOAD", "false").lower() in ("true", "1", "yes")
+        if enable_auto_reload:
+            try:
+                from .monitoring.auto_reload import enable_auto_reload as start_auto_reload
+                await start_auto_reload()
+                logger.info("Auto-reload monitoring enabled")
+            except Exception as e:
+                logger.warning(f"Could not enable auto-reload: {e}")
+        
         # Check if DI should be enabled
         enable_di = os.environ.get("MCP_TASK_ORCHESTRATOR_USE_DI", "true").lower() in ("true", "1", "yes")
         

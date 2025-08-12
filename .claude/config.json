@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "post-command": [
+      ".claude/hooks/session-context.sh",
+      ".claude/hooks/git-automation-helper.sh",
+      ".claude/hooks/status-tag-validator.sh",
+      ".claude/hooks/file-size-monitor.sh",
+      ".claude/hooks/test-reminder.sh",
+      ".claude/hooks/todo-tracker.sh"
+    ]
+  },
+  "settings": {
+    "hook_system": {
+      "enabled": true,
+      "description": "Comprehensive development workflow automation",
+      "features": [
+        "Session context restoration",
+        "Git workflow automation suggestions", 
+        "Status tag compliance validation",
+        "File size monitoring for Claude Code stability",
+        "Test reminder system",
+        "Technical debt tracking"
+      ]
+    }
+  }
+}

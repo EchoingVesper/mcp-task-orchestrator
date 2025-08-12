@@ -1,11 +1,12 @@
 
-
 # Testing Instructions for v1.7.1 Critical Fixes
 
 #
+
 # What We Fixed
 
 #
+
 ## Issue #35: Auto-Configuration Fix
 
 - **Problem**: `mcp-task-orchestrator-cli install` required manual server path
@@ -13,6 +14,7 @@
 - **Solution**: Added `mcp-task-orchestrator-cli setup` command that auto-detects everything
 
 #
+
 ## Issue #36: Working Directory Fix  
 
 - **Problem**: `.task_orchestrator` folder created in wrong location
@@ -20,9 +22,11 @@
 - **Solution**: Added `working_directory` parameter to `orchestrator_initialize_session`
 
 #
+
 # Testing the Fixes
 
 #
+
 ## Step 1: Test Auto-Configuration (Issue #35 Fix)
 
 Since you're in Windows and we're in WSL, here's how to test the auto-configuration:
@@ -31,7 +35,6 @@ Since you're in Windows and we're in WSL, here's how to test the auto-configurat
 
    **From Windows Command Prompt or PowerShell:**
 
-   
 ```bash
    pip install path\to\mcp_task_orchestrator-1.7.1-py3-none-any.whl
    ```
@@ -39,11 +42,11 @@ Since you're in Windows and we're in WSL, here's how to test the auto-configurat
 1. **Test the new setup command**:
 
    ```
+
 bash
    mcp-task-orchestrator-cli setup
    **Expected output**:
 
-   
 ```text
 
    MCP Task Orchestrator - Quick Setup
