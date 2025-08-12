@@ -12,6 +12,7 @@ import logging
 import sys
 from typing import Dict, List, Any, Optional
 from pathlib import Path
+from datetime import datetime, timezone
 
 from mcp import types
 
@@ -1136,6 +1137,7 @@ async def handle_resume_session(args: Dict[str, Any]) -> List[types.TextContent]
             session_data = json.load(f)
         
         # Update session to mark as resumed
+        from datetime import datetime, timezone
         session_data["resumed_at"] = datetime.now(timezone.utc).timestamp()
         session_data["database_status"] = "connected"  # Will be verified by database manager
         
@@ -1201,6 +1203,7 @@ async def handle_cleanup_sessions(args: Dict[str, Any]) -> List[types.TextConten
         # Find all session files
         session_files = list(task_orchestrator_dir.glob("session_*.json"))
         to_cleanup = []
+        from datetime import datetime, timezone
         current_time = datetime.now(timezone.utc).timestamp()
         cutoff_time = current_time - (older_than_days * 24 * 60 * 60)
         
