@@ -46,6 +46,30 @@ Quick reference for all available commands in this project.
 **When to use**: Implementing specific technical tasks or bug fixes  
 **Example**: `/PRPs:prp-task-execute @PRPs/add-rate-limiting-task.md`
 
+### `/PRPs:meta-prp-create [complex concept]`
+
+**Purpose**: Create comprehensive meta-PRPs with orchestrator multi-agent coordination  
+**When to use**: Complex, multi-phase projects requiring coordinated sub-agent execution  
+**Features**:
+- Multi-agent coordination through task orchestrator
+- Automatic specialist assignment (researcher, architect, coder, tester, reviewer)
+- Orchestrator session management and task breakdown
+- Artifact storage via orchestrator_complete_task
+- Result synthesis without manual summaries
+**Example**: `/PRPs:meta-prp-create v2.0 release coordination with comprehensive testing`
+
+### `/PRPs:meta-prp-execute @meta-prp-file.md`
+
+**Purpose**: Execute meta-PRPs using orchestrator multi-agent coordination  
+**When to use**: Implementing complex meta-PRPs with multiple coordinated phases  
+**Features**:
+- Main orchestrator agent coordinates all sub-agents
+- Sub-agents work on specific orchestrator tasks with specialist contexts
+- Automatic dependency management between sub-agents
+- Real-time progress monitoring and health checks
+- Result synthesis and artifact aggregation
+**Example**: `/PRPs:meta-prp-execute @PRPs/v2.0-release-meta-prp.md`
+
 ## Development Commands
 
 ### `/development:create-pr [PR title]`
@@ -136,6 +160,14 @@ Quick reference for all available commands in this project.
 2. `/PRPs:prp-task-create [fix description]` - Plan the fix
 3. `/PRPs:prp-task-execute @task-file.md` - Implement fix
 4. `/development:smart-commit [commit message]` - Commit fix
+
+### 🎯 **Meta-PRP Complex Project Workflow**
+
+1. `/PRPs:meta-prp-create [complex concept]` - Create multi-agent coordination PRP
+2. `/PRPs:meta-prp-execute @meta-prp-file.md` - Execute with orchestrator coordination
+3. **Automatic**: Sub-agents handle specialist work (research, architecture, coding, testing, security)
+4. **Automatic**: Result synthesis and artifact storage via orchestrator
+5. `/development:create-pr [PR title]` - Submit coordinated results
 
 ### 🚦 **Git Conflict Resolution**
 
