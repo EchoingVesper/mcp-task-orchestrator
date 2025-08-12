@@ -1,31 +1,15 @@
-# Core MCP dependencies
+# Core MCP Task Orchestrator dependencies
+# Generated from pyproject.toml dependencies for CI compatibility
+
 mcp>=1.9.0
-pydantic>=2.0.0  # Data validation and settings management
-
-# Template engine for specialist prompts
+pydantic>=2.0.0
 jinja2>=3.1.0
-
-# YAML parser for configuration files
 pyyaml>=6.0.0
-
-# Async file operations
 aiofiles>=23.0.0
-
-# System and process utilities (client detection, monitoring)
 psutil>=5.9.0
-
-# File locking for task persistence
 filelock>=3.12.0
-
-# Database persistence (SQLAlchemy ORM + migrations)
 sqlalchemy>=2.0.0
 alembic>=1.10.0
-aiosqlite>=0.19.0  # Async SQLite driver for SQLAlchemy
-
-# CLI dependencies
-typer>=0.9.0  # CLI framework for command-line interface
-rich>=13.0.0  # Rich terminal output formatting
-
-# Development dependencies (optional)
-pytest>=7.0.0
-pytest-asyncio>=0.21.0
+aiosqlite>=0.19.0
+typer>=0.9.0
+rich>=13.0.0
