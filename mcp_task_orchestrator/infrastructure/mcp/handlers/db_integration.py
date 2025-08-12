@@ -92,7 +92,7 @@ class MockTaskResult:
         self.status = task.status.value if hasattr(task.status, 'value') else str(task.status)
         self.lifecycle_stage = "initialized"
         self.complexity = task.complexity.value if hasattr(task.complexity, 'value') else str(task.complexity)
-        self.specialist_type = task.metadata.get("specialist", "generic")
+        self.specialist_type = getattr(task, 'specialist_type', 'generic')
         self.task_type = task.task_type.value if hasattr(task.task_type, 'value') else str(task.task_type)
         self.created_at = task.created_at
         self.updated_at = task.updated_at
@@ -141,11 +141,18 @@ class RealTaskUseCase:
             }]
             
             # Use the orchestrator's plan_task method
+            # Convert context to string if it's a dictionary
+            context_data = task_data.get("context", "")
+            if isinstance(context_data, dict):
+                context_str = json.dumps(context_data)
+            else:
+                context_str = str(context_data) if context_data else ""
+            
             breakdown = await self.orchestrator.plan_task(
                 description=task_data.get("description", "Single task"),
                 complexity=task_data.get("complexity", "moderate"),
                 subtasks_json=json.dumps(subtasks_data),
-                context=task_data.get("context", "")
+                context=context_str
             )
             
             # Return the first (and only) subtask
@@ -176,10 +183,10 @@ class RealTaskUseCase:
                 task_type=existing_task.task_type,
                 status=TaskStatus(update_data.get("status", existing_task.status.value)) if "status" in update_data else existing_task.status,
                 complexity=ComplexityLevel(update_data.get("complexity", existing_task.complexity.value)) if "complexity" in update_data else existing_task.complexity,
-                specialist_type=update_data.get("specialist_type", existing_task.metadata.get("specialist", "generic")),
+                specialist_type=update_data.get("specialist_type", existing_task.context.get("specialist", "generic")),
                 created_at=existing_task.created_at,
                 updated_at=datetime.utcnow(),
-                metadata={**existing_task.metadata, **update_data.get("context", {})}
+                metadata={**existing_task.context, **update_data.get("context", {})}
             )
             
             # Use state manager to update the task
@@ -209,10 +216,10 @@ class RealTaskUseCase:
                     task_type=existing_task.task_type,
                     status=TaskStatus.ARCHIVED,
                     complexity=existing_task.complexity,
-                    specialist_type=existing_task.metadata.get("specialist", "generic"),
+                    specialist_type=existing_task.context.get("specialist", "generic"),
                     created_at=existing_task.created_at,
                     updated_at=datetime.utcnow(),
-                    metadata={**existing_task.metadata, "archived_at": datetime.utcnow().isoformat()}
+                    metadata={**existing_task.context, "archived_at": datetime.utcnow().isoformat()}
                 )
                 
                 await self.state_manager.update_subtask(archived_task)
@@ -234,10 +241,10 @@ class RealTaskUseCase:
                     task_type=existing_task.task_type,
                     status=TaskStatus.CANCELLED,
                     complexity=existing_task.complexity,
-                    specialist_type=existing_task.metadata.get("specialist", "generic"),
+                    specialist_type=existing_task.context.get("specialist", "generic"),
                     created_at=existing_task.created_at,
                     updated_at=datetime.utcnow(),
-                    metadata={**existing_task.metadata, "deleted_at": datetime.utcnow().isoformat(), "force_deleted": force}
+                    metadata={**existing_task.context, "deleted_at": datetime.utcnow().isoformat(), "force_deleted": force}
                 )
                 
                 await self.state_manager.update_subtask(deleted_task)
@@ -277,11 +284,11 @@ class RealTaskUseCase:
                 task_type=existing_task.task_type,
                 status=TaskStatus.CANCELLED,
                 complexity=existing_task.complexity,
-                specialist_type=existing_task.metadata.get("specialist", "generic"),
+                specialist_type=existing_task.context.get("specialist", "generic"),
                 created_at=existing_task.created_at,
                 updated_at=datetime.utcnow(),
                 metadata={
-                    **existing_task.metadata,
+                    **existing_task.context,
                     "cancelled_at": datetime.utcnow().isoformat(),
                     "cancellation_reason": reason,
                     "work_preserved": preserve_work
@@ -338,7 +345,7 @@ class RealTaskUseCase:
                 
                 # Filter by specialist type
                 if "specialist_type" in filters:
-                    specialist = task.metadata.get("specialist", "generic")
+                    specialist = task.context.get("specialist", "generic")
                     if isinstance(filters["specialist_type"], list):
                         include_task &= specialist in filters["specialist_type"]
                     else:
@@ -375,7 +382,7 @@ class RealTaskUseCase:
                     "description": task.description,
                     "status": task.status.value,
                     "complexity": task.complexity.value,
-                    "specialist_type": task.metadata.get("specialist", "generic"),
+                    "specialist_type": task.context.get("specialist", "generic"),
                     "created_at": task.created_at.isoformat() if task.created_at else None,
                     "updated_at": task.updated_at.isoformat() if task.updated_at else None
                 })
@@ -428,7 +435,7 @@ class RealExecuteTaskUseCase:
                 task_id=task_id,
                 task_title=task.title,
                 task_description=task.description,
-                specialist_type=task.metadata.get("specialist", "generic"),
+                specialist_type=task.context.get("specialist", "generic"),
                 specialist_context=specialist_context,
                 specialist_prompts=[specialist_context],  # The context includes prompts
                 execution_instructions=[

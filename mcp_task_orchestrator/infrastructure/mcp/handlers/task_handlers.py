@@ -472,3 +472,109 @@ async def handle_complete_task(args: Dict[str, Any]) -> List[types.TextContent]:
             type="text",
             text=json.dumps(error_response, indent=2)
         )]
+
+
+@mcp_validation_handler(["description", "subtasks_json"])
+@mcp_error_handler(tool_name="orchestrator_plan_task", require_auth=True)
+async def handle_plan_task_legacy(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Legacy handler for orchestrator_plan_task with subtasks_json parameter."""
+    logger.info(f"Planning task with legacy handler: {args.get('description', 'Unknown')[:50]}...")
+    
+    # Extract legacy parameters
+    description = args["description"]
+    subtasks_json = args["subtasks_json"]
+    complexity = args.get("complexity_level", "moderate")
+    context = args.get("context", "")
+    
+    try:
+        # Parse the subtasks JSON to create individual tasks
+        import json as json_lib
+        subtasks_data = json_lib.loads(subtasks_json)
+        
+        # Create the main parent task first
+        parent_task_args = {
+            "title": f"Task: {description[:100]}",
+            "description": description,
+            "task_type": "breakdown",
+            "complexity": complexity,
+            "specialist_type": "coordinator",
+            "context": {"original_context": context, "legacy_mode": True}
+        }
+        
+        # Create parent task using existing handler
+        use_case = get_generic_task_use_case()
+        parent_task = await use_case.create_task(parent_task_args)
+        
+        # Create subtasks
+        subtasks = []
+        execution_order = []
+        for i, subtask in enumerate(subtasks_data):
+            if isinstance(subtask, dict):
+                subtask_title = subtask.get("title", f"Subtask {i+1}")
+                subtask_description = subtask.get("description", str(subtask))
+            else:
+                subtask_title = f"Subtask {i+1}"
+                subtask_description = str(subtask)
+            
+            # Create subtask
+            subtask_args = {
+                "title": subtask_title,
+                "description": subtask_description,
+                "task_type": "standard",
+                "parent_task_id": parent_task.id,
+                "complexity": "simple",
+                "specialist_type": "generic"
+            }
+            
+            created_subtask = await use_case.create_task(subtask_args)
+            subtasks.append({
+                "task_id": created_subtask.id,
+                "title": created_subtask.title,
+                "description": created_subtask.description,
+                "specialist": created_subtask.specialist_type.value if created_subtask.specialist_type else "generic"
+            })
+            execution_order.append(created_subtask.id)
+        
+        # Calculate estimated duration (basic estimation)
+        estimated_duration = len(subtasks) * 15  # 15 minutes per subtask
+        
+        # Format success response in expected legacy format
+        response_data = {
+            "task_created": True,
+            "parent_task_id": parent_task.id,
+            "description": parent_task.description,
+            "complexity": complexity,
+            "subtasks": subtasks,
+            "execution_order": execution_order,
+            "estimated_duration_minutes": estimated_duration,
+            "next_steps": "Use orchestrator_execute_task to start working on individual subtasks"
+        }
+        
+        return format_mcp_success_response(
+            data=response_data,
+            message=f"Task breakdown created with {len(subtasks)} subtasks"
+        )
+        
+    except json_lib.JSONDecodeError as e:
+        error_response = {
+            "error": "Invalid JSON in subtasks_json parameter",
+            "details": str(e),
+            "tool": "orchestrator_plan_task"
+        }
+        logger.error(f"JSON decode error: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]
+        
+    except Exception as e:
+        error_response = {
+            "error": "Task planning failed",
+            "details": str(e),
+            "tool": "orchestrator_plan_task"
+        }
+        logger.error(f"Error planning task: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(error_response, indent=2)
+        )]

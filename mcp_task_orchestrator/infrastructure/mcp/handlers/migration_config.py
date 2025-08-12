@@ -17,8 +17,12 @@ from .task_handlers import (
     handle_cancel_task,
     handle_query_tasks,
     handle_execute_task,
-    handle_complete_task
+    handle_complete_task,
+    handle_plan_task_legacy
 )
+
+# Import fixed handler for orchestrator_plan_task
+from .orchestrator_plan_task_fix import handle_orchestrator_plan_task_fixed
 
 # Import new Pydantic-based handlers
 from .task_handlers_v2 import (
@@ -53,7 +57,7 @@ class HandlerMigrationManager:
         self.handler_configs: Dict[str, HandlerConfig] = {
             "orchestrator_plan_task": HandlerConfig(
                 tool_name="orchestrator_plan_task",
-                old_handler=handle_create_generic_task,
+                old_handler=handle_orchestrator_plan_task_fixed,  # Use the fixed handler that maps parameters correctly
                 new_handler=handle_create_task_v2,
                 use_new=use_pydantic_handlers or self._check_specific_flag("CREATE_TASK"),
                 description="Create/plan a new task"

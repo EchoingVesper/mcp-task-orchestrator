@@ -6,6 +6,7 @@ Supports gradual migration from dictionary-based to Pydantic DTO-based handlers.
 """
 
 import logging
+import json
 from typing import Dict, List, Any
 from mcp import types
 
@@ -60,8 +61,26 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
     elif name == "orchestrator_maintenance_coordinator":
         return await handle_maintenance_coordinator(arguments)
     
-    # Task management tools (use migration manager)
-    elif name in ["orchestrator_plan_task", "orchestrator_create_generic_task", 
+    # Special handling for orchestrator_plan_task (temporary fix)
+    elif name == "orchestrator_plan_task":
+        try:
+            from .handlers.orchestrator_plan_task_fix import handle_orchestrator_plan_task_fixed
+            return await handle_orchestrator_plan_task_fixed(arguments)
+        except Exception as e:
+            logger.error(f"Error in plan_task fix: {e}")
+            error_response = {
+                "status": "error", 
+                "error": f"Task planning failed: {str(e)}",
+                "tool": name,
+                "suggestion": "Ensure title and description parameters are provided"
+            }
+            return [types.TextContent(
+                type="text",
+                text=json.dumps(error_response, indent=2)
+            )]
+
+    # Other task management tools (use migration manager)
+    elif name in ["orchestrator_create_generic_task", 
                   "orchestrator_execute_task", "orchestrator_complete_task",
                   "orchestrator_update_task", "orchestrator_delete_task",
                   "orchestrator_cancel_task", "orchestrator_query_tasks"]:
