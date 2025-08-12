@@ -302,7 +302,8 @@ class TemplateSecurityValidator:
         # Validate task type
         task_type = task_def.get('type', 'standard')
         allowed_types = ['standard', 'breakdown', 'milestone', 'review', 'approval', 
-                        'research', 'implementation', 'testing', 'documentation', 'deployment']
+                        'research', 'implementation', 'testing', 'documentation', 'deployment',
+                        'design', 'planning', 'custom']
         if task_type not in allowed_types:
             raise SecurityValidationError(f"Invalid task type: {task_type}")
         
