@@ -994,3 +994,390 @@ def _generate_maintenance_next_steps(results: Dict[str, Any]) -> List[str]:
     next_steps.append("Use orchestrator_get_status to monitor system health")
     
     return next_steps
+
+
+# Session Management Handlers
+
+logger = logging.getLogger(__name__)
+
+async def handle_list_sessions(args: Dict[str, Any]) -> List[types.TextContent]:
+    """List all orchestration sessions with status and metadata."""
+    try:
+        include_completed = args.get("include_completed", False)
+        limit = args.get("limit", 10)
+        
+        # Get working directory and task orchestrator directory
+        working_dir = Path.cwd()
+        task_orchestrator_dir = working_dir / ".task_orchestrator"
+        
+        if not task_orchestrator_dir.exists():
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "sessions": [],
+                    "total_count": 0,
+                    "message": "No .task_orchestrator directory found - no sessions available"
+                }, indent=2)
+            )]
+        
+        # Find all session files
+        session_files = list(task_orchestrator_dir.glob("session_*.json"))
+        sessions = []
+        
+        for session_file in session_files:
+            try:
+                with open(session_file, 'r') as f:
+                    session_data = json.load(f)
+                
+                # Extract session info
+                session_id = session_data.get("session_id", session_file.stem)
+                created_at = session_data.get("created_at")
+                initialized = session_data.get("initialized", False)
+                database_status = session_data.get("database_status", "unknown")
+                
+                # Determine session status
+                if not initialized:
+                    status = "uninitialized"
+                elif database_status == "connected":
+                    status = "active"
+                elif database_status == "disconnected":
+                    status = "inactive"
+                else:
+                    status = "unknown"
+                
+                # Get file modification time for last activity
+                last_modified = session_file.stat().st_mtime
+                
+                session_info = {
+                    "session_id": session_id,
+                    "status": status,
+                    "created_at": created_at,
+                    "last_activity": last_modified,
+                    "initialized": initialized,
+                    "database_status": database_status,
+                    "working_directory": session_data.get("working_directory"),
+                    "file_path": str(session_file),
+                    "capabilities": session_data.get("capabilities", {}),
+                    "hot_reload_status": session_data.get("hot_reload_status", {})
+                }
+                
+                # Filter completed sessions if requested
+                if not include_completed or status != "completed":
+                    sessions.append(session_info)
+                    
+            except Exception as e:
+                logger.warning(f"Failed to read session file {session_file}: {e}")
+                sessions.append({
+                    "session_id": session_file.stem,
+                    "status": "corrupted",
+                    "error": str(e),
+                    "file_path": str(session_file)
+                })
+        
+        # Sort by last activity (most recent first) and limit
+        sessions.sort(key=lambda x: x.get("last_activity", 0), reverse=True)
+        if limit > 0:
+            sessions = sessions[:limit]
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "sessions": sessions,
+                "total_count": len(session_files),
+                "displayed_count": len(sessions),
+                "include_completed": include_completed,
+                "limit_applied": limit,
+                "message": f"Found {len(sessions)} sessions"
+            }, indent=2)
+        )]
+        
+    except Exception as e:
+        logger.error(f"Failed to list sessions: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "error": f"Failed to list sessions: {str(e)}",
+                "sessions": [],
+                "total_count": 0
+            }, indent=2)
+        )]
+
+
+async def handle_resume_session(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Resume a previous orchestration session by ID."""
+    try:
+        session_id = args.get("session_id")
+        if not session_id:
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "success": False,
+                    "error": "session_id is required"
+                }, indent=2)
+            )]
+        
+        # Get working directory and session file
+        working_dir = Path.cwd()
+        task_orchestrator_dir = working_dir / ".task_orchestrator"
+        session_file = task_orchestrator_dir / f"{session_id}.json"
+        
+        if not session_file.exists():
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "success": False,
+                    "error": f"Session file not found: {session_id}",
+                    "session_id": session_id
+                }, indent=2)
+            )]
+        
+        # Load session data
+        with open(session_file, 'r') as f:
+            session_data = json.load(f)
+        
+        # Update session to mark as resumed
+        session_data["resumed_at"] = datetime.now(timezone.utc).timestamp()
+        session_data["database_status"] = "connected"  # Will be verified by database manager
+        
+        # Save updated session
+        with open(session_file, 'w') as f:
+            json.dump(session_data, f, indent=2)
+        
+        # Initialize database manager if needed
+        db_manager = get_database_manager()
+        if db_manager is None:
+            db_manager = await initialize_global_database_manager()
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "success": True,
+                "session_id": session_id,
+                "message": f"Session {session_id} resumed successfully",
+                "working_directory": session_data.get("working_directory"),
+                "capabilities": session_data.get("capabilities", {}),
+                "database_status": "connected",
+                "next_steps": [
+                    "Use orchestrator_get_status to check session state",
+                    "Use orchestrator_query_tasks to see active tasks",
+                    "Continue with task orchestration operations"
+                ]
+            }, indent=2)
+        )]
+        
+    except Exception as e:
+        logger.error(f"Failed to resume session: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "success": False,
+                "error": f"Failed to resume session: {str(e)}",
+                "session_id": args.get("session_id")
+            }, indent=2)
+        )]
+
+
+async def handle_cleanup_sessions(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Clean up old, completed, or orphaned sessions."""
+    try:
+        cleanup_type = args.get("cleanup_type", "completed")
+        older_than_days = args.get("older_than_days", 7)
+        dry_run = args.get("dry_run", True)
+        
+        # Get working directory and task orchestrator directory
+        working_dir = Path.cwd()
+        task_orchestrator_dir = working_dir / ".task_orchestrator"
+        
+        if not task_orchestrator_dir.exists():
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "cleaned_sessions": [],
+                    "total_cleaned": 0,
+                    "message": "No .task_orchestrator directory found"
+                }, indent=2)
+            )]
+        
+        # Find all session files
+        session_files = list(task_orchestrator_dir.glob("session_*.json"))
+        to_cleanup = []
+        current_time = datetime.now(timezone.utc).timestamp()
+        cutoff_time = current_time - (older_than_days * 24 * 60 * 60)
+        
+        for session_file in session_files:
+            try:
+                with open(session_file, 'r') as f:
+                    session_data = json.load(f)
+                
+                session_id = session_data.get("session_id", session_file.stem)
+                created_at = session_data.get("created_at", 0)
+                database_status = session_data.get("database_status", "unknown")
+                initialized = session_data.get("initialized", False)
+                
+                should_cleanup = False
+                reason = ""
+                
+                if cleanup_type == "completed":
+                    # Sessions that are marked as completed or have disconnected database
+                    if database_status == "disconnected" and initialized:
+                        should_cleanup = True
+                        reason = "completed (disconnected database)"
+                elif cleanup_type == "orphaned":
+                    # Sessions that are corrupted or uninitialized
+                    if not initialized or database_status == "unknown":
+                        should_cleanup = True
+                        reason = "orphaned (not properly initialized)"
+                elif cleanup_type == "old":
+                    # Sessions older than the cutoff
+                    if created_at < cutoff_time:
+                        should_cleanup = True
+                        reason = f"old (older than {older_than_days} days)"
+                elif cleanup_type == "all":
+                    should_cleanup = True
+                    reason = "cleanup all requested"
+                
+                if should_cleanup:
+                    to_cleanup.append({
+                        "session_id": session_id,
+                        "file_path": str(session_file),
+                        "reason": reason,
+                        "created_at": created_at,
+                        "database_status": database_status
+                    })
+                    
+            except Exception as e:
+                # Corrupted files should be cleaned up
+                to_cleanup.append({
+                    "session_id": session_file.stem,
+                    "file_path": str(session_file),
+                    "reason": f"corrupted file: {str(e)}",
+                    "error": str(e)
+                })
+        
+        # Perform cleanup if not dry run
+        cleaned_sessions = []
+        if not dry_run:
+            for session_info in to_cleanup:
+                try:
+                    session_file = Path(session_info["file_path"])
+                    if session_file.exists():
+                        session_file.unlink()  # Delete the file
+                        cleaned_sessions.append(session_info)
+                except Exception as e:
+                    session_info["cleanup_error"] = str(e)
+                    cleaned_sessions.append(session_info)
+        else:
+            cleaned_sessions = to_cleanup
+        
+        action_performed = "would be cleaned" if dry_run else "cleaned"
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "cleanup_type": cleanup_type,
+                "dry_run": dry_run,
+                "older_than_days": older_than_days if cleanup_type == "old" else None,
+                "sessions_found": len(session_files),
+                "sessions_to_cleanup": len(to_cleanup),
+                "cleaned_sessions": cleaned_sessions,
+                "total_cleaned": len(cleaned_sessions),
+                "message": f"{len(cleaned_sessions)} sessions {action_performed}",
+                "next_steps": [
+                    "Run with dry_run=false to actually perform cleanup" if dry_run else "Cleanup completed",
+                    "Use orchestrator_list_sessions to verify results"
+                ]
+            }, indent=2)
+        )]
+        
+    except Exception as e:
+        logger.error(f"Failed to cleanup sessions: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "error": f"Failed to cleanup sessions: {str(e)}",
+                "cleaned_sessions": [],
+                "total_cleaned": 0
+            }, indent=2)
+        )]
+
+
+async def handle_session_status(args: Dict[str, Any]) -> List[types.TextContent]:
+    """Get detailed status of a specific session."""
+    try:
+        session_id = args.get("session_id")
+        if not session_id:
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "error": "session_id is required"
+                }, indent=2)
+            )]
+        
+        # Get working directory and session file
+        working_dir = Path.cwd()
+        task_orchestrator_dir = working_dir / ".task_orchestrator"
+        session_file = task_orchestrator_dir / f"{session_id}.json"
+        
+        if not session_file.exists():
+            return [types.TextContent(
+                type="text",
+                text=json.dumps({
+                    "session_id": session_id,
+                    "exists": False,
+                    "error": f"Session file not found: {session_id}"
+                }, indent=2)
+            )]
+        
+        # Load session data
+        with open(session_file, 'r') as f:
+            session_data = json.load(f)
+        
+        # Get file stats
+        file_stats = session_file.stat()
+        
+        # Check database connectivity
+        db_manager = get_database_manager()
+        db_connected = db_manager is not None
+        
+        # Build comprehensive status
+        status = {
+            "session_id": session_id,
+            "exists": True,
+            "file_path": str(session_file),
+            "file_size": file_stats.st_size,
+            "created_at": session_data.get("created_at"),
+            "last_modified": file_stats.st_mtime,
+            "working_directory": session_data.get("working_directory"),
+            "initialized": session_data.get("initialized", False),
+            "database_status": session_data.get("database_status", "unknown"),
+            "database_manager_available": db_connected,
+            "capabilities": session_data.get("capabilities", {}),
+            "hot_reload_status": session_data.get("hot_reload_status", {}),
+            "resumed_at": session_data.get("resumed_at"),
+            "session_context": session_data.get("session_context", {})
+        }
+        
+        # Add health assessment
+        if status["initialized"] and status["database_status"] == "connected" and db_connected:
+            status["health"] = "healthy"
+        elif status["initialized"] and status["database_status"] == "disconnected":
+            status["health"] = "inactive"
+        elif not status["initialized"]:
+            status["health"] = "uninitialized"
+        else:
+            status["health"] = "degraded"
+        
+        return [types.TextContent(
+            type="text",
+            text=json.dumps(status, indent=2)
+        )]
+        
+    except Exception as e:
+        logger.error(f"Failed to get session status: {e}")
+        return [types.TextContent(
+            type="text",
+            text=json.dumps({
+                "session_id": args.get("session_id"),
+                "error": f"Failed to get session status: {str(e)}"
+            }, indent=2)
+        )]

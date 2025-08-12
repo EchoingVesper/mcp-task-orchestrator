@@ -351,6 +351,84 @@ def get_generic_task_tools() -> List[types.Tool]:
     ]
 
 
+def get_session_management_tools() -> List[types.Tool]:
+    """Get session management tools for listing, resuming, and cleanup."""
+    return [
+        types.Tool(
+            name="orchestrator_list_sessions",
+            description="List all orchestration sessions with status and metadata",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "include_completed": {
+                        "type": "boolean",
+                        "description": "Whether to include completed sessions",
+                        "default": False
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Maximum number of sessions to return",
+                        "default": 10
+                    }
+                }
+            }
+        ),
+        types.Tool(
+            name="orchestrator_resume_session",
+            description="Resume a previous orchestration session by ID",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "session_id": {
+                        "type": "string",
+                        "description": "ID of the session to resume"
+                    }
+                },
+                "required": ["session_id"]
+            }
+        ),
+        types.Tool(
+            name="orchestrator_cleanup_sessions",
+            description="Clean up old, completed, or orphaned sessions",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "cleanup_type": {
+                        "type": "string",
+                        "enum": ["completed", "orphaned", "old", "all"],
+                        "description": "Type of cleanup to perform",
+                        "default": "completed"
+                    },
+                    "older_than_days": {
+                        "type": "integer",
+                        "description": "For 'old' cleanup, remove sessions older than this many days",
+                        "default": 7
+                    },
+                    "dry_run": {
+                        "type": "boolean",
+                        "description": "Preview what would be cleaned up without actually doing it",
+                        "default": True
+                    }
+                }
+            }
+        ),
+        types.Tool(
+            name="orchestrator_session_status",
+            description="Get detailed status of a specific session",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "session_id": {
+                        "type": "string",
+                        "description": "ID of the session to check status for"
+                    }
+                },
+                "required": ["session_id"]
+            }
+        )
+    ]
+
+
 def get_maintenance_tools() -> List[types.Tool]:
     """Get the maintenance and coordination tools."""
     return [
@@ -397,6 +475,9 @@ def get_all_tools() -> List[types.Tool]:
     
     # Add generic task management tools
     tools.extend(get_generic_task_tools())
+    
+    # Add session management tools
+    tools.extend(get_session_management_tools())
     
     # Add maintenance tools
     tools.extend(get_maintenance_tools())

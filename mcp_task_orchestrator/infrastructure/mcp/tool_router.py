@@ -42,7 +42,11 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
         handle_initialize_session,
         handle_synthesize_results,
         handle_get_status,
-        handle_maintenance_coordinator
+        handle_maintenance_coordinator,
+        handle_list_sessions,
+        handle_resume_session,
+        handle_cleanup_sessions,
+        handle_session_status
     )
     
     # Log handler selection for debugging
@@ -60,6 +64,16 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
         return await handle_get_status(arguments)
     elif name == "orchestrator_maintenance_coordinator":
         return await handle_maintenance_coordinator(arguments)
+    
+    # Session management tools
+    elif name == "orchestrator_list_sessions":
+        return await handle_list_sessions(arguments)
+    elif name == "orchestrator_resume_session":
+        return await handle_resume_session(arguments)
+    elif name == "orchestrator_cleanup_sessions":
+        return await handle_cleanup_sessions(arguments)
+    elif name == "orchestrator_session_status":
+        return await handle_session_status(arguments)
     
     # Special handling for orchestrator_plan_task (temporary fix)
     elif name == "orchestrator_plan_task":
