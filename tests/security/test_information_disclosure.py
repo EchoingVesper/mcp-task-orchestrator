@@ -124,9 +124,9 @@ class TestErrorMessageSanitization:
             "FAKE-SK-REDACTED-FOR-TESTING",
             "FAKE-GHP-REDACTED-FOR-TESTING",
             "FAKE-XOXB-REDACTED-FOR-TESTING",
-            "ya29.a0ARrdaM1234567890abcdef1234567890",
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-            "AKIA1234567890ABCDEF",
+            "FAKE-YA29-REDACTED-FOR-TESTING",
+            "Bearer FAKE-JWT-REDACTED-FOR-TESTING",
+            "FAKE-AKIA-REDACTED-FOR-TESTING",
         ]
         
         for token in sensitive_tokens:
