@@ -277,10 +277,14 @@ async def handle_query_tasks(args: Dict[str, Any]) -> List[types.TextContent]:
         
         response = {
             "status": "success",
-            "message": f"Found {query_result['pagination']['total_count']} tasks matching query criteria",
+            "message": f"Found {query_result['total_count']} tasks matching query criteria",
             "query_summary": {
-                "filters_applied": query_result["filters_applied"],
-                "pagination": query_result["pagination"]
+                "filters_applied": query_result.get("filters_applied", []),
+                "pagination": {
+                    "total_count": query_result.get("total_count", 0),
+                    "page_count": query_result.get("page_count", 0),
+                    "has_more": query_result.get("has_more", False)
+                }
             },
             "tasks": tasks_dict,
             "next_steps": [
