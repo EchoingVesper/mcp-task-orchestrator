@@ -201,6 +201,50 @@ orchestrator_integration:
   artifact_storage: "orchestrator_complete_task"
 ```
 
+### Enhanced Sub-Agent Spawning with Context Detection
+
+**Intelligent Agent Spawning Mode Detection:**
+
+```yaml
+agent_spawning_intelligence:
+  execution_context_detection:
+    if_claude_code_context:
+      agent_tool: "Claude Code Task tool"
+      coordination_method: "Orchestrator artifact storage + Claude Code execution"
+      session_management: "Orchestrator maintains session state"
+      hot_reload_capability: "/mcp reconnect for orchestrator changes"
+      
+    if_orchestrator_native_context:
+      agent_tool: "Orchestrator native agent-to-agent"
+      coordination_method: "Full orchestrator coordination"
+      session_management: "Orchestrator session context passing"
+      history_feature: "Automated 'undo' capabilities via orchestrator history"
+      
+sub_agent_spawning_claude_code_mode:
+  research_agent:
+    spawning_method: "Task tool with general-purpose agent"
+    specialist_context_retrieval:
+      action: orchestrator_execute_task
+      task_id: "[research_task_id]"
+      
+    sub_agent_instructions: |
+      You are a RESEARCH SPECIALIST working on orchestrator task: [research_task_id]
+      
+      CRITICAL ORCHESTRATOR INTEGRATION: 
+      - FIRST: Use orchestrator_execute_task to get your specialist context
+      - Work ONLY on the specific task assigned to you
+      - Use orchestrator_complete_task when finished with detailed artifacts
+      - ALL work stored in orchestrator artifacts, not manual summaries
+      - Maintain orchestrator session throughout your work
+      
+      HOOKS INTEGRATION AWARENESS:
+      - Consider what hooks would prevent problems in this research domain
+      - Design validation hooks for research quality assurance
+      - Apply lessons learned from git hooks success patterns
+      
+      Expected deliverable: Complete research artifacts stored via orchestrator_complete_task
+```
+
 ### Phase Structure with Sub-Agent Coordination
 
 ```yaml
@@ -208,11 +252,12 @@ phase_structure:
   phase_1_research:
     duration: "varies"
     orchestrator_session: "Research Coordination"
+    hooks_integration: "Research validation and quality assurance hooks"
     sub_agents:
       - market_research_agent: "specialist_type: researcher"
       - technical_research_agent: "specialist_type: architect"
       - security_research_agent: "specialist_type: reviewer"
-    deliverables: "Research artifacts in orchestrator storage"
+    deliverables: "Research artifacts in orchestrator storage with hook validation"
     
   phase_2_design:
     duration: "varies"
@@ -221,7 +266,8 @@ phase_structure:
       - architecture_agent: "specialist_type: architect"
       - api_design_agent: "specialist_type: coder"
       - security_design_agent: "specialist_type: reviewer"
-    deliverables: "Design artifacts in orchestrator storage"
+    deliverables: "Design artifacts in orchestrator storage with automated validation"
+    hooks_integration: "Design quality and consistency validation hooks"
     
   phase_3_implementation:
     duration: "varies"
@@ -230,7 +276,8 @@ phase_structure:
       - core_implementation_agent: "specialist_type: coder"
       - testing_implementation_agent: "specialist_type: tester"
       - documentation_agent: "specialist_type: documenter"
-    deliverables: "Implementation artifacts in orchestrator storage"
+    deliverables: "Implementation artifacts in orchestrator storage with code quality hooks"
+    hooks_integration: "Code quality, testing, and documentation validation hooks"
     
   phase_4_validation:
     duration: "varies"
@@ -239,7 +286,8 @@ phase_structure:
       - integration_testing_agent: "specialist_type: tester"
       - security_validation_agent: "specialist_type: reviewer"
       - performance_testing_agent: "specialist_type: tester"
-    deliverables: "Validation artifacts in orchestrator storage"
+    deliverables: "Validation artifacts in orchestrator storage with comprehensive testing hooks"
+    hooks_integration: "Testing completeness and quality assurance validation hooks"
 ```
 
 ## Enhanced Multi-Stage Validation

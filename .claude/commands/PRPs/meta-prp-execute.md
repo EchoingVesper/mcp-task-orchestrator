@@ -4,19 +4,31 @@ Execute comprehensive meta-PRPs using the task orchestrator's full orchestration
 
 ## Meta-PRP File: $ARGUMENTS
 
-## Pre-Execution Orchestrator Health Check
+## Immediate Orchestrator Session Activation
 
-**MANDATORY FIRST STEP:**
+**MANDATORY FIRST STEPS - Execute in Order:**
 
 ```bash
-# Verify orchestrator connection and full functionality
+# 1. Verify orchestrator connection and full functionality
 claude mcp list | grep task-orchestrator || (echo "ORCHESTRATOR NOT CONNECTED - Fixing..." && claude mcp restart task-orchestrator)
 
-# Test critical orchestrator tools for meta-coordination
-# orchestrator_health_check should be available
+# 2. Test critical orchestrator tools for meta-coordination
+# orchestrator_health_check must be available and functioning
 ```
 
 **CRITICAL**: If orchestrator fails, STOP and follow CLAUDE.md protocol. Meta-PRPs require full orchestrator functionality.
+
+**IMMEDIATE SESSION TAKEOVER:**
+```yaml
+# 3. Initialize orchestrator session for meta-PRP execution coordination
+orchestrator_initialize_session:
+  working_directory: "/current/project/path"
+  session_name: "meta-prp-execution-{concept}-{timestamp}"
+  
+# 4. Orchestrator becomes the primary coordinator for all sub-agent spawning
+orchestrator_role: "primary_execution_coordinator"
+coordination_mode: "multi_agent_meta_prp_execution"
+```
 
 ## Enhanced Context Loading
 
@@ -142,31 +154,65 @@ progress_monitoring:
   purpose: "Monitor task creation and dependencies"
 ```
 
-### Phase 3: Sub-Agent Spawning and Execution
+### Phase 3: Intelligent Sub-Agent Spawning and Execution
 
-**Sub-Agent Spawning Pattern:**
-
-For each sub-task created, spawn dedicated sub-agents:
+**Execution Context Detection and Agent Spawning:**
 
 ```yaml
-sub_agent_spawning:
+intelligent_agent_spawning:
+  execution_context_detection:
+    if_claude_code_context:
+      agent_spawning_method: "Claude Code Task tool"
+      coordination_backbone: "Orchestrator maintains all coordination state"
+      hot_reload_support: "Use /mcp reconnect when orchestrator updated"
+      artifact_storage: "All work stored in orchestrator artifacts"
+      
+    if_orchestrator_native_context:
+      agent_spawning_method: "Orchestrator native agent-to-agent capabilities"
+      coordination_backbone: "Full orchestrator session context passing"
+      history_retention: "Orchestrator maintains execution history for 'undo' features"
+      artifact_storage: "Native orchestrator artifact management"
+      
+sub_agent_spawning_claude_code_mode:
   research_agent:
+    spawning_method: "Task tool with general-purpose agent"
     specialist_context_retrieval:
       action: orchestrator_execute_task
       task_id: "[research_task_id]"
       
     sub_agent_instructions: |
-      You are a RESEARCH SPECIALIST working on task: [research_task_id]
+      You are a RESEARCH SPECIALIST executing orchestrator task: [research_task_id]
       
-      CRITICAL: 
-      - Use orchestrator_execute_task to get your specialist context
-      - Work ONLY on the specific task assigned to you
-      - Use orchestrator_complete_task when finished with detailed artifacts
+      CRITICAL ORCHESTRATOR INTEGRATION: 
+      - FIRST: Use orchestrator_execute_task to get your specialist context and instructions
+      - Work ONLY on the specific task assigned to you by the orchestrator
+      - Use orchestrator_complete_task when finished - ALL work goes into artifacts
       - Reference meta-PRP file for complete context: $ARGUMENTS
       - Load relevant PRPs/ai_docs/ for specialized context
+      - The orchestrator is your coordination backbone - maintain session throughout
+      
+      LESSONS LEARNED INTEGRATION:
+      - Apply hook-style automated validation to your work
+      - Consider what automated checks would prevent problems in your domain
+      - Design your work to be artifact-centric, not summary-centric
+      - All deliverables stored in orchestrator for future 'undo' capabilities
       
       Your task: Execute the research phase as specified in the meta-PRP
-      Expected deliverable: Complete research artifacts stored via orchestrator_complete_task
+      Expected deliverable: Complete research artifacts via orchestrator_complete_task
+      
+sub_agent_spawning_orchestrator_native_mode:
+  # This mode will be available when agent-to-agent is fully implemented
+  research_agent:
+    spawning_method: "orchestrator_spawn_specialist_agent"
+    session_context_passing: "Full orchestrator session state shared"
+    history_tracking: "All work tracked for automated undo capabilities"
+    
+    specialist_instructions: |
+      You are spawned by the orchestrator as a RESEARCH SPECIALIST
+      - Full orchestrator session context automatically provided
+      - Work integrated into orchestrator's history system
+      - Automated documentation retention and 'undo' capabilities available
+      - Session management handled automatically by orchestrator
       
   architecture_agent:
     specialist_context_retrieval:
@@ -251,6 +297,19 @@ result_synthesis_workflow:
       action: "scan_cleanup"
       scope: "current_session"
     purpose: "Clean up completed multi-agent workflow"
+    
+  hot_reload_validation:
+    condition: "If orchestrator code was modified during execution"
+    action: "/mcp reconnect"
+    purpose: "Ensure orchestrator changes picked up without Claude Code restart"
+    
+  hook_integration_validation:
+    action: "Run git hooks for automated quality validation"
+    purpose: "Apply lessons learned - let hooks catch problems automatically"
+    
+  session_accumulation_prevention:
+    action: "orchestrator_list_sessions + cleanup old sessions"
+    purpose: "Prevent infinite session file accumulation discovered in lessons learned"
 ```
 
 ## Enhanced Multi-Agent Execution Pattern
@@ -383,16 +442,25 @@ python scripts/validate_artifact_synthesis.py $ARGUMENTS
 python scripts/validate_multi_agent_success.py $ARGUMENTS
 ```
 
-## Success Criteria for Meta-PRP Execution
+## Enhanced Success Criteria with Lessons Learned Integration
 
 ### Core Execution Requirements
 
-- [ ] **Orchestrator session** successfully initialized and maintained
-- [ ] **Meta-task breakdown** completed with all sub-tasks created
-- [ ] **Sub-agents spawned** with appropriate specialist assignments
-- [ ] **All sub-tasks completed** with detailed artifacts stored
-- [ ] **Results synthesized** via orchestrator_synthesize_results
-- [ ] **Meta-task completed** with comprehensive final artifacts
+- [ ] **Orchestrator session** successfully initialized and maintained as primary coordinator
+- [ ] **Meta-task breakdown** completed with all sub-tasks created via orchestrator
+- [ ] **Sub-agents spawned** via intelligent context detection (Claude Code vs native)
+- [ ] **All sub-tasks completed** with detailed artifacts stored in orchestrator
+- [ ] **Results synthesized** via orchestrator_synthesize_results (no manual summaries)
+- [ ] **Meta-task completed** with comprehensive final artifacts in orchestrator storage
+
+### Lessons Learned Integration Success
+
+- [ ] **Hook integration** applied for automated problem detection and prevention
+- [ ] **Session lifecycle management** properly handled to prevent accumulation
+- [ ] **Artifact-centric workflow** maintained throughout (no scattered summaries)
+- [ ] **Hot-reload capability** tested if orchestrator changes were made
+- [ ] **Multi-database architecture** properly utilized (SQLite, Vector, Graph)
+- [ ] **Automated validation** applied at each phase via hook-inspired patterns
 
 ### Multi-Agent Coordination Success
 
@@ -431,6 +499,14 @@ python scripts/validate_multi_agent_success.py $ARGUMENTS
 7. **Security Integration Score Target**: 10/10 (dedicated security validation)
 8. **Orchestrator Integration Score Target**: 10/10 (full tool suite utilized)
 9. **Multi-Agent Coordination Score Target**: 10/10 (seamless collaboration)
+10. **Lessons Learned Integration Score Target**: 10/10 (hook patterns, session management, artifact-centric)
+11. **Future 'Undo' Readiness Score Target**: 10/10 (all work stored in orchestrator for automation)
+
+**Mad Scientist Achievement Unlocked**: *"Eventually I WILL have my automated 'oops! undo that!' feature!"* 
+- All work stored in orchestrator artifacts enables future automated undo capabilities
+- Session management prevents infinite accumulation discovered in lessons learned  
+- Hook patterns provide the automated problem detection foundation
+- Agent-to-agent architecture will complete the automation vision
 
 ## No Manual Summary Required
 
