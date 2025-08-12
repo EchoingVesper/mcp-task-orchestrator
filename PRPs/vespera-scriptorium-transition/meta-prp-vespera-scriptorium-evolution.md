@@ -9,7 +9,10 @@
 
 ## Executive Summary
 
-Transform the **MCP Task Orchestrator** into **Vespera Scriptorium** - a core component of the Vespera Atelier platform. This evolution repositions the project from a standalone task orchestrator to a document-centric "IDE for ideas" that supports creative writing, research projects, and software development through intelligent document management and multi-agent coordination.
+Transform the **MCP Task Orchestrator** into **Vespera Scriptorium** - a core component of the Vespera Atelier platform.
+This evolution repositions the project from a standalone task orchestrator to a document-centric "IDE for ideas" that
+supports creative writing, research projects, and software development through intelligent document management and multi
+-agent coordination.
 
 ## Vision: From Orchestrator to Scriptorium
 
@@ -17,13 +20,16 @@ Transform the **MCP Task Orchestrator** into **Vespera Scriptorium** - a core co
 
 > **"An IDE for ideas, not just code"**
 
-The Vespera Atelier platform represents a paradigm shift from code-centric development tools to **idea-centric creation tools**. Vespera Scriptorium becomes the core engine that manages, organizes, and intelligently processes documents, knowledge, and creative workflows.
+The Vespera Atelier platform extends beyond traditional code-centric development tools to support **idea-centric creation
+workflows**. Vespera Scriptorium becomes the core engine that manages, organizes, and intelligently processes documents,
+knowledge, and creative workflows.
 
-### Why "Scriptorium"?
+### Why "Scriptorium"
 
-**Historical Context**: Medieval scriptoriums were centers of knowledge preservation, document creation, and intellectual collaboration.
+**Historical Context**: Medieval scriptoriums were centers of knowledge preservation, document creation, and
+intellectual collaboration.
 
-**Modern Application**: 
+**Modern Application**:
 - **Document Management**: Core organizational capability
 - **Knowledge Synthesis**: RAG and graph database integration
 - **Creative Workflows**: Support for writing, research, and ideation
@@ -33,7 +39,8 @@ The Vespera Atelier platform represents a paradigm shift from code-centric devel
 ## Platform Architecture Evolution
 
 ### Current State: MCP Task Orchestrator
-```
+
+```text
 Standalone MCP Server
 ├── Task Management
 ├── SQLite Database
@@ -42,7 +49,8 @@ Standalone MCP Server
 ```
 
 ### Target State: Vespera Scriptorium
-```
+
+```text
 Vespera Scriptorium (Dual-Mode Architecture)
 ├── Standalone MCP Server Mode (backward compatibility)
 ├── Integrated Atelier Component Mode (platform integration)
@@ -62,13 +70,16 @@ Vespera Scriptorium (Dual-Mode Architecture)
 ## Phase 1: Technical Foundation (Weeks 1-3)
 
 ### 1.1 Repository Transition
+
 - **Rename Project**: `mcp-task-orchestrator` → `vespera-scriptorium`
 - **Update PyPI Package**: Migrate from broken `mcp-task-orchestrator` to `vespera-scriptorium`
 - **GitHub Repository**: Create new `vespera-scriptorium` repository
 - **Awesome MCP Servers**: Update listing with new name and working installation
 
 ### 1.2 Documentation Overhaul
+
 **Automated Documentation Update System**:
+
 ```yaml
 documentation_automation:
   triggers:
@@ -89,6 +100,7 @@ documentation_automation:
 ```
 
 ### 1.3 Backwards Compatibility
+
 - Maintain `mcp-task-orchestrator` as alias/wrapper
 - Preserve all existing MCP tool names
 - Ensure seamless migration for current users (if any exist)
@@ -96,6 +108,7 @@ documentation_automation:
 ## Phase 2: Scriptorium Feature Integration (Weeks 4-6)
 
 ### 2.1 Document Chunking System Migration
+
 **From Private Scriptorium Repository**:
 - Advanced document chunking for large files
 - Local LLM integration for small context windows
@@ -105,6 +118,7 @@ documentation_automation:
 ### 2.2 Enhanced Project Type Support
 
 #### Creative Writing Projects
+
 ```yaml
 creative_writing_template:
   managed_documents:
@@ -131,6 +145,7 @@ creative_writing_template:
 ```
 
 #### Research Projects  
+
 ```yaml
 research_project_template:
   managed_documents:
@@ -147,6 +162,7 @@ research_project_template:
 ```
 
 #### Software Development Projects
+
 ```yaml
 software_development_template:
   managed_documents:
@@ -165,8 +181,10 @@ software_development_template:
 ## Phase 3: Vespera Atelier Integration (Weeks 7-9)
 
 ### 3.1 Monorepo Integration
+
 **Target Structure**:
-```
+
+```directory
 /home/dev/monorepo/vespera-atelier/
 ├── packages/
 │   ├── vespera-scriptorium/          # Core MCP server
@@ -184,11 +202,13 @@ software_development_template:
 ```
 
 ### 3.2 Cross-Component Communication
+
 - **MCP Protocol Extensions**: Custom tools for Atelier integration
 - **Shared Database Access**: Multi-component database coordination
 - **Event System**: Cross-component notification and synchronization
 
 ### 3.3 Obsidian Plugin Revival
+
 **Transform Private Plugin** → **Vespera Atelier GUI**:
 - Document visualization and navigation
 - Real-time sync with Scriptorium backend
@@ -198,6 +218,7 @@ software_development_template:
 ## Phase 4: Community & Ecosystem (Weeks 10-12)
 
 ### 4.1 GitHub Ecosystem Updates
+
 **Reference Update Campaign**:
 - **Awesome MCP Servers**: Update with working installation and new name
 - **PyPI Migration**: Deprecation notice + new package publication
@@ -206,6 +227,7 @@ software_development_template:
 - **Community Forums**: Announcement and migration guide
 
 ### 4.2 Testing Infrastructure
+
 **Multi-Platform Validation**:
 - ✅ **Windows WSL**: Current testing environment
 - 🔄 **Native Linux**: Priority testing target
@@ -213,7 +235,9 @@ software_development_template:
 - 📱 **Container Environments**: Docker validation
 
 ### 4.3 Installation System Overhaul
+
 **Universal Installer Enhancement**:
+
 ```bash
 # Simple installation
 curl -sSL https://install.vespera.dev/scriptorium | bash
@@ -226,6 +250,7 @@ npm install -g vespera-scriptorium-cli
 ## Implementation Strategy: Multi-Agent Coordination
 
 ### Meta-Agent Coordination
+
 ```yaml
 scriptorium_evolution_workflow:
   session_management:
@@ -267,6 +292,7 @@ scriptorium_evolution_workflow:
 ```
 
 ### Artifact-Centric Workflow
+
 **Critical Principle**: All detailed work stored in artifacts, enabling:
 - Cross-agent knowledge sharing
 - Historical implementation tracking  
@@ -277,18 +303,21 @@ scriptorium_evolution_workflow:
 ## Success Metrics
 
 ### Technical Metrics
+
 1. **Dual-Mode Operation**: Both standalone MCP + Atelier integration working
 2. **Installation Success Rate**: >95% across target platforms
 3. **Database Performance**: <100ms query response times
 4. **Documentation Coverage**: 100% API coverage with examples
 
 ### Platform Metrics  
+
 1. **Project Type Support**: 3 complete templates (creative, research, code)
 2. **Cross-Agent Coordination**: Session management across 5+ agent types
 3. **Document Automation**: Automatic updates for 10+ document types
 4. **RAG Integration**: Semantic search across all project artifacts
 
 ### Ecosystem Metrics
+
 1. **Reference Updates**: All external references migrated to new identity
 2. **Community Adoption**: Active users across 3 platforms
 3. **Integration Depth**: Obsidian plugin functional with Scriptorium backend
@@ -297,12 +326,14 @@ scriptorium_evolution_workflow:
 ## Risk Mitigation
 
 ### Technical Risks
+
 - **Breaking Changes**: Comprehensive backwards compatibility testing
 - **Database Migration**: Automated migration scripts with rollback capability
 - **Performance Regression**: Continuous performance monitoring
 - **Integration Complexity**: Modular integration with fallback modes
 
 ### Ecosystem Risks
+
 - **Community Confusion**: Clear communication and migration guides
 - **Reference Rot**: Systematic external reference tracking and updates
 - **Installation Failures**: Multi-platform testing and validation
@@ -331,12 +362,14 @@ gantt
 ## Critical Dependencies
 
 ### Internal Dependencies
+
 1. **Current Branch**: `vespera-integration-prep` must be tested and validated
 2. **Database Architecture**: Multi-database system must be stable
 3. **Session Management**: Cross-agent coordination must be reliable
 4. **Artifact System**: Document automation must be functional
 
 ### External Dependencies
+
 1. **Vespera Atelier Monorepo**: GitHub repository creation and structure
 2. **PyPI Migration**: Package name availability and transfer process
 3. **Obsidian Plugin**: Access to private repository for integration
@@ -352,7 +385,8 @@ gantt
 
 ## Long-Term Vision Impact
 
-This transition represents more than a rename - it's the foundation for **Vespera Atelier** as a comprehensive creative platform:
+This transition represents more than a rename - it establishes the foundation for **Vespera Atelier** as a comprehensive
+creative platform:
 
 - **Document-Centric Workflows**: Moving beyond code to ideas and content
 - **Multi-Domain Support**: Creative writing, research, software development  
@@ -360,8 +394,10 @@ This transition represents more than a rename - it's the foundation for **Vesper
 - **Collaborative Intelligence**: Multi-agent systems for complex creative tasks
 - **Platform Extensibility**: Plugin architecture for domain-specific workflows
 
-**Vespera Scriptorium** becomes the intelligent core that transforms how people organize, develop, and synthesize complex ideas across multiple domains.
+**Vespera Scriptorium** becomes the intelligent core that enhances how people organize, develop, and synthesize
+complex ideas across multiple domains.
 
 ---
 
-*This meta-PRP coordinates the complete evolution from MCP Task Orchestrator to Vespera Scriptorium, establishing the foundation for the broader Vespera Atelier platform.*
+*This meta-PRP coordinates the complete evolution from MCP Task Orchestrator to Vespera Scriptorium, establishing the
+foundation for the broader Vespera Atelier platform.*
