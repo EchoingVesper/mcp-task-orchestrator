@@ -155,14 +155,51 @@ async def handle_initialize_session(args: Dict[str, Any]) -> List[types.TextCont
             logger.warning(f"Could not initialize hot-reload: {e}")
             session_state["capabilities"]["hot_reload"] = False
         
-        # Check database connectivity
+        # Initialize and check database connectivity
         try:
-            from ....infrastructure.database.unified_manager import get_database_manager
+            from ....infrastructure.database.unified_manager import initialize_global_database_manager, get_database_manager
+            from ....infrastructure.database.base import DatabaseType
+            
+            # Initialize the multi-database architecture if not already done
             db_manager = get_database_manager()
+            if db_manager is None:
+                logger.info("Initializing multi-database architecture (SQLite + Vector + Graph)")
+                db_manager = await initialize_global_database_manager()
+            
+            # Check connectivity of each database type
+            health_status = await db_manager.health_check()
             session_state["database_status"] = "connected"
+            session_state["database_health"] = health_status
+            session_state["capabilities"]["database_persistence"] = True
+            
+            # Log which databases are available
+            available_dbs = []
+            
+            if db_manager.has_database(DatabaseType.OPERATIONAL):
+                available_dbs.append("SQLite (operational)")
+            if db_manager.has_database(DatabaseType.VECTOR):
+                available_dbs.append("Vector (ChromaDB)")
+            if db_manager.has_database(DatabaseType.GRAPH):
+                available_dbs.append("Graph (Neo4j)")
+            
+            logger.info(f"Databases available: {', '.join(available_dbs)}")
+            session_state["available_databases"] = available_dbs
+            
+            # Verify operational database is working
+            if db_manager.operational:
+                # Test a simple query to ensure the database is functional
+                try:
+                    async with db_manager.operational.transaction() as tx:
+                        pass  # Just test that we can create a transaction
+                    logger.info("Operational database connection verified")
+                except Exception as db_test_error:
+                    logger.warning(f"Operational database test failed: {db_test_error}")
+                    session_state["database_warnings"] = [f"Operational DB test failed: {str(db_test_error)}"]
+            
         except Exception as e:
-            logger.warning(f"Database connection issue: {e}")
+            logger.error(f"Database initialization failed: {e}")
             session_state["database_status"] = "disconnected"
+            session_state["database_error"] = str(e)
             session_state["capabilities"]["database_persistence"] = False
         
         # Create task orchestrator directory if needed

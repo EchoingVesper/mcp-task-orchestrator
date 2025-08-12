@@ -328,3 +328,83 @@ def create_unified_manager(config: Dict[str, Any]) -> UnifiedDatabaseManager:
         Configured UnifiedDatabaseManager
     """
     return UnifiedDatabaseManager(config)
+
+
+# Global database manager instance
+_global_database_manager: Optional[UnifiedDatabaseManager] = None
+
+
+async def initialize_global_database_manager(config: Optional[Dict[str, Any]] = None) -> UnifiedDatabaseManager:
+    """
+    Initialize the global database manager with default or provided configuration.
+    
+    Args:
+        config: Optional database configuration. If None, uses default config.
+        
+    Returns:
+        Initialized UnifiedDatabaseManager
+    """
+    global _global_database_manager
+    
+    if _global_database_manager is None:
+        if config is None:
+            # Default configuration for the 3-database architecture
+            from pathlib import Path
+            
+            # Get .task_orchestrator directory
+            workspace_dir = Path.cwd() / ".task_orchestrator"
+            workspace_dir.mkdir(exist_ok=True)
+            
+            # Create organized database directory structure
+            db_dir = workspace_dir / "databases"
+            db_dir.mkdir(exist_ok=True)
+            (db_dir / "operational").mkdir(exist_ok=True)
+            (db_dir / "vector").mkdir(exist_ok=True)
+            (db_dir / "graph").mkdir(exist_ok=True)
+            
+            config = {
+                "operational": {
+                    "url": f"sqlite:///{db_dir}/operational/tasks.db",
+                    "timeout": 30.0,
+                    "check_same_thread": False
+                },
+                # Vector database is optional - only initialize if ChromaDB is available
+                "vector": {
+                    "url": f"chromadb://file://{db_dir}/vector/embeddings.db",
+                    "persist_directory": str(db_dir / "vector"),
+                    "collection_name": "task_embeddings"
+                },
+                # Graph database is optional - only initialize if Neo4j is available
+                "graph": {
+                    "url": f"neo4j://file://{db_dir}/graph/knowledge.db",
+                    "database": "neo4j",
+                    "embedded": True  # Use embedded Neo4j if available
+                }
+            }
+        
+        _global_database_manager = UnifiedDatabaseManager(config)
+        await _global_database_manager.initialize()
+        logger.info("Global database manager initialized with multi-database architecture")
+    
+    return _global_database_manager
+
+
+def get_database_manager() -> Optional[UnifiedDatabaseManager]:
+    """
+    Get the global database manager instance.
+    
+    Returns:
+        The global UnifiedDatabaseManager instance, or None if not initialized
+    """
+    global _global_database_manager
+    return _global_database_manager
+
+
+async def close_global_database_manager():
+    """Close the global database manager and clean up connections."""
+    global _global_database_manager
+    
+    if _global_database_manager is not None:
+        await _global_database_manager.close()
+        _global_database_manager = None
+        logger.info("Global database manager closed")
