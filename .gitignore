@@ -131,7 +131,6 @@ dmypy.json
 files-created-this-session.md
 
 # Claude Code specific patterns
-temp/
 .claude-temp/
 .claude-session/
 *-claude-session.md
@@ -140,6 +139,7 @@ claude-work-session-*.md
 .mcp.json
 
 # Temporary development artifacts
+temp/
 dev-temp/
 scratch/
 .working/
@@ -148,6 +148,10 @@ scratch/
 PRPs/*.tmp
 PRPs/.cache/
 .prp-session/
+
+# Reference entries
+reference/
+reference/*
 
 # Note: This project doesn't use Supabase - entries removed
 # Note: Duplicate database and venv entries cleaned up above
