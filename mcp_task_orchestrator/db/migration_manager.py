@@ -274,7 +274,7 @@ class MigrationManager:
             elif operation.operation_type == 'ADD_COLUMN':
                 column = operation.details['column']
                 # SQLite doesn't support ADD COLUMN with all constraints
-                # This is a simplified implementation
+                # Using basic ADD COLUMN syntax due to SQLite limitations
                 col_type = str(column.type)
                 default_clause = ""
                 

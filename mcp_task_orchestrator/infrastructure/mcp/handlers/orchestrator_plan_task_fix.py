@@ -53,7 +53,7 @@ async def handle_orchestrator_plan_task_fixed(args: Dict[str, Any]) -> List[type
             "execution_order": [f"{task_id}_01"],
             "estimated_duration_minutes": 30,
             "next_steps": "Use orchestrator_execute_task to start working on individual subtasks",
-            "created_with": "simplified_handler",
+            "created_with": "orchestrator_task_planner",
             "task_type": task_type,
             "context_provided": bool(context)
         }

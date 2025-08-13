@@ -11,15 +11,19 @@ The infrastructure layer implements the interfaces defined in the domain layer.
 """
 
 # Database infrastructure
-# TODO: Re-enable when database implementations are fixed
-# from .database import (
-#     SQLiteTaskRepository,
-#     SQLiteStateRepository, 
-#     SQLiteSpecialistRepository,
-#     DatabaseConnectionManager,
-#     RepositoryFactory,
-#     LegacyDatabaseAdapter
-# )
+from .database import (
+    DatabaseType,
+    DatabaseAdapter,
+    OperationalDatabaseAdapter,
+    VectorDatabaseAdapter,
+    GraphDatabaseAdapter,
+    DatabaseAdapterFactory,
+    UnifiedDatabaseManager,
+    create_unified_manager,
+    DatabaseConnectionManager,
+    RepositoryFactory,
+    create_repository_factory
+)
 
 # Dependency injection infrastructure
 from .di import (
@@ -31,50 +35,84 @@ from .di import (
 )
 
 # MCP protocol infrastructure
-# TODO: Re-enable when MCP adapters are implemented
-# from .mcp import (
-#     MCPServerAdapter,
-#     MCPRequestAdapter,
-#     MCPResponseAdapter,
-#     MCPErrorAdapter,
-#     MCPToolHandler,
-#     MCPResourceHandler
-# )
+from .mcp import (
+    MCPServerAdapter,
+    MCPRequestAdapter,
+    MCPResponseAdapter,
+    MCPErrorAdapter
+    # Note: MCPToolHandler and MCPResourceHandler temporarily disabled due to import conflicts
+)
 
 # Configuration infrastructure
-# TODO: Re-enable when config implementations are fixed
-# from .config import (
-#     ConfigurationManager,
-#     ConfigValidator,
-#     EnvironmentConfigLoader,
-#     FileConfigLoader,
-#     DefaultConfigLoader
-# )
+from .config import (
+    ConfigurationManager,
+    ConfigValidator,
+    EnvironmentConfigLoader,
+    FileConfigLoader,
+    DefaultConfigLoader
+)
 
 # Monitoring infrastructure
-# TODO: Re-enable when monitoring implementations are fixed
-# from .monitoring import (
-#     HealthChecker,
-#     MetricsCollector,
-#     LoggingConfigurator
-# )
+from .monitoring import (
+    HealthChecker,
+    MetricsCollector,
+    PerformanceTracker,
+    SystemMonitor,
+    DiagnosticRunner
+)
 
 # External services infrastructure
-# TODO: Re-enable when external service implementations are fixed
-# from .external import (
-#     WebhookNotificationService,
-#     EmailNotificationService,
-#     HTTPApiClient,
-#     FileSystemArtifactStorage
-# )
+from .external import (
+    WebhookNotificationService,
+    EmailNotificationService,
+    HTTPApiClient,
+    FileSystemArtifactStorage
+)
 
 __all__ = [
-    # Dependency Injection (currently working)
+    # Database infrastructure
+    'DatabaseType',
+    'DatabaseAdapter',
+    'OperationalDatabaseAdapter',
+    'VectorDatabaseAdapter',
+    'GraphDatabaseAdapter',
+    'DatabaseAdapterFactory',
+    'UnifiedDatabaseManager',
+    'create_unified_manager',
+    'DatabaseConnectionManager',
+    'RepositoryFactory',
+    'create_repository_factory',
+    
+    # Dependency Injection
     'ServiceContainer',
     'ServiceRegistrar',
     'get_container',
     'set_container',
     'get_service',
     
-    # TODO: Add other modules as they are implemented and tested
+    # MCP protocol infrastructure
+    'MCPServerAdapter',
+    'MCPRequestAdapter',
+    'MCPResponseAdapter',
+    'MCPErrorAdapter',
+    
+    # Configuration infrastructure
+    'ConfigurationManager',
+    'ConfigValidator',
+    'EnvironmentConfigLoader',
+    'FileConfigLoader',
+    'DefaultConfigLoader',
+    
+    # Monitoring infrastructure
+    'HealthChecker',
+    'MetricsCollector',
+    'PerformanceTracker',
+    'SystemMonitor',
+    'DiagnosticRunner',
+    
+    # External services infrastructure
+    'WebhookNotificationService',
+    'EmailNotificationService',
+    'HTTPApiClient',
+    'FileSystemArtifactStorage'
 ]

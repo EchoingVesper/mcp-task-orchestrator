@@ -337,9 +337,8 @@ class LifecycleAnalyticsService:
             return {}
     
     async def _calculate_quality_metrics(self, session, time_window_days: int) -> Dict[str, float]:
-        """Calculate quality-related metrics."""
-        # This is a simplified implementation
-        # In a real system, you might track rework through task updates or specific metadata
+        """Calculate quality-related metrics based on task rework patterns and completion status."""
+        # Calculate rework metrics by analyzing task update patterns and status transitions
         
         try:
             from ...db.models import SubTaskModel

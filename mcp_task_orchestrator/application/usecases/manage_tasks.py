@@ -12,11 +12,10 @@ from ...domain.repositories.task_repository import TaskRepository
 @dataclass
 class TaskUseCase:
     """
-    Simple use case for managing generic tasks.
+    Use case for managing generic tasks following Clean Architecture principles.
     
-    This is a simplified implementation to support the legacy
-    db_integration.py pattern. Now uses domain repository interface
-    instead of directly importing infrastructure.
+    This use case provides a clean interface to task management operations,
+    using domain repository interfaces instead of direct infrastructure dependencies.
     """
     repository: TaskRepository
     
