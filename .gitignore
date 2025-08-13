@@ -62,6 +62,7 @@ data/backups/*.bak*
 backups/
 archives/
 .claude/commands-backup-*/
+.migration-temp/
 # PRPs/completed/ - Intentionally tracked for historical reference
 
 # IDE specific files
