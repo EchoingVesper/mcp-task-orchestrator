@@ -18,11 +18,12 @@ from .repository.base import (
     asynccontextmanager, AsyncSession,
     select, delete, update, and_, or_, func,
     SQLAlchemyError, IntegrityError, text,
-    selectinload, joinedload
+    selectinload, joinedload,
+    TaskRepository
 )
 
-# Import the abstract repository interface
-from ..domain.repositories.task_repository import TaskRepository
+# Import the abstract repository interface for type hints
+from ..domain.repositories.task_repository import TaskRepository as AbstractTaskRepository
 
 # Import converter functions 
 from .repository.converters import (
@@ -209,6 +210,51 @@ class GenericTaskRepository(TaskRepository):
         from .repository.query_builder import search_by_attribute
         return await search_by_attribute(self, attribute_name, attribute_value, indexed_only)
     
+    async def get_parent_task_id(self, task_id: str) -> Optional[str]:
+        """
+        Retrieve parent task ID for a given task using async SQLAlchemy.
+        
+        Args:
+            task_id: Task identifier to get parent for
+            
+        Returns:
+            Optional[str]: Parent task ID or None if task has no parent
+            
+        Raises:
+            InfrastructureError: If database query fails
+        """
+        try:
+            async with self.get_session() as session:
+                # Parameterized query to prevent SQL injection
+                query = text("""
+                    SELECT parent_task_id 
+                    FROM generic_tasks 
+                    WHERE task_id = :task_id
+                """)
+                
+                result = await session.execute(query, {"task_id": task_id})
+                parent_task_id = result.scalar_one_or_none()
+                
+                logger.debug(f"Retrieved parent task ID for {task_id}: {parent_task_id}")
+                return parent_task_id
+                
+        except SQLAlchemyError as e:
+            logger.error(f"Database error retrieving parent task ID for {task_id}: {e}")
+            from ..domain.exceptions.base_exceptions import InfrastructureError
+            raise InfrastructureError(
+                component="GenericTaskRepository", 
+                failure_reason=f"Database query failed: {str(e)}",
+                is_recoverable=True
+            )
+        except Exception as e:
+            logger.error(f"Unexpected error retrieving parent task ID for {task_id}: {e}")
+            from ..domain.exceptions.base_exceptions import InfrastructureError
+            raise InfrastructureError(
+                component="GenericTaskRepository",
+                failure_reason=f"Unexpected database error: {str(e)}",
+                is_recoverable=False
+            )
+    
     # ============================================
     # Template Operations
     # ============================================
@@ -298,7 +344,7 @@ class GenericTaskRepository(TaskRepository):
         self._sqlite_repo = SQLiteTaskRepository(connection_manager)
         
         # Call parent init for async functionality
-        super().__init__()
+        super().__init__(db_url)
     
     def create_task(self, task_data: Dict[str, Any]) -> str:
         """Create a new task using SQLite backend."""

@@ -9,8 +9,10 @@ import logging
 from typing import Dict, List, Optional, Any, Union
 from pathlib import Path
 
-from .repository.base import TaskRepository
+from .generic_repository import GenericTaskRepository
 from ..domain.entities.task import Task
+from ..domain.validation import validate_task_id, ValidationError
+from ..domain.exceptions.base_exceptions import InfrastructureError
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +29,7 @@ class DatabasePersistenceManager:
         """Initialize the database persistence manager."""
         self.base_dir = base_dir or str(Path.cwd())
         self.db_url = db_url or f"sqlite:///{self.base_dir}/.task_orchestrator/tasks.db"
-        self._repository = TaskRepository(db_url=self.db_url)
+        self._repository = GenericTaskRepository(db_url=self.db_url)
         logger.info(f"DatabasePersistenceManager initialized with base_dir: {self.base_dir}")
     
     async def create_task(self, task_data: Dict[str, Any]) -> Task:
@@ -128,6 +130,41 @@ class DatabasePersistenceManager:
         except Exception as e:
             logger.error(f"Failed to save task breakdown: {str(e)}")
             return False
+
+    async def get_parent_task_id(self, task_id: str) -> Optional[str]:
+        """
+        Retrieve the parent task ID for a given task.
+        
+        Args:
+            task_id: The ID of the task to get parent for
+            
+        Returns:
+            Optional[str]: Parent task ID or None if no parent
+            
+        Raises:
+            ValidationError: If task_id is invalid
+            InfrastructureError: If database operation fails
+        """
+        try:
+            # Domain-level validation
+            validated_task_id = validate_task_id(task_id)
+            
+            # Delegate to repository layer
+            parent_id = await self._repository.get_parent_task_id(validated_task_id)
+            
+            return parent_id
+            
+        except ValidationError:
+            # Re-raise validation errors
+            raise
+        except Exception as e:
+            # Convert database errors to domain errors
+            logger.error(f"Database error retrieving parent task ID: {e}")
+            raise InfrastructureError(
+                component="DatabasePersistenceManager",
+                failure_reason=f"Failed to retrieve parent task ID for {task_id}",
+                is_recoverable=True
+            )
 
     async def close(self):
         """Close the database connection."""
