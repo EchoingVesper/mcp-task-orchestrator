@@ -1,0 +1,305 @@
+{
+  "resource_limits_config": {
+    "version": "1.0",
+    "description": "Resource constraint configuration for documentation modernization agents",
+    "last_updated": "2025-08-13",
+    "environment": "development"
+  },
+  
+  "system_limits": {
+    "max_cpu_percent": 80.0,
+    "max_memory_percent": 80.0,
+    "max_disk_usage_percent": 85.0,
+    "min_free_memory_mb": 1024,
+    "max_open_file_handles": 256,
+    "throttle_on_high_load": true,
+    "auto_suspend_on_limits": true
+  },
+  
+  "agent_limits": {
+    "max_concurrent_agents": 2,
+    "max_files_per_agent": 10,
+    "max_processing_time_minutes": 15,
+    "max_retry_attempts": 3,
+    "agent_timeout_seconds": 900,
+    "graceful_shutdown_timeout": 30
+  },
+  
+  "token_limits": {
+    "claude_3_sonnet": {
+      "max_context_tokens": 200000,
+      "warning_threshold_percent": 80,
+      "critical_threshold_percent": 90,
+      "suspension_threshold_percent": 95,
+      "max_tokens_per_agent": 50000,
+      "max_tokens_per_file": 20000
+    },
+    "claude_3_opus": {
+      "max_context_tokens": 200000,
+      "warning_threshold_percent": 80,
+      "critical_threshold_percent": 90,
+      "suspension_threshold_percent": 95,
+      "max_tokens_per_agent": 50000,
+      "max_tokens_per_file": 20000
+    },
+    "claude_3_haiku": {
+      "max_context_tokens": 200000,
+      "warning_threshold_percent": 80,
+      "critical_threshold_percent": 90,
+      "suspension_threshold_percent": 95,
+      "max_tokens_per_agent": 40000,
+      "max_tokens_per_file": 15000
+    },
+    "default": {
+      "max_context_tokens": 100000,
+      "warning_threshold_percent": 80,
+      "critical_threshold_percent": 90,
+      "suspension_threshold_percent": 95,
+      "max_tokens_per_agent": 30000,
+      "max_tokens_per_file": 10000
+    }
+  },
+  
+  "monitoring_config": {
+    "monitoring_interval_seconds": 10.0,
+    "resource_check_interval_seconds": 30.0,
+    "cleanup_check_interval_seconds": 300.0,
+    "report_generation_interval_minutes": 30,
+    "history_retention_hours": 24,
+    "alert_cooldown_minutes": 5
+  },
+  
+  "priority_settings": {
+    "critical": {
+      "cpu_multiplier": 1.5,
+      "memory_multiplier": 1.5,
+      "token_multiplier": 1.2,
+      "timeout_multiplier": 2.0
+    },
+    "high": {
+      "cpu_multiplier": 1.3,
+      "memory_multiplier": 1.3,
+      "token_multiplier": 1.1,
+      "timeout_multiplier": 1.5
+    },
+    "normal": {
+      "cpu_multiplier": 1.0,
+      "memory_multiplier": 1.0,
+      "token_multiplier": 1.0,
+      "timeout_multiplier": 1.0
+    },
+    "low": {
+      "cpu_multiplier": 0.7,
+      "memory_multiplier": 0.8,
+      "token_multiplier": 0.9,
+      "timeout_multiplier": 0.8
+    }
+  },
+  
+  "file_processing_limits": {
+    "max_file_size_mb": 10,
+    "max_concurrent_file_operations": 5,
+    "backup_retention_days": 7,
+    "checkpoint_interval_operations": 5,
+    "batch_size_limits": {
+      "small_files": 20,
+      "medium_files": 10,
+      "large_files": 5
+    }
+  },
+  
+  "error_handling": {
+    "max_consecutive_errors": 3,
+    "error_rate_threshold_percent": 20,
+    "suspend_on_repeated_errors": true,
+    "escalation_error_count": 5,
+    "recovery_wait_time_minutes": 10
+  },
+  
+  "network_limits": {
+    "max_concurrent_connections": 10,
+    "request_timeout_seconds": 30,
+    "retry_delay_seconds": 5,
+    "max_retries": 3,
+    "rate_limit_requests_per_minute": 60
+  },
+  
+  "validation_gates": {
+    "pre_phase_validation": {
+      "system_health_check": true,
+      "resource_availability_check": true,
+      "backup_integrity_check": true,
+      "recovery_system_check": true
+    },
+    "in_phase_validation": {
+      "file_integrity_check": true,
+      "markdown_lint_check": true,
+      "link_validation_check": true,
+      "reference_integrity_check": true
+    },
+    "post_phase_validation": {
+      "comprehensive_validation": true,
+      "performance_impact_check": true,
+      "user_acceptance_validation": true,
+      "rollback_readiness_check": true
+    }
+  },
+  
+  "rollback_configuration": {
+    "automatic_rollback_triggers": {
+      "error_rate_exceeds_percent": 20,
+      "critical_validation_failure": true,
+      "system_resource_exhaustion": true,
+      "orchestrator_failure": true
+    },
+    "rollback_procedures": {
+      "file_level_rollback": {
+        "backup_restoration": true,
+        "progress_tracking_reset": true,
+        "error_logging": true
+      },
+      "batch_level_rollback": {
+        "batch_suspension": true,
+        "batch_file_restoration": true,
+        "progress_reset": true,
+        "failure_analysis": true
+      },
+      "phase_level_rollback": {
+        "emergency_suspension": true,
+        "complete_restoration": true,
+        "comprehensive_analysis": true,
+        "manual_intervention_required": true
+      }
+    }
+  },
+  
+  "environment_specific": {
+    "development": {
+      "relaxed_limits": true,
+      "extended_timeouts": true,
+      "verbose_logging": true,
+      "debug_mode": true
+    },
+    "production": {
+      "strict_limits": true,
+      "optimized_timeouts": true,
+      "essential_logging": true,
+      "performance_mode": true
+    },
+    "testing": {
+      "reduced_limits": true,
+      "fast_timeouts": true,
+      "comprehensive_logging": true,
+      "validation_mode": true
+    }
+  },
+  
+  "integration_settings": {
+    "orchestrator_integration": {
+      "enabled": true,
+      "sync_interval_seconds": 60,
+      "task_status_updates": true,
+      "progress_reporting": true
+    },
+    "recovery_manager_integration": {
+      "enabled": true,
+      "checkpoint_frequency": 5,
+      "auto_suspension": true,
+      "recovery_instructions": true
+    },
+    "progress_tracker_integration": {
+      "enabled": true,
+      "real_time_updates": true,
+      "milestone_reporting": true,
+      "performance_metrics": true
+    }
+  },
+  
+  "alert_configuration": {
+    "alert_levels": {
+      "info": {
+        "enabled": true,
+        "notification_channels": ["log"]
+      },
+      "warning": {
+        "enabled": true,
+        "notification_channels": ["log", "console"]
+      },
+      "critical": {
+        "enabled": true,
+        "notification_channels": ["log", "console", "recovery"]
+      },
+      "emergency": {
+        "enabled": true,
+        "notification_channels": ["log", "console", "recovery", "suspension"]
+      }
+    },
+    "alert_thresholds": {
+      "resource_usage_percent": 85,
+      "error_rate_percent": 15,
+      "response_time_seconds": 60,
+      "queue_depth": 20
+    }
+  },
+  
+  "performance_optimization": {
+    "load_balancing": {
+      "enabled": true,
+      "algorithm": "round_robin",
+      "health_checks": true,
+      "automatic_failover": true
+    },
+    "caching": {
+      "enabled": false,
+      "cache_size_mb": 128,
+      "ttl_minutes": 30
+    },
+    "compression": {
+      "enabled": false,
+      "compression_level": 6
+    }
+  },
+  
+  "security_constraints": {
+    "file_access_validation": true,
+    "path_traversal_protection": true,
+    "resource_isolation": true,
+    "secure_cleanup": true,
+    "audit_logging": true
+  },
+  
+  "documentation_specific": {
+    "markdown_processing": {
+      "max_document_size_mb": 5,
+      "link_validation_timeout_seconds": 10,
+      "reference_check_depth": 3,
+      "format_validation": true
+    },
+    "batch_processing": {
+      "optimal_batch_size": 5,
+      "max_batch_processing_time_minutes": 30,
+      "inter_batch_delay_seconds": 5,
+      "validation_between_batches": true
+    },
+    "quality_gates": {
+      "markdown_lint_required": true,
+      "broken_link_tolerance": 0,
+      "formatting_consistency": true,
+      "content_accuracy_check": false
+    }
+  },
+  
+  "maintenance_settings": {
+    "cleanup_schedules": {
+      "checkpoint_cleanup_days": 7,
+      "log_retention_days": 14,
+      "backup_retention_days": 30,
+      "report_retention_days": 90
+    },
+    "optimization_tasks": {
+      "resource_usage_analysis": true,
+      "performance_tuning": false,
+      "capacity_planning": true
+    }
+  }
+}
