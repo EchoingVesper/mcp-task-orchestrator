@@ -241,6 +241,10 @@ class QualityGate:
     
     def generate_report(self, output_file: str = "quality_report.json"):
         """Generate a detailed quality report."""
+        # Ensure the output directory exists
+        output_path = Path(output_file)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
         report = {
             "timestamp": time.time(),
             "summary": {
@@ -252,7 +256,7 @@ class QualityGate:
             "detailed_results": self.results
         }
         
-        with open(output_file, 'w') as f:
+        with open(output_path, 'w') as f:
             json.dump(report, f, indent=2)
         
         print(f"📄 Detailed report saved to {output_file}")

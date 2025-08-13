@@ -87,6 +87,7 @@ local_settings.py
 .claude/session/
 .claude/.mcp-session-*
 .claude/*-session.md
+.claude/settings.local.json
 
 # Jupyter Notebook
 .ipynb_checkpoints

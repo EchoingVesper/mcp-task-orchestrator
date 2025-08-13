@@ -75,22 +75,43 @@ jobs:
       run: |
         echo "📚 Running enhanced documentation quality checks..."
         
+        # Ensure output directories exist
+        mkdir -p validation_results quality_reports
+        
         # Check if quality automation script exists
         if [ -f "scripts/quality_automation.py" ]; then
-          python scripts/quality_automation.py --check all --report validation_results/documentation_quality_report.json || echo "⚠️ Quality automation completed with issues"
+          # Run quality checks and fail on errors
+          python scripts/quality_automation.py --check all --report validation_results/documentation_quality_report.json
+          QUALITY_EXIT_CODE=$?
+          
+          # If checks failed, exit with error
+          if [ $QUALITY_EXIT_CODE -ne 0 ]; then
+            echo "❌ Documentation quality checks failed"
+            exit $QUALITY_EXIT_CODE
+          fi
         else
           echo "⚠️ Quality automation script not found - running manual checks"
           
-          # Manual markdownlint check
+          # Manual markdownlint check - fail on errors
           if command -v markdownlint-cli2 &> /dev/null; then
-            markdownlint-cli2 "docs/**/*.md" "*.md" || echo "⚠️ Markdownlint found issues"
+            markdownlint-cli2 "docs/**/*.md" "*.md"
+            if [ $? -ne 0 ]; then
+              echo "❌ Markdownlint found errors"
+              exit 1
+            fi
           fi
           
-          # Manual Vale check
+          # Manual Vale check - fail on errors
           if command -v vale &> /dev/null && [ -f .vale.ini ]; then
-            vale docs/ || echo "⚠️ Vale found issues"
+            vale docs/
+            if [ $? -ne 0 ]; then
+              echo "❌ Vale found errors"
+              exit 1
+            fi
           fi
         fi
+        
+        echo "✅ Documentation quality checks passed"
         
     - name: Run documentation validation stage from multi-stage pipeline
       run: |
@@ -108,6 +129,7 @@ jobs:
           validation_results/
           quality_report.json
         retention-days: 30
+        if-no-files-found: warn  # Don't fail if reports are missing
         
     - name: Comment PR with enhanced results
       if: github.event_name == 'pull_request' && always()
@@ -240,58 +262,18 @@ jobs:
         
         if [ -f .markdownlint.json ]; then
           echo "Using project markdownlint configuration"
-          markdownlint-cli2 "docs/**/*.md" "*.md" --config .markdownlint.json || echo "MARKDOWN_ISSUES=true" >> $GITHUB_ENV
+          markdownlint-cli2 "docs/**/*.md" "*.md" --config .markdownlint.json
+          LINT_EXIT_CODE=$?
         else
           echo "Using default markdownlint configuration"
-          markdownlint-cli2 "docs/**/*.md" "*.md" || echo "MARKDOWN_ISSUES=true" >> $GITHUB_ENV
+          markdownlint-cli2 "docs/**/*.md" "*.md"
+          LINT_EXIT_CODE=$?
         fi
         
-    - name: Auto-fix markdown issues
-      if: env.MARKDOWN_ISSUES == 'true'
-      run: |
-        echo "🔧 Attempting to auto-fix markdown issues..."
-        
-        # Check if auto-fix script exists
-        if [ -f "scripts/fix_markdown_lint.py" ]; then
-          python scripts/fix_markdown_lint.py || echo "⚠️ Auto-fix script completed with warnings"
-        else
-          echo "⚠️ Auto-fix script not found - skipping auto-fix"
+        if [ $LINT_EXIT_CODE -ne 0 ]; then
+          echo "❌ Markdownlint found errors that must be fixed manually"
+          echo "Run 'markdownlint-cli2 \"docs/**/*.md\" \"*.md\"' locally to see all issues"
+          exit 1
         fi
         
-    - name: Commit auto-fixes
-      if: env.MARKDOWN_ISSUES == 'true'
-      run: |
-        echo "📝 Committing auto-fixes..."
-        
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        
-        # Check if there are changes to commit
-        if [ -n "$(git status --porcelain)" ]; then
-          git add -A
-          git commit -m "docs: auto-fix markdown lint issues
-
-          🤖 Automated fix applied by GitHub Actions
-          - Fixed markdown formatting issues
-          - Applied consistent style guidelines
-          
-          Generated with GitHub Actions bot"
-          
-          # Push changes
-          git push || echo "⚠️ Failed to push auto-fixes - may need manual intervention"
-          
-          echo "✅ Auto-fixes committed and pushed"
-        else
-          echo "ℹ️ No changes to commit after auto-fix attempt"
-        fi
-        
-    - name: Re-run validation after fixes
-      if: env.MARKDOWN_ISSUES == 'true'
-      run: |
-        echo "🔍 Re-validating after auto-fixes..."
-        
-        if [ -f .markdownlint.json ]; then
-          markdownlint-cli2 "docs/**/*.md" "*.md" --config .markdownlint.json && echo "✅ All markdown issues resolved" || echo "⚠️ Some issues remain after auto-fix"
-        else
-          markdownlint-cli2 "docs/**/*.md" "*.md" && echo "✅ All markdown issues resolved" || echo "⚠️ Some issues remain after auto-fix"
-        fi
+        echo "✅ All markdown files pass linting"

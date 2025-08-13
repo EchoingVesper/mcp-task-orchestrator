@@ -2,16 +2,18 @@
 
 ## Executive Summary
 
-The Documentation Quality GitHub Actions workflow is failing in PR #45 due to missing scripts, improper directory handling, and inadequate error recovery mechanisms. This PRD outlines a comprehensive solution to fix these issues and establish robust documentation quality gates.
+The Documentation Quality GitHub Actions workflow is failing in PR #45 due to improper directory handling, inadequate error recovery mechanisms, and attempting problematic auto-fixes. This PRD outlines a solution focused on proper validation, failing fast on errors, and requiring manual fixes for documentation issues.
 
 ## Problem Statement
 
 ### Current Issues
-1. **Missing Scripts**: `fix_markdown_lint.py` script referenced in workflow but doesn't exist
+
+1. **Auto-Fix Problems**: Previous `fix_markdown_lint.py` script caused more issues than it solved and has been removed
 2. **Directory Creation**: `validation_results/` directory not created before report generation
 3. **Error Handling**: Workflow continues with warnings instead of proper failure detection
 4. **Artifact Upload**: No artifacts uploaded due to missing files
 5. **PR Comments**: Cannot post results due to missing reports
+6. **Silent Failures**: Markdownlint errors don't fail the workflow properly
 
 ### Impact
 - PRs cannot be properly validated for documentation quality
@@ -21,27 +23,28 @@ The Documentation Quality GitHub Actions workflow is failing in PR #45 due to mi
 
 ## Solution Overview
 
-Implement a robust documentation quality workflow with proper error handling, auto-fix capabilities, and comprehensive reporting.
+Implement a robust documentation quality workflow that fails fast on errors, requires manual fixes for documentation issues, and provides comprehensive reporting without attempting problematic auto-fixes.
 
 ## User Stories
 
 ### Epic: Documentation Quality Automation
 
-#### Story 1: Auto-Fix Markdown Issues
+#### Story 1: Fail Fast on Markdown Issues
+
 **As a** developer  
-**I want** automatic fixing of common markdown issues  
-**So that** I don't have to manually fix formatting problems
+**I want** the CI to fail immediately on markdown lint errors  
+**So that** I'm forced to fix issues properly before merging
 
 **Acceptance Criteria:**
-- [ ] Script automatically fixes common markdown lint issues
-- [ ] Preserves content while fixing formatting
-- [ ] Commits changes back to PR when in CI environment
-- [ ] Provides detailed logs of changes made
+- [ ] Workflow fails with clear error messages on any markdown lint issues
+- [ ] Error output shows exact file, line, and issue description
+- [ ] Exit code properly propagates to GitHub Actions
+- [ ] Provides instructions for running markdownlint locally
 
 **Technical Notes:**
-- Use Python AST for safe markdown parsing
-- Implement fixes for top 10 most common issues
-- Ensure idempotent operations
+- Use markdownlint-cli2 for validation
+- Ensure proper exit codes on failure
+- No auto-fix attempts that could break formatting
 
 #### Story 2: Robust Report Generation
 **As a** CI/CD system  
@@ -110,37 +113,7 @@ flowchart TB
 
 ## Implementation Components
 
-### 1. fix_markdown_lint.py Script
-
-```python
-# Core functionality structure
-class MarkdownAutoFixer:
-    def __init__(self):
-        self.fix_rules = {
-            'MD001': self.fix_heading_increment,
-            'MD009': self.fix_trailing_spaces,
-            'MD010': self.fix_hard_tabs,
-            'MD012': self.fix_multiple_blank_lines,
-            'MD022': self.fix_heading_blank_lines,
-            'MD031': self.fix_fenced_code_blocks,
-            'MD032': self.fix_list_blank_lines,
-            'MD034': self.fix_bare_urls,
-            'MD040': self.fix_code_language,
-            'MD047': self.fix_file_ending
-        }
-    
-    def fix_file(self, filepath: Path) -> bool:
-        """Apply all applicable fixes to a file."""
-        pass
-    
-    def fix_heading_increment(self, content: str) -> str:
-        """Fix heading level increments."""
-        pass
-    
-    # ... other fix methods
-```
-
-### 2. Enhanced quality_automation.py
+### 1. Enhanced quality_automation.py
 
 ```python
 # Key improvements
@@ -165,7 +138,7 @@ class QualityGate:
         # ... save logic ...
 ```
 
-### 3. Workflow Improvements
+### 2. Workflow Improvements
 
 ```yaml
 # Key workflow enhancements
@@ -173,40 +146,31 @@ class QualityGate:
   run: |
     mkdir -p validation_results quality_reports
     
-- name: Run quality checks with fallback
+- name: Run quality checks - fail on errors
   run: |
     if [ -f "scripts/quality_automation.py" ]; then
+      # Run checks and fail immediately on errors
       python scripts/quality_automation.py --check all \
-        --report validation_results/documentation_quality_report.json \
-        || echo "CHECK_FAILED=true" >> $GITHUB_ENV
+        --report validation_results/documentation_quality_report.json
+      QUALITY_EXIT_CODE=$?
+      
+      if [ $QUALITY_EXIT_CODE -ne 0 ]; then
+        echo "❌ Documentation quality checks failed"
+        exit $QUALITY_EXIT_CODE
+      fi
+    else
+      # Fall back to direct markdownlint
+      markdownlint-cli2 "docs/**/*.md" "*.md"
+      if [ $? -ne 0 ]; then
+        echo "❌ Markdownlint found errors"
+        exit 1
+      fi
     fi
     
-- name: Generate fallback report
-  if: env.CHECK_FAILED == 'true'
-  run: |
-    echo '{"status": "partial", "message": "Some checks failed"}' \
-      > validation_results/documentation_quality_report.json
+    echo "✅ Documentation quality checks passed"
 ```
 
 ## API Specifications
-
-### fix_markdown_lint.py CLI
-
-```bash
-# Basic usage
-python scripts/fix_markdown_lint.py [OPTIONS] [PATHS...]
-
-# Options
---fix           # Apply fixes (default: dry-run)
---config FILE   # Custom markdownlint config
---report FILE   # Save fix report
---verbose       # Detailed output
---quiet         # Minimal output
-
-# Examples
-python scripts/fix_markdown_lint.py --fix docs/
-python scripts/fix_markdown_lint.py --report fixes.json *.md
-```
 
 ### quality_automation.py Enhancements
 
@@ -258,16 +222,18 @@ python scripts/fix_markdown_lint.py --report fixes.json *.md
 ## Implementation Phases
 
 ### Phase 1: Critical Fixes (Immediate)
-1. Create basic fix_markdown_lint.py script
-2. Fix directory creation in quality_automation.py
-3. Update workflow with proper error handling
-4. Add fallback report generation
+
+1. Fix directory creation in quality_automation.py (DONE)
+2. Update workflow to fail fast on errors (DONE)
+3. Remove auto-fix references from workflow (DONE)
+4. Ensure proper error code propagation
 
 ### Phase 2: Enhanced Functionality (Week 1)
-1. Implement comprehensive auto-fix rules
-2. Add multiple report format support
-3. Enhance PR comment formatting
-4. Add caching for performance
+
+1. Add multiple report format support
+2. Enhance PR comment formatting  
+3. Add caching for performance
+4. Improve error message clarity
 
 ### Phase 3: Advanced Features (Week 2)
 1. Implement incremental checking
