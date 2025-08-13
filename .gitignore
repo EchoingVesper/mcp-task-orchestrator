@@ -62,7 +62,7 @@ data/backups/*.bak*
 backups/
 archives/
 .claude/commands-backup-*/
-PRPs/completed/
+# PRPs/completed/ - Intentionally tracked for historical reference
 
 # IDE specific files
 .idea/
