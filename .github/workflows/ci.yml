@@ -216,6 +216,123 @@ jobs:
         if command -v semgrep &> /dev/null; then
           semgrep --config=auto --json --output=semgrep-report.json . || echo "⚠️ Semgrep scan completed with potential issues"
         fi
+        
+    - name: Run documentation security validation
+      run: |
+        echo "📚 Running documentation security validation..."
+        
+        python - << 'EOF'
+        """Documentation Security Validator."""
+        import json
+        import re
+        import os
+        from pathlib import Path
+        from datetime import datetime
+        
+        def scan_documentation_security():
+            """Scan documentation for potential security issues."""
+            security_report = {
+                "timestamp": datetime.now().isoformat(),
+                "security_checks": {
+                    "credential_exposure": {"issues": [], "severity": "critical"},
+                    "internal_urls": {"issues": [], "severity": "medium"},
+                    "system_paths": {"issues": [], "severity": "low"},
+                    "api_endpoints": {"issues": [], "severity": "medium"},
+                    "configuration_exposure": {"issues": [], "severity": "high"}
+                },
+                "total_issues": 0,
+                "critical_issues": 0
+            }
+            
+            # Patterns to detect potential security issues
+            patterns = {
+                "credential_exposure": [
+                    r'password\s*[=:]\s*["\'][^"\']+["\']',
+                    r'api_key\s*[=:]\s*["\'][^"\']+["\']',
+                    r'secret\s*[=:]\s*["\'][^"\']+["\']',
+                    r'token\s*[=:]\s*["\'][^"\']+["\']',
+                    r'[a-zA-Z0-9]{32,}',  # Potential API keys
+                ],
+                "internal_urls": [
+                    r'https?://(?:localhost|127\.0\.0\.1|192\.168\.|10\.|172\.)',
+                    r'https?://[^/\s]+\.local',
+                ],
+                "system_paths": [
+                    r'/home/[^/\s]+',
+                    r'C:\\Users\\[^\\s]+',
+                    r'/var/log/',
+                    r'/etc/',
+                ],
+                "api_endpoints": [
+                    r'https?://[^/\s]+/api/[^/\s]+/[a-zA-Z0-9]{20,}',  # API with tokens
+                ],
+                "configuration_exposure": [
+                    r'database.*connection.*string',
+                    r'mongodb://.*:.*@',
+                    r'postgresql://.*:.*@',
+                ]
+            }
+            
+            # Scan all markdown files
+            md_files = list(Path('.').glob('**/*.md'))
+            
+            for md_file in md_files:
+                if '.git/' in str(md_file):
+                    continue
+                    
+                try:
+                    content = md_file.read_text()
+                    
+                    for check_type, pattern_list in patterns.items():
+                        for pattern in pattern_list:
+                            matches = re.finditer(pattern, content, re.IGNORECASE)
+                            for match in matches:
+                                # Skip obvious examples or placeholders
+                                matched_text = match.group(0)
+                                if any(placeholder in matched_text.lower() for placeholder in [
+                                    'example', 'placeholder', 'your_', 'xxx', '***', 'redacted'
+                                ]):
+                                    continue
+                                
+                                issue = {
+                                    "file": str(md_file),
+                                    "line": content[:match.start()].count('\n') + 1,
+                                    "matched_text": matched_text[:50] + "..." if len(matched_text) > 50 else matched_text,
+                                    "pattern": pattern
+                                }
+                                
+                                security_report["security_checks"][check_type]["issues"].append(issue)
+                                
+                                if security_report["security_checks"][check_type]["severity"] == "critical":
+                                    security_report["critical_issues"] += 1
+                                
+                                security_report["total_issues"] += 1
+                
+                except Exception as e:
+                    print(f"⚠️ Could not scan {md_file}: {e}")
+            
+            print(f"🔍 Documentation Security Scan Results:")
+            print(f"  Total issues: {security_report['total_issues']}")
+            print(f"  Critical issues: {security_report['critical_issues']}")
+            
+            # Save security report
+            with open('documentation-security-report.json', 'w') as f:
+                json.dump(security_report, f, indent=2)
+            
+            # Fail if critical security issues found
+            if security_report["critical_issues"] > 0:
+                print("❌ Critical security issues found in documentation!")
+                return False
+            elif security_report["total_issues"] > 10:
+                print("⚠️ Many potential security issues found - manual review recommended")
+                return False
+            else:
+                print("✅ Documentation security scan passed")
+                return True
+        
+        security_passed = scan_documentation_security()
+        exit(0 if security_passed else 1)
+        EOF
     
     - name: Upload security reports
       uses: actions/upload-artifact@v4
@@ -224,6 +341,7 @@ jobs:
         name: security-reports-${{ github.run_id }}
         path: |
           *-report.json
+          documentation-security-report.json
           validation_results/
         retention-days: 30
 

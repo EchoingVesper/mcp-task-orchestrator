@@ -5,6 +5,7 @@ on:
     branches: [main, develop]
     paths: 
       - 'docs/**'
+      - 'PRPs/**'
       - '*.md'
       - '.markdownlint.json'
       - '.vale.ini'
@@ -14,6 +15,7 @@ on:
     branches: [main, develop]
     paths:
       - 'docs/**'
+      - 'PRPs/**'
       - '*.md'
       - '.markdownlint.json'
       - '.vale.ini'
@@ -120,6 +122,37 @@ jobs:
           python -m tools.validation.stage_1_syntax --mode documentation || echo "⚠️ Documentation syntax validation completed with issues"
         fi
         
+    - name: Run Japanese standards and template compliance checks
+      run: |
+        echo "🗾 Running integrated Japanese standards validation..."
+        
+        # Check if this is part of the comprehensive documentation lifecycle
+        # If documentation-lifecycle-management workflow exists, ensure coordination
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          echo "📋 PR detected - running template compliance preview..."
+          
+          # Quick template compliance check
+          python - << 'EOF'
+          import os
+          from pathlib import Path
+          
+          # Check for status tags in changed files
+          prp_files = list(Path('PRPs').glob('**/*.md')) if Path('PRPs').exists() else []
+          status_tagged = [f for f in prp_files if any(tag in f.name for tag in ['[IN-PROGRESS]', '[DRAFT]', '[COMPLETED]', '[CURRENT]'])]
+          
+          compliance_rate = len(status_tagged) / max(len(prp_files), 1) if prp_files else 1.0
+          
+          print(f"📊 Status tag compliance: {compliance_rate:.1%}")
+          print(f"📝 PRPs with status tags: {len(status_tagged)}/{len(prp_files)}")
+          
+          # Set environment variable for summary
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write(f"STATUS_TAG_COMPLIANCE={compliance_rate:.1%}\n")
+              f.write(f"TAGGED_PRPS={len(status_tagged)}\n")
+              f.write(f"TOTAL_PRPS={len(prp_files)}\n")
+          EOF
+        fi
+        
     - name: Upload enhanced quality reports
       uses: actions/upload-artifact@v4  # Updated to v4
       if: always()
@@ -188,10 +221,19 @@ jobs:
           
           const emoji = passed === total ? '✅' : '❌';
           
+          // Get Japanese standards compliance from environment
+          const statusTagCompliance = process.env.STATUS_TAG_COMPLIANCE || 'N/A';
+          const taggedPrps = process.env.TAGGED_PRPS || '0';
+          const totalPrps = process.env.TOTAL_PRPS || '0';
+          
           const comment = `## ${emoji} Enhanced Documentation Quality Report
           
           **Quality Gates**: ${passed}/${total} passed
           **Issues Found**: ${errors} errors, ${warnings} warnings
+          
+          ### Japanese Development Standards Integration:
+          - **Status Tag Compliance**: ${statusTagCompliance}
+          - **Tagged PRPs**: ${taggedPrps}/${totalPrps} files follow systematic naming
           
           ### Quality Gate Results:
           ${Object.entries(report.detailed_results || {}).map(([gate, result]) => {

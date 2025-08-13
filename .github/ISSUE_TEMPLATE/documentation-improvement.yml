@@ -1,0 +1,169 @@
+name: 📚 Documentation Improvement
+description: Suggest improvements to documentation following Japanese development standards
+title: "[DOCS]: "
+labels: ["documentation", "enhancement"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 Documentation Improvement Request
+        
+        Thank you for helping improve our documentation! This project follows Japanese development principles of systematic organization, lifecycle management, and continuous improvement.
+        
+        Please provide detailed information about your documentation improvement suggestion.
+
+  - type: dropdown
+    id: improvement-type
+    attributes:
+      label: Type of Documentation Improvement
+      description: What type of documentation improvement are you suggesting?
+      options:
+        - New documentation (missing content)
+        - Update existing documentation (outdated content)
+        - Organization improvement (better structure)
+        - Template compliance (status tags, formatting)
+        - Japanese standards compliance (cleanliness, systematic approach)
+        - Quality automation (markdownlint, Vale issues)
+        - Lifecycle management (archiving, cleanup)
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: Describe the current state of the documentation you want to improve
+      placeholder: |
+        Example:
+        - The authentication guide in docs/users/ is missing examples
+        - PRPs in the main directory don't follow status tag conventions
+        - The CLAUDE.md file needs updates for new features
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed Improvement
+      description: Describe your specific improvement suggestion
+      placeholder: |
+        Example:
+        - Add code examples and screenshots to the authentication guide
+        - Rename PRPs to include [CURRENT], [IN-PROGRESS], or [DRAFT] status tags
+        - Update CLAUDE.md with new MCP tool descriptions and usage patterns
+    validations:
+      required: true
+
+  - type: dropdown
+    id: japanese-standards
+    attributes:
+      label: Japanese Development Standards Alignment
+      description: Which Japanese development principle does this improvement support?
+      options:
+        - 整理整頓 (Seiriseiton) - Organization and cleanliness
+        - 体系的アプローチ (Systematic Approach) - Systematic methodology  
+        - ライフサイクル管理 (Lifecycle Management) - Proper maintenance
+        - 丁寧な保守 (Respectful Maintenance) - Careful upkeep
+        - 全体的品質 (Holistic Quality) - Overall quality improvement
+        - Multiple principles
+        - Not directly related to Japanese standards
+      default: 0
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: quality-gates
+    attributes:
+      label: Quality Gates Consideration
+      description: Which quality gates will this improvement affect?
+      options:
+        - label: Markdownlint compliance (proper formatting, heading hierarchy)
+        - label: Vale prose quality (clear, professional writing)
+        - label: Template compliance (status tags, consistent structure)
+        - label: Link validation (working internal and external links)
+        - label: Content freshness (up-to-date information)
+        - label: Archive organization (proper lifecycle management)
+
+  - type: textarea
+    id: files-affected
+    attributes:
+      label: Files and Directories Affected
+      description: List the specific files, directories, or areas that would be changed
+      placeholder: |
+        Example:
+        - docs/users/authentication.md (main improvement)
+        - docs/users/README.md (update links)
+        - PRPs/[DRAFT]authentication-improvement.md (create new PRP)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority Level
+      description: How urgent is this documentation improvement?
+      options:
+        - High (affects user onboarding or critical workflows)
+        - Medium (improves user experience significantly)
+        - Low (nice-to-have improvement)
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: |
+        Provide any additional context, links, or information that would help implement this improvement.
+        
+        Consider including:
+        - Links to related documentation
+        - Examples from other projects
+        - Screenshots of issues (if applicable)
+        - User feedback or pain points
+      placeholder: |
+        Example:
+        - Users frequently ask about authentication in Discord
+        - Similar projects have great examples at [link]
+        - Current documentation causes confusion because [reason]
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution Intent
+      description: Are you planning to contribute to this improvement?
+      options:
+        - label: I'm willing to work on this improvement myself
+        - label: I can provide review and feedback
+        - label: I'm reporting this for someone else to implement
+        - label: I'm available for testing and validation
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        ## 🗾 Japanese Development Standards
+        
+        This project follows Japanese software development principles:
+        
+        - **整理整頓 (Seiriseiton)**: Keep documentation organized and clean
+        - **体系的アプローチ (Systematic Approach)**: Follow consistent patterns and templates  
+        - **ライフサイクル管理 (Lifecycle Management)**: Maintain proper documentation lifecycle
+        - **丁寧な保守 (Respectful Maintenance)**: Make careful, thoughtful improvements
+        - **全体的品質 (Holistic Quality)**: Consider the impact on the entire documentation ecosystem
+        
+        ## 📋 Documentation Quality Pipeline
+        
+        All documentation changes go through automated quality gates:
+        
+        1. **Markdownlint** - Formatting and structure validation
+        2. **Vale** - Prose quality and style checking  
+        3. **Template Compliance** - Status tags and structure validation
+        4. **Japanese Standards** - Organizational principle compliance
+        5. **Link Validation** - Working link verification
+        
+        Your improvement will be validated against these quality standards automatically.

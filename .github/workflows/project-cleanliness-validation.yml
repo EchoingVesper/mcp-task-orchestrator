@@ -1,0 +1,804 @@
+name: Project Cleanliness Validation
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly cleanliness audit
+    - cron: '0 8 * * 0'  # Sunday at 8 AM UTC
+  workflow_dispatch:
+    inputs:
+      cleanup_level:
+        description: 'Level of cleanup to perform'
+        required: false
+        default: 'audit-only'
+        type: choice
+        options:
+        - audit-only
+        - safe-cleanup
+        - aggressive-cleanup
+      validate_archives:
+        description: 'Validate archive organization'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  # Root Directory Cleanliness Check
+  root-directory-cleanliness:
+    runs-on: ubuntu-latest
+    name: Root Directory Cleanliness Validation
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Run root directory cleanliness check
+      run: |
+        echo "🧹 Running Root Directory Cleanliness Validation..."
+        mkdir -p validation_results
+        
+        python - << 'EOF'
+        """Root Directory Cleanliness Validator."""
+        import json
+        import os
+        from pathlib import Path
+        from datetime import datetime
+        
+        def validate_root_cleanliness():
+            """Validate root directory organization following Japanese cleanliness principles."""
+            results = {
+                "timestamp": datetime.now().isoformat(),
+                "cleanliness_checks": {
+                    "essential_files_only": {"passed": False, "issues": [], "files": []},
+                    "no_temp_artifacts": {"passed": False, "issues": [], "files": []},
+                    "proper_directory_structure": {"passed": False, "issues": [], "directories": []},
+                    "no_build_artifacts": {"passed": False, "issues": [], "files": []},
+                    "no_log_files": {"passed": False, "issues": [], "files": []},
+                    "no_backup_files": {"passed": False, "issues": [], "files": []}
+                },
+                "overall_cleanliness": False,
+                "cleanliness_score": 0
+            }
+            
+            # Essential files check
+            print("📋 Checking for essential files only...")
+            essential_files = {
+                'README.md', 'CHANGELOG.md', 'LICENSE', 'CONTRIBUTING.md',
+                'CLAUDE.md', 'QUICK_START.md', 'TESTING_INSTRUCTIONS.md',
+                'pyproject.toml', 'setup.py', 'requirements.txt',
+                '.gitignore', '.markdownlint.json', '.vale.ini'
+            }
+            
+            root_files = [f for f in os.listdir('.') if os.path.isfile(f)]
+            non_essential = [f for f in root_files if f not in essential_files and not f.startswith('.')]
+            
+            results["cleanliness_checks"]["essential_files_only"]["files"] = root_files
+            
+            if len(non_essential) <= 3:  # Allow a few additional files
+                results["cleanliness_checks"]["essential_files_only"]["passed"] = True
+            else:
+                results["cleanliness_checks"]["essential_files_only"]["issues"] = [
+                    f"Too many non-essential files in root: {non_essential}"
+                ]
+            
+            # Temporary artifacts check
+            print("🗂️ Checking for temporary artifacts...")
+            temp_patterns = ['.tmp', '.temp', '~', '.bak', '.backup', '.old', '.orig']
+            temp_files = []
+            
+            for root, dirs, files in os.walk('.'):
+                # Skip hidden directories and common ignore directories
+                dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['node_modules', '__pycache__', 'venv']]
+                
+                for file in files:
+                    if any(file.endswith(pattern) for pattern in temp_patterns):
+                        temp_files.append(os.path.join(root, file))
+            
+            results["cleanliness_checks"]["no_temp_artifacts"]["files"] = temp_files
+            
+            if len(temp_files) == 0:
+                results["cleanliness_checks"]["no_temp_artifacts"]["passed"] = True
+            else:
+                results["cleanliness_checks"]["no_temp_artifacts"]["issues"] = [
+                    f"Temporary artifacts found: {temp_files[:10]}"  # Show first 10
+                ]
+            
+            # Directory structure check
+            print("🏗️ Checking proper directory structure...")
+            expected_structure = {
+                'mcp_task_orchestrator': 'Main package directory',
+                'tests': 'Test suite',
+                'docs': 'Documentation',
+                'scripts': 'Utility scripts',
+                'tools': 'Development tools',
+                '.github': 'GitHub configuration'
+            }
+            
+            root_dirs = [d for d in os.listdir('.') if os.path.isdir(d) and not d.startswith('.') and d != '__pycache__']
+            results["cleanliness_checks"]["proper_directory_structure"]["directories"] = root_dirs
+            
+            missing_critical = []
+            for critical_dir in ['mcp_task_orchestrator', 'tests', 'docs']:
+                if critical_dir not in root_dirs:
+                    missing_critical.append(critical_dir)
+            
+            if len(missing_critical) == 0:
+                results["cleanliness_checks"]["proper_directory_structure"]["passed"] = True
+            else:
+                results["cleanliness_checks"]["proper_directory_structure"]["issues"] = [
+                    f"Missing critical directories: {missing_critical}"
+                ]
+            
+            # Build artifacts check
+            print("🔧 Checking for build artifacts...")
+            build_artifacts = []
+            build_patterns = ['*.egg-info', 'build', 'dist', '__pycache__', '*.pyc', '*.pyo']
+            
+            for pattern in build_patterns:
+                for path in Path('.').glob(f'**/{pattern}'):
+                    # Allow some build artifacts in specific locations
+                    path_str = str(path)
+                    if not any(skip in path_str for skip in ['.git/', 'venv/', 'node_modules/']):
+                        build_artifacts.append(path_str)
+            
+            results["cleanliness_checks"]["no_build_artifacts"]["files"] = build_artifacts
+            
+            # Allow build artifacts in root but not scattered throughout
+            root_build_artifacts = [a for a in build_artifacts if '/' not in a.lstrip('./')]
+            scattered_artifacts = [a for a in build_artifacts if a not in root_build_artifacts]
+            
+            if len(scattered_artifacts) <= 5:  # Allow some build artifacts
+                results["cleanliness_checks"]["no_build_artifacts"]["passed"] = True
+            else:
+                results["cleanliness_checks"]["no_build_artifacts"]["issues"] = [
+                    f"Too many scattered build artifacts: {scattered_artifacts[:10]}"
+                ]
+            
+            # Log files check
+            print("📝 Checking for log files...")
+            log_patterns = ['*.log', '*.log.*', 'logs']
+            log_files = []
+            
+            for pattern in log_patterns:
+                for path in Path('.').glob(f'**/{pattern}'):
+                    path_str = str(path)
+                    if not any(skip in path_str for skip in ['.git/', 'tests/', 'archives/']):
+                        log_files.append(path_str)
+            
+            results["cleanliness_checks"]["no_log_files"]["files"] = log_files
+            
+            if len(log_files) <= 2:  # Allow a few log files
+                results["cleanliness_checks"]["no_log_files"]["passed"] = True
+            else:
+                results["cleanliness_checks"]["no_log_files"]["issues"] = [
+                    f"Too many log files outside appropriate directories: {log_files}"
+                ]
+            
+            # Backup files check
+            print("💾 Checking for backup files...")
+            backup_patterns = ['*.backup', '*.bak', '*~', '*.orig']
+            backup_files = []
+            
+            for pattern in backup_patterns:
+                for path in Path('.').glob(f'**/{pattern}'):
+                    path_str = str(path)
+                    if not any(skip in path_str for skip in ['.git/', 'backups/', 'archives/']):
+                        backup_files.append(path_str)
+            
+            results["cleanliness_checks"]["no_backup_files"]["files"] = backup_files
+            
+            if len(backup_files) == 0:
+                results["cleanliness_checks"]["no_backup_files"]["passed"] = True
+            else:
+                results["cleanliness_checks"]["no_backup_files"]["issues"] = [
+                    f"Backup files found outside archives: {backup_files}"
+                ]
+            
+            # Calculate cleanliness score
+            passed_checks = sum(1 for check in results["cleanliness_checks"].values() if check["passed"])
+            results["cleanliness_score"] = (passed_checks / len(results["cleanliness_checks"])) * 100
+            results["overall_cleanliness"] = results["cleanliness_score"] >= 80
+            
+            print(f"🧹 Root Directory Cleanliness Score: {results['cleanliness_score']:.1f}%")
+            
+            # Save results
+            with open('validation_results/root_cleanliness_report.json', 'w') as f:
+                json.dump(results, f, indent=2)
+            
+            return results["overall_cleanliness"]
+        
+        cleanliness_passed = validate_root_cleanliness()
+        exit(0 if cleanliness_passed else 1)
+        EOF
+    
+    - name: Upload root cleanliness report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: root-cleanliness-report-${{ github.run_id }}
+        path: validation_results/root_cleanliness_report.json
+        retention-days: 30
+
+  # Test Artifact Lifecycle Validation
+  test-artifact-lifecycle:
+    runs-on: ubuntu-latest
+    name: Test Artifact Lifecycle Validation
+    needs: root-directory-cleanliness
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Run test artifact lifecycle validation
+      run: |
+        echo "🧪 Running Test Artifact Lifecycle Validation..."
+        mkdir -p validation_results
+        
+        python - << 'EOF'
+        """Test Artifact Lifecycle Validator."""
+        import json
+        import os
+        from pathlib import Path
+        from datetime import datetime, timedelta
+        
+        def validate_test_artifacts():
+            """Validate test artifact organization and lifecycle management."""
+            results = {
+                "timestamp": datetime.now().isoformat(),
+                "artifact_checks": {
+                    "test_results_organization": {"passed": False, "issues": [], "artifacts": []},
+                    "validation_reports_management": {"passed": False, "issues": [], "artifacts": []},
+                    "temporary_test_files": {"passed": False, "issues": [], "artifacts": []},
+                    "archive_organization": {"passed": False, "issues": [], "directories": []},
+                    "artifact_age_management": {"passed": False, "issues": [], "old_artifacts": []}
+                },
+                "overall_lifecycle": False,
+                "lifecycle_score": 0
+            }
+            
+            # Test results organization
+            print("📊 Checking test results organization...")
+            test_result_patterns = ['*results*.json', '*report*.json', '*.xml', '*coverage*']
+            test_artifacts = []
+            
+            for pattern in test_result_patterns:
+                for path in Path('.').glob(f'**/{pattern}'):
+                    path_str = str(path)
+                    # Exclude proper locations
+                    if not any(proper in path_str for proper in ['tests/', 'validation_results/', 'archives/']):
+                        test_artifacts.append(path_str)
+            
+            results["artifact_checks"]["test_results_organization"]["artifacts"] = test_artifacts
+            
+            if len(test_artifacts) <= 3:  # Allow a few scattered artifacts
+                results["artifact_checks"]["test_results_organization"]["passed"] = True
+            else:
+                results["artifact_checks"]["test_results_organization"]["issues"] = [
+                    f"Test artifacts not properly organized: {test_artifacts[:10]}"
+                ]
+            
+            # Validation reports management
+            print("📋 Checking validation reports management...")
+            validation_dirs = ['validation_results', 'test_results', 'reports']
+            validation_artifacts = []
+            
+            for validation_dir in validation_dirs:
+                if os.path.exists(validation_dir):
+                    files = list(Path(validation_dir).glob('**/*'))
+                    validation_artifacts.extend([str(f) for f in files if f.is_file()])
+            
+            results["artifact_checks"]["validation_reports_management"]["artifacts"] = validation_artifacts
+            
+            # Check if validation artifacts are properly contained
+            if len(validation_artifacts) > 0:
+                # Good - validation artifacts are organized
+                results["artifact_checks"]["validation_reports_management"]["passed"] = True
+            else:
+                # Check if there are validation artifacts scattered elsewhere
+                scattered = list(Path('.').glob('**/validation_*.json'))
+                if len(scattered) > 5:
+                    results["artifact_checks"]["validation_reports_management"]["issues"] = [
+                        f"Validation reports scattered instead of organized: {scattered[:5]}"
+                    ]
+                else:
+                    results["artifact_checks"]["validation_reports_management"]["passed"] = True
+            
+            # Temporary test files
+            print("🗂️ Checking temporary test files...")
+            temp_test_patterns = ['test_*.tmp', '*.test.tmp', 'tmp_*', '.pytest_cache']
+            temp_test_files = []
+            
+            for pattern in temp_test_patterns:
+                for path in Path('.').glob(f'**/{pattern}'):
+                    temp_test_files.append(str(path))
+            
+            results["artifact_checks"]["temporary_test_files"]["artifacts"] = temp_test_files
+            
+            if len(temp_test_files) <= 2:  # Allow minimal temp files
+                results["artifact_checks"]["temporary_test_files"]["passed"] = True
+            else:
+                results["artifact_checks"]["temporary_test_files"]["issues"] = [
+                    f"Too many temporary test files: {temp_test_files[:10]}"
+                ]
+            
+            # Archive organization
+            print("📦 Checking archive organization...")
+            archive_dirs = ['archives', 'docs/archives', 'tests/archives']
+            well_organized_archives = []
+            
+            for archive_dir in archive_dirs:
+                if os.path.exists(archive_dir):
+                    subdirs = [d for d in os.listdir(archive_dir) if os.path.isdir(os.path.join(archive_dir, d))]
+                    if len(subdirs) > 0:  # Has subdirectory organization
+                        well_organized_archives.append(archive_dir)
+            
+            results["artifact_checks"]["archive_organization"]["directories"] = well_organized_archives
+            
+            if len(well_organized_archives) >= 1:  # At least one well-organized archive
+                results["artifact_checks"]["archive_organization"]["passed"] = True
+            else:
+                results["artifact_checks"]["archive_organization"]["issues"] = [
+                    "No well-organized archive directories found"
+                ]
+            
+            # Artifact age management
+            print("⏰ Checking artifact age management...")
+            old_artifacts = []
+            cutoff_date = datetime.now() - timedelta(days=30)
+            
+            # Check for old artifacts in main areas
+            for pattern in ['*.json', '*.xml', '*.txt']:
+                for path in Path('.').glob(pattern):
+                    try:
+                        mtime = datetime.fromtimestamp(path.stat().st_mtime)
+                        if mtime < cutoff_date and any(keyword in str(path) for keyword in ['test', 'report', 'result']):
+                            old_artifacts.append(str(path))
+                    except:
+                        pass
+            
+            results["artifact_checks"]["artifact_age_management"]["old_artifacts"] = old_artifacts
+            
+            if len(old_artifacts) <= 5:  # Allow some old artifacts
+                results["artifact_checks"]["artifact_age_management"]["passed"] = True
+            else:
+                results["artifact_checks"]["artifact_age_management"]["issues"] = [
+                    f"Too many old artifacts that should be archived: {old_artifacts[:10]}"
+                ]
+            
+            # Calculate lifecycle score
+            passed_checks = sum(1 for check in results["artifact_checks"].values() if check["passed"])
+            results["lifecycle_score"] = (passed_checks / len(results["artifact_checks"])) * 100
+            results["overall_lifecycle"] = results["lifecycle_score"] >= 80
+            
+            print(f"♻️ Test Artifact Lifecycle Score: {results['lifecycle_score']:.1f}%")
+            
+            # Save results
+            with open('validation_results/test_artifact_lifecycle_report.json', 'w') as f:
+                json.dump(results, f, indent=2)
+            
+            return results["overall_lifecycle"]
+        
+        lifecycle_passed = validate_test_artifacts()
+        exit(0 if lifecycle_passed else 1)
+        EOF
+    
+    - name: Upload test artifact lifecycle report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-artifact-lifecycle-report-${{ github.run_id }}
+        path: validation_results/test_artifact_lifecycle_report.json
+        retention-days: 30
+
+  # Systematic Organization Validation
+  systematic-organization-validation:
+    runs-on: ubuntu-latest
+    name: Systematic Organization Validation
+    needs: [root-directory-cleanliness, test-artifact-lifecycle]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Run systematic organization validation
+      run: |
+        echo "📋 Running Systematic Organization Validation..."
+        mkdir -p validation_results
+        
+        python - << 'EOF'
+        """Systematic Organization Validator."""
+        import json
+        import os
+        from pathlib import Path
+        from datetime import datetime
+        
+        def validate_systematic_organization():
+            """Validate systematic organization following Japanese principles."""
+            results = {
+                "timestamp": datetime.now().isoformat(),
+                "organization_checks": {
+                    "hierarchical_structure": {"passed": False, "issues": [], "structure": {}},
+                    "purpose_driven_naming": {"passed": False, "issues": [], "examples": []},
+                    "consistent_patterns": {"passed": False, "issues": [], "patterns": {}},
+                    "logical_grouping": {"passed": False, "issues": [], "groups": {}},
+                    "scalable_organization": {"passed": False, "issues": [], "metrics": {}}
+                },
+                "overall_organization": False,
+                "organization_score": 0
+            }
+            
+            # Hierarchical structure check
+            print("🏗️ Checking hierarchical structure...")
+            structure = {}
+            
+            for root, dirs, files in os.walk('.'):
+                if root.startswith('./.git'):
+                    continue
+                level = root.replace('.', '').count(os.sep)
+                if level <= 3:  # Only check first 3 levels
+                    structure[root] = {
+                        'directories': dirs[:],
+                        'files': [f for f in files if not f.startswith('.')],
+                        'level': level
+                    }
+            
+            results["organization_checks"]["hierarchical_structure"]["structure"] = {
+                k: {'dirs': len(v['directories']), 'files': len(v['files']), 'level': v['level']} 
+                for k, v in structure.items()
+            }
+            
+            # Check if root level isn't too cluttered
+            root_structure = structure.get('.', {'directories': [], 'files': []})
+            if len(root_structure['directories']) <= 15 and len(root_structure['files']) <= 15:
+                results["organization_checks"]["hierarchical_structure"]["passed"] = True
+            else:
+                results["organization_checks"]["hierarchical_structure"]["issues"] = [
+                    f"Root level too cluttered: {len(root_structure['directories'])} dirs, {len(root_structure['files'])} files"
+                ]
+            
+            # Purpose-driven naming check
+            print("🎯 Checking purpose-driven naming...")
+            good_naming_examples = []
+            naming_issues = []
+            
+            # Check directory naming
+            for root, dirs, files in os.walk('.'):
+                if root.count(os.sep) <= 2:  # Check first 2 levels
+                    for dir_name in dirs:
+                        if dir_name.startswith('.'):
+                            continue
+                        
+                        # Good naming patterns
+                        purpose_indicators = ['docs', 'tests', 'scripts', 'tools', 'examples', 'archives', 'backups']
+                        if any(indicator in dir_name.lower() for indicator in purpose_indicators):
+                            good_naming_examples.append(f"{root}/{dir_name}")
+                        
+                        # Poor naming patterns
+                        poor_patterns = ['temp', 'tmp', 'misc', 'stuff', 'other']
+                        if any(pattern in dir_name.lower() for pattern in poor_patterns):
+                            naming_issues.append(f"Poor naming: {root}/{dir_name}")
+            
+            results["organization_checks"]["purpose_driven_naming"]["examples"] = good_naming_examples
+            
+            if len(good_naming_examples) >= 3 and len(naming_issues) <= 1:
+                results["organization_checks"]["purpose_driven_naming"]["passed"] = True
+            else:
+                results["organization_checks"]["purpose_driven_naming"]["issues"] = naming_issues
+            
+            # Consistent patterns check
+            print("🔄 Checking consistent patterns...")
+            patterns = {
+                'markdown_files': len(list(Path('.').glob('**/*.md'))),
+                'python_files': len(list(Path('.').glob('**/*.py'))),
+                'test_files': len(list(Path('.').glob('**/test_*.py'))) + len(list(Path('.').glob('**/*_test.py'))),
+                'config_files': len(list(Path('.').glob('**/*.json'))) + len(list(Path('.').glob('**/*.yaml'))) + len(list(Path('.').glob('**/*.yml')))
+            }
+            
+            results["organization_checks"]["consistent_patterns"]["patterns"] = patterns
+            
+            # Check if patterns are reasonable
+            pattern_score = 0
+            if patterns['markdown_files'] > 10:  # Good documentation
+                pattern_score += 1
+            if patterns['python_files'] > patterns['test_files'] * 3:  # Reasonable test ratio
+                pattern_score += 1
+            if patterns['config_files'] > 0:  # Has configuration
+                pattern_score += 1
+            
+            if pattern_score >= 2:
+                results["organization_checks"]["consistent_patterns"]["passed"] = True
+            else:
+                results["organization_checks"]["consistent_patterns"]["issues"] = [
+                    f"Inconsistent patterns: {patterns}"
+                ]
+            
+            # Logical grouping check
+            print("🗂️ Checking logical grouping...")
+            groups = {}
+            
+            # Check if similar files are grouped
+            for pattern, description in [
+                ('tests/**/*.py', 'test_files'),
+                ('docs/**/*.md', 'documentation'),
+                ('scripts/**/*.py', 'utility_scripts'),
+                ('mcp_task_orchestrator/**/*.py', 'main_package')
+            ]:
+                files = list(Path('.').glob(pattern))
+                groups[description] = len(files)
+            
+            results["organization_checks"]["logical_grouping"]["groups"] = groups
+            
+            # Good grouping if most categories have reasonable numbers
+            well_grouped_categories = sum(1 for count in groups.values() if count > 0)
+            if well_grouped_categories >= 3:
+                results["organization_checks"]["logical_grouping"]["passed"] = True
+            else:
+                results["organization_checks"]["logical_grouping"]["issues"] = [
+                    f"Poor logical grouping: only {well_grouped_categories} well-grouped categories"
+                ]
+            
+            # Scalable organization check
+            print("📈 Checking scalable organization...")
+            metrics = {
+                'max_files_per_directory': 0,
+                'max_depth': 0,
+                'directories_with_many_files': 0
+            }
+            
+            for root, dirs, files in os.walk('.'):
+                if root.startswith('./.git'):
+                    continue
+                
+                depth = root.count(os.sep)
+                metrics['max_depth'] = max(metrics['max_depth'], depth)
+                
+                file_count = len([f for f in files if not f.startswith('.')])
+                metrics['max_files_per_directory'] = max(metrics['max_files_per_directory'], file_count)
+                
+                if file_count > 20:
+                    metrics['directories_with_many_files'] += 1
+            
+            results["organization_checks"]["scalable_organization"]["metrics"] = metrics
+            
+            # Scalable if not too deep and not too many files per directory
+            if metrics['max_depth'] <= 6 and metrics['directories_with_many_files'] <= 3:
+                results["organization_checks"]["scalable_organization"]["passed"] = True
+            else:
+                results["organization_checks"]["scalable_organization"]["issues"] = [
+                    f"Organization may not scale well: {metrics}"
+                ]
+            
+            # Calculate organization score
+            passed_checks = sum(1 for check in results["organization_checks"].values() if check["passed"])
+            results["organization_score"] = (passed_checks / len(results["organization_checks"])) * 100
+            results["overall_organization"] = results["organization_score"] >= 80
+            
+            print(f"📋 Systematic Organization Score: {results['organization_score']:.1f}%")
+            
+            # Save results
+            with open('validation_results/systematic_organization_report.json', 'w') as f:
+                json.dump(results, f, indent=2)
+            
+            return results["overall_organization"]
+        
+        organization_passed = validate_systematic_organization()
+        exit(0 if organization_passed else 1)
+        EOF
+    
+    - name: Upload systematic organization report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: systematic-organization-report-${{ github.run_id }}
+        path: validation_results/systematic_organization_report.json
+        retention-days: 30
+
+  # Cleanup Automation (if enabled)
+  automated-cleanup:
+    runs-on: ubuntu-latest
+    name: Automated Cleanup (Optional)
+    needs: [root-directory-cleanliness, test-artifact-lifecycle, systematic-organization-validation]
+    if: github.event.inputs.cleanup_level != 'audit-only' && github.event.inputs.cleanup_level != ''
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Run automated cleanup
+      run: |
+        echo "🧹 Running Automated Cleanup (Level: ${{ github.event.inputs.cleanup_level || 'safe-cleanup' }})"
+        mkdir -p validation_results cleanup_logs
+        
+        python - << 'EOF'
+        """Automated Cleanup Tool."""
+        import json
+        import os
+        import shutil
+        from pathlib import Path
+        from datetime import datetime, timedelta
+        
+        def perform_cleanup(level="safe-cleanup"):
+            """Perform automated cleanup based on level."""
+            cleanup_log = {
+                "timestamp": datetime.now().isoformat(),
+                "cleanup_level": level,
+                "actions_taken": [],
+                "files_moved": [],
+                "files_deleted": [],
+                "errors": []
+            }
+            
+            print(f"🧹 Starting {level} cleanup...")
+            
+            if level == "safe-cleanup":
+                # Safe cleanup: only move obvious temp files
+                temp_patterns = ['.tmp', '.temp', '~', '.bak']
+                
+                for pattern in temp_patterns:
+                    for path in Path('.').glob(f'**/*{pattern}'):
+                        if not any(skip in str(path) for skip in ['.git/', 'archives/', 'backups/']):
+                            try:
+                                # Create cleanup directory if not exists
+                                cleanup_dir = Path('cleanup_temp')
+                                cleanup_dir.mkdir(exist_ok=True)
+                                
+                                # Move file to cleanup directory
+                                new_path = cleanup_dir / path.name
+                                shutil.move(str(path), str(new_path))
+                                
+                                cleanup_log["files_moved"].append({
+                                    "from": str(path),
+                                    "to": str(new_path),
+                                    "reason": f"Temporary file with pattern {pattern}"
+                                })
+                                
+                                print(f"Moved {path} to {new_path}")
+                                
+                            except Exception as e:
+                                cleanup_log["errors"].append(f"Failed to move {path}: {str(e)}")
+                
+            elif level == "aggressive-cleanup":
+                # More aggressive cleanup (be careful!)
+                print("⚠️ Aggressive cleanup not implemented for safety")
+                cleanup_log["actions_taken"].append("Aggressive cleanup skipped for safety")
+            
+            # Log actions
+            cleanup_log["actions_taken"].append(f"Cleanup level {level} completed")
+            
+            print(f"🧹 Cleanup completed: {len(cleanup_log['files_moved'])} files moved, {len(cleanup_log['errors'])} errors")
+            
+            # Save cleanup log
+            with open('cleanup_logs/cleanup_log.json', 'w') as f:
+                json.dump(cleanup_log, f, indent=2)
+        
+        cleanup_level = os.environ.get('CLEANUP_LEVEL', 'safe-cleanup')
+        perform_cleanup(cleanup_level)
+        EOF
+      env:
+        CLEANUP_LEVEL: ${{ github.event.inputs.cleanup_level || 'safe-cleanup' }}
+    
+    - name: Commit cleanup changes (if any)
+      run: |
+        if [ -d "cleanup_temp" ] && [ "$(ls -A cleanup_temp)" ]; then
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add cleanup_temp/ cleanup_logs/
+          git commit -m "chore: automated cleanup - moved temporary files to cleanup_temp/" || echo "No changes to commit"
+        fi
+    
+    - name: Upload cleanup logs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: cleanup-logs-${{ github.run_id }}
+        path: cleanup_logs/
+        retention-days: 30
+
+  # Project Cleanliness Summary
+  cleanliness-summary:
+    runs-on: ubuntu-latest
+    name: Project Cleanliness Summary
+    needs: [root-directory-cleanliness, test-artifact-lifecycle, systematic-organization-validation]
+    if: always()
+    
+    steps:
+    - name: Download all cleanliness reports
+      uses: actions/download-artifact@v4
+      with:
+        path: cleanliness-reports
+    
+    - name: Generate project cleanliness summary
+      run: |
+        echo "# 🧹 Project Cleanliness Validation Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## Cleanliness Validation Results" >> $GITHUB_STEP_SUMMARY
+        echo "| Check | Status | Focus Area |" >> $GITHUB_STEP_SUMMARY
+        echo "|-------|--------|------------|" >> $GITHUB_STEP_SUMMARY
+        echo "| 🧹 Root Directory | ${{ needs.root-directory-cleanliness.result }} | Essential files and directory structure |" >> $GITHUB_STEP_SUMMARY
+        echo "| ♻️ Test Artifacts | ${{ needs.test-artifact-lifecycle.result }} | Test artifact lifecycle management |" >> $GITHUB_STEP_SUMMARY
+        echo "| 📋 Systematic Organization | ${{ needs.systematic-organization-validation.result }} | Japanese organizational principles |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Determine overall cleanliness status
+        if [[ "${{ needs.root-directory-cleanliness.result }}" == "success" && 
+              "${{ needs.test-artifact-lifecycle.result }}" == "success" && 
+              "${{ needs.systematic-organization-validation.result }}" == "success" ]]; then
+          echo "## ✅ Overall Status: EXCELLENT PROJECT CLEANLINESS" >> $GITHUB_STEP_SUMMARY
+          echo "🎉 All cleanliness validation checks passed! The project follows Japanese organizational principles beautifully." >> $GITHUB_STEP_SUMMARY
+          overall_status="excellent"
+        else
+          echo "## 🧹 Overall Status: CLEANLINESS IMPROVEMENTS NEEDED" >> $GITHUB_STEP_SUMMARY
+          echo "Some aspects of project organization need attention. Review the detailed reports for specific cleanup recommendations." >> $GITHUB_STEP_SUMMARY
+          overall_status="needs_improvement"
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 📊 Japanese Development Principles Applied" >> $GITHUB_STEP_SUMMARY
+        echo "- **整理整頓 (Seiriseiton)**: Systematic organization and cleanliness" >> $GITHUB_STEP_SUMMARY
+        echo "- **体系的アプローチ (Systematic Approach)**: Logical structure and hierarchy" >> $GITHUB_STEP_SUMMARY
+        echo "- **ライフサイクル管理 (Lifecycle Management)**: Proper artifact management" >> $GITHUB_STEP_SUMMARY
+        echo "- **継続的改善 (Continuous Improvement)**: Regular validation and cleanup" >> $GITHUB_STEP_SUMMARY
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 📋 Available Reports" >> $GITHUB_STEP_SUMMARY
+        echo "- **Root Cleanliness Report**: Directory structure and essential files analysis" >> $GITHUB_STEP_SUMMARY
+        echo "- **Test Artifact Lifecycle Report**: Test artifact organization and management" >> $GITHUB_STEP_SUMMARY
+        echo "- **Systematic Organization Report**: Overall organizational structure validation" >> $GITHUB_STEP_SUMMARY
+        if [[ "${{ github.event.inputs.cleanup_level }}" != "audit-only" ]]; then
+          echo "- **Cleanup Logs**: Automated cleanup actions taken" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "## 🚀 Next Steps" >> $GITHUB_STEP_SUMMARY
+        if [[ "$overall_status" == "excellent" ]]; then
+          echo "- Continue maintaining excellent organizational standards" >> $GITHUB_STEP_SUMMARY
+          echo "- Consider sharing organizational patterns with other projects" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- Review failed validation checks and implement recommendations" >> $GITHUB_STEP_SUMMARY
+          echo "- Consider running automated cleanup to address identified issues" >> $GITHUB_STEP_SUMMARY
+          echo "- Re-run validation after improvements" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        # Console output
+        echo "🧹 Project Cleanliness Validation Summary"
+        echo "========================================="
+        echo "Root Directory Cleanliness: ${{ needs.root-directory-cleanliness.result }}"
+        echo "Test Artifact Lifecycle: ${{ needs.test-artifact-lifecycle.result }}"
+        echo "Systematic Organization: ${{ needs.systematic-organization-validation.result }}"
+        echo ""
+        
+        if [[ "$overall_status" == "excellent" ]]; then
+          echo "🎉 Project organization follows Japanese principles beautifully!"
+          exit 0
+        else
+          echo "🧹 Project cleanliness needs attention."
+          echo "💡 Check individual validation reports for specific recommendations."
+          exit 1
+        fi
