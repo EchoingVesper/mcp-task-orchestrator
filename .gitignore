@@ -153,5 +153,20 @@ PRPs/.cache/
 reference/
 reference/*
 
+# Temporary files from development (Phase 4 Cleanup Prevention)
+fix_*.py
+system_health*.json
+security_test_suite*.*
+test-*hooks*.sh
+validation_*.json
+test_mcp_compatibility.py
+*_test_report_*.json
+
+# Scripts testing temporary directory (except README)
+scripts/testing/temporary/*.py
+scripts/testing/temporary/*.sh
+scripts/testing/temporary/*.json
+scripts/testing/temporary/*.log
+
 # Note: This project doesn't use Supabase - entries removed
 # Note: Duplicate database and venv entries cleaned up above

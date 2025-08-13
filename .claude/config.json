@@ -6,7 +6,8 @@
       ".claude/hooks/status-tag-validator.sh",
       ".claude/hooks/file-size-monitor.sh",
       ".claude/hooks/test-reminder.sh",
-      ".claude/hooks/todo-tracker.sh"
+      ".claude/hooks/todo-tracker.sh",
+      ".claude/hooks/cleanup-reminder.sh"
     ]
   },
   "settings": {
@@ -19,7 +20,8 @@
         "Status tag compliance validation",
         "File size monitoring for Claude Code stability",
         "Test reminder system",
-        "Technical debt tracking"
+        "Technical debt tracking",
+        "Automated cleanup reminders and lifecycle management"
       ]
     }
   }
