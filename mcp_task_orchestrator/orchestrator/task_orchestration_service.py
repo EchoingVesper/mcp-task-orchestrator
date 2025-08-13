@@ -198,7 +198,7 @@ class TaskOrchestrator:
             
             return specialist_context
         
-        except Exception as e:
+        except Exception:
             # Revert task status on any error
             try:
                 subtask.status = original_status

@@ -69,7 +69,8 @@ def run_python_checks(file_path):
                         'message': issue.get('message', ''),
                         'severity': 'warning'
                     })
-        except:
+        except Exception:
+            # Ruff not available or failed - not critical for linting hook
             pass
             
     except Exception:

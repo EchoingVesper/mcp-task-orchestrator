@@ -87,10 +87,10 @@ class EnvironmentManager:
                     self.console.print(f"[green]Using existing virtual environment: {venv_path}[/green]")
                     return env
                 else:
-                    self.console.print(f"[yellow]Recreating virtual environment (--force specified)[/yellow]")
+                    self.console.print("[yellow]Recreating virtual environment (--force specified)[/yellow]")
                     self._remove_environment(venv_path)
             else:
-                self.console.print(f"[yellow]Removing invalid virtual environment[/yellow]")
+                self.console.print("[yellow]Removing invalid virtual environment[/yellow]")
                 self._remove_environment(venv_path)
         
         # Create new environment
@@ -106,7 +106,7 @@ class EnvironmentManager:
                 self.console.print(f"[green]Using existing virtual environment: {venv_path}[/green]")
                 return env
             elif self.config.force:
-                self.console.print(f"[yellow]Recreating virtual environment (--force specified)[/yellow]")
+                self.console.print("[yellow]Recreating virtual environment (--force specified)[/yellow]")
                 self._remove_environment(venv_path)
             else:
                 raise EnvironmentError(f"Invalid virtual environment at {venv_path}")

@@ -586,7 +586,7 @@ Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
                 emoji = "🚨" if alert['level'] == 'critical' else "⚠️"
                 content += f"\n{emoji} **{alert['type'].replace('_', ' ').title()}:** {alert['message']}"
         
-        content += f"""
+        content += """
 
 ## Recommendations
 

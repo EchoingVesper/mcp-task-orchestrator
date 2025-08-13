@@ -353,7 +353,7 @@ class CrossReferenceValidator:
                         ref.is_valid = True
                     else:
                         ref.error_message = f"File not found: {full_path}"
-                        ref.suggested_fix = f"Check if file exists or update path"
+                        ref.suggested_fix = "Check if file exists or update path"
                 else:
                     ref.error_message = "Project root not found"
                     ref.suggested_fix = "Ensure project has .git, pyproject.toml, or package.json"
@@ -365,7 +365,7 @@ class CrossReferenceValidator:
                     ref.is_valid = True
                 else:
                     ref.error_message = f"File not found: {full_path}"
-                    ref.suggested_fix = f"Check if file exists or update path"
+                    ref.suggested_fix = "Check if file exists or update path"
     
     def _validate_path_references(self, references: List[CrossReference]):
         """Validate relative and absolute path references."""
@@ -384,7 +384,7 @@ class CrossReferenceValidator:
                 ref.is_valid = True
             else:
                 ref.error_message = f"Path not found: {path}"
-                ref.suggested_fix = f"Check if path exists or update reference"
+                ref.suggested_fix = "Check if path exists or update reference"
     
     def _validate_markdown_links(self, references: List[CrossReference]):
         """Validate markdown link targets."""
@@ -415,7 +415,7 @@ class CrossReferenceValidator:
                     ref.is_valid = True
                 else:
                     ref.error_message = f"Link target not found: {path}"
-                    ref.suggested_fix = f"Check if file exists or update link"
+                    ref.suggested_fix = "Check if file exists or update link"
     
     def _validate_url_references(self, references: List[CrossReference]):
         """Validate URL references."""
@@ -473,7 +473,7 @@ class CrossReferenceValidator:
             else:
                 ref.is_valid = False
                 ref.error_message = f"HTTP {response.status_code}"
-                ref.suggested_fix = f"Check if URL is correct or accessible"
+                ref.suggested_fix = "Check if URL is correct or accessible"
                 self.url_cache[url] = {'is_valid': False, 'error_message': ref.error_message}
         
         except requests.exceptions.Timeout:
@@ -699,7 +699,7 @@ def main():
             # Save text report if requested
             if args.output:
                 with open(args.output, 'w') as f:
-                    f.write(f"Cross-Reference Validation Summary\\n")
+                    f.write("Cross-Reference Validation Summary\\n")
                     f.write(f"Validation Rate: {summary['validation_rate']:.2%}\\n")
                     f.write(f"Total Issues: {summary['invalid_references']}/{summary['total_references']}\\n\\n")
                     

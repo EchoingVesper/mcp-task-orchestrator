@@ -18,11 +18,11 @@ import re
 from ..value_objects.complexity_level import ComplexityLevel
 from ..value_objects.flexible_specialist_type import validate_specialist_type as validate_specialist_type_func
 
-# Import security framework for input validation
-from ...infrastructure.security.validators import (
+# Import domain validation functions
+from ..validation import (
     validate_string_input, 
     validate_task_id,
-    ValidationError as SecurityValidationError
+    ValidationError as DomainValidationError
 )
 
 
@@ -642,7 +642,7 @@ class Task(BaseModel):
             field_name = info.field_name if info else "text_field"
             sanitized_value = validate_string_input(v, field_name)
             return sanitized_value.strip()
-        except SecurityValidationError as e:
+        except DomainValidationError as e:
             raise ValueError(f"Security validation failed for {info.field_name if info else 'field'}: {str(e)}")
     
     @field_validator('task_id')
@@ -654,7 +654,7 @@ class Task(BaseModel):
         
         try:
             return validate_task_id(v)
-        except SecurityValidationError as e:
+        except DomainValidationError as e:
             raise ValueError(f"Invalid task ID format: {str(e)}")
     
     @field_validator('parent_task_id')
@@ -666,7 +666,7 @@ class Task(BaseModel):
         
         try:
             return validate_task_id(v)
-        except SecurityValidationError as e:
+        except DomainValidationError as e:
             raise ValueError(f"Invalid parent task ID format: {str(e)}")
 
     model_config = ConfigDict(

@@ -32,7 +32,7 @@ def extract_internal_links(file_path: Path) -> list:
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-    except Exception as e:
+    except Exception:
         return []
     
     # Find all markdown links: [text](url)

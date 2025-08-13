@@ -60,7 +60,7 @@ class ClientRegistry:
             
             if registry_path is None:
                 raise FileNotFoundError(
-                    f"Could not find mcp_clients_registry.yaml in any of these locations:\n" +
+                    "Could not find mcp_clients_registry.yaml in any of these locations:\n" +
                     "\n".join(f"  - {p}" for p in possible_paths)
                 )
         

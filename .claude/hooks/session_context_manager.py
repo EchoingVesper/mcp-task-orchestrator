@@ -33,7 +33,8 @@ def get_git_info():
             'modified_files': modified_count,
             'last_commit': last_commit or 'none'
         }
-    except:
+    except Exception:
+        # Git not available or error - return default info
         return {'branch': 'none', 'modified_files': 0, 'last_commit': 'none'}
 
 def find_current_prp():
@@ -43,7 +44,8 @@ def find_current_prp():
         if prps_dir.exists():
             for prp_file in prps_dir.glob('[IN-PROGRESS]*.md'):
                 return prp_file.name
-    except:
+    except Exception:
+        # Failed to access PRPs directory - not critical
         pass
     return 'none'
 
@@ -55,7 +57,8 @@ def load_session_context():
         try:
             with open(context_file, 'r') as f:
                 return json.load(f)
-        except:
+        except Exception:
+            # Failed to load session context - return empty
             pass
     return {}
 
@@ -110,7 +113,8 @@ def main():
         input_data = {}
         try:
             input_data = json.loads(sys.stdin.read())
-        except:
+        except Exception:
+            # Failed to parse stdin input - use empty dict
             pass
             
         hook_type = os.environ.get('CLAUDE_HOOK_TYPE', '')

@@ -232,7 +232,7 @@ class ClaudeCodeConfig(MCPClientConfig):
             result = subprocess.run(workspace_cmd, capture_output=True, text=True, timeout=30)
             
             if result.returncode == 0:
-                console.print(f"[green]✓[/green] Configured Claude Code (workspace scope)")
+                console.print("[green]✓[/green] Configured Claude Code (workspace scope)")
                 return True
             else:
                 # Fallback to global scope
@@ -250,7 +250,7 @@ class ClaudeCodeConfig(MCPClientConfig):
                 result = subprocess.run(global_cmd, capture_output=True, text=True, timeout=30)
                 
                 if result.returncode == 0:
-                    console.print(f"[green]✓[/green] Configured Claude Code (global scope)")
+                    console.print("[green]✓[/green] Configured Claude Code (global scope)")
                     return True
                 else:
                     console.print(f"[red]✗[/red] Failed to configure Claude Code: {result.stderr}")
@@ -299,7 +299,7 @@ class CursorConfig(MCPClientConfig):
         
         # Ask user preference
         use_workspace = Confirm.ask(
-            f"Configure Cursor for current workspace only?", 
+            "Configure Cursor for current workspace only?", 
             default=True
         )
         
@@ -394,8 +394,8 @@ class WindsurfConfig(MCPClientConfig):
         success = self.save_config(config_path, config)
         
         if success:
-            console.print(f"[green]✓[/green] Configured Windsurf")
-            console.print(f"[dim]Access via CMD/Ctrl + Shift + P → 'MCP Configuration Panel'[/dim]")
+            console.print("[green]✓[/green] Configured Windsurf")
+            console.print("[dim]Access via CMD/Ctrl + Shift + P → 'MCP Configuration Panel'[/dim]")
         
         return success
 
@@ -439,7 +439,7 @@ class VSCodeMCPConfig(MCPClientConfig):
         """Configure VS Code GitHub Copilot for Task Orchestrator."""
         # Ask user preference for scope
         use_workspace = Confirm.ask(
-            f"Configure VS Code for current workspace only?", 
+            "Configure VS Code for current workspace only?", 
             default=True
         )
         
@@ -460,8 +460,8 @@ class VSCodeMCPConfig(MCPClientConfig):
             
             success = self.save_config(config_path, config)
             if success:
-                console.print(f"[green]✓[/green] Configured VS Code (workspace scope)")
-                console.print(f"[dim]Note: Requires GitHub Copilot subscription and Agent Mode enabled[/dim]")
+                console.print("[green]✓[/green] Configured VS Code (workspace scope)")
+                console.print("[dim]Note: Requires GitHub Copilot subscription and Agent Mode enabled[/dim]")
         else:
             # Use global settings.json (less common for MCP)
             config_path = self.get_config_path()
@@ -487,7 +487,7 @@ class VSCodeMCPConfig(MCPClientConfig):
             
             success = self.save_config(config_path, config)
             if success:
-                console.print(f"[green]✓[/green] Configured VS Code (global scope)")
+                console.print("[green]✓[/green] Configured VS Code (global scope)")
         
         return success
 
@@ -511,7 +511,7 @@ class ContinueDevConfig(MCPClientConfig):
         """Configure Continue.dev for Task Orchestrator."""
         # Ask user preference
         use_workspace = Confirm.ask(
-            f"Configure Continue.dev for current workspace only?", 
+            "Configure Continue.dev for current workspace only?", 
             default=True
         )
         
@@ -712,9 +712,9 @@ class UniversalInstaller:
             return False
         
         if in_venv:
-            console.print(f"\n[green]✓ All dependencies satisfied![/green] [dim](virtual environment)[/dim]")
+            console.print("\n[green]✓ All dependencies satisfied![/green] [dim](virtual environment)[/dim]")
         else:
-            console.print(f"\n[green]✓ All dependencies satisfied![/green]")
+            console.print("\n[green]✓ All dependencies satisfied![/green]")
         
         return True
     
@@ -753,7 +753,7 @@ class UniversalInstaller:
         if self.running_clients:
             running_names = [c.name for c in self.running_clients if c in selected_clients]
             if running_names:
-                console.print(f"[yellow]⚠️  Warning: The following clients are running:[/yellow]")
+                console.print("[yellow]⚠️  Warning: The following clients are running:[/yellow]")
                 for name in running_names:
                     console.print(f"   • {name}")
                 console.print("\n[yellow]Please close these applications before continuing.[/yellow]")

@@ -40,8 +40,7 @@ from .repositories import (
 # Import domain services
 from .services import (
     TaskBreakdownService, SpecialistAssignmentService,
-    ProgressTrackingService, ResultSynthesisService,
-    OrchestrationCoordinator, TaskService
+    ProgressTrackingService, ResultSynthesisService
 )
 
 __all__ = [
@@ -70,6 +69,5 @@ __all__ = [
     
     # Domain Services
     'TaskBreakdownService', 'SpecialistAssignmentService',
-    'ProgressTrackingService', 'ResultSynthesisService',
-    'OrchestrationCoordinator', 'TaskService'
+    'ProgressTrackingService', 'ResultSynthesisService'
 ]

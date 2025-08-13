@@ -34,16 +34,16 @@ def test_dependency_logic():
             print(f"  ❌ {dep_name}: missing")
             missing_deps.append(dep_name)
     
-    print(f"\n📊 Dependency Status:")
+    print("\n📊 Dependency Status:")
     print(f"  Available: {len(available_deps)}/{len(required_deps)}")
     print(f"  Missing: {len(missing_deps)}/{len(required_deps)}")
     
     if missing_deps:
-        print(f"\n🚨 Missing Dependencies:")
+        print("\n🚨 Missing Dependencies:")
         for dep in missing_deps:
             print(f"    - {dep}")
         
-        print(f"\n💡 Installation Command:")
+        print("\n💡 Installation Command:")
         if Path("requirements.txt").exists():
             print("    pip install -r requirements.txt")
         else:
@@ -51,21 +51,21 @@ def test_dependency_logic():
         
         return False
     else:
-        print(f"\n✅ All dependencies available!")
+        print("\n✅ All dependencies available!")
         return True
 
 def test_workspace_detection_dependency():
     """Test if workspace detection can work with available dependencies."""
-    print(f"\n🎯 Testing Workspace Detection Dependency...")
+    print("\n🎯 Testing Workspace Detection Dependency...")
     
     try:
         import pydantic
         print(f"  ✅ pydantic available: {pydantic.__version__}")
-        print(f"  ✅ Workspace paradigm should work correctly")
+        print("  ✅ Workspace paradigm should work correctly")
         return True
     except ImportError:
-        print(f"  ❌ pydantic missing: Workspace detection may fail")
-        print(f"  ⚠️ This explains the 80% test success rate")
+        print("  ❌ pydantic missing: Workspace detection may fail")
+        print("  ⚠️ This explains the 80% test success rate")
         return False
 
 if __name__ == "__main__":
@@ -75,13 +75,13 @@ if __name__ == "__main__":
     deps_ok = test_dependency_logic()
     workspace_ok = test_workspace_detection_dependency()
     
-    print(f"\n🎯 Analysis Results:")
+    print("\n🎯 Analysis Results:")
     print(f"  Dependencies: {'✅ OK' if deps_ok else '❌ Missing'}")
     print(f"  Workspace Detection: {'✅ Ready' if workspace_ok else '❌ Needs pydantic'}")
     
     if not deps_ok:
-        print(f"\n🔧 Required Action: Install missing dependencies before creating PR")
+        print("\n🔧 Required Action: Install missing dependencies before creating PR")
         sys.exit(1)
     else:
-        print(f"\n✅ Ready for PR: All core dependencies available")
+        print("\n✅ Ready for PR: All core dependencies available")
         sys.exit(0)

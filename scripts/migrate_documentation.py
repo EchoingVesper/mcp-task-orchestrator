@@ -230,7 +230,7 @@ class DocumentationMigrator:
         # Generate migration report
         self.generate_report()
         
-        print(f"\n✅ Migration completed!")
+        print("\n✅ Migration completed!")
         print(f"📈 Files migrated: {total_migrated}")
         print(f"❌ Errors: {total_errors}")
         

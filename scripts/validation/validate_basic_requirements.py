@@ -235,7 +235,7 @@ def main():
         # Save text report
         if args.output:
             with open(args.output, 'w') as f:
-                f.write(f"Basic Validation Summary\\n")
+                f.write("Basic Validation Summary\\n")
                 f.write(f"Files: {summary['total_files']}, Issues: {summary['total_issues']}, Warnings: {summary['total_warnings']}\\n\\n")
                 for result in results:
                     if result.issues or result.warnings:

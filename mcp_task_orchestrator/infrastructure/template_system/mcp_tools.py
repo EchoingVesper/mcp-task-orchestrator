@@ -274,9 +274,9 @@ async def handle_template_create(args: Dict[str, Any]) -> List[types.TextContent
             "template_id": template_id,
             "category": category,
             "next_steps": [
-                f"Use 'template_instantiate' to create tasks from this template",
+                "Use 'template_instantiate' to create tasks from this template",
                 f"Use 'template_info {template_id}' to view template details",
-                f"Use 'template_list' to see all available templates"
+                "Use 'template_list' to see all available templates"
             ]
         }
         

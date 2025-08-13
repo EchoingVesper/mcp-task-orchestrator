@@ -92,25 +92,25 @@ class APIKeyManager:
             Tuple of (is_valid, key_metadata)
         """
         if not api_key or not api_key.startswith("mcp_task_"):
-            security_logger.warning(f"Invalid API key format attempted")
+            security_logger.warning("Invalid API key format attempted")
             return False, None
         
         key_hash = self._hash_key(api_key)
         key_data = self._keys.get(key_hash)
         
         if not key_data:
-            security_logger.warning(f"API key validation failed: key not found")
+            security_logger.warning("API key validation failed: key not found")
             return False, None
         
         # Check if key is active
         if not key_data.get("is_active", False):
-            security_logger.warning(f"API key validation failed: key inactive")
+            security_logger.warning("API key validation failed: key inactive")
             return False, None
         
         # Check expiration
         expires_at = key_data.get("expires_at")
         if expires_at and datetime.now(timezone.utc).timestamp() > expires_at:
-            security_logger.warning(f"API key validation failed: key expired")
+            security_logger.warning("API key validation failed: key expired")
             return False, None
         
         # Update usage statistics
@@ -135,7 +135,7 @@ class APIKeyManager:
         key_data = self._keys.get(key_hash)
         
         if not key_data:
-            security_logger.warning(f"Attempted to revoke non-existent key")
+            security_logger.warning("Attempted to revoke non-existent key")
             return False
         
         key_data["is_active"] = False

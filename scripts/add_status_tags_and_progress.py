@@ -92,7 +92,7 @@ def add_progress_tracking_section(file_path):
     
     # Check if progress tracking already exists
     if "## Progress Tracking" in content:
-        print(f"  ℹ️ Progress tracking already exists")
+        print("  ℹ️ Progress tracking already exists")
         return False
     
     # Add progress tracking before the final separator (if exists) or at the end
@@ -111,7 +111,7 @@ def add_progress_tracking_section(file_path):
     with open(file_path, 'w', encoding='utf-8') as f:
         f.write(content)
     
-    print(f"  ✅ Added progress tracking section")
+    print("  ✅ Added progress tracking section")
     return True
 
 def process_prp_files():

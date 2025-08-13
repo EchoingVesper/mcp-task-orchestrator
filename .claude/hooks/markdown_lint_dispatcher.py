@@ -131,7 +131,7 @@ def main():
             # Print notification to user
             print(f"📝 Markdown issues detected in {file_path}: {issue_count} issues", file=sys.stderr)
             print(f"   └─ Task created: {task_id}", file=sys.stderr)
-            print(f"   └─ Run 'claude fix-markdown' or 'claude fix-markdown-batch' to fix", file=sys.stderr)
+            print("   └─ Run 'claude fix-markdown' or 'claude fix-markdown-batch' to fix", file=sys.stderr)
             
     except json.JSONDecodeError:
         # Invalid JSON input, ignore

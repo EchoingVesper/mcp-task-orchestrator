@@ -70,7 +70,7 @@ async def example_single_tool_validation():
     
     # Generate report
     report = framework.generate_report()
-    print(f"\n📊 Summary:")
+    print("\n📊 Summary:")
     print(f"   Total tests: {report['summary']['total_tests']}")
     print(f"   Passed: {report['summary']['passed_tests']}")
     print(f"   Failed: {report['summary']['failed_tests']}")
@@ -97,7 +97,7 @@ async def example_automated_test_runner():
     
     result = await runner.run_single_tool(tool_name, TestLevel.BASIC)
     
-    print(f"\n📋 Test Results:")
+    print("\n📋 Test Results:")
     print(f"   Tool: {result['tool']}")
     print(f"   Status: {result['status']}")
     print(f"   Attempt: {result['attempt']}")
@@ -106,7 +106,7 @@ async def example_automated_test_runner():
     print(f"   Failed: {result.get('failed', 0)}")
     
     if result.get('failures'):
-        print(f"\n❌ Failures:")
+        print("\n❌ Failures:")
         for failure in result['failures']:
             print(f"   - {failure['test']}: {failure['error']}")
 
@@ -145,16 +145,16 @@ async def example_issue_resolution():
             print(f"   {status_icon} Resolution: {result.success}")
             
             if result.steps_taken:
-                print(f"   📝 Steps taken:")
+                print("   📝 Steps taken:")
                 for step in result.steps_taken:
                     print(f"      - {step}")
             
             if result.recommendations:
-                print(f"   💡 Recommendations:")
+                print("   💡 Recommendations:")
                 for rec in result.recommendations:
                     print(f"      - {rec}")
         else:
-            print(f"   ❓ No automatic resolution available")
+            print("   ❓ No automatic resolution available")
 
 
 async def example_priority_based_testing():
@@ -171,7 +171,7 @@ async def example_priority_based_testing():
     # Run priority-based tests
     results = await runner.run_priority_based(TestLevel.BASIC)
     
-    print(f"\n📊 Priority-Based Test Results:")
+    print("\n📊 Priority-Based Test Results:")
     print(f"   Tools tested: {len(results)}")
     print(f"   Success rate: {runner.successful_runs / runner.total_runs * 100:.1f}%")
     
@@ -214,7 +214,7 @@ async def example_comprehensive_validation():
     
     result = await runner.validate_single_tool_comprehensive(tool_name)
     
-    print(f"\n📋 Comprehensive Validation Results:")
+    print("\n📋 Comprehensive Validation Results:")
     print(f"   Tool: {result['tool']}")
     print(f"   Overall status: {result['overall_status']}")
     print(f"   Levels tested: {result['levels_tested']}")
@@ -254,7 +254,7 @@ async def example_generate_reports():
     
     # Update tracking file
     framework.update_tracking_file()
-    print(f"   📋 Tracking file updated")
+    print("   📋 Tracking file updated")
 
 
 async def example_full_workflow():
@@ -292,7 +292,7 @@ async def example_full_workflow():
         await asyncio.sleep(0.1)
     
     # Generate final summary
-    print(f"\n📊 Final Workflow Summary:")
+    print("\n📊 Final Workflow Summary:")
     successful_tools = sum(1 for r in all_results.values() if r["overall_status"] == "success")
     total_tools = len(all_results)
     

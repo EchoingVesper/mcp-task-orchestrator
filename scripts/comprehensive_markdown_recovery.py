@@ -50,7 +50,7 @@ def main():
     restored_count = 0
     failed_count = 0
     
-    print(f"\n🔄 Restoring files...")
+    print("\n🔄 Restoring files...")
     
     for file_path in modified_file_list:
         # Use git checkout to restore from HEAD
@@ -63,19 +63,19 @@ def main():
             print(f"❌ Failed to restore: {file_path}")
             failed_count += 1
     
-    print(f"\n📊 Recovery Summary:")
+    print("\n📊 Recovery Summary:")
     print(f"   ✅ Restored: {restored_count} files")
     print(f"   ❌ Failed: {failed_count} files")
     
     if failed_count == 0:
-        print(f"\n🎉 Comprehensive recovery completed successfully!")
-        print(f"\n📋 Next steps:")
-        print(f"   1. Check a few restored files to verify they look correct")
-        print(f"   2. The broken scripts remain disabled (.DISABLED extension)")
-        print(f"   3. All markdown files should now be clean and properly formatted")
+        print("\n🎉 Comprehensive recovery completed successfully!")
+        print("\n📋 Next steps:")
+        print("   1. Check a few restored files to verify they look correct")
+        print("   2. The broken scripts remain disabled (.DISABLED extension)")
+        print("   3. All markdown files should now be clean and properly formatted")
     else:
-        print(f"\n⚠️  Recovery completed with some failures")
-        print(f"   Check failed files manually if needed")
+        print("\n⚠️  Recovery completed with some failures")
+        print("   Check failed files manually if needed")
     
     return 0 if failed_count == 0 else 1
 

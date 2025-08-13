@@ -302,7 +302,7 @@ Please update your bookmarks and links to use the new structure.
         
         # 1. Analyze current state
         analysis = self.analyze_current_structure()
-        print(f"📊 Analysis:")
+        print("📊 Analysis:")
         print(f"  - Old folders to migrate: {len(analysis['old_folders'])}")
         print(f"  - New folders existing: {len(analysis['new_folders'])}")
         print(f"  - Root files: {len(analysis['root_files'])}")

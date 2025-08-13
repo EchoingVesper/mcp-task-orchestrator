@@ -99,11 +99,11 @@ async def test_orchestrator_performance():
         print(f"Slow operations: {len(slow_operations)}")
         
         if slow_operations:
-            print(f"\nSLOW OPERATIONS:")
+            print("\nSLOW OPERATIONS:")
             for op_name, duration in slow_operations:
                 print(f"   {op_name}: {duration:.4f}s")
         else:
-            print(f"\nSUCCESS: All operations completed within 5-second threshold!")
+            print("\nSUCCESS: All operations completed within 5-second threshold!")
         
         return results
         

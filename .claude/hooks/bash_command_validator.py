@@ -26,7 +26,7 @@ def validate_command(command):
     find_name_match = re.search(r'find\s+\S+\s+-name\s+["\']([^"\']+)["\']', command)
     if find_name_match:
         pattern = find_name_match.group(1)
-        warnings.append(f"Consider using 'rg --files -g' instead of 'find -name' for pattern matching")
+        warnings.append("Consider using 'rg --files -g' instead of 'find -name' for pattern matching")
         suggestions.append(f"rg equivalent: rg --files -g '{pattern}'")
     
     # Check for dangerous patterns

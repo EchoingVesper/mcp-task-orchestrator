@@ -581,7 +581,7 @@ def main():
         manager.integrate_with_orchestrator(report_file, analysis)
         
         # Output summary
-        print(f"\nTemporary File Lifecycle Summary:")
+        print("\nTemporary File Lifecycle Summary:")
         print(f"  Total temp files: {analysis['total_temp_files']}")
         print(f"  Cleanup candidates: {len(analysis['cleanup_candidates'])}")
         print(f"  Locked files: {len(analysis['locked_files'])}")
@@ -593,7 +593,7 @@ def main():
             print(f"  Files skipped: {cleanup_results['skipped']}")
             print(f"  Space freed: {cleanup_results['bytes_freed']:,} bytes")
             
-        print(f"  Safety analysis:")
+        print("  Safety analysis:")
         print(f"    Safe to clean: {analysis['safety_analysis']['safe_to_clean']}")
         print(f"    Needs review: {analysis['safety_analysis']['needs_review']}")
         print(f"    Do not clean: {analysis['safety_analysis']['do_not_clean']}")

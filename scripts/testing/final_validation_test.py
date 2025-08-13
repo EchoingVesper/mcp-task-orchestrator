@@ -319,7 +319,7 @@ def main():
         # Generate final report
         generate_final_report(output_file, import_results, functionality_results, integration_results)
         
-        print(f"\n✅ Validation completed successfully!")
+        print("\n✅ Validation completed successfully!")
         print(f"📁 Detailed results: {output_file}")
         
         # Print summary

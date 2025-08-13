@@ -57,18 +57,18 @@ def main():
             print(f"❌ Failed to restore {file_path}: {e}")
             failed_count += 1
     
-    print(f"\n📊 Recovery Summary:")
+    print("\n📊 Recovery Summary:")
     print(f"   ✅ Restored: {restored_count} files")
     print(f"   ❌ Failed: {failed_count} files")
     
     if failed_count == 0:
-        print(f"\n🎉 Recovery completed successfully!")
-        print(f"\n📋 Next steps:")
-        print(f"   1. Check a few restored files to verify they look correct")
-        print(f"   2. Run 'markdownlint docs/' to check for any remaining issues")
-        print(f"   3. The broken scripts have been disabled (.DISABLED extension)")
+        print("\n🎉 Recovery completed successfully!")
+        print("\n📋 Next steps:")
+        print("   1. Check a few restored files to verify they look correct")
+        print("   2. Run 'markdownlint docs/' to check for any remaining issues")
+        print("   3. The broken scripts have been disabled (.DISABLED extension)")
     else:
-        print(f"\n⚠️  Recovery completed with some failures")
+        print("\n⚠️  Recovery completed with some failures")
     
     return 0 if failed_count == 0 else 1
 

@@ -100,7 +100,7 @@ with open(tracking_file, 'a') as f:
     f.write("\n\n---\n")
     f.write(summary)
 
-print(f"Updated tracking file with test results")
+print("Updated tracking file with test results")
 print(f"Summary appended to: {tracking_file}")
 
 # Also create a detailed tool status file

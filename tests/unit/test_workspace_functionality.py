@@ -125,7 +125,7 @@ def test_directory_detection_logic():
         detector = DirectoryDetector()
         result = detector.detect_project_root()
         
-        print(f"  ✅ Detection successful!")
+        print("  ✅ Detection successful!")
         print(f"  📍 Detected path: {result.detected_path}")
         print(f"  🔧 Method used: {result.method.value}")
         print(f"  📊 Confidence: {result.confidence}/10")
@@ -134,7 +134,7 @@ def test_directory_detection_logic():
         print(f"  ✏️ Writable: {result.validation.is_writable}")
         
         if result.project_markers:
-            print(f"  🏷️ Project markers found:")
+            print("  🏷️ Project markers found:")
             for marker in result.project_markers[:3]:  # Show top 3
                 print(f"    - {marker.file_path.name} ({marker.marker_type}, confidence: {marker.confidence})")
         

@@ -336,7 +336,7 @@ class TestHandlerPerformanceComparison:
             # PRP Requirement: <5% latency increase
             assert performance_ratio < 1.05, f"New handler too slow: {performance_ratio:.3f}x slower"
             
-            print(f"Handler performance comparison:")
+            print("Handler performance comparison:")
             print(f"  Old handler: {old_stats['mean']:.6f}s")
             print(f"  New handler: {new_stats['mean']:.6f}s")
             print(f"  Performance ratio: {performance_ratio:.3f}x")

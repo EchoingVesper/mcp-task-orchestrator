@@ -40,10 +40,13 @@ jobs:
           pip install -e ".[dev]" || pip install -e . || echo "⚠️ Development installation failed"
         fi
     
+    - name: Create validation directory
+      run: mkdir -p validation_results/
+    
     - name: Run Multi-Stage Validation Pipeline
       run: |
         echo "🚀 Starting Multi-Stage Validation Pipeline..."
-        python -m tools.validation.pipeline_orchestrator --run-full || echo "⚠️ Validation pipeline completed with issues"
+        python -m tools.validation.pipeline_orchestrator --run-full --output-dir validation_results/ || echo "⚠️ Validation pipeline completed with issues"
     
     - name: Upload validation reports
       uses: actions/upload-artifact@v4
@@ -51,6 +54,7 @@ jobs:
       with:
         name: validation-reports-${{ github.run_id }}
         path: validation_results/
+        if-no-files-found: warn
         retention-days: 30
     
     - name: Comment PR with validation summary

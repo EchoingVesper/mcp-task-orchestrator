@@ -28,7 +28,7 @@ class TestErrorMessageSanitization:
         def raise_error_with_trace():
             try:
                 1 / 0  # Causes ZeroDivisionError with stack trace
-            except Exception as e:
+            except Exception:
                 # Capture full traceback
                 full_traceback = traceback.format_exc()
                 raise Exception(f"Database error: {full_traceback}")

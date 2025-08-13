@@ -306,7 +306,7 @@ class ComprehensiveTestRunner:
         print("COMPREHENSIVE TEST EXECUTION SUMMARY")
         print("="*80)
         
-        print(f"📊 Overall Statistics:")
+        print("📊 Overall Statistics:")
         print(f"   Total tests: {self.execution_summary['total_tests']}")
         print(f"   Passed: {self.execution_summary['total_passed']}")
         print(f"   Failed: {self.execution_summary['total_failed']}")
@@ -314,7 +314,7 @@ class ComprehensiveTestRunner:
         print(f"   Duration: {duration:.2f} seconds")
         print()
         
-        print(f"🔧 Runner Breakdown:")
+        print("🔧 Runner Breakdown:")
         for runner_type, stats in self.execution_summary['runner_results'].items():
             if 'runner_error' in stats:
                 print(f"   {runner_type}: RUNNER ERROR - {stats['runner_error']}")

@@ -221,7 +221,7 @@ class DocumentationModularizationAnalyzer:
                     file_path=analysis.file_path,
                     opportunity_type="section_size",
                     description=f"Section '{section_name}' too large ({section_size} lines)",
-                    suggestion=f"Break section into subsections or separate file",
+                    suggestion="Break section into subsections or separate file",
                     priority="medium",
                     estimated_impact="medium"
                 ))
@@ -659,7 +659,7 @@ def main():
         # Save text report if requested
         if args.output:
             with open(args.output, 'w') as f:
-                f.write(f"Modularization Analysis Summary\\n")
+                f.write("Modularization Analysis Summary\\n")
                 f.write(f"Files analyzed: {len(analyses)}\\n")
                 f.write(f"Total opportunities: {sum(len(a.opportunities) for a in analyses)}\\n\\n")
                 

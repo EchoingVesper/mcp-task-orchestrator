@@ -6,11 +6,11 @@ from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
 from ...domain import (
-    OrchestrationCoordinator,
     Task,
     OrchestrationError,
     TaskValidationError
 )
+from ...domain.services.orchestration_coordinator import OrchestrationCoordinator
 from ..dto import TaskPlanRequest, TaskPlanResponse
 
 

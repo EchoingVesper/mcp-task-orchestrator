@@ -487,7 +487,7 @@ class ComprehensiveDocumentationValidator:
         print(f"Warnings: {health.warnings_count}")
         
         if health.failed_checks > 0:
-            print(f"\nFailed Checks by Type:")
+            print("\nFailed Checks by Type:")
             check_types = {}
             for result in self.results:
                 if not result.passed:
@@ -497,13 +497,13 @@ class ComprehensiveDocumentationValidator:
                 print(f"  {check_type}: {count}")
         
         if health.health_score >= 90:
-            print(f"\n✅ Documentation health is EXCELLENT!")
+            print("\n✅ Documentation health is EXCELLENT!")
         elif health.health_score >= 70:
-            print(f"\n⚠️  Documentation health is GOOD but has room for improvement.")
+            print("\n⚠️  Documentation health is GOOD but has room for improvement.")
         elif health.health_score >= 50:
-            print(f"\n❌ Documentation health is POOR and needs attention.")
+            print("\n❌ Documentation health is POOR and needs attention.")
         else:
-            print(f"\n🚨 Documentation health is CRITICAL and requires immediate action.")
+            print("\n🚨 Documentation health is CRITICAL and requires immediate action.")
         
         print("="*80)
 
@@ -538,7 +538,7 @@ def main():
         validator.print_summary()
         
         if args.detailed:
-            print(f"\nDetailed Issues:")
+            print("\nDetailed Issues:")
             for result in validator.results:
                 if not result.passed or result.warnings:
                     print(f"\nFile: {result.file_path}")

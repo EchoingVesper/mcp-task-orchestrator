@@ -44,7 +44,7 @@ async def main():
     with open("single_tool_test_result.json", "w") as f:
         json.dump(result, f, indent=2)
     
-    print(f"\nFull results saved to: single_tool_test_result.json")
+    print("\nFull results saved to: single_tool_test_result.json")
 
 
 if __name__ == "__main__":

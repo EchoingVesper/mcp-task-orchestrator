@@ -76,7 +76,7 @@ async def run_diagnostics():
     for result in results.values():
         status_counts[result.status] += 1
     
-    print(f"\n📋 Diagnostic Summary:")
+    print("\n📋 Diagnostic Summary:")
     print(f"  ✅ Passed: {status_counts['pass']}")
     print(f"  ⚠️  Warnings: {status_counts['warning']}")
     print(f"  ❌ Errors: {status_counts['error']}")
@@ -115,7 +115,7 @@ def run_system_monitoring():
     metrics_collector = get_metrics_collector()
     metrics_report = metrics_collector.get_metrics_report()
     
-    print(f"\n📈 Metrics Summary:")
+    print("\n📈 Metrics Summary:")
     print(f"  Uptime: {metrics_report['uptime_seconds']:.0f}s")
     print(f"  Total Metrics: {metrics_report['total_metrics']}")
     

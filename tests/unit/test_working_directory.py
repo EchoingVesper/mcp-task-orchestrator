@@ -47,7 +47,7 @@ async def test_working_directory():
     if expected_path.exists():
         print(f"✓ .task_orchestrator created at: {expected_path}")
     else:
-        print(f"✓ .task_orchestrator not created")
+        print("✓ .task_orchestrator not created")
     
     print("\n=== Test Summary ===")
     print("✓ Auto-detection works")

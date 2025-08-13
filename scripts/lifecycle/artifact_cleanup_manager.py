@@ -561,7 +561,7 @@ def main():
         manager.integrate_with_orchestrator(report_file, analysis)
         
         # Output summary
-        print(f"\nArtifact Cleanup Summary:")
+        print("\nArtifact Cleanup Summary:")
         print(f"  Total artifacts: {analysis['total_artifacts']}")
         print(f"  Cleanup candidates: {len(analysis['cleanup_candidates'])}")
         print(f"  Archive candidates: {len(analysis['archive_candidates'])}")

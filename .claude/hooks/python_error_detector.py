@@ -135,9 +135,10 @@ def run_quick_type_check(file_path):
                                 'message': parts[3].strip(),
                                 'severity': 'medium'
                             })
-                        except:
+                        except Exception:
+                            # Failed to parse mypy line - skip this line
                             pass
-    except:
+    except Exception:
         # mypy not available or error - not critical
         pass
     
@@ -186,7 +187,8 @@ def main():
         try:
             with open(file_path, 'r') as f:
                 content = f.read()
-        except:
+        except Exception:
+            # Failed to read file - exit silently
             sys.exit(0)
         
         all_issues = []

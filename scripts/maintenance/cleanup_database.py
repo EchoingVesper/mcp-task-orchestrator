@@ -279,7 +279,7 @@ def main():
     
     # Show current stats
     stats = get_database_stats(db_path)
-    print(f"\n[STATS] Current Stats:")
+    print("\n[STATS] Current Stats:")
     print(f"   Tasks: {stats['tasks']}")
     print(f"   Subtasks: {stats['subtasks']}")
     print(f"   Completed: {stats['completed']}")

@@ -246,7 +246,7 @@ class SpecialistManager:
             context_parts.append(f"- {approach}")
         
         # Add task details
-        context_parts.append(f"\n## Task Details:")
+        context_parts.append("\n## Task Details:")
         context_parts.append(f"**Task ID:** {subtask.task_id}")
         context_parts.append(f"**Title:** {subtask.title}")
         context_parts.append(f"**Description:** {subtask.description}")
@@ -255,7 +255,7 @@ class SpecialistManager:
             context_parts.append(f"\n**Dependencies:** {', '.join(subtask.dependencies)}")
         
         # Add instructions
-        context_parts.append(f"\n## Instructions:")
+        context_parts.append("\n## Instructions:")
         context_parts.append(f"""
 Please complete this task as the {specialist_type.value} specialist. Focus on your area of expertise.
 
@@ -274,7 +274,7 @@ Remember: You are the {specialist_type.value} specialist for this task. Apply yo
         """Synthesize results from multiple completed subtasks."""
         
         synthesis_parts = []
-        synthesis_parts.append(f"# Task Synthesis Report")
+        synthesis_parts.append("# Task Synthesis Report")
         synthesis_parts.append(f"**Task ID:** {parent_task_id}")
         synthesis_parts.append(f"**Completed Subtasks:** {len(completed_subtasks)}")
         synthesis_parts.append("")

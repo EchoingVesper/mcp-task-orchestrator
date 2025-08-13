@@ -163,7 +163,7 @@ def main():
             section_sql = f"PRAGMA foreign_keys = ON;\n{section}"
             success = test_sql_section(f"Section {i+1}", section_sql)
             if not success:
-                print(f"Failed section content preview:")
+                print("Failed section content preview:")
                 print(section[:200] + "..." if len(section) > 200 else section)
                 break
 

@@ -525,7 +525,7 @@ def main():
         
         # Print summary
         if not args.quiet:
-            print(f"\nTest Summary:")
+            print("\nTest Summary:")
             print(f"Total Tests: {total_tests}")
             print(f"Passed: {total_tests - failed_count}")
             print(f"Failed: {failed_count}")

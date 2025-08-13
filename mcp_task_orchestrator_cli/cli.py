@@ -116,7 +116,7 @@ def install(
     """
     Install and configure the MCP Task Orchestrator server.
     """
-    console.print(f"[bold green]MCP Task Orchestrator - Installation[/bold green]")
+    console.print("[bold green]MCP Task Orchestrator - Installation[/bold green]")
     
     # Auto-detect server path if not provided
     if server_path is None:
@@ -203,7 +203,7 @@ def install(
             console.print("[red]Failed[/red]")
     
     # Summary
-    console.print(f"\n[bold]Installation summary:[/bold]")
+    console.print("\n[bold]Installation summary:[/bold]")
     console.print(f"Successfully configured {success_count} out of {len(detected_clients)} clients.")
     
     if success_count > 0:
@@ -232,7 +232,7 @@ def update(
     """
     Update the configuration of previously configured MCP clients.
     """
-    console.print(f"[bold green]MCP Task Orchestrator - Update[/bold green]")
+    console.print("[bold green]MCP Task Orchestrator - Update[/bold green]")
     console.print(f"New server path: {server_path}")
     
     # Resolve server path
@@ -288,7 +288,7 @@ def update(
             console.print("[red]Failed[/red]")
     
     # Summary
-    console.print(f"\n[bold]Update summary:[/bold]")
+    console.print("\n[bold]Update summary:[/bold]")
     console.print(f"Successfully updated {success_count} out of {len(configured_clients)} clients.")
     
     if success_count > 0:
@@ -318,7 +318,7 @@ def uninstall(
     """
     Remove MCP Task Orchestrator configuration from clients.
     """
-    console.print(f"[bold red]MCP Task Orchestrator - Uninstallation[/bold red]")
+    console.print("[bold red]MCP Task Orchestrator - Uninstallation[/bold red]")
     
     if not all_clients and not clients:
         console.print("[bold red]Error:[/bold red] Please specify clients to unconfigure or use --all.")
@@ -385,7 +385,7 @@ def uninstall(
             console.print("[red]Failed[/red]")
     
     # Summary
-    console.print(f"\n[bold]Uninstallation summary:[/bold]")
+    console.print("\n[bold]Uninstallation summary:[/bold]")
     console.print(f"Successfully unconfigured {success_count} out of {len(configured_clients)} clients.")
     
     if success_count > 0:
@@ -496,7 +496,7 @@ def setup(
             console.print("[red]Failed[/red]")
     
     # Summary
-    console.print(f"\n[bold]Setup complete![/bold]")
+    console.print("\n[bold]Setup complete![/bold]")
     if success_count > 0:
         console.print(f"[green]✓[/green] Successfully configured {success_count} client(s).")
         console.print("\n[bold]Next steps:[/bold]")
@@ -568,11 +568,11 @@ def check_deps():
             missing_deps.append(dep_name)
     
     if missing_deps:
-        console.print(f"\n[bold red]Missing dependencies found:[/bold red]")
+        console.print("\n[bold red]Missing dependencies found:[/bold red]")
         for dep in missing_deps:
             console.print(f"  - {dep}")
         
-        console.print(f"\n[bold]To install missing dependencies:[/bold]")
+        console.print("\n[bold]To install missing dependencies:[/bold]")
         if Path("requirements.txt").exists():
             console.print("  pip install -r requirements.txt")
         else:
@@ -600,7 +600,7 @@ def check_deps():
                 console.print(f"[red]✗ Installation error:[/red] {e}")
                 raise typer.Exit(code=1)
     else:
-        console.print(f"\n[green]✓ All dependencies are installed![/green]")
+        console.print("\n[green]✓ All dependencies are installed![/green]")
 
 
 def main():

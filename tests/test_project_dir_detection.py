@@ -32,7 +32,7 @@ async def simulate_mcp_request(project_dir):
         if success:
             print(f"Created example roles file at: {file_path}")
         else:
-            print(f"Failed to create example roles file")
+            print("Failed to create example roles file")
     else:
         print(f"Example roles file already exists at: {example_file}")
     

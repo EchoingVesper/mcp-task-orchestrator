@@ -625,7 +625,7 @@ def main():
                     print(f"\\n{rec['file_path']}:")
                     print(f"  Current Size: {rec['current_size']}")
                     print(f"  Priority: {rec['warning_level'].upper()}")
-                    print(f"  Actions:")
+                    print("  Actions:")
                     for action in rec['detailed_recommendations'][:3]:
                         print(f"    • {action}")
         

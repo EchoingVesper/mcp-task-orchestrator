@@ -83,8 +83,8 @@ def generate_report(results: dict, max_lines: int) -> str:
     
     # Summary
     total_files = len(results['compliant']) + len(results['over_limit']) + len(results['warnings'])
-    report_lines.append(f"# File Size Validation Report")
-    report_lines.append(f"")
+    report_lines.append("# File Size Validation Report")
+    report_lines.append("")
     report_lines.append(f"**Maximum Lines**: {max_lines}")
     report_lines.append(f"**Total Files Checked**: {total_files}")
     report_lines.append(f"**Files Over Limit**: {len(results['over_limit'])}")

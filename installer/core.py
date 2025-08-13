@@ -402,7 +402,7 @@ class UniversalInstaller:
         """Show detailed status information."""
         try:
             # Python environment info
-            self.console.print(f"\n[bold]Environment Details:[/bold]")
+            self.console.print("\n[bold]Environment Details:[/bold]")
             self.console.print(f"  Python: {sys.version}")
             self.console.print(f"  Platform: {sys.platform}")
             

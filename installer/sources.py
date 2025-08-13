@@ -106,7 +106,7 @@ class SourceManager:
             self.console.print(f"[dim]  Editable: {self.config.dev_mode}[/dim]")
         elif self.config.source == InstallationSource.PYPI:
             self.console.print(f"[dim]Dry run: Would install from PyPI using {package_manager}[/dim]")
-            self.console.print(f"[dim]  Package: mcp-task-orchestrator[/dim]")
+            self.console.print("[dim]  Package: mcp-task-orchestrator[/dim]")
         elif self.config.source == InstallationSource.VERSION:
             self.console.print(f"[dim]Dry run: Would install version {self.config.version} using {package_manager}[/dim]")
         elif self.config.source == InstallationSource.GIT:
@@ -171,11 +171,11 @@ class SourceManager:
             if is_dev:
                 # For editable installs with extras, need to use proper syntax: -e ".[dev]"
                 if self.config.verbose:
-                    self.console.print(f"[dim]Package spec with dev: .[dev][/dim]")
+                    self.console.print("[dim]Package spec with dev: .[dev][/dim]")
                 cmd.extend(['-e', '.[dev]'])
             else:
                 if self.config.verbose:
-                    self.console.print(f"[dim]Package spec without dev: .[/dim]")
+                    self.console.print("[dim]Package spec without dev: .[/dim]")
                 cmd.extend(['-e', '.'])
         else:  # pip
             python_exe = self._get_python_executable()

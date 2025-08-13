@@ -235,7 +235,7 @@ class CLAUDEmdValidator:
         """Generate validation report"""
         report_lines = []
         report_lines.append("# CLAUDE.md Ecosystem Validation Report")
-        report_lines.append(f"")
+        report_lines.append("")
         report_lines.append(f"**Generated**: {os.environ.get('DATE', 'Unknown date')}")
         report_lines.append(f"**Files Validated**: {len(results)}")
         report_lines.append("")

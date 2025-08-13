@@ -59,7 +59,7 @@ class PytestOutputCapture:
                         # Write test completion marker
                         session.write_line("\\n=== TEST COMPLETED SUCCESSFULLY ===")
                         session.write_line(f"Test: {test_name}")
-                        session.write_line(f"Result: PASSED")
+                        session.write_line("Result: PASSED")
                         
                         return result
                         
@@ -68,7 +68,7 @@ class PytestOutputCapture:
                         session.write_line("\\n=== TEST FAILED ===")
                         session.write_line(f"Test: {test_name}")
                         session.write_line(f"Error: {str(e)}")
-                        session.write_line(f"Result: FAILED")
+                        session.write_line("Result: FAILED")
                         raise
                         
                     finally:
@@ -195,7 +195,7 @@ def integrate_with_migration_test():
         
         # Run the original test - output will be captured to file
         print("=== Starting Enhanced Migration Test ===")
-        print(f"Output will be written to file for safe reading")
+        print("Output will be written to file for safe reading")
         print(f"Temporary path: {tmp_path}")
         
         try:

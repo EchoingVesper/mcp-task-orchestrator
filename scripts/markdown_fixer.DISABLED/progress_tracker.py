@@ -125,7 +125,7 @@ class ProgressTracker:
     
     def _print_summary(self) -> None:
         """Print detailed summary of results."""
-        print(f"📊 Summary:")
+        print("📊 Summary:")
         print(f"   Total files:     {self.stats.total_files}")
         print(f"   Processed:       {self.stats.processed_files}")
         print(f"   Successful:      {self.stats.successful_fixes}")
@@ -133,7 +133,7 @@ class ProgressTracker:
         print(f"   Errors fixed:    {self.stats.total_errors_fixed}")
         print()
         
-        print(f"⏱️  Timing:")
+        print("⏱️  Timing:")
         print(f"   Total time:      {self._format_time(self.stats.elapsed_time)}")
         print(f"   Average rate:    {self.stats.processing_rate:.2f} files/s")
         

@@ -12,8 +12,16 @@ from datetime import datetime
 from ..repositories import TaskRepository, StateRepository, SpecialistRepository
 from ..value_objects.specialist_type import SpecialistType
 from ..value_objects.task_status import TaskStatus
-# Import get_roles from orchestrator legacy module until proper RoleRepository is implemented
-from ...orchestrator.role_loader import get_roles
+# TODO: Replace with proper RoleRepository implementation
+# Temporary stub to avoid circular import with orchestrator layer
+def get_roles(project_dir: Optional[str] = None) -> Dict[str, Any]:
+    """Temporary role loading stub - returns default specialist types."""
+    return {
+        'developer': {'name': 'Developer', 'capabilities': ['code', 'debug', 'test']},
+        'analyst': {'name': 'Analyst', 'capabilities': ['research', 'analysis', 'documentation']},
+        'architect': {'name': 'Architect', 'capabilities': ['design', 'planning', 'review']},
+        'tester': {'name': 'Tester', 'capabilities': ['testing', 'validation', 'quality_assurance']}
+    }
 
 
 class SpecialistAssignmentService:
@@ -125,7 +133,7 @@ class SpecialistAssignmentService:
                 if k not in ['specialist', 'session_id']
             }
             if relevant_metadata:
-                context_parts.append(f"\n\nAdditional Context:")
+                context_parts.append("\n\nAdditional Context:")
                 for key, value in relevant_metadata.items():
                     context_parts.append(f"- {key}: {value}")
         

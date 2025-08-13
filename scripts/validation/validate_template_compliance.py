@@ -499,7 +499,7 @@ def main():
             print(json.dumps(output_data, indent=2))
     else:
         # Text format
-        print(f"Documentation Template Compliance Report")
+        print("Documentation Template Compliance Report")
         print(f"{'='*50}")
         print(f"Total files validated: {metrics['total_files']}")
         print(f"Average compliance score: {metrics['average_compliance_score']}%")

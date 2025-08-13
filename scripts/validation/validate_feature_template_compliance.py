@@ -93,7 +93,7 @@ class FeatureDocumentationValidator:
             report.results.append(ValidationResult(
                 level=ValidationLevel.WARNING,
                 message=f"File exceeds recommended size limit ({len(lines)} > {self.max_file_size} lines)",
-                suggestion=f"Consider breaking into smaller files or modules"
+                suggestion="Consider breaking into smaller files or modules"
             ))
         
         # Extract and validate metadata

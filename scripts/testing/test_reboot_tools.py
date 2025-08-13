@@ -217,7 +217,7 @@ async def run_all_tests():
             failed += 1
             logger.error(f"✗ {test_name} FAILED with exception: {e}")
     
-    logger.info(f"\n--- Test Results ---")
+    logger.info("\n--- Test Results ---")
     logger.info(f"Passed: {passed}")
     logger.info(f"Failed: {failed}")
     logger.info(f"Total: {passed + failed}")

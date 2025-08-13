@@ -44,18 +44,18 @@ try:
     # Check subtasks schema
     cursor.execute("PRAGMA table_info(subtasks)")
     columns = cursor.fetchall()
-    print(f"\n📊 Subtasks table columns:")
+    print("\n📊 Subtasks table columns:")
     for col in columns:
         print(f"  - {col[1]}: {col[2]}")
     
     conn.close()
     
-    print(f"\n✅ Database created successfully!")
-    print(f"\n📋 Next steps:")
-    print(f"1. Stop any running orchestrator processes")
-    print(f"2. In Windows, rename task_orchestrator.db to task_orchestrator_old.db")
-    print(f"3. Rename task_orchestrator_new.db to task_orchestrator.db")
-    print(f"4. Restart the orchestrator")
+    print("\n✅ Database created successfully!")
+    print("\n📋 Next steps:")
+    print("1. Stop any running orchestrator processes")
+    print("2. In Windows, rename task_orchestrator.db to task_orchestrator_old.db")
+    print("3. Rename task_orchestrator_new.db to task_orchestrator.db")
+    print("4. Restart the orchestrator")
     
 except Exception as e:
     print(f"❌ Failed to create database: {e}")

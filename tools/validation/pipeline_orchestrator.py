@@ -785,7 +785,7 @@ async def main():
             result = await orchestrator.run_full_pipeline()
         
         # Print summary
-        print(f"\n=== Pipeline Validation Summary ===")
+        print("\n=== Pipeline Validation Summary ===")
         print(f"Status: {result.get('status', 'UNKNOWN')}")
         print(f"Pipeline ID: {result.get('pipeline_id', 'N/A')}")
         

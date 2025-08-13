@@ -56,7 +56,7 @@ def upload_to_pypi(test: bool = False):
             else:
                 print("   View at: https://pypi.org/project/mcp-task-orchestrator/")
         else:
-            print(f"❌ Upload failed!")
+            print("❌ Upload failed!")
             # Don't print stderr as it might contain the token
             print("   Check your token and try again")
             sys.exit(1)

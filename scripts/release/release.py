@@ -173,7 +173,7 @@ class ReleaseManager:
         print(f"\n📊 Version: {current_version} → {new_version}")
         
         # Confirm with user
-        response = input(f"\nProceed with release? [y/N]: ")
+        response = input("\nProceed with release? [y/N]: ")
         if response.lower() != 'y':
             print("❌ Release cancelled")
             return

@@ -110,7 +110,7 @@ class PerformanceMonitorTool:
         # Analyze error metrics
         error_metrics = [m for m in metrics.keys() if "error" in m or "failure" in m]
         if error_metrics:
-            print(f"\n❌ Error Metrics:")
+            print("\n❌ Error Metrics:")
             for metric_name in error_metrics:
                 summary = metrics[metric_name]
                 print(f"  {metric_name}: {summary.sum:.0f} total, {summary.avg:.2f} avg")
@@ -118,7 +118,7 @@ class PerformanceMonitorTool:
         # Performance recommendations
         recommendations = self._generate_performance_recommendations(metrics)
         if recommendations:
-            print(f"\n💡 Performance Recommendations:")
+            print("\n💡 Performance Recommendations:")
             for rec in recommendations:
                 print(f"  - {rec}")
     

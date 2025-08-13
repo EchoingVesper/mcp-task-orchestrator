@@ -63,7 +63,7 @@ class ArtifactService:
                 details={"artifact_type": artifact_type, "error": str(e)},
                 user_id=None  # TODO: Add user context when authentication is integrated
             )
-            raise OrchestrationError(f"Invalid file path: Security validation failed")
+            raise OrchestrationError("Invalid file path: Security validation failed")
         
         # Store content to file
         with open(artifact_path, 'w', encoding='utf-8') as f:

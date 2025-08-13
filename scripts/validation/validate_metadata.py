@@ -573,7 +573,7 @@ class MetadataValidator:
                             field_name=field_name,
                             level=ValidationLevel.INFO,
                             message=f"Consider using '{new_term}' instead of '{old_term}'",
-                            suggestion=f"Update terminology for consistency"
+                            suggestion="Update terminology for consistency"
                         ))
     
     def _validate_status_progression(self, metadata: Dict, report: FileMetadataReport):
@@ -784,7 +784,7 @@ def main():
         # Save text report if requested
         if args.output:
             with open(args.output, 'w') as f:
-                f.write(f"Metadata Validation Summary\\n")
+                f.write("Metadata Validation Summary\\n")
                 f.write(f"Coverage: {summary['metadata_coverage']:.1%}, Validation Rate: {summary['validation_rate']:.1%}\\n")
                 f.write(f"Errors: {summary['total_errors']}, Warnings: {summary['total_warnings']}\\n\\n")
                 

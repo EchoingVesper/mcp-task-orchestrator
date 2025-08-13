@@ -80,7 +80,7 @@ async def test_comprehensive_integration():
         # Test execution context (this should work with proper error handling)
         try:
             execution_context = await execute_use_case.get_task_execution_context("test-task-id")
-            print(f"✅ Execution context retrieved")
+            print("✅ Execution context retrieved")
             print(f"   Success: {execution_context.success}")
             print(f"   Task ID: {execution_context.task_id}")
             print(f"   Specialist Type: {execution_context.specialist_type}")
@@ -112,7 +112,7 @@ async def test_comprehensive_integration():
             completion_result = await complete_use_case.complete_task_with_artifacts(
                 "test-task-id", completion_data
             )
-            print(f"✅ Task completion processed")
+            print("✅ Task completion processed")
             print(f"   Success: {completion_result.success}")
             print(f"   Task ID: {completion_result.task_id}")
             print(f"   Artifact Count: {completion_result.artifact_count}")
@@ -143,7 +143,7 @@ async def test_comprehensive_integration():
             metadata={"test": True, "created_at": datetime.now().isoformat()}
         )
         
-        print(f"✅ Artifact stored successfully")
+        print("✅ Artifact stored successfully")
         print(f"   Artifact ID: {test_artifact.artifact_id}")
         print(f"   Path: {test_artifact.path}")
         print(f"   Size: {test_artifact.size} bytes")

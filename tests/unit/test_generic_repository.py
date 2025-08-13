@@ -45,7 +45,7 @@ async def test_db():
                 if statement.strip():
                     try:
                         conn.execute(statement)
-                    except Exception as e:
+                    except Exception:
                         # Ignore trigger creation errors in test
                         if 'CREATE TRIGGER' not in statement:
                             raise
