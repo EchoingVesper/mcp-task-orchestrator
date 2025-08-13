@@ -44,6 +44,61 @@ Transform the MCP Task Orchestrator documentation ecosystem from its current fra
 maintainable, and comprehensive knowledge system following Japanese software development principles of cleanliness,
 systematic organization, and lifecycle management.
 
+## Meta-PRP Orchestrator Integration
+
+### Orchestrator Session Management
+
+```yaml
+orchestrator_meta_session:
+  session_name: "documentation-ecosystem-modernization"
+  working_directory: ".task_orchestrator/"
+  expected_duration: "3-5 days with interruption recovery"
+  
+orchestrator_meta_task:
+  title: "Documentation Ecosystem Modernization Meta-Coordination"
+  description: "Multi-agent coordination for comprehensive documentation overhaul"
+  complexity: "very_complex"
+  task_type: "breakdown"
+  specialist_type: "coordinator"
+  
+sub_agent_coordination:
+  template_architect: "specialist_type: architect"
+  user_docs_modernizer: "specialist_type: documenter"
+  developer_docs_modernizer: "specialist_type: coder"
+  reference_docs_modernizer: "specialist_type: documenter"
+  ci_integration_specialist: "specialist_type: devops"
+  cleanup_coordinator: "specialist_type: coordinator"
+```
+
+### Orchestrator Tool Usage Matrix
+
+| Tool | Main Coordinator | Sub-Agents | Purpose |
+|------|-----------------|------------|---------|
+| orchestrator_initialize_session | ✓ | - | Session setup with recovery |
+| orchestrator_plan_task | ✓ | ✓ | Task breakdown and sub-task creation |
+| orchestrator_execute_task | ✓ | ✓ | Get specialist context for each agent |
+| orchestrator_complete_task | ✓ | ✓ | Store all artifacts (survives token limits) |
+| orchestrator_get_status | ✓ | - | Progress tracking across interruptions |
+| orchestrator_query_tasks | ✓ | - | Dependency and conflict management |
+| orchestrator_synthesize_results | ✓ | - | Aggregate all agent outputs |
+| orchestrator_maintenance_coordinator | ✓ | - | Cleanup and optimization |
+
+### Artifact Storage Strategy
+
+```yaml
+artifact_persistence:
+  token_limit_recovery:
+    - All agent work stored via orchestrator_complete_task
+    - Progress persists across Claude subscription interruptions
+    - No manual summaries needed - orchestrator maintains state
+    
+  per_agent_artifacts:
+    template_creation: "Stored templates and validation results"
+    documentation_updates: "File-by-file modernization progress"
+    ci_integration: "Workflow updates and test results"
+    cleanup_operations: "Archive organization and cleanup logs"
+```
+
 ## Current State Analysis
 
 ### Documentation Chaos Assessment
@@ -189,7 +244,38 @@ claude_structure:
 
 ### Phase 0: Pre-Implementation Setup and Safeguards (2-4 hours)
 
-#### 0.1 Environment Preparation and Recovery Infrastructure
+#### 0.1 Orchestrator Session Initialization
+
+##### **Task: INITIALIZE Orchestrator Meta-Session**
+
+```yaml
+action: ORCHESTRATOR_INITIALIZE
+session_config:
+  session_name: "documentation-ecosystem-modernization"
+  working_directory: ".task_orchestrator/"
+  recovery_mode: "enabled"
+  
+orchestrator_commands: |
+  # Initialize session with recovery capabilities
+  orchestrator_initialize_session --working-directory .
+  
+  # Create meta-task for coordination
+  orchestrator_plan_task \
+    --title "Documentation Ecosystem Modernization" \
+    --description "Multi-agent coordination for documentation overhaul" \
+    --complexity "very_complex" \
+    --task_type "breakdown" \
+    --specialist_type "coordinator"
+    
+  # Verify session health and recovery capability
+  orchestrator_health_check
+  
+validation:
+  command: "orchestrator_get_status"
+  expect: "Session active with meta-task created"
+```
+
+#### 0.2 Environment Preparation and Recovery Infrastructure
 
 ##### **Task: CREATE Agent Recovery and Progress Tracking System**
 
@@ -337,26 +423,61 @@ Agent coordination through the orchestrator enables:
 - Automatic context sharing between agents for consistency
 - Real-time progress tracking and dynamic re-assignment
 
-##### **Task: MODIFY Documentation Update Agent Deployment**
+##### **Task: MODIFY Documentation Update Agent Deployment with Orchestrator Integration**
 
 ```yaml
 action: CREATE
 file: scripts/agents/documentation_update_coordinator.py
 changes: |
-  - Create orchestrator-integrated agent deployment system
-  - One agent per document with specific modernization instructions
-  - Each agent must:
-    * Read current file and understand its purpose
-    * Map content to new template structure
-    * Update all technical references to post-Clean Architecture state
-    * Fix all Markdownlint violations (including line length)
-    * Validate all code examples against current codebase
-    * Ensure security compliance in content updates
-  - Agents work independently but coordinate through orchestrator
-  - Progress tracking through orchestrator_get_status
+  - Create orchestrator-integrated agent deployment system with specialist contexts
+  - Each agent follows meta-PRP pattern:
+    
+    1. RETRIEVE SPECIALIST CONTEXT:
+       orchestrator_execute_task --task-id [assigned_task_id]
+       
+    2. WORK ON ASSIGNED TASK:
+       * Read current file and understand its purpose
+       * Map content to new template structure
+       * Update all technical references to post-Clean Architecture state
+       * Fix all Markdownlint violations (including line length)
+       * Validate all code examples against current codebase
+       * Ensure security compliance in content updates
+       
+    3. STORE ARTIFACTS:
+       orchestrator_complete_task \
+         --task-id [assigned_task_id] \
+         --summary "Modernized [file_name]" \
+         --detailed-work "[full updated content]" \
+         --artifact-type "documentation"
+         
+  - Orchestrator maintains state across token limit interruptions
+  - Progress persists via orchestrator artifact storage
+  - No manual summaries - orchestrator handles aggregation
+  
 validation:
-  command: "python scripts/agents/test_agent_coordination.py"
-  expect: "Agent deployment system functional with orchestrator integration"
+  command: "orchestrator_query_tasks --status in_progress"
+  expect: "All agent tasks tracked with artifacts stored"
+```
+
+##### **Sub-Agent Spawning Pattern for Documentation Modernization**
+
+```yaml
+sub_agent_instructions_template: |
+  You are a DOCUMENTATION SPECIALIST working on orchestrator task: [task_id]
+  
+  CRITICAL ORCHESTRATOR INTEGRATION:
+  1. FIRST: Use orchestrator_execute_task to get your specialist context
+  2. Work ONLY on the files assigned to you in the task
+  3. Store ALL work via orchestrator_complete_task with detailed artifacts
+  4. Your work persists across Claude token limits via orchestrator storage
+  5. NO manual summaries - orchestrator aggregates all outputs
+  
+  WORKFLOW:
+  - orchestrator_execute_task --task-id [task_id]  # Get context
+  - [Do your specialized work]
+  - orchestrator_complete_task --task-id [task_id] --detailed-work "[artifacts]"
+  
+  Expected deliverable: Complete artifacts in orchestrator storage
 ```
 
 ##### **Task: MODIFY User Documentation Modernization (20+ files)**
@@ -635,7 +756,42 @@ validation:
 
 ### Phase 6: Quality Assurance and Integration (2-3 hours)
 
-#### 6.1 Comprehensive Validation Framework
+#### 6.1 Orchestrator Result Synthesis
+
+##### **Task: SYNTHESIZE All Agent Outputs via Orchestrator**
+
+```yaml
+action: ORCHESTRATOR_SYNTHESIZE
+synthesis_workflow:
+  retrieve_all_artifacts: |
+    # Get all completed task artifacts
+    orchestrator_query_tasks --status completed --with-artifacts
+    
+  synthesize_results: |
+    # Aggregate all agent outputs into comprehensive result
+    orchestrator_synthesize_results \
+      --parent-task-id [meta_task_id] \
+      --output-format comprehensive
+      
+  validation_summary: |
+    # Generate validation report from all agent work
+    orchestrator_maintenance_coordinator \
+      --action validate_structure \
+      --scope current_session
+      
+benefits:
+  - All agent work automatically aggregated
+  - No manual collection of results needed
+  - Comprehensive view of all modernization work
+  - Persistent artifacts survive token limits
+  - Automatic quality validation across all outputs
+  
+validation:
+  command: "orchestrator_synthesize_results --parent-task-id [meta_task_id]"
+  expect: "Complete synthesis of all documentation modernization artifacts"
+```
+
+#### 6.2 Comprehensive Validation Framework
 
 ##### **Task: CREATE Documentation Quality Assurance System**
 
@@ -727,6 +883,76 @@ validation:
 - **Monitoring**: Automated security scanning of configuration changes
 
 ## Validation Framework
+
+### Meta-PRP 5-Stage Validation Framework
+
+#### Stage 1: Orchestrator Integration Validation
+
+```bash
+# Validate orchestrator session health
+orchestrator_health_check
+
+# Verify all sub-tasks created with proper specialists
+orchestrator_query_tasks --include-specialist-types
+
+# Validate artifact storage configuration
+orchestrator_query_tasks --status completed --with-artifacts | grep "artifact_type"
+
+# Check session recovery capability
+python scripts/validate_orchestrator_recovery.py
+```
+
+#### Stage 2: Sub-Agent Assignment and Context Validation
+
+```bash
+# Verify specialist assignments match task requirements
+python scripts/validate_specialist_assignments.py
+
+# Check all agents retrieved specialist context
+orchestrator_query_tasks --filter "execute_task_called=true"
+
+# Validate task dependencies properly configured
+python scripts/validate_task_dependencies.py
+```
+
+#### Stage 3: Artifact Storage and Progress Tracking
+
+```bash
+# Verify all agents storing artifacts via orchestrator
+orchestrator_query_tasks --status completed --missing-artifacts
+
+# Check progress persistence across interruptions
+python scripts/test_token_limit_recovery.py
+
+# Validate artifact content completeness
+python scripts/validate_artifact_completeness.py
+```
+
+#### Stage 4: Result Synthesis and Aggregation
+
+```bash
+# Test result synthesis functionality
+orchestrator_synthesize_results --parent-task-id [meta_task_id] --dry-run
+
+# Validate aggregation completeness
+python scripts/validate_result_aggregation.py
+
+# Check for orphaned artifacts
+orchestrator_maintenance_coordinator --action scan_cleanup --dry-run
+```
+
+#### Stage 5: End-to-End Meta-PRP Workflow
+
+```bash
+# Complete workflow validation
+python scripts/test_meta_prp_workflow.py
+
+# Token limit interruption recovery test
+python scripts/simulate_token_exhaustion_recovery.py
+
+# Final quality validation
+python scripts/validate_documentation_quality_gates.py
+```
 
 ### Practical Solo-Dev Validation Gates
 
@@ -844,6 +1070,15 @@ python scripts/security/test_documentation_security.py
 ```
 
 ## Success Metrics
+
+### Meta-PRP Orchestrator Integration Success
+
+- [ ] **Orchestrator Session Active**: Session initialized with recovery capability
+- [ ] **All Sub-Tasks Created**: Tasks properly broken down with specialist assignments
+- [ ] **Artifact Storage Working**: All agents using orchestrator_complete_task
+- [ ] **Progress Persistence**: Work survives Claude token limit interruptions
+- [ ] **Result Synthesis Functional**: orchestrator_synthesize_results aggregates all outputs
+- [ ] **No Manual Summaries**: Orchestrator handles all result aggregation automatically
 
 ### Primary Objectives
 
