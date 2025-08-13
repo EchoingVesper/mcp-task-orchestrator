@@ -25,7 +25,7 @@
 
 - Extra line breaks at document start causing structural damage
 - Heading corruption: `## Heading` becomes `#\n# Heading` (multiple H1 violations)
-- Code block corruption: ````python` becomes ````text\npython` (breaks syntax highlighting)
+- Code block corruption: ``` `python` becomes ``` `text\npython` (breaks syntax highlighting)
 - Systematic `text\n` insertion after code fences breaking markdownlint parsing
 - **CRITICAL**: Markdownlint stops parsing after broken code blocks, hiding further errors
 
