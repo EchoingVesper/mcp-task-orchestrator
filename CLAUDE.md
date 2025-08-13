@@ -393,7 +393,7 @@ Use status tags in square brackets at the beginning of filenames for systematic 
 # PRPs with lifecycle tracking
 PRPs/[IN-PROGRESS]foundation-stabilization-workflow-automation.md
 PRPs/[DRAFT]agent-to-agent-architecture-implementation.md
-PRPs/completed/[COMPLETED]codebase-standards-modernization.md
+PRPs/completed/development-workflow/code-standards/codebase-standards-modernization.md
 
 # Documentation with maintenance status
 docs/[CURRENT]installation-guide.md
