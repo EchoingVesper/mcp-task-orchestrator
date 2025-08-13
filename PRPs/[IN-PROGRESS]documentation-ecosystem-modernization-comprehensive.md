@@ -18,6 +18,7 @@
 ## Enhanced Context References
 
 **Required Documentation Loading**:
+
 ```yaml
 context_files:
   - file: PRPs/ai_docs/context-engineering-guide.md
@@ -39,13 +40,16 @@ context_files:
 
 ## Overview
 
-Transform the MCP Task Orchestrator documentation ecosystem from its current fragmented state into a modern, maintainable, and comprehensive knowledge system following Japanese software development principles of cleanliness, systematic organization, and lifecycle management.
+Transform the MCP Task Orchestrator documentation ecosystem from its current fragmented state into a modern,
+maintainable, and comprehensive knowledge system following Japanese software development principles of cleanliness,
+systematic organization, and lifecycle management.
 
 ## Current State Analysis
 
 ### Documentation Chaos Assessment
 
 **Massive Documentation Sprawl** (100+ files identified):
+
 ```yaml
 current_issues:
   docs_directory:
@@ -72,6 +76,7 @@ current_issues:
 ### Architecture Misalignment
 
 **Critical Gap**: Documentation predates Clean Architecture refactor (commit 9a02ca4)
+
 ```yaml
 misalignment_issues:
   legacy_references:
@@ -91,6 +96,7 @@ misalignment_issues:
 ### File Lifecycle Problems
 
 **Japanese Development Standard Violation**: No systematic artifact cleanup
+
 ```yaml
 lifecycle_issues:
   test_artifacts:
@@ -110,6 +116,7 @@ lifecycle_issues:
 ### Japanese-Inspired Development Standards
 
 **Core Principles from Research**:
+
 ```yaml
 japanese_principles:
   cleanliness_first:
@@ -131,6 +138,7 @@ japanese_principles:
 ### Modern Documentation Architecture
 
 **Target Structure**:
+
 ```yaml
 docs_structure:
   users/:
@@ -157,6 +165,7 @@ docs_structure:
 ### Enhanced .claude/ Ecosystem
 
 **Systematic Agent Integration**:
+
 ```yaml
 claude_structure:
   commands/:
@@ -182,7 +191,8 @@ claude_structure:
 
 #### 1.1 Research Integration and Standards Creation
 
-**Task: RESEARCH Japanese Development Standards Deep Dive**
+##### Task: RESEARCH Japanese Development Standards Deep Dive
+
 ```yaml
 action: CREATE
 files:
@@ -199,7 +209,8 @@ validation:
   expect: "All standards documents pass quality checks"
 ```
 
-**Task: CREATE Comprehensive Template System**
+##### **Task: CREATE Comprehensive Template System**
+
 ```yaml
 action: CREATE
 files:
@@ -225,7 +236,8 @@ validation:
 
 #### 1.2 Cleanup Automation Infrastructure
 
-**Task: CREATE Artifact Lifecycle Management System**
+##### **Task: CREATE Artifact Lifecycle Management System**
+
 ```yaml
 action: CREATE
 files:
@@ -251,7 +263,8 @@ validation:
 
 **Strategy**: Deploy individual agents for each document category
 
-**Task: MODIFY Documentation Update Agent Deployment**
+##### **Task: MODIFY Documentation Update Agent Deployment**
+
 ```yaml
 action: CREATE
 file: scripts/agents/documentation_update_coordinator.py
@@ -272,7 +285,8 @@ validation:
   expect: "Agent deployment system functional with orchestrator integration"
 ```
 
-**Task: MODIFY User Documentation Modernization (20+ files)**
+##### **Task: MODIFY User Documentation Modernization (20+ files)**
+
 ```yaml
 action: MODIFY
 files: 
@@ -290,7 +304,8 @@ validation:
   expect: "All user documentation passes quality gates and examples work"
 ```
 
-**Task: MODIFY Developer Documentation Modernization (30+ files)**
+##### **Task: MODIFY Developer Documentation Modernization (30+ files)**
+
 ```yaml
 action: MODIFY
 files:
@@ -310,7 +325,8 @@ validation:
 
 #### 2.2 Reference Documentation Overhaul
 
-**Task: MODIFY API and Configuration Reference Update**
+##### **Task: MODIFY API and Configuration Reference Update**
+
 ```yaml
 action: MODIFY
 files:
@@ -333,7 +349,8 @@ validation:
 
 #### 3.1 Command System Enhancement
 
-**Task: MODIFY .claude/commands/ Systematic Update**
+##### **Task: MODIFY .claude/commands/ Systematic Update**
+
 ```yaml
 action: MODIFY
 files:
@@ -353,7 +370,8 @@ validation:
 
 #### 3.2 Configuration and Hooks Modernization
 
-**Task: MODIFY .claude/ Configuration System Update**
+##### **Task: MODIFY .claude/ Configuration System Update**
+
 ```yaml
 action: MODIFY
 files:
@@ -375,7 +393,8 @@ validation:
 
 #### 4.1 Historical Archive Reorganization
 
-**Task: MOVE Historical Documentation Lifecycle Management**
+##### **Task: MOVE Historical Documentation Lifecycle Management**
+
 ```yaml
 action: MOVE
 files:
@@ -395,7 +414,8 @@ validation:
 
 #### 4.2 Root Directory Cleanup and Prevention
 
-**Task: DELETE Test Artifact Cleanup and Prevention**
+##### **Task: DELETE Test Artifact Cleanup and Prevention**
+
 ```yaml
 action: DELETE/CREATE
 files:
@@ -413,11 +433,138 @@ validation:
   expect: "Root directory clean with automated prevention system active"
 ```
 
-### Phase 5: Quality Assurance and Integration (Days 14-15)
+### Phase 5: CI/CD Pipeline and GitHub Workflow Modernization (Days 14-16)
 
-#### 5.1 Comprehensive Validation Framework
+#### 5.1 CI/CD Pipeline Enhancement and Standards Integration
 
-**Task: CREATE Documentation Quality Assurance System**
+**Critical Integration**: Align GitHub workflows with new documentation standards and Japanese development principles
+
+##### **Task: MODIFY CI/CD Pipeline Modernization**
+
+```yaml
+action: MODIFY
+files:
+  - .github/workflows/ci.yml
+  - .github/workflows/documentation-quality.yml
+  - .github/workflows/claude-code-review.yml
+  - .github/workflows/claude.yml
+changes: |
+  - Agent assignment: Specialist agents for CI/CD workflow expertise
+  - Integrate new documentation quality gates with existing multi-stage validation
+  - Update documentation quality workflow to enforce template compliance
+  - Add Japanese development principle validation to CI pipeline
+  - Integrate artifact lifecycle management checks into workflows
+  - Ensure all quality gates align with new template system
+  - Add automated detection of documentation debt accumulation
+  - Integrate orchestrator health checks into CI pipeline
+validation:
+  command: "python scripts/ci/validate_workflow_integration.py && yamllint .github/workflows/"
+  expect: "All GitHub workflows pass validation and integrate new standards"
+```
+
+#### 5.2 Enhanced Documentation Quality Enforcement
+
+##### **Task: CREATE Advanced Documentation CI/CD Integration**
+
+```yaml
+action: CREATE
+files:
+  - .github/workflows/documentation-lifecycle-management.yml
+  - .github/workflows/template-compliance-validation.yml
+  - scripts/ci/japanese-standards-validator.py
+  - scripts/ci/documentation-debt-detector.py
+  - scripts/ci/template-compliance-checker.py
+changes: |
+  - Create dedicated workflow for Japanese development standards validation
+  - Implement template compliance checking in CI pipeline
+  - Add automated documentation debt detection and prevention
+  - Create artifact lifecycle validation in pull requests
+  - Integrate with Claude Code hooks for quality enforcement
+  - Add comprehensive reporting for documentation health metrics
+  - Implement automated fixes for common documentation issues
+validation:
+  command: "python scripts/ci/test_enhanced_documentation_ci.py"
+  expect: "Enhanced documentation CI pipeline fully functional"
+```
+
+#### 5.3 Automated Test Artifact and Cleanliness Validation
+
+##### **Task: CREATE CI/CD Cleanliness Enforcement**
+
+```yaml
+action: CREATE
+files:
+  - .github/workflows/project-cleanliness-validation.yml
+  - scripts/ci/root-directory-cleanliness-checker.py
+  - scripts/ci/test-artifact-lifecycle-validator.py
+  - scripts/ci/japanese-organization-principles-validator.py
+changes: |
+  - Create automated validation of root directory cleanliness
+  - Implement test artifact lifecycle management in CI
+  - Add Japanese organizational principle enforcement
+  - Create automated cleanup reminders for agents
+  - Integrate with existing artifact management system
+  - Add prevention of documentation sprawl in CI
+  - Implement systematic organization validation
+validation:
+  command: "python scripts/ci/test_cleanliness_validation.py"
+  expect: "Project cleanliness validation integrated into CI pipeline"
+```
+
+#### 5.4 Enhanced Security and Performance Integration
+
+##### **Task: MODIFY Security and Performance CI Enhancement**
+
+```yaml
+action: MODIFY
+files:
+  - .github/workflows/ci.yml (security section)
+  - scripts/security/documentation_security_scanner.py
+  - scripts/performance/documentation_performance_analyzer.py
+changes: |
+  - Enhance security scanning to include documentation content validation
+  - Add performance impact assessment for documentation changes
+  - Integrate security review of template system updates
+  - Add automated detection of sensitive information in documentation
+  - Implement performance monitoring for documentation build times
+  - Add validation of documentation accessibility compliance
+  - Integrate with enhanced validation framework
+validation:
+  command: "python scripts/security/test_documentation_security.py && python scripts/performance/test_documentation_performance.py"
+  expect: "Enhanced security and performance validation functional"
+```
+
+#### 5.5 GitHub Integration and Pull Request Enhancement
+
+##### **Task: CREATE Advanced GitHub Integration**
+
+```yaml
+action: CREATE
+files:
+  - .github/pull_request_template.md
+  - .github/ISSUE_TEMPLATE/documentation_improvement.yml
+  - .github/ISSUE_TEMPLATE/template_request.yml
+  - scripts/github/pr_documentation_analyzer.py
+  - scripts/github/automated_documentation_reviewer.py
+changes: |
+  - Create enhanced pull request template with documentation requirements
+  - Add issue templates for documentation improvements and template requests
+  - Implement automated documentation review in pull requests
+  - Add template compliance verification in PR checks
+  - Create documentation impact assessment for code changes
+  - Integrate Japanese development standards into PR workflow
+  - Add automated assignment of documentation reviewers
+validation:
+  command: "python scripts/github/test_pr_integration.py"
+  expect: "Enhanced GitHub integration functional with documentation focus"
+```
+
+### Phase 6: Quality Assurance and Integration (Days 17-18)
+
+#### 6.1 Comprehensive Validation Framework
+
+##### **Task: CREATE Documentation Quality Assurance System**
+
 ```yaml
 action: CREATE
 files:
@@ -436,9 +583,10 @@ validation:
   expect: "All documentation passes quality gates with zero violations"
 ```
 
-#### 5.2 Integration Testing and Handoff
+#### 6.2 Integration Testing and Handoff
 
-**Task: CREATE Documentation Integration Verification**
+##### **Task: CREATE Documentation Integration Verification**
+
 ```yaml
 action: CREATE
 files:
@@ -485,6 +633,7 @@ validation:
 ## Validation Framework
 
 ### Stage 1: Template and Standards Validation
+
 ```bash
 # Validate template completeness and consistency
 python scripts/quality/validate_template_system.py
@@ -497,6 +646,7 @@ python scripts/quality/japanese_standards_compliance.py
 ```
 
 ### Stage 2: Content Modernization Validation
+
 ```bash
 # Markdownlint validation (all files must pass)
 markdownlint docs/ .claude/ --config .markdownlint.json
@@ -509,6 +659,7 @@ python scripts/quality/code_example_validator.py
 ```
 
 ### Stage 3: Agent Workflow Validation
+
 ```bash
 # Orchestrator integration testing
 python scripts/agents/test_orchestrator_integration.py
@@ -521,6 +672,7 @@ python scripts/orchestrator/validate_progress_tracking.py
 ```
 
 ### Stage 4: Lifecycle Management Validation
+
 ```bash
 # Cleanup automation testing
 bash .claude/hooks/test_cleanup_automation.sh
@@ -532,7 +684,27 @@ python scripts/lifecycle/test_artifact_management.py
 python scripts/quality/validate_project_cleanliness.py
 ```
 
-### Stage 5: Integration and Security Validation
+### Stage 5: CI/CD Pipeline and GitHub Integration Validation
+
+```bash
+# CI/CD workflow validation
+python scripts/ci/validate_workflow_integration.py
+
+# GitHub integration testing
+python scripts/github/test_pr_integration.py
+
+# Template compliance CI testing
+python scripts/ci/test_template_compliance_ci.py
+
+# Japanese standards CI validation
+python scripts/ci/test_japanese_standards_validation.py
+
+# Artifact lifecycle CI testing
+python scripts/ci/test_artifact_lifecycle_ci.py
+```
+
+### Stage 6: Integration and Security Validation
+
 ```bash
 # End-to-end documentation system testing
 python tests/documentation/comprehensive_integration_test.py
@@ -542,18 +714,25 @@ python scripts/security/documentation_security_audit.py
 
 # Performance impact assessment
 python scripts/performance/documentation_performance_test.py
+
+# CI/CD security integration testing
+python scripts/security/test_documentation_security.py
 ```
 
 ## Success Metrics
 
 ### Primary Objectives
+
 - [ ] **100% Template Coverage**: All documentation follows standardized templates
 - [ ] **Zero Markdownlint Violations**: All files pass linting with line length ≤ 120
 - [ ] **Current Architecture Alignment**: All references updated to Clean Architecture
 - [ ] **Agent Workflow Functional**: Individual agents can update files systematically
 - [ ] **Lifecycle Management Active**: Automated cleanup and prevention systems working
+- [ ] **CI/CD Integration Complete**: GitHub workflows enforce new documentation standards
+- [ ] **Japanese Standards Integrated**: CI pipeline validates cleanliness and organization principles
 
 ### Quality Gates
+
 - [ ] **Link Validation**: 100% of internal links functional
 - [ ] **Code Example Accuracy**: All examples tested against current codebase
 - [ ] **Template Compliance**: All documents follow appropriate template structure
@@ -561,6 +740,7 @@ python scripts/performance/documentation_performance_test.py
 - [ ] **Accessibility Standards**: Documentation meets accessibility requirements
 
 ### Japanese Development Principles Integration
+
 - [ ] **Cleanliness Achieved**: Project structure exemplifies systematic organization
 - [ ] **Lifecycle Management**: Automated prevention of documentation debt
 - [ ] **Maintenance Philosophy**: Preventive maintenance systems operational
@@ -568,25 +748,31 @@ python scripts/performance/documentation_performance_test.py
 - [ ] **Handoff Protocols**: Clear procedures for knowledge transfer established
 
 ### Implementation Readiness
+
 - [ ] **Agent Coordination**: Orchestrator-based agent deployment functional
-- [ ] **Validation Framework**: 5-stage validation system operational
+- [ ] **Validation Framework**: 6-stage validation system operational
 - [ ] **Monitoring Systems**: Ongoing quality monitoring established
 - [ ] **Security Integration**: Security-first principles applied throughout
 - [ ] **Developer Experience**: Enhanced tools and workflows for contributors
+- [ ] **CI/CD Pipeline Modernized**: GitHub workflows align with new standards
+- [ ] **Automated Quality Gates**: Continuous enforcement of documentation standards
 
 ## Context Engineering Score Target: 10/10
+
 - Complete context references to modern development practices
 - Integration with orchestrator for systematic execution
 - Security-first design throughout implementation
 - Comprehensive validation at every stage
 
 ## Security Integration Score Target: 10/10
+
 - Security impact assessment for all changes
 - Content sanitization and validation processes
 - Configuration security validation
 - Ongoing security monitoring integration
 
 ## Implementation Confidence Score: 9/10
+
 - Proven agent coordination patterns available
 - Comprehensive validation framework designed
 - Clear rollback and recovery strategies
@@ -595,25 +781,34 @@ python scripts/performance/documentation_performance_test.py
 ## Enhanced Orchestrator Integration
 
 **Required Orchestrator Usage**:
+
 ```yaml
 task_planning:
   - orchestrator_plan_task: "Template system design and validation"
   - orchestrator_plan_task: "Agent coordination for file-by-file updates"
   - orchestrator_plan_task: "Lifecycle management implementation"
+  - orchestrator_plan_task: "CI/CD pipeline modernization and GitHub integration"
   - orchestrator_plan_task: "Quality assurance and integration testing"
 
 execution_tracking:
   - orchestrator_execute_task: For each documentation modernization agent
+  - orchestrator_execute_task: For CI/CD workflow enhancement agents
   - orchestrator_get_status: Real-time progress monitoring
   - orchestrator_query_tasks: Dependency management and coordination
 
 completion_validation:
   - orchestrator_complete_task: With comprehensive documentation artifacts
+  - orchestrator_complete_task: With CI/CD integration validation results
   - orchestrator_synthesize_results: Integration of all agent outputs
 ```
 
 ## Conclusion
 
-This PRP transforms the MCP Task Orchestrator documentation ecosystem from fragmented and outdated to modern, maintainable, and exemplary. By integrating Japanese development principles of cleanliness and systematic organization, implementing comprehensive template systems, and deploying orchestrator-coordinated agents for systematic updates, we create a sustainable documentation infrastructure that prevents future documentation debt while ensuring current accuracy and accessibility.
+This PRP transforms the MCP Task Orchestrator documentation ecosystem from fragmented and outdated to modern,
+maintainable, and exemplary. By integrating Japanese development principles of cleanliness and systematic organization,
+implementing comprehensive template systems, and deploying orchestrator-coordinated agents for systematic updates, we
+create a sustainable documentation infrastructure that prevents future documentation debt while ensuring current
+accuracy and accessibility.
 
-The systematic approach ensures security, quality, and maintainability while providing clear handoff protocols for ongoing development. The result is documentation that serves as a model for Clean Architecture project documentation standards.
+The systematic approach ensures security, quality, and maintainability while providing clear handoff protocols for
+ongoing development. The result is documentation that serves as a model for Clean Architecture project documentation standards.
