@@ -164,7 +164,12 @@ class CleanArchTaskUseCase:
     
     def _format_task_response(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
         """Format task data for response."""
-        metadata = json.loads(task_data.get("metadata", "{}"))
+        # Handle metadata that could be either a string or dict
+        metadata_raw = task_data.get("metadata", {})
+        if isinstance(metadata_raw, str):
+            metadata = json.loads(metadata_raw) if metadata_raw else {}
+        else:
+            metadata = metadata_raw if metadata_raw else {}
         return {
             "task_id": task_data["id"],
             "title": task_data["title"],
