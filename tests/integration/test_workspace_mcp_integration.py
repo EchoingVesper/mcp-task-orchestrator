@@ -339,7 +339,12 @@ def run_mcp_integration_tests():
         print(f"  ✅ Paradigm Benefits: {benefits_count} major advantages")
     
     # Overall integration status
-    integration_success =
+    integration_success = all([
+        results['basic_connection_test']['success'],
+        results['workspace_detection']['success'],
+        results['mcp_tools_registration']['success'],
+        results['database_integration']['success']
+    ])
     
     results['overall_integration'] = {
         'status': 'PASS' if integration_success else 'CONCERNS',

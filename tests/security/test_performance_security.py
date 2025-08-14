@@ -1005,7 +1005,7 @@ class TestPerformanceSecurityIntegration:
             blocked = stats["blocked"]
             
             if result_type == "normal":
-                success_rate = / total
+                success_rate = (total - blocked) / total
                 assert success_rate > 0.9, f"Sustained normal request success rate: {success_rate:.2%}"
             else:
                 block_rate = blocked / total

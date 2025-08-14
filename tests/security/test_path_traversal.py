@@ -758,7 +758,7 @@ class TestPathTraversalIntegration:
             ("linux", "\\\\server\\share\\file.txt"),
             
             # Unix paths on Windows
-           ,
+            ("windows", "/tmp/test")
         ]
         
         for platform, attack_path in cross_platform_attacks:

@@ -653,7 +653,7 @@ class ComprehensiveToolValidator:
                     "failed": failed_tests,
                     "errors": error_tests,
                     "skipped": skipped_tests,
-                    "pass_rate": if total_tests > 0 else 0
+                    "pass_rate": passed_tests / total_tests if total_tests > 0 else 0
                 },
                 "tool_results": tool_results
             }

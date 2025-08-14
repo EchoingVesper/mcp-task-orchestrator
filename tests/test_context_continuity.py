@@ -161,7 +161,7 @@ async def test_context_continuity_system():
             print(f"   Summary: {session_report['session_summary']}")
             
             # Validate all tests passed
-            all_tests_passed = == 2 and
+            all_tests_passed = (len([test_file1, test_file2]) == 2 and
                 len(context_package.files_modified) == 1 and
                 context_package.decisions_summary['total_decisions'] >= 4 and  # 2 explicit + file operation decisions
                 completion_result['completion_approved'] and

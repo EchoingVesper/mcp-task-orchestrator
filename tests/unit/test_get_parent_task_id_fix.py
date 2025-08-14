@@ -24,9 +24,9 @@ async def test_get_parent_task_id_fix():
         
         from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
         # Import Clean Architecture v2.0 models
-from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
-from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
-from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
+        from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+        from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+        from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
         
         # Initialize StateManager with explicit paths
         state_manager = StateManager(db_path=db_path, base_dir=base_dir)

@@ -180,7 +180,7 @@ class CoreToolTests(BaseToolTest):
             duration = time.time() - start_time
             
             # Validate response structure
-            if result.get("success", False) or != "error" and 
+            if result.get("success", False) or (result.get("status") != "error" and 
                 "session_id" in result
             ):
                 return TestResult(
