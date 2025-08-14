@@ -843,8 +843,7 @@ class TestAttackSimulationIntegration:
             ("xss", "<script>alert('xss')</script>"),
             ("path_traversal", "../../../etc/passwd"),
             ("sql_injection", "'; DROP TABLE users; --"),
-            ("command_injection", "; cat /etc/passwd"),
-           ,
+            ("command_injection", "; cat /etc/passwd")
         ]
         
         async def execute_attack_vector(vector_info):

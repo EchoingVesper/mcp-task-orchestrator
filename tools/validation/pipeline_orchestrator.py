@@ -34,7 +34,11 @@ class ValidationPipelineOrchestrator:
     """
     
     def __init__(self, config: Optional[Dict[str, Any]] = None):
-        self.config = config or self._get_default_config()
+        # Merge provided config with defaults
+        default_config = self._get_default_config()
+        if config:
+            default_config.update(config)
+        self.config = default_config
         self.pipeline_id = str(uuid.uuid4())
         self.project_root = Path(self.config.get('project_root', '.')).resolve()
         
