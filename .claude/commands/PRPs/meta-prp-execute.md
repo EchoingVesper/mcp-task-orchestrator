@@ -1,8 +1,12 @@
 # Execute META-PRP with Orchestrator Multi-Agent Coordination
 
-Execute comprehensive meta-PRPs using the task orchestrator's full orchestration capabilities to coordinate sub-agents through systematic multi-phase workflows.
+Execute comprehensive meta-PRPs using the task orchestrator's full orchestration capabilities to coordinate sub-agents through systematic multi-phase workflows with git worktree isolation and executive dysfunction design principles.
 
 ## Meta-PRP File: $ARGUMENTS
+
+## Template Reference
+
+**CRITICAL**: This execution assumes the meta-PRP was created using `PRPs/templates/meta_prp_structure.md` template with hierarchical structure and git worktree strategy.
 
 ## Immediate Orchestrator Session Activation
 
@@ -73,19 +77,30 @@ orchestrator_session_setup:
 orchestrator_health_validation:
   action: orchestrator_health_check
   purpose: "Ensure orchestrator ready for multi-agent coordination"
+
+git_worktree_initialization:
+  executive_dysfunction_support: "Pre-create isolated workspaces to eliminate decision paralysis"
+  worktree_creation:
+    priority_1: "git worktree add ../worktrees/agent-priority-1 -b feature/priority-1"
+    priority_2: "git worktree add ../worktrees/agent-priority-2 -b feature/priority-2"
+    coordination: "git worktree add ../worktrees/agent-coordination -b feature/coordination"
+  auto_preservation_setup:
+    wip_commits: "Configure auto-commit hooks for WIP preservation"
+    conflict_prevention: "Isolated branches prevent agent conflicts"
   
 meta_task_creation:
   action: orchestrator_plan_task
   parameters:
     title: "Meta-PRP Execution: {concept}"
-    description: "Multi-agent coordination for {concept} from meta-PRP"
+    description: "Multi-agent coordination for {concept} from meta-PRP with worktree isolation"
     complexity: "very_complex"
     task_type: "breakdown"
     specialist_type: "coordinator"
+    context: "Git worktree strategy applied for executive dysfunction support"
     
 initial_status_check:
   action: orchestrator_get_status
-  purpose: "Baseline status before sub-agent spawning"
+  purpose: "Baseline status before sub-agent spawning with worktree setup"
 ```
 
 ### Phase 2: Sub-Agent Coordination and Task Breakdown
@@ -176,12 +191,22 @@ intelligent_agent_spawning:
 sub_agent_spawning_claude_code_mode:
   research_agent:
     spawning_method: "Task tool with general-purpose agent"
+    worktree_context:
+      working_directory: "../worktrees/agent-research"
+      branch: "feature/research-phase"
+      isolation: "No conflicts with other agents"
     specialist_context_retrieval:
       action: orchestrator_execute_task
       task_id: "[research_task_id]"
       
     sub_agent_instructions: |
       You are a RESEARCH SPECIALIST executing orchestrator task: [research_task_id]
+      
+      CRITICAL WORKTREE INTEGRATION:
+      - Working in ISOLATED WORKTREE: ../worktrees/agent-research  
+      - Branch: feature/research-phase (isolated from other agents)
+      - Auto-preservation: Run "git add -A && git commit -m 'WIP: $(date)'" every 30 min
+      - No merge conflicts: Your work is completely isolated
       
       CRITICAL ORCHESTRATOR INTEGRATION: 
       - FIRST: Use orchestrator_execute_task to get your specialist context and instructions
@@ -190,6 +215,12 @@ sub_agent_spawning_claude_code_mode:
       - Reference meta-PRP file for complete context: $ARGUMENTS
       - Load relevant PRPs/ai_docs/ for specialized context
       - The orchestrator is your coordination backbone - maintain session throughout
+      
+      EXECUTIVE DYSFUNCTION SUPPORT:
+      - Pre-created directory structure in PRPs/templates/meta_prp_structure.md eliminates decisions
+      - Isolated worktree prevents overwhelm from other agent activities
+      - Progress automatically preserved via git commits
+      - Clear single focus area reduces cognitive load
       
       LESSONS LEARNED INTEGRATION:
       - Apply hook-style automated validation to your work
@@ -310,6 +341,23 @@ result_synthesis_workflow:
   session_accumulation_prevention:
     action: "orchestrator_list_sessions + cleanup old sessions"
     purpose: "Prevent infinite session file accumulation discovered in lessons learned"
+    
+  worktree_cleanup_and_integration:
+    purpose: "Merge agent work and clean up worktrees"
+    workflow:
+      merge_agent_work:
+        - "cd ../../main-repo"
+        - "git merge feature/priority-1"
+        - "git merge feature/priority-2" 
+        - "git merge feature/coordination"
+      cleanup_worktrees:
+        - "git worktree remove ../worktrees/agent-priority-1"
+        - "git worktree remove ../worktrees/agent-priority-2"
+        - "git worktree remove ../worktrees/agent-coordination"
+      executive_dysfunction_notes:
+        - "All agent work preserved in main branch"
+        - "No work lost due to worktree cleanup"
+        - "Clean workspace for future meta-PRP execution"
 ```
 
 ## Enhanced Multi-Agent Execution Pattern
@@ -485,6 +533,25 @@ python scripts/validate_multi_agent_success.py $ARGUMENTS
 - [ ] **Health monitoring** maintained system stability
 - [ ] **Maintenance coordination** completed successfully
 - [ ] **Session preservation** maintained throughout complex workflow
+
+### Executive Dysfunction Design Success
+
+- [ ] **Template structure followed** from PRPs/templates/meta_prp_structure.md
+- [ ] **Pre-created directories** eliminated decision paralysis during execution
+- [ ] **Worktree isolation** prevented agent conflicts and overwhelm
+- [ ] **Auto-preservation** maintained progress through WIP commits
+- [ ] **Progress visibility** available at all granularities
+- [ ] **Momentum preservation** survived any sleep resets or interruptions
+- [ ] **Damage prevention** graceful handling of any overwhelm or errors
+
+### Git Worktree Execution Success
+
+- [ ] **Worktrees created** for all priority areas without conflicts
+- [ ] **Agent isolation** maintained throughout execution
+- [ ] **Auto-preservation** WIP commits functioned correctly
+- [ ] **Work integration** merged back to main branch successfully
+- [ ] **Worktree cleanup** completed without data loss
+- [ ] **Workspace clean** ready for future meta-PRP execution
 
 ## Completion Protocol
 

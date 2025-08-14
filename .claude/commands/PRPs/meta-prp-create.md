@@ -1,8 +1,12 @@
 # Create META-PRP with Orchestrator Multi-Agent Coordination
 
-Create comprehensive meta-PRPs that coordinate complex multi-step plans using the task orchestrator's full orchestration capabilities with sub-agent coordination.
+Create comprehensive meta-PRPs that coordinate complex multi-step plans using the task orchestrator's full orchestration capabilities with sub-agent coordination, git worktree isolation, and executive dysfunction design principles.
 
 ## Meta-PRP Concept: $ARGUMENTS
+
+## Template Reference
+
+**CRITICAL**: Refer to `PRPs/templates/meta_prp_structure.md` for the complete hierarchical structure template with executive dysfunction design patterns and git worktree strategy.
 
 ## Pre-Execution Orchestrator Health Check
 
@@ -98,7 +102,102 @@ sub_task_coordination:
    - **Requirements Sub-Agent**: Focuses on gathering comprehensive requirements
    - **Risk Assessment Sub-Agent**: Dedicated to risk analysis and mitigation
 
+## Git Worktree Strategy for Multi-Agent Coordination
+
+### Executive Dysfunction-Aware Worktree Management
+
+**Problem**: Agent work conflicts create overwhelm and lost progress  
+**Solution**: Isolated worktrees with automated coordination patterns
+
+```bash
+# Create Meta-PRP with worktree structure
+PRPs/{project-name}-transition/
+├── README.md                    # Navigation and overview
+├── 00-main-coordination/        # Central hub (main branch)
+├── 01-priority-1/              # Worktree: feature/priority-1
+├── 02-priority-2/              # Worktree: feature/priority-2
+└── tracking/                   # Shared progress tracking
+
+# Agent isolation strategy
+main-repo/                      # Main repository
+worktrees/
+├── agent-priority-1/          # git worktree for priority 1
+├── agent-priority-2/          # git worktree for priority 2
+└── agent-coordination/        # git worktree for main coordination
+```
+
+### Worktree Creation Pattern
+
+```bash
+# Create worktrees for each priority area
+git worktree add ../worktrees/agent-{priority-name} -b feature/{priority-name}
+
+# Agent auto-preservation (executive dysfunction support)
+cd ../worktrees/agent-{priority-name}
+git add -A && git commit -m "WIP: Auto-save $(date +%Y%m%d-%H%M%S)"
+
+# When agent completes work
+git add -A && git commit -m "feat({scope}): {agent task completion}"
+
+# Merge back to main when ready
+cd ../../main-repo
+git merge feature/{priority-name}
+git worktree remove ../worktrees/agent-{priority-name}
+```
+
+### Agent Spawning with Worktree Context
+
+```yaml
+agent_spawning_with_worktrees:
+  research_agent:
+    worktree: "../worktrees/agent-research"
+    branch: "feature/research-phase"
+    specialist_context_retrieval:
+      action: orchestrator_execute_task
+      working_directory: "../worktrees/agent-research"
+      
+    sub_agent_instructions: |
+      You are working in an ISOLATED WORKTREE for executive dysfunction support
+      
+      WORKTREE INTEGRATION:
+      - Working directory: ../worktrees/agent-research
+      - Branch: feature/research-phase  
+      - Auto-preservation: WIP commits every 30 minutes
+      - No conflicts with other agents
+      
+      ORCHESTRATOR INTEGRATION:
+      - Use orchestrator_execute_task to get your context
+      - Store ALL work in orchestrator artifacts
+      - Reference meta-PRP structure template
+      
+      EXECUTIVE DYSFUNCTION SUPPORT:
+      - Pre-created directory structure reduces decisions
+      - Isolated environment prevents overwhelm
+      - Progress automatically preserved via git
+      - Clear single focus area
+```
+
 ## Meta-PRP Generation with Orchestrator Integration
+
+### Hierarchical Structure Creation
+
+```yaml
+meta_prp_structure_creation:
+  step_1_template_application:
+    action: "Apply PRPs/templates/meta_prp_structure.md template"
+    output: "Complete directory hierarchy"
+    
+  step_2_worktree_setup:
+    create_worktrees_for_priorities:
+      priority_1: "git worktree add ../worktrees/agent-priority-1 -b feature/priority-1"
+      priority_2: "git worktree add ../worktrees/agent-priority-2 -b feature/priority-2"
+      coordination: "git worktree add ../worktrees/agent-coordination -b feature/coordination"
+    
+  step_3_executive_dysfunction_optimizations:
+    pre_created_structure: "All directories exist, no decision paralysis"
+    clear_naming: "Numbered priorities eliminate choice overhead"
+    working_directories: "Auto-generated vs manual content clearly marked"
+    progress_visibility: "Multiple tracking mechanisms at different granularities"
 
 ### Session and Task Structure
 
@@ -245,18 +344,37 @@ sub_agent_spawning_claude_code_mode:
       Expected deliverable: Complete research artifacts stored via orchestrator_complete_task
 ```
 
-### Phase Structure with Sub-Agent Coordination
+### Phase Structure with Sub-Agent Coordination and Worktrees
 
 ```yaml
 phase_structure:
   phase_1_research:
     duration: "varies"
     orchestrator_session: "Research Coordination"
+    worktree_strategy:
+      main_branch: "main (coordination hub)"
+      agent_worktrees:
+        - "../worktrees/agent-market-research (feature/market-research)"
+        - "../worktrees/agent-technical-research (feature/technical-research)"
+        - "../worktrees/agent-security-research (feature/security-research)"
     hooks_integration: "Research validation and quality assurance hooks"
     sub_agents:
-      - market_research_agent: "specialist_type: researcher"
-      - technical_research_agent: "specialist_type: architect"
-      - security_research_agent: "specialist_type: reviewer"
+      - market_research_agent: 
+          specialist_type: "researcher"
+          worktree: "../worktrees/agent-market-research"
+          isolation: "No conflicts with other research agents"
+      - technical_research_agent: 
+          specialist_type: "architect" 
+          worktree: "../worktrees/agent-technical-research"
+          isolation: "Independent technical analysis"
+      - security_research_agent: 
+          specialist_type: "reviewer"
+          worktree: "../worktrees/agent-security-research"
+          isolation: "Isolated security assessment"
+    executive_dysfunction_support:
+      auto_preservation: "WIP commits every 30 minutes in each worktree"
+      conflict_prevention: "Isolated worktrees prevent merge conflicts"
+      momentum_preservation: "Work survives sleep resets via git"
     deliverables: "Research artifacts in orchestrator storage with hook validation"
     
   phase_2_design:
@@ -389,6 +507,24 @@ python scripts/test_meta_prp_workflow.py PRPs/{concept}-meta-prp.md
 - [ ] **Dependencies** properly managed through orchestrator task system
 - [ ] **All 5 validation stages** executable for meta-PRP structure
 - [ ] **Ready for meta-prp-execute** command execution
+
+### Executive Dysfunction Design Requirements
+
+- [ ] **Template structure applied** from PRPs/templates/meta_prp_structure.md
+- [ ] **Pre-created directories** eliminate decision paralysis at task initiation
+- [ ] **Clear numbering system** (00-99) removes naming decisions
+- [ ] **Working directories marked** with README files explaining auto-generated vs manual
+- [ ] **Progress tracking** at multiple granularities for momentum preservation
+- [ ] **Git worktree strategy** documented for agent isolation
+- [ ] **Automated coordination** patterns defined to reduce manual overhead
+
+### Git Worktree Integration Requirements
+
+- [ ] **Worktree strategy** documented for each priority area
+- [ ] **Agent isolation** prevents conflicts and overwhelm
+- [ ] **Auto-preservation** commands specified for WIP commits
+- [ ] **Merge coordination** strategy defined for agent work integration
+- [ ] **Working directory management** clear for distributed agent work
 
 ### Orchestrator Integration Requirements
 
