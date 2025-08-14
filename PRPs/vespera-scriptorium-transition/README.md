@@ -1,5 +1,9 @@
 # Vespera Scriptorium Transition - Complete Meta-PRP
 
+**Template Compliance**: Created using [PRPs/templates/meta_prp_structure.md](../templates/meta_prp_structure.md)  
+**Philosophy**: Executive Dysfunction-Aware Multi-Agent Coordination  
+**Git Strategy**: Worktree isolation for conflict-free parallel development
+
 This directory contains the comprehensive, multi-agent coordinated plan for transforming MCP Task Orchestrator into
 Vespera Scriptorium.
 
@@ -75,15 +79,22 @@ We're archiving ALL existing docs and starting fresh with:
 
 ## 🔗 Related Documents
 
+### Template and Design Philosophy
+
+- [PRPs/templates/meta_prp_structure.md](../templates/meta_prp_structure.md) - Template structure used
+- [executive-dysfunction-philosophy.md](executive-dysfunction-philosophy.md) - Core design principles
+- [git-worktree-strategy.md](git-worktree-strategy.md) - Multi-agent coordination strategy
+
 ### Source PRPs (Merged)
 
-- [meta-prp-vespera-scriptorium-evolution.md](meta-prp-vespera-scriptorium-evolution.md)
-- [../[IN-PROGRESS]comprehensive-documentation-audit-and-remediation-meta-prp.md](../[IN-PROGRESS]comprehensive-documentation-audit-and-remediation-meta-prp.md)
-- [../v2.0-release-meta-prp/](../v2.0-release-meta-prp/)
+- [../archives/pre-vespera-transition/meta-prp-vespera-scriptorium-evolution.md](../archives/pre-vespera-transition/meta-prp-vespera-scriptorium-evolution.md)
+- [../archives/pre-vespera-transition/comprehensive-documentation-audit-and-remediation-meta-prp.md](../archives/pre-vespera-transition/comprehensive-documentation-audit-and-remediation-meta-prp.md)
+- [../archives/pre-vespera-transition/v2.0-release-meta-prp/](../archives/pre-vespera-transition/v2.0-release-meta-prp/)
 
 ### Implementation Guides
 
 - [CLAUDE.md](/home/aya/dev/mcp-servers/mcp-task-orchestrator/CLAUDE.md) - Critical orchestrator protocols
+- [docs/journey/extended_pressure_lid_metaphor.md](../../docs/journey/extended_pressure_lid_metaphor.md) - Executive dysfunction theory
 - Task Orchestrator Documentation
 - Clean Architecture Guide
 
