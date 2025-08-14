@@ -32,10 +32,18 @@ async def run_health_checks():
     state_repo = None
     
     try:
+        # Initialize DI container first
+        from mcp_task_orchestrator.infrastructure.mcp.handlers.core_handlers import enable_dependency_injection
+        await enable_dependency_injection()
+        
         container = get_container()
         if container:
             task_repo = container.get_service(TaskRepository)
-            state_repo = container.get_service(StateRepository)
+            try:
+                state_repo = container.get_service(StateRepository)
+            except:
+                # StateRepository might not be registered yet
+                pass
     except Exception as e:
         print(f"⚠️  Could not access DI container: {e}")
     

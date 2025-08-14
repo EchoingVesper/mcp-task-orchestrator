@@ -76,6 +76,30 @@ async def enable_dependency_injection():
             type(get_reboot_manager()), 
             lambda container: get_reboot_manager()
         ).as_singleton()
+        
+        # Register TaskRepository with its SQLite implementation
+        from ....domain.repositories.task_repository import TaskRepository
+        from ....infrastructure.database.sqlite.sqlite_task_repository import SQLiteTaskRepository
+        from ....infrastructure.database.connection_manager import DatabaseConnectionManager
+        
+        # Register DatabaseConnectionManager as singleton with database URL
+        def create_database_connection_manager(container):
+            from pathlib import Path
+            # Use default SQLite database path
+            db_path = Path(".task_orchestrator") / "tasks.sqlite"
+            db_url = f"sqlite:///{db_path.absolute()}"
+            return DatabaseConnectionManager(db_url)
+        
+        registrar.register_factory(
+            DatabaseConnectionManager, 
+            create_database_connection_manager
+        ).as_singleton()
+        
+        # Register TaskRepository with SQLite implementation
+        registrar.register_factory(
+            TaskRepository,
+            lambda container: SQLiteTaskRepository(container.get_service(DatabaseConnectionManager))
+        ).as_singleton()
     
     # Configure services
     register_services(configure_services)

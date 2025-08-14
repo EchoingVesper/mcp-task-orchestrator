@@ -139,7 +139,7 @@ class HealthChecker:
         
         try:
             # Try a simple operation
-            tasks = await self.task_repository.list_all_tasks()
+            tasks = self.task_repository.list_tasks()
             
             return HealthCheckResult(
                 name="database_connectivity",
@@ -174,8 +174,8 @@ class HealthChecker:
         
         try:
             # Test basic operations
-            tasks = await self.task_repository.list_all_tasks()
-            active_count = len([t for t in tasks if t.status.is_active()])
+            tasks = self.task_repository.list_tasks()
+            active_count = len([t for t in tasks if t.get('status') in ['pending', 'in_progress', 'blocked']])
             
             return HealthCheckResult(
                 name="task_repository",
