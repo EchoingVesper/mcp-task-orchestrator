@@ -175,14 +175,64 @@ class CleanArchExecuteTaskUseCase:
             
             metadata = json.loads(task.get("metadata", "{}"))
             specialist_type = metadata.get("specialist_type", "generic")
+            context_data = metadata.get("context", {})
             
-            # Return specialist context
+            # Generate specialist prompts based on type
+            specialist_prompts = []
+            if specialist_type == "devops":
+                specialist_prompts.extend([
+                    "Focus on infrastructure, CI/CD, and deployment concerns",
+                    "Ensure system reliability and performance",
+                    "Follow security best practices"
+                ])
+            elif specialist_type == "documenter":
+                specialist_prompts.extend([
+                    "Create clear, comprehensive documentation",
+                    "Follow documentation standards and formatting",
+                    "Consider your audience's needs"
+                ])
+            elif specialist_type == "architect":
+                specialist_prompts.extend([
+                    "Design for scalability and maintainability", 
+                    "Consider system architecture and patterns",
+                    "Document architectural decisions"
+                ])
+            elif specialist_type == "coder":
+                specialist_prompts.extend([
+                    "Write clean, well-tested code",
+                    "Follow coding standards and best practices",
+                    "Consider performance and security"
+                ])
+            else:
+                specialist_prompts.append(f"Apply {specialist_type} specialist knowledge to this task")
+            
+            # Generate execution instructions
+            execution_instructions = [
+                f"Task: {task['title']}",
+                f"Description: {task['description']}",
+                f"Specialist Role: {specialist_type}",
+                "",
+                "Execute this task using your specialist expertise.",
+                "Provide detailed work artifacts when completing the task.",
+                "Use orchestrator_complete_task to store your results."
+            ]
+            
+            # Return format expected by handler
             return {
                 "task_id": task_id,
+                "task_title": task.get('title', 'Untitled Task'),
+                "task_description": task.get('description', ''),
                 "specialist_type": specialist_type,
-                "context": metadata.get("context", {}),
-                "instructions": f"Execute {task['title']} as a {specialist_type} specialist",
-                "expected_deliverable": f"Complete {task['description']} and store results via orchestrator_complete_task"
+                "specialist_context": context_data,
+                "specialist_prompts": specialist_prompts,
+                "execution_instructions": execution_instructions,
+                "dependencies_completed": True,  # Simplified for now
+                "estimated_effort": metadata.get("estimated_effort", "Unknown"),
+                "next_steps": [
+                    "Review the task details and specialist context",
+                    "Execute the task according to the instructions",
+                    "Complete the task using orchestrator_complete_task"
+                ]
             }
             
         except Exception as e:
@@ -233,9 +283,22 @@ class CleanArchCompleteTaskUseCase:
                     "size": artifact_ref.size
                 })
             
-            return {
-                "status": "success",
-                "task_id": task_id,
+            # Create response object that mimics the expected interface
+            class CompletionResponse:
+                def __init__(self, data):
+                    self.message = data["message"]
+                    self.summary = data["summary"]
+                    self.artifact_count = data["artifact_count"]
+                    self.artifact_references = data["artifact_references"]
+                    self.next_action = data["next_action"]
+                    self.completion_time = data["completion_time"]
+                    self.next_steps = data.get("next_steps", [
+                        "Task completed successfully",
+                        "Artifacts have been stored for future reference",
+                        "Check dependent tasks for new availability"
+                    ])
+            
+            response_data = {
                 "message": f"Task {task_id} completed successfully",
                 "summary": completion_data.get("summary", "Task completed"),
                 "artifact_count": len(artifact_refs),
@@ -243,6 +306,8 @@ class CleanArchCompleteTaskUseCase:
                 "next_action": completion_data.get("next_action", "complete"),
                 "completion_time": updates["completed_at"]
             }
+            
+            return CompletionResponse(response_data)
             
         except Exception as e:
             logger.error(f"Failed to complete task {task_id}: {str(e)}")

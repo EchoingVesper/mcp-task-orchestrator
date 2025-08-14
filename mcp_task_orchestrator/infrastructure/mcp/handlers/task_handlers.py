@@ -349,19 +349,36 @@ async def handle_execute_task(args: Dict[str, Any]) -> List[types.TextContent]:
         execution_context = await use_case.execute_task(task_id)
 
         # Convert response to dict for serialization
-        response = {
-            "status": "ready_for_execution",
-            "task_id": task_id,
-            "task_title": execution_context.task_title,
-            "task_description": execution_context.task_description,
-            "specialist_type": execution_context.specialist_type,
-            "specialist_context": execution_context.specialist_context,
-            "specialist_prompts": execution_context.specialist_prompts,
-            "execution_instructions": execution_context.execution_instructions,
-            "dependencies_completed": execution_context.dependencies_completed,
-            "estimated_effort": execution_context.estimated_effort,
-            "next_steps": execution_context.next_steps
-        }
+        # Handle both dict and object responses from use case
+        if isinstance(execution_context, dict):
+            response = {
+                "status": "ready_for_execution",
+                "task_id": task_id,
+                "task_title": execution_context.get("task_title", ""),
+                "task_description": execution_context.get("task_description", ""),
+                "specialist_type": execution_context.get("specialist_type", "generic"),
+                "specialist_context": execution_context.get("specialist_context", {}),
+                "specialist_prompts": execution_context.get("specialist_prompts", []),
+                "execution_instructions": execution_context.get("execution_instructions", []),
+                "dependencies_completed": execution_context.get("dependencies_completed", True),
+                "estimated_effort": execution_context.get("estimated_effort", "Unknown"),
+                "next_steps": execution_context.get("next_steps", [])
+            }
+        else:
+            # Legacy object-based response
+            response = {
+                "status": "ready_for_execution",
+                "task_id": task_id,
+                "task_title": execution_context.task_title,
+                "task_description": execution_context.task_description,
+                "specialist_type": execution_context.specialist_type,
+                "specialist_context": execution_context.specialist_context,
+                "specialist_prompts": execution_context.specialist_prompts,
+                "execution_instructions": execution_context.execution_instructions,
+                "dependencies_completed": execution_context.dependencies_completed,
+                "estimated_effort": execution_context.estimated_effort,
+                "next_steps": execution_context.next_steps
+            }
 
         logger.info(f"Task {task_id} ready for execution")
 
@@ -434,17 +451,32 @@ async def handle_complete_task(args: Dict[str, Any]) -> List[types.TextContent]:
         completion_response = await use_case.complete_task(task_id, args)
 
         # Convert response to dict for serialization
-        response = {
-            "status": "success",
-            "task_id": task_id,
-            "message": completion_response.message,
-            "summary": completion_response.summary,
-            "artifact_count": completion_response.artifact_count,
-            "artifact_references": completion_response.artifact_references,
-            "next_action": completion_response.next_action,
-            "completion_time": completion_response.completion_time,
-            "next_steps": completion_response.next_steps
-        }
+        # Handle both dict and object responses from use case
+        if isinstance(completion_response, dict):
+            response = {
+                "status": "success",
+                "task_id": task_id,
+                "message": completion_response.get("message", f"Task {task_id} completed"),
+                "summary": completion_response.get("summary", "Task completed"),
+                "artifact_count": completion_response.get("artifact_count", 0),
+                "artifact_references": completion_response.get("artifact_references", []),
+                "next_action": completion_response.get("next_action", "complete"),
+                "completion_time": completion_response.get("completion_time", ""),
+                "next_steps": completion_response.get("next_steps", [])
+            }
+        else:
+            # Object-based response (has attributes)
+            response = {
+                "status": "success",
+                "task_id": task_id,
+                "message": completion_response.message,
+                "summary": completion_response.summary,
+                "artifact_count": completion_response.artifact_count,
+                "artifact_references": completion_response.artifact_references,
+                "next_action": completion_response.next_action,
+                "completion_time": completion_response.completion_time,
+                "next_steps": completion_response.next_steps
+            }
 
         logger.info(f"Task {task_id} completed successfully")
 
