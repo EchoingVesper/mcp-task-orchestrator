@@ -149,18 +149,12 @@ class CleanArchTaskUseCase:
             logger.error(f"Failed to update task {task_id}: {str(e)}")
             raise OrchestrationError(f"Task update failed: {str(e)}")
     
-    def query_tasks(self, filters: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+    async def query_tasks(self, filters: Dict[str, Any] = None) -> List[Dict[str, Any]]:
         """Query tasks using Clean Architecture."""
         try:
             # Apply filters
             filters = filters or {}
-            tasks = self.task_repository.list_tasks(
-                session_id=filters.get("session_id"),
-                parent_task_id=filters.get("parent_task_id"),
-                status=filters.get("status"),
-                limit=filters.get("limit"),
-                offset=filters.get("offset")
-            )
+            tasks = await self.task_repository.query_tasks(filters)
             
             return [self._format_task_response(task) for task in tasks]
             
