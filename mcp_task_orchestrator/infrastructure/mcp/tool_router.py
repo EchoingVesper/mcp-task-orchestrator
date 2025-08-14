@@ -75,10 +75,15 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
     elif name == "orchestrator_session_status":
         return await handle_session_status(arguments)
     
-    # orchestrator_plan_task routes directly to Clean Architecture handler
+    # orchestrator_plan_task routes to Clean Architecture handler
     elif name == "orchestrator_plan_task":
-        from .handlers.task_handlers import handle_plan_task_legacy
-        return await handle_plan_task_legacy(arguments)
+        from .handlers.di_integration import CleanArchTaskUseCase
+        use_case = CleanArchTaskUseCase()
+        result = await use_case.create_task(arguments)
+        return [types.TextContent(
+            type="text", 
+            text=json.dumps(result, indent=2)
+        )]
 
     # Other task management tools (use migration manager)
     elif name in ["orchestrator_create_generic_task", 

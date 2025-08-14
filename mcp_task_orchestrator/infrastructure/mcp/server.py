@@ -65,29 +65,42 @@ class MCPServerAdapter:
                 ),
                 types.Tool(
                     name="orchestrator_plan_task",
-                    description="Create a task breakdown from LLM-analyzed subtasks",
+                    description="Create a new task using Clean Architecture",
                     inputSchema={
                         "type": "object",
                         "properties": {
+                            "title": {
+                                "type": "string",
+                                "description": "Task title"
+                            },
                             "description": {
                                 "type": "string",
-                                "description": "The complex task to be broken down"
+                                "description": "Detailed task description"
                             },
-                            "subtasks_json": {
+                            "task_type": {
                                 "type": "string",
-                                "description": "JSON array of subtasks"
+                                "enum": ["standard", "breakdown", "milestone", "review", "approval", "research", "implementation", "testing", "documentation", "deployment", "custom"],
+                                "default": "standard",
+                                "description": "Type of task"
                             },
-                            "complexity_level": {
+                            "complexity": {
                                 "type": "string",
-                                "enum": ["simple", "moderate", "complex", "highly_complex"],
-                                "default": "moderate"
+                                "enum": ["trivial", "simple", "moderate", "complex", "very_complex"],
+                                "default": "moderate",
+                                "description": "Task complexity level"
                             },
-                            "context": {
+                            "specialist_type": {
                                 "type": "string",
-                                "description": "Additional context for the task"
+                                "enum": ["analyst", "coder", "tester", "documenter", "reviewer", "architect", "devops", "researcher", "coordinator", "generic"],
+                                "default": "generic",
+                                "description": "Specialist type for assignment"
+                            },
+                            "parent_task_id": {
+                                "type": "string",
+                                "description": "Parent task ID for hierarchy (optional)"
                             }
                         },
-                        "required": ["description", "subtasks_json"]
+                        "required": ["title", "description"]
                     }
                 ),
                 types.Tool(
