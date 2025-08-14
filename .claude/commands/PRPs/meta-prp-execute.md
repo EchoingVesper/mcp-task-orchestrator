@@ -1,12 +1,14 @@
 # Execute META-PRP with Orchestrator Multi-Agent Coordination
 
-Execute comprehensive meta-PRPs using the task orchestrator's full orchestration capabilities to coordinate sub-agents through systematic multi-phase workflows with git worktree isolation and executive dysfunction design principles.
+Execute comprehensive meta-PRPs using the task orchestrator's full orchestration capabilities to coordinate sub-agents
+through systematic multi-phase workflows with git worktree isolation and executive dysfunction design principles.
 
 ## Meta-PRP File: $ARGUMENTS
 
 ## Template Reference
 
-**CRITICAL**: This execution assumes the meta-PRP was created using `PRPs/templates/meta_prp_structure.md` template with hierarchical structure and git worktree strategy.
+**CRITICAL**: This execution assumes the meta-PRP was created using `PRPs/templates/meta_prp_structure.md` template with
+hierarchical structure and git worktree strategy.
 
 ## Immediate Orchestrator Session Activation
 
@@ -23,6 +25,7 @@ claude mcp list | grep task-orchestrator || (echo "ORCHESTRATOR NOT CONNECTED - 
 **CRITICAL**: If orchestrator fails, STOP and follow CLAUDE.md protocol. Meta-PRPs require full orchestrator functionality.
 
 **IMMEDIATE SESSION TAKEOVER:**
+
 ```yaml
 # 3. Initialize orchestrator session for meta-PRP execution coordination
 orchestrator_initialize_session:
@@ -518,6 +521,14 @@ python scripts/validate_multi_agent_success.py $ARGUMENTS
 - [ ] **Artifact storage consistency** across all sub-agents
 - [ ] **Progress monitoring** maintained throughout execution
 
+### Local LLM Integration Success
+
+- [ ] **Task readiness classification** used effectively for automation decisions
+- [ ] **Structured prompts** enabled successful local LLM execution where applicable
+- [ ] **Category-based task distribution** aligned with LLM capabilities
+- [ ] **Progressive automation** pathways utilized for appropriate tasks
+- [ ] **Validation procedures** confirmed automated task completion
+
 ### Quality and Security Validation
 
 - [ ] **Security validation** completed by dedicated security sub-agent
@@ -569,7 +580,7 @@ python scripts/validate_multi_agent_success.py $ARGUMENTS
 10. **Lessons Learned Integration Score Target**: 10/10 (hook patterns, session management, artifact-centric)
 11. **Future 'Undo' Readiness Score Target**: 10/10 (all work stored in orchestrator for automation)
 
-**Mad Scientist Achievement Unlocked**: *"Eventually I WILL have my automated 'oops! undo that!' feature!"* 
+**Mad Scientist Achievement Unlocked**: *"Eventually I WILL have my automated 'oops! undo that!' feature!"*
 - All work stored in orchestrator artifacts enables future automated undo capabilities
 - Session management prevents infinite accumulation discovered in lessons learned  
 - Hook patterns provide the automated problem detection foundation
@@ -577,7 +588,7 @@ python scripts/validate_multi_agent_success.py $ARGUMENTS
 
 ## No Manual Summary Required
 
-**CRITICAL**: Meta-PRP execution does NOT require manual result summaries. The orchestrator's 
+**CRITICAL**: Meta-PRP execution does NOT require manual result summaries. The orchestrator's
 `orchestrator_synthesize_results` and `orchestrator_complete_task` tools automatically handle:
 
 - **Artifact aggregation** from all sub-agents
@@ -587,4 +598,6 @@ python scripts/validate_multi_agent_success.py $ARGUMENTS
 
 **Return only**: Reference to the orchestrator task artifacts for the main agent to read.
 
-Remember: Meta-PRP execution with orchestrator multi-agent coordination enables systematic execution of complex, multi-phase projects with professional quality, comprehensive validation, and seamless collaboration between specialized sub-agents working in orchestrated harmony.
+Remember: Meta-PRP execution with orchestrator multi-agent coordination enables systematic execution of complex, multi-
+phase projects with professional quality, comprehensive validation, and seamless collaboration between specialized sub-
+agents working in orchestrated harmony.

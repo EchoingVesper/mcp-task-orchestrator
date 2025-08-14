@@ -1,12 +1,14 @@
 # Create META-PRP with Orchestrator Multi-Agent Coordination
 
-Create comprehensive meta-PRPs that coordinate complex multi-step plans using the task orchestrator's full orchestration capabilities with sub-agent coordination, git worktree isolation, and executive dysfunction design principles.
+Create comprehensive meta-PRPs that coordinate complex multi-step plans using the task orchestrator's full orchestration
+capabilities with sub-agent coordination, git worktree isolation, and executive dysfunction design principles.
 
 ## Meta-PRP Concept: $ARGUMENTS
 
 ## Template Reference
 
-**CRITICAL**: Refer to `PRPs/templates/meta_prp_structure.md` for the complete hierarchical structure template with executive dysfunction design patterns and git worktree strategy.
+**CRITICAL**: Refer to `PRPs/templates/meta_prp_structure.md` for the complete hierarchical structure template with
+executive dysfunction design patterns and git worktree strategy.
 
 ## Pre-Execution Orchestrator Health Check
 
@@ -486,6 +488,14 @@ python scripts/test_meta_prp_workflow.py PRPs/{concept}-meta-prp.md
 - [ ] **Result synthesis** via orchestrator_synthesize_results
 - [ ] **Multi-phase structure** with proper dependencies
 
+### Multi-Level Subtask Structure Requirements
+
+- [ ] **Category-based organization** of subtasks for clarity
+- [ ] **Local LLM readiness classification** (✅🟡❌) for all tasks
+- [ ] **Structured prompt templates** for high-readiness tasks
+- [ ] **Clear input/output specifications** for automation
+- [ ] **Progressive automation paths** from manual to automated execution
+
 ### Context Engineering Integration
 
 - [ ] **Enhanced context references** from PRPs/ai_docs/ for all sub-agents
@@ -556,4 +566,5 @@ Save as: `PRPs/{concept}-meta-prp.md`
 - [ ] **Failure protocol**: CLAUDE.md orchestrator protocol if issues arise
 - [ ] **Multi-agent artifact tracking**: All sub-agent outputs committed
 
-Remember: Meta-PRPs with orchestrator multi-agent coordination enable systematic execution of complex, multi-phase projects with professional quality and comprehensive validation through specialized sub-agents working in coordinated harmony.
+Remember: Meta-PRPs with orchestrator multi-agent coordination enable systematic execution of complex, multi-phase
+projects with professional quality and comprehensive validation through specialized sub-agents working in coordinated harmony.
