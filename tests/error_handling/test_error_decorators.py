@@ -13,9 +13,9 @@ from typing import Dict, Any, List
 from datetime import datetime
 
 # Import error handling components
-# from mcp_task_orchestrator.infrastructure.error_handling.decorators import  # TODO: Complete this import
-# from mcp_task_orchestrator.infrastructure.error_handling.retry_coordinator import  # TODO: Complete this import
-# from mcp_task_orchestrator.domain.exceptions import  # TODO: Complete this import
+from mcp_task_orchestrator.infrastructure.error_handling.decorators import handle_errors
+from mcp_task_orchestrator.infrastructure.error_handling.retry_coordinator import RetryPolicy
+from mcp_task_orchestrator.domain.exceptions import BaseOrchestrationError, ValidationError
 
 
 class TestHandleErrorsDecorator:

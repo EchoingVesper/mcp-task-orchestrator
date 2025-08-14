@@ -12,7 +12,7 @@ from pathlib import Path
 # Add installer directory to path
 sys.path.insert(0, str(Path(__file__).parent / "installer"))
 
-from mcp_task_orchestrator_cli.platforms.client_detector import ClientDetector
+from mcp_task_orchestrator_cli.client_detector import ClientDetector
 
 def main():
     """Test client detection and print results."""
