@@ -58,7 +58,7 @@ class TestStreamingArtifactManager:
     async def test_store_large_content_without_truncation(self, artifact_manager):
         """Test storing large content without truncation."""
         # Create large content (10MB)
-        large_content = "x" *
+        large_content = "x" * (10 * 1024 * 1024)  # 10MB
         
         session = await artifact_manager.create_streaming_session(
             task_id="large_content_task",

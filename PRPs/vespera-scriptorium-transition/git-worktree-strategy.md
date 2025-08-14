@@ -6,7 +6,8 @@
 
 ## Overview
 
-This document outlines the git worktree strategy for multi-agent coordination during the Vespera Scriptorium transition, designed specifically for executive dysfunction accessibility and conflict prevention.
+This document outlines the git worktree strategy for multi-agent coordination during the Vespera Scriptorium transition,
+designed specifically for executive dysfunction accessibility and conflict prevention.
 
 ## Executive Dysfunction Problem Statement
 
@@ -233,21 +234,25 @@ git log --oneline  # Find last good commit
 ## Success Metrics
 
 ### Conflict Prevention
+
 - [ ] **Zero merge conflicts** during parallel development
 - [ ] **100% agent isolation** maintained throughout
 - [ ] **No work interference** between priority areas
 
 ### Progress Preservation
+
 - [ ] **Work loss incidents**: 0
 - [ ] **Recovery time** from interruption: < 30 seconds
 - [ ] **Context preservation** across sleep resets: 100%
 
 ### Coordination Efficiency
+
 - [ ] **Agent spawn time**: < 2 minutes
 - [ ] **Worktree setup overhead**: < 5 minutes total
 - [ ] **Integration complexity**: Low (simple merge commands)
 
 ### Executive Dysfunction Support
+
 - [ ] **Decision points eliminated**: 90%+
 - [ ] **Cognitive load reduction**: Measurable via self-report
 - [ ] **Overwhelm recovery**: < 5 minutes
@@ -274,4 +279,5 @@ git log --oneline  # Find last good commit
 
 ---
 
-**Remember**: This git strategy exists to support executive dysfunction accessibility. Every command and procedure should reduce cognitive load and prevent work loss, not add complexity.
+**Remember**: This git strategy exists to support executive dysfunction accessibility. Every command and procedure
+should reduce cognitive load and prevent work loss, not add complexity.

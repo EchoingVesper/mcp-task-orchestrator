@@ -247,7 +247,7 @@ class TestErrorSanitizationIntegration:
             (ValueError("test"), MCPErrorCode.INVALID_PARAMS),
             (FileNotFoundError("test"), MCPErrorCode.TASK_NOT_FOUND),
             (PermissionError("test"), MCPErrorCode.PERMISSION_DENIED),
-           , MCPErrorCode.DATABASE_ERROR),
+            (ConnectionError("test"), MCPErrorCode.DATABASE_ERROR),
         ]
         
         for exception, expected_code in test_cases:

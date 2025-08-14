@@ -378,7 +378,7 @@ class TestRunner:
                 "total_runs": self.total_runs,
                 "successful_runs": self.successful_runs,
                 "failed_runs": self.failed_runs,
-                "success_rate": if self.total_runs > 0 else 0
+                "success_rate": (self.successful_runs / self.total_runs * 100) if self.total_runs > 0 else 0
             },
             "failed_tools": list(self.failed_tools),
             "retry_counts": self.retry_counts,

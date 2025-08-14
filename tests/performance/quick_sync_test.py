@@ -13,7 +13,7 @@ async def test_quick_operations():
     print("Testing key operations...")
     
     try:
-        from .orchestrator.orchestration_state_manager import StateManager
+        from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
         
         # Test StateManager operations
         state_manager = StateManager()

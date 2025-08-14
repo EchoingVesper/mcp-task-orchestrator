@@ -15,7 +15,7 @@ def test_state_manager_cleanup():
     """Test that StateManager can now call cleanup_stale_locks without errors."""
     try:
         # Import the state manager
-        from .orchestrator.orchestration_state_manager import StateManager
+        from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
         
         logger.info("Testing StateManager cleanup integration...")
         

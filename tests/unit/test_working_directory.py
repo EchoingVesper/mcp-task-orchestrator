@@ -12,7 +12,7 @@ from pathlib import Path
 # Add the source directory to the Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from mcp_task_orchestrator.server import handle_initialize_session
+from mcp_task_orchestrator.infrastructure.mcp.handlers import handle_initialize_session
 
 
 async def test_working_directory():

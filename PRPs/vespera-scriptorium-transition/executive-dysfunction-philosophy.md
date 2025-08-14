@@ -6,7 +6,8 @@
 
 ## Core Philosophy: Executive Dysfunction as Design Principle
 
-**CRITICAL INSIGHT**: Vespera Scriptorium is fundamentally a **disability aid for executive dysfunction**. Every design decision must be evaluated through the lens of:
+**CRITICAL INSIGHT**: Vespera Scriptorium is fundamentally a **disability aid for executive dysfunction**. Every design
+decision must be evaluated through the lens of:
 
 > Does this reduce lid weight, preserve momentum, delegate pressure, or prevent damage?
 
@@ -107,24 +108,28 @@ Executive dysfunction operates like a **pressure cooker with a weighted lid**:
 ## Success Metrics Through ED Lens
 
 ### Lid Weight Reduction Metrics
+
 - [ ] Time from idea to first code: < 5 minutes
 - [ ] Decisions required for project start: < 3
 - [ ] Manual setup steps eliminated: 90%+
 - [ ] Template application success rate: 100%
 
 ### Momentum Preservation Metrics
+
 - [ ] Work recovery after interruption: < 30 seconds
 - [ ] Context loss across sleep: 0%
 - [ ] Progress visibility granularities: 3+ levels
 - [ ] Session continuity success rate: 100%
 
 ### Pressure Delegation Metrics
+
 - [ ] Manual coordination overhead: < 10%
 - [ ] Agent work isolation success: 100%
 - [ ] Automated result synthesis: 100%
 - [ ] Cognitive load distribution effectiveness: measurable
 
 ### Damage Prevention Metrics
+
 - [ ] Work loss incidents: 0
 - [ ] Recovery from overwhelm: < 5 minutes
 - [ ] Graceful degradation paths: documented for all scenarios
@@ -133,6 +138,7 @@ Executive dysfunction operates like a **pressure cooker with a weighted lid**:
 ## Implementation Principles
 
 ### 1. ED-First Architecture
+
 Every system component must answer:
 - How does this reduce barriers to starting?
 - How does this preserve work across interruptions?
@@ -140,18 +146,21 @@ Every system component must answer:
 - How does this prevent catastrophic failure?
 
 ### 2. Progressive Disclosure
+
 - Essential functions immediately visible
 - Advanced features available but not overwhelming
 - Clear hierarchy of importance
 - Optional complexity layers
 
 ### 3. Automated Coordination
+
 - Minimize manual decision points
 - Automate routine task management
 - Provide clear guidance for non-routine decisions
 - Maintain context automatically
 
 ### 4. Multi-Modal Support
+
 - Visual progress indicators
 - Text-based status reports
 - Automated reminders and prompts
@@ -160,6 +169,7 @@ Every system component must answer:
 ## Future Evolution Considerations
 
 ### Agent-to-Agent Architecture
+
 When agent-to-agent communication is fully implemented:
 - **Enhanced Pressure Delegation**: Agents coordinate directly
 - **Reduced Main Agent Load**: Less manual coordination required
@@ -167,6 +177,7 @@ When agent-to-agent communication is fully implemented:
 - **Dynamic Load Balancing**: Agents redistribute work based on capacity
 
 ### Advanced ED Features
+
 - **Overwhelm Detection**: Biometric integration for stress monitoring
 - **Adaptive Complexity**: System complexity adjusts to current capacity
 - **Predictive Support**: AI anticipates needs based on patterns
@@ -184,4 +195,5 @@ For any new feature or change, ask:
 
 ---
 
-**Remember**: Vespera Scriptorium succeeds when it makes complex creative and technical work accessible to minds that struggle with executive function. Every technical decision is an accessibility decision.
+**Remember**: Vespera Scriptorium succeeds when it makes complex creative and technical work accessible to minds that
+struggle with executive function. Every technical decision is an accessibility decision.

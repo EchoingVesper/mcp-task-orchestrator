@@ -9,9 +9,9 @@ from pathlib import Path
 import yaml
 import asyncio
 
-from .orchestrator.task_orchestration_service import TaskOrchestrator
-from .orchestrator.specialist_management_service import SpecialistManager
-from .orchestrator.orchestration_state_manager import StateManager
+from mcp_task_orchestrator.orchestrator.task_orchestration_service import TaskOrchestrator
+from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
 
 
 class TestCustomRoles(unittest.TestCase):
