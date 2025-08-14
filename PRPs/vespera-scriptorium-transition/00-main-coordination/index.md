@@ -31,6 +31,15 @@ This meta-PRP coordinates the complete transformation of **MCP Task Orchestrator
 
 ## Priority Structure
 
+### Priority 0: Database Persistence Critical Issue (BLOCKING)
+
+**Status**: CRITICAL - BLOCKING ALL DEVELOPMENT  
+**Issue**: Task orchestrator creates tasks but they don't persist in database queries  
+**Root Cause**: Task handlers using mock objects instead of actual database persistence  
+**Progress**: Routing fixes complete, DI container configured, need comprehensive database audit  
+**Next**: Create dedicated PRP for complete database architecture audit and remediation  
+**Estimated**: 1-2 days for audit and fixes  
+
 ### Priority 1: CI/CD Pipeline Fixes (Immediate)
 
 **Location**: [01-cicd-pipeline-fixes/](../01-cicd-pipeline-fixes/index.md)  

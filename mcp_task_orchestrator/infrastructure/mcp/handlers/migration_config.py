@@ -21,8 +21,7 @@ from .task_handlers import (
     handle_plan_task_legacy
 )
 
-# Import fixed handler for orchestrator_plan_task
-from .orchestrator_plan_task_fix import handle_orchestrator_plan_task_fixed
+# Fixed handler removed - routing directly to Clean Architecture handlers
 
 # Import new Pydantic-based handlers
 from .task_handlers_v2 import (
@@ -55,13 +54,7 @@ class HandlerMigrationManager:
         
         # Define handler configurations
         self.handler_configs: Dict[str, HandlerConfig] = {
-            "orchestrator_plan_task": HandlerConfig(
-                tool_name="orchestrator_plan_task",
-                old_handler=handle_orchestrator_plan_task_fixed,  # Legacy mock handler (doesn't persist)
-                new_handler=handle_plan_task_legacy,  # Clean Architecture handler that persists
-                use_new=True,  # Force use of Clean Architecture handler
-                description="Create/plan a new task with persistence"
-            ),
+            # orchestrator_plan_task removed - routes directly to Clean Architecture handlers
             "orchestrator_create_generic_task": HandlerConfig(
                 tool_name="orchestrator_create_generic_task",
                 old_handler=handle_create_generic_task,

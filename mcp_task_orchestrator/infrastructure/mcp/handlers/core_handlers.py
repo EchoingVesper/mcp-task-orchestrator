@@ -541,17 +541,17 @@ async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
             use_case = await get_clean_task_use_case()
             
             # Query for active and pending tasks
-            active_tasks = use_case.query_tasks({
+            active_tasks = await use_case.query_tasks({
                 "status": "in_progress",
                 "limit": 100
             })
             
-            pending_tasks = use_case.query_tasks({
+            pending_tasks = await use_case.query_tasks({
                 "status": "pending",
                 "limit": 100  
             })
             
-            failed_tasks = use_case.query_tasks({
+            failed_tasks = await use_case.query_tasks({
                 "status": "failed",
                 "limit": 50
             })
@@ -566,7 +566,7 @@ async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
             response["task_summary"]["total_failed"] = len(response["failed_tasks"])
             
             if include_completed:
-                completed_tasks = use_case.query_tasks({
+                completed_tasks = await use_case.query_tasks({
                     "status": "completed",
                     "limit": 50
                 })

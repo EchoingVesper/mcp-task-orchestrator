@@ -75,24 +75,10 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
     elif name == "orchestrator_session_status":
         return await handle_session_status(arguments)
     
-    # orchestrator_plan_task now uses Clean Architecture via migration manager
+    # orchestrator_plan_task routes directly to Clean Architecture handler
     elif name == "orchestrator_plan_task":
-        try:
-            # Route to the Clean Architecture handler via migration manager
-            handler = get_handler_for_tool(name)
-            return await handler(arguments)
-        except Exception as e:
-            logger.error(f"Error in orchestrator_plan_task: {e}")
-            error_response = {
-                "status": "error", 
-                "error": f"Task planning failed: {str(e)}",
-                "tool": name,
-                "suggestion": "Ensure title and description parameters are provided"
-            }
-            return [types.TextContent(
-                type="text",
-                text=json.dumps(error_response, indent=2)
-            )]
+        from .handlers.task_handlers import handle_plan_task_legacy
+        return await handle_plan_task_legacy(arguments)
 
     # Other task management tools (use migration manager)
     elif name in ["orchestrator_create_generic_task", 

@@ -307,6 +307,24 @@ class SQLiteTaskRepository(TaskRepository):
             cursor = conn.execute(query, params)
             return cursor.rowcount
     
+    def query_tasks(self, filters: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Query tasks with filters - wraps list_tasks for compatibility."""
+        # Extract filter parameters
+        session_id = filters.get('session_id')
+        parent_task_id = filters.get('parent_task_id') 
+        status = filters.get('status')
+        limit = filters.get('limit')
+        offset = filters.get('offset')
+        
+        # Call existing list_tasks method
+        return self.list_tasks(
+            session_id=session_id,
+            parent_task_id=parent_task_id,
+            status=status,
+            limit=limit,
+            offset=offset
+        )
+
     def get_task_metrics(self, session_id: Optional[str] = None) -> Dict[str, Any]:
         """Get metrics about tasks."""
         base_query = "FROM tasks"
