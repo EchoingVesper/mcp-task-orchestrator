@@ -66,9 +66,9 @@ def test_correct_database_path():
                 # a simple test case.
                 
                 # Import Clean Architecture v2.0 models
-from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
-from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
-from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
+                from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+                from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+                from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
                 from datetime import datetime
                 
                 # Create a test task breakdown

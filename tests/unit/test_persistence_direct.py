@@ -31,9 +31,9 @@ def test_persistence_update_directly():
                 
                 # Convert to domain model
                 # Import Clean Architecture v2.0 models
-from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
-from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
-from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType SubTask, TaskStatus, SpecialistType
+                from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+                from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+                from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
                 from datetime import datetime
                 
                 domain_task = Task(

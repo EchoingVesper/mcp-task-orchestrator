@@ -802,8 +802,6 @@ class ComprehensiveMigrationTestSuite:
                 session.write_line(f"{metric_name}: {value}")
         
         # Recommendations
-        session.write_line("\nRECOMMENDAT"""
-                
         session.write_line("\nRECOMMENDATIONS:")
         session.write_line("-" * 30)
         

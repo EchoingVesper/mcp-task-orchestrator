@@ -173,7 +173,7 @@ async def test_enhanced_orchestrator_integration():
         print(f"   Context tracking enabled: {doc_execution.get('context_tracking_enabled', False)}")
         
         # Test integration success criteria
-        integration_success = and
+        integration_success = (
             recovery_result.get('context_recovered', False) and
             continuity_status.get('context_continuity_enabled', False) and
             doc_execution.get('ready_for_execution', False)
