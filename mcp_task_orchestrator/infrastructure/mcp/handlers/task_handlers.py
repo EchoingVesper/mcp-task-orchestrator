@@ -25,11 +25,11 @@ from ....domain.entities.task import (
 from ....domain.value_objects.complexity_level import ComplexityLevel
 from ....domain.value_objects.specialist_type import SpecialistType
 
-# Import use cases and database integration
-from .db_integration import (
-    get_generic_task_use_case, 
-    get_execute_task_use_case,
-    get_complete_task_use_case
+# Import Clean Architecture use cases
+from .di_integration import (
+    get_clean_task_use_case, 
+    get_clean_execute_use_case,
+    get_clean_complete_use_case
 )
 from ....domain.exceptions import OrchestrationError
 
@@ -50,7 +50,7 @@ async def handle_create_generic_task(args: Dict[str, Any]) -> List[types.TextCon
     logger.info(f"Creating generic task: {args.get('title', 'Unknown')}")
     
     # Get use case instance
-    use_case = get_generic_task_use_case()
+    use_case = await get_clean_task_use_case()
     
     # Create task using use case
     created_task = await use_case.create_task(args)
@@ -92,7 +92,7 @@ async def handle_update_task(args: Dict[str, Any]) -> List[types.TextContent]:
     logger.info(f"Updating generic task: {task_id}")
     
     # Get use case instance
-    use_case = get_generic_task_use_case()
+    use_case = await get_clean_task_use_case()
     
     # Create update data from args (excluding task_id)
     update_data = {k: v for k, v in args.items() if k != "task_id"}
@@ -141,7 +141,7 @@ async def handle_delete_task(args: Dict[str, Any]) -> List[types.TextContent]:
     logger.info(f"Deleting generic task: {task_id} (force={force}, archive={archive_instead})")
     
     # Get use case instance
-    use_case = get_generic_task_use_case()
+    use_case = await get_clean_task_use_case()
     
     # Delete task using use case
     deletion_result = await use_case.delete_task(task_id, force, archive_instead)
@@ -188,7 +188,7 @@ async def handle_cancel_task(args: Dict[str, Any]) -> List[types.TextContent]:
         logger.info(f"Cancelling generic task: {task_id} (preserve_work={preserve_work})")
         
         # Get use case instance
-        use_case = get_generic_task_use_case()
+        use_case = await get_clean_task_use_case()
         
         # Cancel task using use case
         cancellation_result = await use_case.cancel_task(task_id, reason, preserve_work)
@@ -243,7 +243,7 @@ async def handle_query_tasks(args: Dict[str, Any]) -> List[types.TextContent]:
         logger.info(f"Querying generic tasks with filters: {list(args.keys())}")
         
         # Get use case instance
-        use_case = get_generic_task_use_case()
+        use_case = await get_clean_task_use_case()
         
         # Query tasks using use case
         query_result = await use_case.query_tasks(args)
@@ -343,10 +343,10 @@ async def handle_execute_task(args: Dict[str, Any]) -> List[types.TextContent]:
         logger.info(f"Executing task: {task_id}")
 
         # Get use case instance
-        use_case = get_execute_task_use_case()
+        use_case = await get_clean_execute_use_case()
 
         # Get execution context using use case
-        execution_context = await use_case.get_task_execution_context(task_id)
+        execution_context = await use_case.execute_task(task_id)
 
         # Convert response to dict for serialization
         response = {
@@ -428,10 +428,10 @@ async def handle_complete_task(args: Dict[str, Any]) -> List[types.TextContent]:
         logger.info(f"Completing task: {task_id}")
 
         # Get use case instance
-        use_case = get_complete_task_use_case()
+        use_case = await get_clean_complete_use_case()
 
         # Complete task using use case
-        completion_response = await use_case.complete_task_with_artifacts(task_id, args)
+        completion_response = await use_case.complete_task(task_id, args)
 
         # Convert response to dict for serialization
         response = {
@@ -506,7 +506,7 @@ async def handle_plan_task_legacy(args: Dict[str, Any]) -> List[types.TextConten
         }
         
         # Create parent task using existing handler
-        use_case = get_generic_task_use_case()
+        use_case = await get_clean_task_use_case()
         parent_task = await use_case.create_task(parent_task_args)
         
         # Create subtasks

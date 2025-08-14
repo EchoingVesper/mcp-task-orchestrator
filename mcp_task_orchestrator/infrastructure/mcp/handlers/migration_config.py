@@ -57,10 +57,10 @@ class HandlerMigrationManager:
         self.handler_configs: Dict[str, HandlerConfig] = {
             "orchestrator_plan_task": HandlerConfig(
                 tool_name="orchestrator_plan_task",
-                old_handler=handle_orchestrator_plan_task_fixed,  # Use the fixed handler that maps parameters correctly
-                new_handler=handle_create_task_v2,
-                use_new=use_pydantic_handlers or self._check_specific_flag("CREATE_TASK"),
-                description="Create/plan a new task"
+                old_handler=handle_orchestrator_plan_task_fixed,  # Legacy mock handler (doesn't persist)
+                new_handler=handle_plan_task_legacy,  # Clean Architecture handler that persists
+                use_new=True,  # Force use of Clean Architecture handler
+                description="Create/plan a new task with persistence"
             ),
             "orchestrator_create_generic_task": HandlerConfig(
                 tool_name="orchestrator_create_generic_task",

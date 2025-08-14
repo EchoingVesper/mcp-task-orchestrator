@@ -75,13 +75,14 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
     elif name == "orchestrator_session_status":
         return await handle_session_status(arguments)
     
-    # Special handling for orchestrator_plan_task (temporary fix)
+    # orchestrator_plan_task now uses Clean Architecture via migration manager
     elif name == "orchestrator_plan_task":
         try:
-            from .handlers.orchestrator_plan_task_fix import handle_orchestrator_plan_task_fixed
-            return await handle_orchestrator_plan_task_fixed(arguments)
+            # Route to the Clean Architecture handler via migration manager
+            handler = get_handler_for_tool(name)
+            return await handler(arguments)
         except Exception as e:
-            logger.error(f"Error in plan_task fix: {e}")
+            logger.error(f"Error in orchestrator_plan_task: {e}")
             error_response = {
                 "status": "error", 
                 "error": f"Task planning failed: {str(e)}",

@@ -534,31 +534,31 @@ async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
             }
         }
         
-        # Try to get tasks from the database
+        # Try to get tasks from the database using Clean Architecture
         try:
-            from ....infrastructure.mcp.handlers.db_integration import get_generic_task_use_case
+            from ....infrastructure.mcp.handlers.di_integration import get_clean_task_use_case
             
-            use_case = get_generic_task_use_case()
+            use_case = await get_clean_task_use_case()
             
             # Query for active and pending tasks
-            active_query = await use_case.query_tasks({
-                "status": ["active", "in_progress"],
+            active_tasks = use_case.query_tasks({
+                "status": "in_progress",
                 "limit": 100
             })
             
-            pending_query = await use_case.query_tasks({
-                "status": ["pending"],
+            pending_tasks = use_case.query_tasks({
+                "status": "pending",
                 "limit": 100  
             })
             
-            failed_query = await use_case.query_tasks({
-                "status": ["failed"],
+            failed_tasks = use_case.query_tasks({
+                "status": "failed",
                 "limit": 50
             })
             
-            response["active_tasks"] = [task.dict() if hasattr(task, 'dict') else task for task in active_query.get("tasks", [])]
-            response["pending_tasks"] = [task.dict() if hasattr(task, 'dict') else task for task in pending_query.get("tasks", [])]
-            response["failed_tasks"] = [task.dict() if hasattr(task, 'dict') else task for task in failed_query.get("tasks", [])]
+            response["active_tasks"] = active_tasks
+            response["pending_tasks"] = pending_tasks
+            response["failed_tasks"] = failed_tasks
             
             # Update summary counts
             response["task_summary"]["total_active"] = len(response["active_tasks"])
@@ -566,11 +566,11 @@ async def handle_get_status(args: Dict[str, Any]) -> List[types.TextContent]:
             response["task_summary"]["total_failed"] = len(response["failed_tasks"])
             
             if include_completed:
-                completed_query = await use_case.query_tasks({
-                    "status": ["completed"],
+                completed_tasks = use_case.query_tasks({
+                    "status": "completed",
                     "limit": 50
                 })
-                response["completed_tasks"] = [task.dict() if hasattr(task, 'dict') else task for task in completed_query.get("tasks", [])]
+                response["completed_tasks"] = completed_tasks
                 response["task_summary"]["total_completed"] = len(response["completed_tasks"])
             
             response["database_status"] = "connected"
