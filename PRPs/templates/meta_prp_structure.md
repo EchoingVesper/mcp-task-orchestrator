@@ -107,7 +107,7 @@ Files in this directory are generated automatically. Manual edits will be overwr
 
 **Multi-Level Organization**:
 
-```text
+```directory
 subtasks/
 ├── 00-{category-name}/           # Task category (analysis, fixes, etc.)
 │   ├── README.md                 # Category overview and structure
@@ -218,6 +218,7 @@ git worktree remove ../worktrees/agent-{task-id}
 **Implementation**: Include prompt templates in every high-readiness task
 
 **Template Structure**:
+
 ```text
 CONTEXT: {Background information}
 TASK: {Specific objective}
@@ -380,17 +381,19 @@ VALIDATION: {How to verify success}
 - [ ] {Measurable completion criteria}
 - [ ] {Validation commands pass}
 - [ ] {Expected outputs generated}
+```
 
 ## Local LLM Prompt Template
 
-```
-{Structured prompt for local LLM execution}
+For high-readiness tasks, include a structured prompt following this pattern:
 
-INPUT_DATA: {input_specification}
-REQUIREMENTS: {specific_requirements}
-
-Expected output: {format_specification}
-```
+**Template Elements:**
+- CONTEXT: Background information
+- TASK: Specific objective  
+- INPUT: Structured input data
+- REQUIREMENTS: Specific constraints and requirements
+- OUTPUT_FORMAT: Expected output structure
+- VALIDATION: How to verify success
 
 ## Agent Instructions
 
@@ -403,6 +406,7 @@ Expected output: {format_specification}
 ## Git Worktree Strategy
 
 {Worktree approach for this task if applicable}
+
 ```
 
 ### Category README Template (`subtasks/XX-{category}/README.md`)
@@ -527,6 +531,7 @@ Structure reveals complexity gradually, not all at once
 ## Validation Checklist
 
 ### Structure Validation
+
 - [ ] All priority areas have consistent structure
 - [ ] Working directories have README files
 - [ ] Main coordination links to all priorities
@@ -534,6 +539,7 @@ Structure reveals complexity gradually, not all at once
 - [ ] Tracking checklists created
 
 ### Multi-Level Subtask Validation
+
 - [ ] Subtask categories organized logically
 - [ ] Category README files explain purpose and structure
 - [ ] Tasks classified by Local LLM readiness (✅🟡❌)
@@ -541,12 +547,14 @@ Structure reveals complexity gradually, not all at once
 - [ ] Validation commands specified for each task
 
 ### Local LLM Integration Validation
+
 - [ ] High-readiness tasks have complete prompt templates
 - [ ] Input/output specifications are structured
 - [ ] Task categories align with LLM capabilities
 - [ ] Progressive automation paths documented
 
 ### Executive Dysfunction Design Validation
+
 - [ ] Executive dysfunction philosophy documented
 - [ ] Lid weight reduction strategies implemented
 - [ ] Momentum preservation mechanisms in place
@@ -554,6 +562,7 @@ Structure reveals complexity gradually, not all at once
 - [ ] Damage prevention procedures specified
 
 ### Git and Coordination Validation
+
 - [ ] Git worktree strategy documented
 - [ ] Success metrics defined
 - [ ] Navigation paths clear
