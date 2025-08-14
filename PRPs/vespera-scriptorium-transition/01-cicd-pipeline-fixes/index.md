@@ -17,12 +17,14 @@ Over 50% of tests are failing in the CI/CD pipeline, blocking:
 ## Investigation Areas
 
 ### 1. Missing Dependencies
+
 **Task ID**: `task_49459_01`
 - Check for missing `requirements.txt` or incomplete dependencies
 - Verify all test dependencies are properly declared
 - Ensure CI environment matches development environment
 
 ### 2. Test Environment Issues
+
 **Task ID**: `task_49459_02`
 - Database initialization problems
 - File system permissions
@@ -30,6 +32,7 @@ Over 50% of tests are failing in the CI/CD pipeline, blocking:
 - Python version compatibility
 
 ### 3. Async/Await Issues
+
 **Task ID**: `task_49459_03`
 - SQLAlchemy async compatibility
 - Event loop management
@@ -40,6 +43,7 @@ Over 50% of tests are failing in the CI/CD pipeline, blocking:
 ### Phase 1: Diagnosis (Day 1)
 
 #### Task 1.1: Analyze CI Logs
+
 ```yaml
 action: ANALYZE_CI_LOGS
 orchestrator_task: task_49459_01
@@ -51,6 +55,7 @@ deliverables:
 ```
 
 #### Task 1.2: Local CI Reproduction
+
 ```yaml
 action: REPRODUCE_LOCALLY
 orchestrator_task: task_49459_02
@@ -64,6 +69,7 @@ deliverables:
 ### Phase 2: Fix Implementation (Day 2)
 
 #### Task 2.1: Dependency Fixes
+
 ```yaml
 action: FIX_DEPENDENCIES
 orchestrator_task: task_49459_03
@@ -75,6 +81,7 @@ deliverables:
 ```
 
 #### Task 2.2: Test Infrastructure Fixes
+
 ```yaml
 action: FIX_TEST_INFRASTRUCTURE
 orchestrator_task: task_49459_04
@@ -88,6 +95,7 @@ deliverables:
 ### Phase 3: Validation (Day 3)
 
 #### Task 3.1: Comprehensive Test Run
+
 ```yaml
 action: VALIDATE_ALL_TESTS
 orchestrator_task: task_49459_05
@@ -101,6 +109,7 @@ deliverables:
 ## Common Issues and Solutions
 
 ### Issue 1: ImportError in Tests
+
 ```python
 # Problem
 ImportError: cannot import name 'AsyncSession' from 'sqlalchemy.ext.asyncio'
@@ -112,6 +121,7 @@ sqlalchemy[asyncio]>=2.0.0
 ```
 
 ### Issue 2: Event Loop Errors
+
 ```python
 # Problem
 RuntimeError: There is no current event loop in thread
@@ -129,6 +139,7 @@ def event_loop():
 ```
 
 ### Issue 3: Database Lock Errors
+
 ```python
 # Problem
 sqlite3.OperationalError: database is locked

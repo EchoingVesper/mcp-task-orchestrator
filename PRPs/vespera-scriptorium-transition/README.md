@@ -1,10 +1,11 @@
 # Vespera Scriptorium Transition - Complete Meta-PRP
 
-This directory contains the comprehensive, multi-agent coordinated plan for transforming MCP Task Orchestrator into Vespera Scriptorium.
+This directory contains the comprehensive, multi-agent coordinated plan for transforming MCP Task Orchestrator into
+Vespera Scriptorium.
 
 ## 📁 Directory Structure
 
-```
+```directory
 vespera-scriptorium-transition/
 ├── 00-main-coordination/       # Main orchestrator coordination hub
 │   ├── index.md               # PRIMARY ENTRY POINT - Start here!
@@ -53,15 +54,19 @@ vespera-scriptorium-transition/
 ## 📚 Key Concepts
 
 ### What We're Building
-**Vespera Scriptorium**: An "IDE for ideas" - a document-centric orchestration platform that goes beyond code to support creative writing, research, and knowledge management.
+
+**Vespera Scriptorium**: An "IDE for ideas" - a document-centric orchestration platform that goes beyond code to support
+creative writing, research, and knowledge management.
 
 ### Why This Structure
+
 - **Merged PRPs**: Combines evolution plan + documentation audit + v2.0 features
 - **Task Breakdown**: Each major priority has its own coordination hub
 - **Agent Coordination**: Designed for multi-agent execution via orchestrator
 - **Hook Integration**: Templates spawn agents automatically
 
 ### Documentation Strategy
+
 We're archiving ALL existing docs and starting fresh with:
 - GitHub Pages or MkDocs for wiki-like documentation
 - Vespera Scriptorium branding throughout
@@ -71,11 +76,13 @@ We're archiving ALL existing docs and starting fresh with:
 ## 🔗 Related Documents
 
 ### Source PRPs (Merged)
+
 - [meta-prp-vespera-scriptorium-evolution.md](meta-prp-vespera-scriptorium-evolution.md)
 - [../[IN-PROGRESS]comprehensive-documentation-audit-and-remediation-meta-prp.md](../[IN-PROGRESS]comprehensive-documentation-audit-and-remediation-meta-prp.md)
 - [../v2.0-release-meta-prp/](../v2.0-release-meta-prp/)
 
 ### Implementation Guides
+
 - [CLAUDE.md](/home/aya/dev/mcp-servers/mcp-task-orchestrator/CLAUDE.md) - Critical orchestrator protocols
 - Task Orchestrator Documentation
 - Clean Architecture Guide
@@ -98,8 +105,10 @@ We're archiving ALL existing docs and starting fresh with:
 
 ## 🎨 Vision
 
-From a simple task orchestrator to a comprehensive platform for managing ideas, documents, and creative workflows. Vespera Scriptorium will be the intelligent core of the Vespera Atelier platform.
+From a simple task orchestrator to a comprehensive platform for managing ideas, documents, and creative workflows.
+Vespera Scriptorium will be the intelligent core of the Vespera Atelier platform.
 
 ---
 
-**Remember**: Always start at [00-main-coordination/index.md](00-main-coordination/index.md) for the latest coordination status and next steps.
+**Remember**: Always start at [00-main-coordination/index.md](00-main-coordination/index.md) for the latest coordination
+status and next steps.

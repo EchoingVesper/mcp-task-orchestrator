@@ -326,7 +326,7 @@ tasks:
 
 ## Template Library Structure
 
-```
+```directory
 .task_orchestrator/
 ├── templates/
 │   ├── builtin/           # Built-in templates

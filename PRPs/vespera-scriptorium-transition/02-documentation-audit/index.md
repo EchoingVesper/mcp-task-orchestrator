@@ -59,6 +59,7 @@ mkdocs_setup:
 ## Phase 1: Complete Archive Operation
 
 ### Task 1.1: Archive Everything
+
 ```yaml
 action: ARCHIVE_ALL_DOCS
 location: docs/archives/pre-vespera-legacy/
@@ -71,6 +72,7 @@ steps:
 ```
 
 ### Task 1.2: Document Inventory
+
 ```yaml
 action: CREATE_INVENTORY
 output: inventory/complete_documentation_audit.json
@@ -88,7 +90,7 @@ data_collected:
 
 ### New Vespera Scriptorium Documentation
 
-```
+```directory
 docs/
 ├── _config.yml                 # Jekyll/MkDocs configuration
 ├── index.md                    # Home: "Vespera Scriptorium"
