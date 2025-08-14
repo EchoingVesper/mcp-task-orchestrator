@@ -1,0 +1,273 @@
+# Vespera Scriptorium Documentation Configuration
+# MkDocs prototype for new documentation infrastructure
+
+site_name: 'Vespera Scriptorium: An IDE for Ideas'
+site_description: 'Transform how you create, collaborate, and preserve knowledge across technical and creative disciplines.'
+site_url: 'https://vespera-scriptorium.dev'
+repo_url: 'https://github.com/EchoingVesper/vespera-scriptorium'
+repo_name: 'vespera-scriptorium'
+
+# Site metadata
+site_author: 'Echoing Vesper'
+copyright: 'Copyright &copy; 2025 Echoing Vesper - Vespera Scriptorium'
+
+# Theme configuration with Vespera Scriptorium branding
+theme:
+  name: 'material'
+  custom_dir: 'overrides'
+  language: 'en'
+  
+  # Color scheme matching Vespera brand guide
+  palette:
+    # Light mode
+    - scheme: default
+      primary: 'blue grey'      # Vespera Deep Blue approximation
+      accent: 'amber'           # Illumination Gold approximation
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    # Dark mode  
+    - scheme: slate
+      primary: 'blue grey'
+      accent: 'amber'
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  # Typography following brand guide
+  font:
+    text: 'Inter'              # Primary brand font
+    code: 'JetBrains Mono'     # Monospace brand font
+
+  # Material theme features
+  features:
+    # Navigation enhancements
+    - navigation.tabs          # Top-level tabs for main audiences
+    - navigation.tabs.sticky   # Keep tabs visible when scrolling
+    - navigation.sections      # Section grouping
+    - navigation.expand        # Expand sections in sidebar
+    - navigation.top           # Back to top button
+    - navigation.tracking      # Update URL with current section
+    
+    # Search enhancements  
+    - search.highlight         # Highlight search terms
+    - search.suggest           # Search suggestions
+    - search.share             # Share search results
+    
+    # Content enhancements
+    - content.code.copy        # Copy code button
+    - content.code.annotate    # Code annotations
+    - content.tooltips         # Enhanced tooltips
+    
+    # Repository integration
+    - content.action.edit      # Edit page link
+    - content.action.view      # View source link
+
+  # Logo and favicon
+  logo: assets/images/vespera-logo.svg
+  favicon: assets/images/favicon.ico
+
+# Navigation structure following Vespera brand architecture
+nav:
+  # Welcome and overview
+  - Home: 'index.md'
+  
+  # Primary audience navigation tabs
+  - For Creators:
+    - 'creators/index.md'
+    - Getting Started:
+      - 'creators/getting-started/welcome.md'
+      - 'creators/getting-started/first-project.md'
+      - 'creators/getting-started/core-concepts.md'
+    - Creative Workflows:
+      - 'creators/workflows/writing-projects.md'
+      - 'creators/workflows/research-projects.md'
+      - 'creators/workflows/content-creation.md'
+      - 'creators/workflows/collaborative-writing.md'
+    - Advanced Techniques:
+      - 'creators/advanced/automation.md'
+      - 'creators/advanced/integration.md'
+      - 'creators/advanced/customization.md'
+    - Examples & Case Studies:
+      - 'creators/examples/novel-writing.md'
+      - 'creators/examples/academic-research.md'
+      - 'creators/examples/technical-writing.md'
+
+  - For Developers:
+    - 'developers/index.md'
+    - Architecture:
+      - 'developers/architecture/overview.md'
+      - 'developers/architecture/clean-architecture.md'
+      - 'developers/architecture/domain-design.md'
+      - 'developers/architecture/database-design.md'
+    - API Reference:
+      - 'developers/api/orchestrator-tools.md'
+      - 'developers/api/specialist-roles.md'
+      - 'developers/api/template-system.md'
+      - 'developers/api/maintenance-tools.md'
+    - Contributing:
+      - 'developers/contributing/getting-started.md'
+      - 'developers/contributing/development-setup.md'
+      - 'developers/contributing/testing-guidelines.md'
+      - 'developers/contributing/code-standards.md'
+    - Deployment:
+      - 'developers/deployment/installation.md'
+      - 'developers/deployment/configuration.md'
+      - 'developers/deployment/monitoring.md'
+
+  - For Users:
+    - 'users/index.md'
+    - Quick Start:
+      - 'users/quick-start/installation.md'
+      - 'users/quick-start/first-session.md'
+      - 'users/quick-start/basic-workflows.md'
+    - Core Concepts:
+      - 'users/concepts/idea-orchestration.md'
+      - 'users/concepts/specialist-roles.md'
+      - 'users/concepts/knowledge-preservation.md'
+      - 'users/concepts/workflow-patterns.md'
+    - Integration Guides:
+      - 'users/integration/claude-desktop.md'
+      - 'users/integration/cursor-ide.md'
+      - 'users/integration/vscode.md'
+      - 'users/integration/custom-clients.md'
+    - Troubleshooting:
+      - 'users/troubleshooting/installation-issues.md'
+      - 'users/troubleshooting/common-problems.md'
+      - 'users/troubleshooting/performance.md'
+
+  - Platform:
+    - 'platform/index.md'
+    - Vision & Philosophy:
+      - 'platform/vision/ide-for-ideas.md'
+      - 'platform/vision/executive-dysfunction-support.md'
+      - 'platform/vision/creative-technical-bridge.md'
+    - Platform Capabilities:
+      - 'platform/capabilities/orchestration.md'
+      - 'platform/capabilities/specialists.md'
+      - 'platform/capabilities/preservation.md'
+      - 'platform/capabilities/collaboration.md'
+    - Success Stories:
+      - 'platform/stories/creative-projects.md'
+      - 'platform/stories/technical-projects.md'
+      - 'platform/stories/research-projects.md'
+    - Community:
+      - 'platform/community/contributing.md'
+      - 'platform/community/discussions.md'
+      - 'platform/community/support.md'
+
+# Plugins configuration
+plugins:
+  # Essential plugins
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  
+  # Git integration for content management
+  - git-revision-date-localized:
+      type: date
+      enable_creation_date: true
+      
+  # Enhanced navigation
+  - awesome-pages         # Flexible page organization
+  - section-index        # Auto-generate section indexes
+  
+  # Content enhancement  
+  - minify:              # Optimize generated files
+      minify_html: true
+      minify_js: true  
+      minify_css: true
+      
+  # Social sharing
+  - social:              # Generate social media cards
+      cards_color:
+        fill: "#1a2332"   # Vespera Deep Blue
+        text: "#f8f6f0"   # Parchment Warm
+
+# Markdown extensions for enhanced content
+markdown_extensions:
+  # Standard extensions
+  - abbr                 # Abbreviation support
+  - admonition          # Callout boxes  
+  - attr_list           # HTML attributes in markdown
+  - def_list            # Definition lists
+  - footnotes           # Footnote support
+  - meta                # Metadata support
+  - toc:                # Table of contents
+      permalink: true
+      permalink_title: Link to this section
+      
+  # Code extensions
+  - pymdownx.highlight:  # Syntax highlighting
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite # Inline code highlighting
+  - pymdownx.snippets    # Include external files
+  - pymdownx.superfences: # Enhanced code blocks
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+          
+  # Content extensions
+  - pymdownx.critic      # Track changes and reviews
+  - pymdownx.details     # Collapsible sections
+  - pymdownx.emoji:      # Emoji support
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.keys        # Keyboard key styling
+  - pymdownx.mark        # Text highlighting
+  - pymdownx.smartsymbols # Smart symbols
+  - pymdownx.tabbed:     # Tabbed content
+      alternate_style: true
+  - pymdownx.tasklist:   # Task lists
+      custom_checkbox: true
+
+# Additional configuration
+extra:
+  # Social media links
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/EchoingVesper/vespera-scriptorium
+      name: Vespera Scriptorium on GitHub
+    - icon: fontawesome/solid/paper-plane
+      link: mailto:hello@vespera-scriptorium.dev
+      name: Contact us
+      
+  # Analytics (placeholder for future implementation)
+  analytics:
+    provider: custom
+    
+  # Version management
+  version:
+    provider: mike
+    default: stable
+    
+  # Generator notice
+  generator: false
+
+# Custom CSS for Vespera branding
+extra_css:
+  - assets/stylesheets/vespera-theme.css
+  - assets/stylesheets/custom-components.css
+
+# Custom JavaScript for enhanced functionality  
+extra_javascript:
+  - assets/javascripts/vespera-features.js
+  - assets/javascripts/search-enhancements.js
+
+# Validation and quality
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+    absolute_links: warn
+  links:
+    not_found: warn
+    absolute_links: warn
+    unrecognized_links: warn
+
+# Watch additional files for development
+watch:
+  - overrides/
+  - assets/
