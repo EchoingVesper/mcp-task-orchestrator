@@ -77,43 +77,15 @@ async def route_tool_call(name: str, arguments: Dict[str, Any]) -> List[types.Te
     
     # orchestrator_plan_task routes to Clean Architecture handler
     elif name == "orchestrator_plan_task":
-        try:
-            from .handlers.di_integration import CleanArchTaskUseCase
-            use_case = CleanArchTaskUseCase()
-            result = await use_case.create_task(arguments)
-            
-            # Extract basic info and create simple response
-            task_id = getattr(result, 'id', 'unknown')
-            title = arguments.get('title', 'Unknown Task')
-            description = arguments.get('description', '')
-            
-            response = {
-                "status": "success",
-                "message": "Task created successfully using Clean Architecture",
-                "task_id": task_id,
-                "title": title,
-                "description": description,
-                "task_type": arguments.get('task_type', 'standard'),
-                "complexity": arguments.get('complexity', 'moderate'),
-                "specialist_type": arguments.get('specialist_type', 'generic')
-            }
-            
-            return [types.TextContent(
-                type="text", 
-                text=json.dumps(response, indent=2)
-            )]
-        except Exception as e:
-            # Fallback response if anything fails
-            error_response = {
-                "status": "error", 
-                "message": f"Task creation attempted but encountered serialization issue: {str(e)}",
-                "note": "Task may have been created in database despite serialization error",
-                "input_received": arguments
-            }
-            return [types.TextContent(
-                type="text",
-                text=json.dumps(error_response, indent=2)
-            )]
+        from .handlers.di_integration import CleanArchTaskUseCase
+        use_case = CleanArchTaskUseCase()
+        result = await use_case.create_task(arguments)
+        
+        # Result is now a dict, so we can serialize it directly
+        return [types.TextContent(
+            type="text", 
+            text=json.dumps(result, indent=2)
+        )]
 
     # Other task management tools (use migration manager)
     elif name in ["orchestrator_create_generic_task", 

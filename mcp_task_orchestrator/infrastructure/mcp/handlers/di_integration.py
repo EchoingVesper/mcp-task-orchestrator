@@ -62,44 +62,18 @@ class CleanArchTaskUseCase:
             
             logger.info(f"Successfully created task {result_id} via Clean Architecture")
             
-            # Return a mock Task object that has the required interface
-            class MockTask:
-                def __init__(self, data):
-                    self.id = result_id
-                    self.title = data["title"]
-                    self.description = data["description"]
-                    # Create mock enum objects that have .value attribute
-                    class MockEnum:
-                        def __init__(self, value):
-                            self.value = value
-                    
-                    self.status = MockEnum(data["status"])
-                    self.task_type = MockEnum(data.get("task_type", "standard"))
-                    self.specialist_type = MockEnum(task_data.get("specialist_type", "generic"))
-                    self.complexity = MockEnum(task_data.get("complexity", "moderate"))
-                    self.lifecycle_stage = MockEnum("active")
-                    self.created_at = datetime.fromisoformat(data["created_at"])
-                    self.updated_at = datetime.fromisoformat(data["updated_at"])
-                    self.completed_at = None
-                    self._data = data
-                
-                def dict(self):
-                    return {
-                        "id": self.id,
-                        "title": self.title,
-                        "description": self.description,
-                        "status": self.status,
-                        "task_type": self.task_type,
-                        "specialist_type": self.specialist_type,
-                        "complexity": self.complexity,
-                        "lifecycle_stage": self.lifecycle_stage,
-                        "created_at": self.created_at,
-                        "updated_at": self.updated_at,
-                        "completed_at": self.completed_at,
-                        "metadata": task_data.get("context", {})
-                    }
-            
-            return MockTask(clean_task_data)
+            # Return simple dict - no MockTask objects needed
+            return {
+                "task_id": result_id,
+                "title": task_data.get("title", ""),
+                "description": task_data.get("description", ""),
+                "status": "pending",
+                "task_type": task_data.get("task_type", "standard"),
+                "complexity": task_data.get("complexity", "moderate"),
+                "specialist_type": task_data.get("specialist_type", "generic"),
+                "created_at": clean_task_data["created_at"],
+                "message": f"Task created successfully with ID: {result_id}"
+            }
             
         except Exception as e:
             logger.error(f"Failed to create task via Clean Architecture: {str(e)}")
