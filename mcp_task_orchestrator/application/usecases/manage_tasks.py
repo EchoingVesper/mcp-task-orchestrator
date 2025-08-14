@@ -39,6 +39,6 @@ class TaskUseCase:
         """Cancel a task."""
         return await self.repository.cancel_task(task_id, reason, preserve_work)
     
-    async def query_tasks(self, filters: Dict[str, Any]) -> Dict[str, Any]:
+    async def query_tasks(self, filters: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Query tasks with filters."""
         return await self.repository.query_tasks(filters)
