@@ -124,7 +124,7 @@ def test_auto_migration_system(db_path):
         
         # Test migration execution
         result = migration_system.execute_auto_migration()
-        print(f"Migration execution result:")
+        print("Migration execution result:")
         print(f"  Success: {result.success}")
         print(f"  Migration needed: {result.migration_needed}")
         print(f"  Execution time: {result.execution_time_ms}ms")
@@ -168,7 +168,7 @@ def test_migration_manager(db_path):
         
         # Test schema difference detection
         differences = migration_manager.detect_schema_differences()
-        print(f"Schema differences detected:")
+        print("Schema differences detected:")
         print(f"  Missing tables: {len(differences.missing_tables)}")
         print(f"  Extra tables: {len(differences.extra_tables)}")
         print(f"  Table differences: {len(differences.table_differences)}")

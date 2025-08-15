@@ -20,7 +20,7 @@ async def test_state_manager_with_correct_db():
         os.environ["MCP_TASK_ORCHESTRATOR_DB_PATH"] = db_path
         os.environ["MCP_TASK_ORCHESTRATOR_BASE_DIR"] = base_dir
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
         
         # Initialize StateManager with explicit paths
         state_manager = StateManager(db_path=db_path, base_dir=base_dir)
@@ -56,7 +56,7 @@ async def test_state_manager_with_correct_db():
                     print("SUCCESS: update_subtask completed quickly!")
                     return True
                 else:
-                    print(f"WARNING: update_subtask took {elapsed:.2f}s (> 2.0s target)")
+                    print(f"WARNING: update_subtask took {elapsed:.2f}s")
                     return False
             else:
                 print("Could not retrieve specific task")

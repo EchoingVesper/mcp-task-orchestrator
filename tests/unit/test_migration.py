@@ -256,7 +256,7 @@ def test_json_object_migration(tmp_path):
     cursor.execute("""
         INSERT INTO subtasks (task_id, parent_task_id, artifacts)
         VALUES (?, ?, ?)
-    """, ('sub1', 'task1', json_obj))
+    """,)
     
     conn.commit()
     conn.close()

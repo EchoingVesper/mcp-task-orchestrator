@@ -27,13 +27,16 @@ def test_persistence_update_directly():
             
             if sample_db_task:
                 print(f"Testing update for task: {sample_db_task.task_id}")
-                print(f"Parent task: {sample_db_task.parent_task_id}")
+                print(f"Parent task: {sample_db_task.task_id}")
                 
                 # Convert to domain model
-                from mcp_task_orchestrator.orchestrator.models import SubTask, TaskStatus, SpecialistType
+                # Import Clean Architecture v2.0 models
+                from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+                from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+                from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
                 from datetime import datetime
                 
-                domain_task = SubTask(
+                domain_task = Task(
                     task_id=sample_db_task.task_id,
                     title=sample_db_task.title,
                     description=sample_db_task.description,
@@ -50,7 +53,7 @@ def test_persistence_update_directly():
                 # Test direct persistence update
                 print("Testing persistence.update_subtask directly...")
                 start_time = time.time()
-                persistence.update_subtask(domain_task, sample_db_task.parent_task_id)
+                persistence.update_subtask(domain_task, sample_db_task.task_id)
                 elapsed = time.time() - start_time
                 print(f"Persistence update completed in {elapsed:.3f}s")
                 

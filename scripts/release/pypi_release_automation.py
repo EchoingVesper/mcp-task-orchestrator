@@ -389,7 +389,7 @@ def main():
     current_version = get_current_version()
     new_version = increment_version(current_version, args.version)
     
-    console.print(f"\n[bold]📋 Release Summary[/bold]")
+    console.print("\n[bold]📋 Release Summary[/bold]")
     summary_table = Table(show_header=False)
     summary_table.add_row("Current Version:", current_version)
     summary_table.add_row("New Version:", f"[green]{new_version}[/green]")

@@ -14,9 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 # Import our file tracking components
 from mcp_task_orchestrator.db.models import Base
-from mcp_task_orchestrator.orchestrator.file_tracking_integration import (
-    initialize_file_tracking, create_file_tracker_for_subtask
-)
+# from mcp_task_orchestrator.orchestrator.file_tracking_integration import  # TODO: Complete this import
 
 
 async def test_file_tracking_system():
@@ -72,7 +70,7 @@ async def test_file_tracking_system():
             print("🔍 Verifying all file operations...")
             verification_summary = await tracker.verify_all_operations()
             
-            print(f"📊 Verification Summary:")
+            print("📊 Verification Summary:")
             print(f"   Total operations: {verification_summary['total_operations']}")
             print(f"   All verified: {verification_summary['all_verified']}")
             print(f"   Failed verifications: {len(verification_summary['failed_verifications'])}")
@@ -88,7 +86,7 @@ async def test_file_tracking_system():
             print("🏁 Testing subtask completion verification...")
             completion_result = await file_tracking.verify_subtask_completion(test_subtask_id)
             
-            print(f"📋 Completion Verification:")
+            print("📋 Completion Verification:")
             print(f"   Status: {completion_result['status']}")
             print(f"   Completion approved: {completion_result['completion_approved']}")
             print(f"   Total operations: {completion_result.get('total_operations', 0)}")
@@ -98,7 +96,7 @@ async def test_file_tracking_system():
             print("🔄 Testing context recovery information...")
             recovery_info = await tracker.get_context_recovery_info()
             
-            print(f"📋 Context Recovery Info:")
+            print("📋 Context Recovery Info:")
             print(f"   Total operations: {recovery_info['total_operations']}")
             print(f"   Files affected: {len(recovery_info['files_affected'])}")
             print(f"   Critical failures: {len(recovery_info['critical_failures'])}")
@@ -114,7 +112,7 @@ async def test_file_tracking_system():
             print("🔍 Final verification after deletion...")
             final_verification = await tracker.verify_all_operations()
             
-            print(f"📊 Final Verification Summary:")
+            print("📊 Final Verification Summary:")
             print(f"   Total operations: {final_verification['total_operations']}")
             print(f"   All verified: {final_verification['all_verified']}")
             

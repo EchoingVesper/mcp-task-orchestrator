@@ -22,7 +22,7 @@ def validate_python_syntax(file_path):
         
         # Parse the AST to check syntax
         ast.parse(content)
-        print(f"  ✓ Syntax valid")
+        print("  ✓ Syntax valid")
         return True
         
     except SyntaxError as e:
@@ -140,7 +140,7 @@ def validate_migration_files():
             print(f"  ✗ Missing classes: {', '.join(missing_classes)}")
             all_valid = False
         else:
-            print(f"  ✓ All required classes present")
+            print("  ✓ All required classes present")
         
         # Check required functions
         missing_functions = set(file_info['required_functions']) - set(structure['functions'])
@@ -148,7 +148,7 @@ def validate_migration_files():
             print(f"  ✗ Missing functions: {', '.join(missing_functions)}")
             all_valid = False
         else:
-            print(f"  ✓ All required functions present")
+            print("  ✓ All required functions present")
         
         print()
     
@@ -241,7 +241,7 @@ def validate_docstrings():
                 print(f"  ⚠️  Missing docstrings: {', '.join(undocumented[:3])}{'...' if len(undocumented) > 3 else ''}")
                 all_documented = False
             else:
-                print(f"  ✓ All public classes and functions documented")
+                print("  ✓ All public classes and functions documented")
         
         except Exception as e:
             print(f"  ✗ Error checking documentation: {e}")
@@ -291,20 +291,20 @@ def generate_implementation_summary():
         except:
             pass
     
-    print(f"Migration System Implementation:")
+    print("Migration System Implementation:")
     print(f"  📁 Files: {len(migration_files)} modules")
     print(f"  📄 Total lines: {total_lines}")
     print(f"  🏗️  Classes: {total_classes}")
     print(f"  ⚙️  Public functions: {total_functions}")
     print(f"  📊 Average lines per file: {total_lines // len(migration_files) if migration_files else 0}")
     
-    print(f"\nKey Features Implemented:")
-    print(f"  ✓ Schema detection using SQLAlchemy introspection")
-    print(f"  ✓ Automatic migration generation and execution")
-    print(f"  ✓ Migration history tracking and audit trail")
-    print(f"  ✓ Backup creation and rollback capabilities")
-    print(f"  ✓ Server startup integration")
-    print(f"  ✓ Health monitoring and statistics")
+    print("\nKey Features Implemented:")
+    print("  ✓ Schema detection using SQLAlchemy introspection")
+    print("  ✓ Automatic migration generation and execution")
+    print("  ✓ Migration history tracking and audit trail")
+    print("  ✓ Backup creation and rollback capabilities")
+    print("  ✓ Server startup integration")
+    print("  ✓ Health monitoring and statistics")
 
 
 def main():

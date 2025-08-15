@@ -1,0 +1,182 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_TOOL_RESULT_FILE\" == *.py ]]; then black \"$CLAUDE_TOOL_RESULT_FILE\" 2>/dev/null && isort \"$CLAUDE_TOOL_RESULT_FILE\" 2>/dev/null; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_TOOL_RESULT_FILE\" == *.md ]]; then markdownlint \"$CLAUDE_TOOL_RESULT_FILE\" 2>/dev/null || true; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_TOOL_RESULT_FILE\" ]]; then lines=$(wc -l < \"$CLAUDE_TOOL_RESULT_FILE\" 2>/dev/null || echo 0); if [[ $lines -gt 400 ]]; then echo \"🔧 Consider modularizing: $lines lines (target: <400 for context efficiency)\"; classes=$(grep -c '^class ' \"$CLAUDE_TOOL_RESULT_FILE\" 2>/dev/null || echo 0); funcs=$(grep -c '^def \\|^async def ' \"$CLAUDE_TOOL_RESULT_FILE\" 2>/dev/null || echo 0); if [[ $classes -gt 3 ]]; then echo \"   💡 $classes classes - consider splitting into modules\"; elif [[ $funcs -gt 10 ]]; then echo \"   💡 $funcs functions - group related functions\"; fi; fi; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_PARAMS\" | grep -q \"pytest\\|python.*test\"; then echo '✅ Tests completed'; elif [[ -d \"tests\" ]] && git status --porcelain | grep -q '\\.py$'; then py_count=$(git status --porcelain | grep '\\.py$' | wc -l); echo \"🧪 $py_count Python files modified - Consider running: pytest tests/ -v\"; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_TOOL_RESULT_FILE\" == *.md ]]; then python3 $CLAUDE_PROJECT_DIR/.claude/hooks/markdown_lint_dispatcher.py < /dev/stdin; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_TOOL_RESULT_FILE\" == *.py ]]; then python3 $CLAUDE_PROJECT_DIR/.claude/hooks/python_error_detector.py < /dev/stdin; fi"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/bash_command_validator.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_PARAMS\" | grep -q \"^pip\\|^python\"; then if [[ ! \"$VIRTUAL_ENV\" ]]; then echo '⚠️  Warning: No virtual environment active. Consider activating venv first.'; fi; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_PARAMS\" | grep -qE \"rm.*\\.db|DROP DATABASE|DELETE FROM.*WHERE.*1.*=.*1\"; then echo '⛔ Dangerous database operation detected. Please confirm this is intentional.'; fi"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/pre_read_linter.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🔔 Claude has finished processing. Ready for next input.'"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/hooks/session_context_manager.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_USER_PROMPT\" | grep -qi \"orchestrat\\|specialist\\|clean architecture\"; then echo 'ℹ️ Remember: This project uses Clean Architecture. Check CLAUDE.md for guidelines.'; fi"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ -d \"PRPs\" ]]; then untagged=0; for file in PRPs/*.md; do [[ -f \"$file\" ]] || continue; basename=$(basename \"$file\"); if [[ \"$basename\" != \"README.md\" ]] && [[ \"$basename\" != \"CLAUDE.md\" ]] && [[ \"$file\" != *\"/completed/\"* ]]; then if [[ ! \"$basename\" =~ ^\\[ ]]; then untagged=$((untagged + 1)); fi; fi; done; if [[ $untagged -gt 0 ]]; then echo \"🏷️ $untagged PRPs missing status tags. Use: [CURRENT] [IN-PROGRESS] [DRAFT] [NEEDS-VALIDATION]\"; fi; fi"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then uncommitted=$(git status --porcelain | wc -l); if [[ $uncommitted -gt 50 ]]; then echo \"📦 Large changeset ($uncommitted files) - Consider: git add . && git commit -m 'feat: [describe changes]' && git push\"; elif [[ $uncommitted -gt 10 ]]; then echo \"📝 $uncommitted files modified - Consider committing soon\"; fi; unpushed=$(git log @{u}..HEAD --oneline 2>/dev/null | wc -l || echo 0); if [[ $unpushed -gt 0 ]]; then echo \"💡 $unpushed unpushed commits - Consider: git push origin $(git branch --show-current)\"; fi; fi"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "todo_count=$(grep -r 'TODO\\|FIXME\\|XXX\\|HACK' --include='*.py' --include='*.md' . 2>/dev/null | wc -l || echo 0); if [[ $todo_count -gt 5 ]]; then echo \"📌 Technical debt: $todo_count TODOs/FIXMEs found\"; if [[ $todo_count -gt 20 ]]; then echo \"   💡 High debt - consider cleanup tasks\"; fi; fi"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"📋 Subagent task completed: $(date +%H:%M:%S)\""
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "idle",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo -e '\\a' && echo '🔔 Waiting for your input...'"
+          }
+        ]
+      },
+      {
+        "matcher": "permission",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo -e '\\a' && echo '🔐 Permission required for tool execution'"
+          }
+        ]
+      }
+    ]
+  }
+}

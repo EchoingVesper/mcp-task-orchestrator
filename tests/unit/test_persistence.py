@@ -11,11 +11,12 @@ import json
 import uuid
 from pathlib import Path
 
-from mcp_task_orchestrator.orchestrator.models import (
-    TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
-)
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 from mcp_task_orchestrator.persistence import PersistenceManager
-from mcp_task_orchestrator.orchestrator.state import StateManager
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
 
 
 async def test_persistence():
@@ -32,7 +33,7 @@ async def test_persistence():
     
     # Create subtasks
     subtasks = [
-        SubTask(
+        Task(
             task_id=f"architect_{uuid.uuid4().hex[:6]}",
             title="Design Persistence Architecture",
             description="Design the overall directory structure and file formats for persistence",
@@ -40,7 +41,7 @@ async def test_persistence():
             dependencies=[],
             estimated_effort="30 minutes"
         ),
-        SubTask(
+        Task(
             task_id=f"implementer_{uuid.uuid4().hex[:6]}",
             title="Implement Persistence Manager",
             description="Create the PersistenceManager class for task state serialization",
@@ -48,7 +49,7 @@ async def test_persistence():
             dependencies=[],
             estimated_effort="1 hour"
         ),
-        SubTask(
+        Task(
             task_id=f"tester_{uuid.uuid4().hex[:6]}",
             title="Test Persistence Mechanism",
             description="Create tests for the persistence mechanism",
@@ -59,7 +60,7 @@ async def test_persistence():
     ]
     
     # Create task breakdown
-    breakdown = TaskBreakdown(
+    breakdown = Task(
         parent_task_id=parent_task_id,
         description="Implement task persistence for MCP Task Orchestrator",
         complexity=ComplexityLevel.MODERATE,
@@ -83,16 +84,16 @@ async def test_persistence():
     # Load the task from persistent storage
     loaded_breakdown = persistence.load_task_breakdown(parent_task_id)
     
-    if loaded_breakdown and loaded_breakdown.parent_task_id == parent_task_id:
+    if loaded_breakdown and loaded_breakdown.task_id == parent_task_id:
         print("✅ Task was successfully loaded from persistent storage")
         print(f"Task description: {loaded_breakdown.description}")
-        print(f"Number of subtasks: {len(loaded_breakdown.subtasks)}")
+        print(f"Number of subtasks: {len(loaded_breakdown.children)}")
     else:
         print("❌ Task could not be loaded from persistent storage")
     
     # Update a subtask
     if loaded_breakdown:
-        subtask = loaded_breakdown.subtasks[0]
+        subtask = loaded_breakdown.children[0]
         subtask.status = TaskStatus.COMPLETED
         subtask.results = "Persistence architecture design completed"
         subtask.artifacts = ["docs/persistence.md"]
@@ -102,7 +103,7 @@ async def test_persistence():
         
         # Verify the update
         updated_breakdown = persistence.load_task_breakdown(parent_task_id)
-        updated_subtask = next((st for st in updated_breakdown.subtasks if st.task_id == subtask.task_id), None)
+        updated_subtask = next((st for st in updated_breakdown.children if st.task_id == subtask.task_id), None)
         
         if updated_subtask and updated_subtask.status == TaskStatus.COMPLETED:
             print("✅ Subtask was successfully updated in persistent storage")

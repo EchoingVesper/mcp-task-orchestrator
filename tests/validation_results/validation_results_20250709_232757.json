@@ -1,0 +1,485 @@
+{
+  "validation_run": "2025-07-10T04:27:57.234562+00:00",
+  "results": [
+    {
+      "tool_name": "orchestrator_initialize_session",
+      "test_name": "orchestrator_initialize_session_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 4.100799560546875e-05,
+      "details": "Missing criteria: ['session_id', 'workspace_path']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:51.203907+00:00"
+    },
+    {
+      "tool_name": "orchestrator_initialize_session",
+      "test_name": "orchestrator_initialize_session_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.00013828277587890625,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:51.304277+00:00"
+    },
+    {
+      "tool_name": "orchestrator_initialize_session",
+      "test_name": "orchestrator_initialize_session_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 8.797645568847656e-05,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:51.404521+00:00"
+    },
+    {
+      "tool_name": "orchestrator_get_status",
+      "test_name": "orchestrator_get_status_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 6.914138793945312e-05,
+      "details": "Missing criteria: ['tasks']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:51.504928+00:00"
+    },
+    {
+      "tool_name": "orchestrator_get_status",
+      "test_name": "orchestrator_get_status_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.00020456314086914062,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:51.605259+00:00"
+    },
+    {
+      "tool_name": "orchestrator_get_status",
+      "test_name": "orchestrator_get_status_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 8.940696716308594e-05,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:51.705508+00:00"
+    },
+    {
+      "tool_name": "orchestrator_synthesize_results",
+      "test_name": "orchestrator_synthesize_results_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 3.695487976074219e-05,
+      "details": "Missing criteria: ['synthesis_complete', 'combined_results']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:52.950238+00:00"
+    },
+    {
+      "tool_name": "orchestrator_synthesize_results",
+      "test_name": "orchestrator_synthesize_results_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.0004956722259521484,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.050885+00:00"
+    },
+    {
+      "tool_name": "orchestrator_synthesize_results",
+      "test_name": "orchestrator_synthesize_results_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 3.7670135498046875e-05,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.151410+00:00"
+    },
+    {
+      "tool_name": "orchestrator_plan_task",
+      "test_name": "orchestrator_plan_task_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.0002949237823486328,
+      "details": "Missing criteria: ['task_id', 'created']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.251966+00:00"
+    },
+    {
+      "tool_name": "orchestrator_plan_task",
+      "test_name": "orchestrator_plan_task_edge_cases",
+      "level": "edge_cases",
+      "status": "passed",
+      "duration": 0.0009505748748779297,
+      "details": "Tested 3 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.353051+00:00"
+    },
+    {
+      "tool_name": "orchestrator_plan_task",
+      "test_name": "orchestrator_plan_task_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.0003426074981689453,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.453558+00:00"
+    },
+    {
+      "tool_name": "orchestrator_update_task",
+      "test_name": "orchestrator_update_task_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.00012373924255371094,
+      "details": "Missing criteria: ['updated', 'task_id']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.554305+00:00"
+    },
+    {
+      "tool_name": "orchestrator_update_task",
+      "test_name": "orchestrator_update_task_edge_cases",
+      "level": "edge_cases",
+      "status": "passed",
+      "duration": 0.0006811618804931641,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.655175+00:00"
+    },
+    {
+      "tool_name": "orchestrator_update_task",
+      "test_name": "orchestrator_update_task_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.00013947486877441406,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.755863+00:00"
+    },
+    {
+      "tool_name": "orchestrator_delete_task",
+      "test_name": "orchestrator_delete_task_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.00012421607971191406,
+      "details": "Missing criteria: ['deleted', 'archived']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.856605+00:00"
+    },
+    {
+      "tool_name": "orchestrator_delete_task",
+      "test_name": "orchestrator_delete_task_edge_cases",
+      "level": "edge_cases",
+      "status": "passed",
+      "duration": 0.0006871223449707031,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:53.957381+00:00"
+    },
+    {
+      "tool_name": "orchestrator_delete_task",
+      "test_name": "orchestrator_delete_task_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.0001983642578125,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.058218+00:00"
+    },
+    {
+      "tool_name": "orchestrator_cancel_task",
+      "test_name": "orchestrator_cancel_task_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.0001277923583984375,
+      "details": "Missing criteria: ['cancelled', 'status']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.158968+00:00"
+    },
+    {
+      "tool_name": "orchestrator_cancel_task",
+      "test_name": "orchestrator_cancel_task_edge_cases",
+      "level": "edge_cases",
+      "status": "passed",
+      "duration": 0.0008504390716552734,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.260077+00:00"
+    },
+    {
+      "tool_name": "orchestrator_cancel_task",
+      "test_name": "orchestrator_cancel_task_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.00012874603271484375,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.360671+00:00"
+    },
+    {
+      "tool_name": "orchestrator_query_tasks",
+      "test_name": "orchestrator_query_tasks_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.0001628398895263672,
+      "details": "Missing criteria: ['tasks', 'total_count']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.461091+00:00"
+    },
+    {
+      "tool_name": "orchestrator_query_tasks",
+      "test_name": "orchestrator_query_tasks_edge_cases",
+      "level": "edge_cases",
+      "status": "passed",
+      "duration": 0.0004374980926513672,
+      "details": "Tested 3 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.561753+00:00"
+    },
+    {
+      "tool_name": "orchestrator_query_tasks",
+      "test_name": "orchestrator_query_tasks_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.000247955322265625,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.662209+00:00"
+    },
+    {
+      "tool_name": "orchestrator_execute_task",
+      "test_name": "orchestrator_execute_task_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.019124984741210938,
+      "details": "Missing criteria: ['execution_context', 'specialist_prompt']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.782042+00:00"
+    },
+    {
+      "tool_name": "orchestrator_execute_task",
+      "test_name": "orchestrator_execute_task_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.0008828639984130859,
+      "details": "Tested 1 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.883097+00:00"
+    },
+    {
+      "tool_name": "orchestrator_execute_task",
+      "test_name": "orchestrator_execute_task_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.00025963783264160156,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:54.983876+00:00"
+    },
+    {
+      "tool_name": "orchestrator_complete_task",
+      "test_name": "orchestrator_complete_task_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.02318739891052246,
+      "details": "Missing criteria: ['completed', 'artifacts_stored']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.107729+00:00"
+    },
+    {
+      "tool_name": "orchestrator_complete_task",
+      "test_name": "orchestrator_complete_task_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.006964683532714844,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.214818+00:00"
+    },
+    {
+      "tool_name": "orchestrator_complete_task",
+      "test_name": "orchestrator_complete_task_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.0049896240234375,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.320362+00:00"
+    },
+    {
+      "tool_name": "orchestrator_maintenance_coordinator",
+      "test_name": "orchestrator_maintenance_coordinator_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 9.1552734375e-05,
+      "details": "Missing criteria: ['action_completed', 'results']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.420758+00:00"
+    },
+    {
+      "tool_name": "orchestrator_maintenance_coordinator",
+      "test_name": "orchestrator_maintenance_coordinator_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.00014019012451171875,
+      "details": "Tested 3 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.521019+00:00"
+    },
+    {
+      "tool_name": "orchestrator_maintenance_coordinator",
+      "test_name": "orchestrator_maintenance_coordinator_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 7.772445678710938e-05,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.621298+00:00"
+    },
+    {
+      "tool_name": "orchestrator_restart_server",
+      "test_name": "orchestrator_restart_server_test",
+      "level": "basic",
+      "status": "failed",
+      "duration": 0.0032651424407958984,
+      "details": "Missing criteria: ['restart_initiated', 'phase']",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.724864+00:00"
+    },
+    {
+      "tool_name": "orchestrator_restart_server",
+      "test_name": "orchestrator_restart_server_edge_cases",
+      "level": "edge_cases",
+      "status": "passed",
+      "duration": 0.0004987716674804688,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.825481+00:00"
+    },
+    {
+      "tool_name": "orchestrator_restart_server",
+      "test_name": "orchestrator_restart_server_integration",
+      "level": "integration",
+      "status": "failed",
+      "duration": 0.00019097328186035156,
+      "details": "Integration failed",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:55.925965+00:00"
+    },
+    {
+      "tool_name": "orchestrator_health_check",
+      "test_name": "orchestrator_health_check_test",
+      "level": "basic",
+      "status": "passed",
+      "duration": 0.00010037422180175781,
+      "details": "All success criteria met",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.026377+00:00"
+    },
+    {
+      "tool_name": "orchestrator_health_check",
+      "test_name": "orchestrator_health_check_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.0001804828643798828,
+      "details": "Tested 1 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.126782+00:00"
+    },
+    {
+      "tool_name": "orchestrator_health_check",
+      "test_name": "orchestrator_health_check_integration",
+      "level": "integration",
+      "status": "passed",
+      "duration": 0.00011420249938964844,
+      "details": "Integration with setup data successful",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.227081+00:00"
+    },
+    {
+      "tool_name": "orchestrator_shutdown_prepare",
+      "test_name": "orchestrator_shutdown_prepare_test",
+      "level": "basic",
+      "status": "passed",
+      "duration": 0.00010395050048828125,
+      "details": "All success criteria met",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.327405+00:00"
+    },
+    {
+      "tool_name": "orchestrator_shutdown_prepare",
+      "test_name": "orchestrator_shutdown_prepare_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.00012302398681640625,
+      "details": "Tested 1 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.427739+00:00"
+    },
+    {
+      "tool_name": "orchestrator_shutdown_prepare",
+      "test_name": "orchestrator_shutdown_prepare_integration",
+      "level": "integration",
+      "status": "passed",
+      "duration": 0.00012683868408203125,
+      "details": "Integration with setup data successful",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.527960+00:00"
+    },
+    {
+      "tool_name": "orchestrator_reconnect_test",
+      "test_name": "orchestrator_reconnect_test_test",
+      "level": "basic",
+      "status": "passed",
+      "duration": 0.00011539459228515625,
+      "details": "All success criteria met",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.628337+00:00"
+    },
+    {
+      "tool_name": "orchestrator_reconnect_test",
+      "test_name": "orchestrator_reconnect_test_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.0001728534698486328,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.728663+00:00"
+    },
+    {
+      "tool_name": "orchestrator_reconnect_test",
+      "test_name": "orchestrator_reconnect_test_integration",
+      "level": "integration",
+      "status": "passed",
+      "duration": 0.00011992454528808594,
+      "details": "Integration with setup data successful",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.828910+00:00"
+    },
+    {
+      "tool_name": "orchestrator_restart_status",
+      "test_name": "orchestrator_restart_status_test",
+      "level": "basic",
+      "status": "passed",
+      "duration": 9.5367431640625e-05,
+      "details": "All success criteria met",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:56.929311+00:00"
+    },
+    {
+      "tool_name": "orchestrator_restart_status",
+      "test_name": "orchestrator_restart_status_edge_cases",
+      "level": "edge_cases",
+      "status": "failed",
+      "duration": 0.00020933151245117188,
+      "details": "Tested 2 edge cases",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:57.029635+00:00"
+    },
+    {
+      "tool_name": "orchestrator_restart_status",
+      "test_name": "orchestrator_restart_status_integration",
+      "level": "integration",
+      "status": "passed",
+      "duration": 0.00010609626770019531,
+      "details": "Integration with setup data successful",
+      "error": null,
+      "timestamp": "2025-07-10T04:27:57.129892+00:00"
+    }
+  ]
+}

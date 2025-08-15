@@ -30,7 +30,7 @@ from mcp_task_orchestrator.db.migration_history import MigrationHistoryManager
 from mcp_task_orchestrator.db.backup_manager import BackupManager
 from mcp_task_orchestrator.db.rollback_manager import RollbackManager
 from mcp_task_orchestrator.db.models import Base
-from mcp_task_orchestrator.testing.file_output_system import TestOutputWriter, AtomicFileWriter
+from testing_utils.file_output_system import TestOutputWriter, AtomicFileWriter
 
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -802,8 +802,6 @@ class ComprehensiveMigrationTestSuite:
                 session.write_line(f"{metric_name}: {value}")
         
         # Recommendations
-        session.write_line("\nRECOMMENDAT"""
-                
         session.write_line("\nRECOMMENDATIONS:")
         session.write_line("-" * 30)
         

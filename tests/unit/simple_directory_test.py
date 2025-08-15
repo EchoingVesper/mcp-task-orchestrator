@@ -19,7 +19,7 @@ def test_directory_logic():
             os.chdir(temp_dir)
             print(f"Changed working directory to: {temp_dir}")
             
-            # Test the fixed logic (what the code should do now)
+            # Test the fixed logic
             base_dir = None
             if base_dir is None:
                 base_dir = os.environ.get("MCP_TASK_ORCHESTRATOR_BASE_DIR")

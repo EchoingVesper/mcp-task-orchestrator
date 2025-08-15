@@ -23,7 +23,7 @@ async def test_orchestrator_performance():
         print("Testing StateManager initialization...")
         start = time.time()
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
         db_path = r"E:\My Work\Programming\MCP Task Orchestrator\task_orchestrator.db"
         state_manager = StateManager(db_path=db_path)
         
@@ -96,14 +96,14 @@ async def test_orchestrator_performance():
             print(f"{status:6} {op_name:25} {duration:8.4f}s")
         
         print(f"\nTotal operations: {len(results)}")
-        print(f"Slow operations (>5s): {len(slow_operations)}")
+        print(f"Slow operations: {len(slow_operations)}")
         
         if slow_operations:
-            print(f"\nSLOW OPERATIONS:")
+            print("\nSLOW OPERATIONS:")
             for op_name, duration in slow_operations:
                 print(f"   {op_name}: {duration:.4f}s")
         else:
-            print(f"\nSUCCESS: All operations completed within 5-second threshold!")
+            print("\nSUCCESS: All operations completed within 5-second threshold!")
         
         return results
         

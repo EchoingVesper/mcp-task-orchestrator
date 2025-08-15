@@ -262,7 +262,7 @@ def test_workspace_detection():
         # Test current directory detection
         result = detector.detect_project_root()
         
-        print(f"Current directory detection:")
+        print("Current directory detection:")
         print(f"  Path: {result.detected_path}")
         print(f"  Method: {result.method.value}")
         print(f"  Confidence: {result.confidence}/10")
@@ -280,12 +280,12 @@ def test_workspace_detection():
                 print(f"    - {marker.marker_type}: {marker.file_path.name} (confidence: {marker.confidence})")
         
         if result.validation.warnings:
-            print(f"  Warnings:")
+            print("  Warnings:")
             for warning in result.validation.warnings:
                 print(f"    - {warning}")
         
         # Test explicit directory detection
-        print(f"\nExplicit directory detection (project root):")
+        print("\nExplicit directory detection (project root):")
         explicit_result = detector.detect_project_root(explicit_directory=str(project_root))
         print(f"  Path: {explicit_result.detected_path}")
         print(f"  Method: {explicit_result.method.value}")

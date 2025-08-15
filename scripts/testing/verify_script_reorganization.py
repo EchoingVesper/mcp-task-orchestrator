@@ -62,7 +62,7 @@ def main():
         "scripts/deployment/": "Deployment scripts"
     }
     
-    print(f"\n📊 Script Organization Summary:")
+    print("\n📊 Script Organization Summary:")
     total_moved = 0
     for path, description in categories.items():
         if os.path.exists(path):

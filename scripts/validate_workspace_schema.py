@@ -49,7 +49,7 @@ def validate_sql_file(sql_file_path):
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
         tables = [row[0] for row in cursor.fetchall()]
         
-        print(f"  ✓ SQL syntax valid")
+        print("  ✓ SQL syntax valid")
         print(f"  ✓ Tables created: {len(tables)}")
         
         # Check for workspace-specific tables
@@ -81,7 +81,7 @@ def validate_python_file(py_file_path):
         
         # Check syntax
         compile(content, py_file_path, 'exec')
-        print(f"  ✓ Python syntax valid")
+        print("  ✓ Python syntax valid")
         
         # Count classes and functions
         lines = content.split('\n')
@@ -192,18 +192,18 @@ def main():
         # Test git detection
         git_dir = project_root / '.git'
         if git_dir.exists():
-            print(f"  ✓ Git repository detected")
+            print("  ✓ Git repository detected")
         else:
-            print(f"  - No git repository found")
+            print("  - No git repository found")
         
         # Test directory writability
         test_file = project_root / '.test_write'
         try:
             test_file.write_text('test')
             test_file.unlink()
-            print(f"  ✓ Directory is writable")
+            print("  ✓ Directory is writable")
         except:
-            print(f"  ✗ Directory is not writable")
+            print("  ✗ Directory is not writable")
             success = False
             
     except Exception as e:

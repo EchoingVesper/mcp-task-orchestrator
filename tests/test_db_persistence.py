@@ -11,7 +11,10 @@ import unittest
 from pathlib import Path
 from datetime import datetime
 
-from mcp_task_orchestrator.orchestrator.models import TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType, TaskArtifact, ArtifactType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
 
 
@@ -56,118 +59,161 @@ class TestDatabasePersistenceManager(unittest.TestCase):
                 print(f"Failed to clean up temporary directory after retry: {e2}")
                 # Just continue - the OS will clean up temp files eventually
     
-    def test_save_and_load_task_breakdown(self):
-        """Test saving and loading a task breakdown."""
-        # Create a task breakdown
-        breakdown = self._create_test_task_breakdown()
+    def test_save_and_load_task(self):
+        """Test saving and loading a hierarchical task structure."""
+        # Create parent task with children
+        parent_task, child_tasks = self._create_test_task_hierarchy()
         
-        # Save the task breakdown
-        self.persistence.save_task_breakdown(breakdown)
+        # Save the parent task
+        self.persistence.save_task(parent_task)
         
-        # Load the task breakdown
-        loaded_breakdown = self.persistence.load_task_breakdown(breakdown.parent_task_id)
+        # Save child tasks
+        for child in child_tasks:
+            self.persistence.save_task(child)
         
-        # Check that the loaded breakdown matches the original
-        self.assertIsNotNone(loaded_breakdown)
-        self.assertEqual(loaded_breakdown.parent_task_id, breakdown.parent_task_id)
-        self.assertEqual(loaded_breakdown.description, breakdown.description)
-        self.assertEqual(loaded_breakdown.complexity, breakdown.complexity)
-        self.assertEqual(loaded_breakdown.context, breakdown.context)
+        # Load the parent task
+        loaded_task = self.persistence.load_task(parent_task.task_id)
         
-        # Check that the subtasks match
-        self.assertEqual(len(loaded_breakdown.subtasks), len(breakdown.subtasks))
-        for i, subtask in enumerate(breakdown.subtasks):
-            loaded_subtask = loaded_breakdown.subtasks[i]
-            self.assertEqual(loaded_subtask.task_id, subtask.task_id)
-            self.assertEqual(loaded_subtask.title, subtask.title)
-            self.assertEqual(loaded_subtask.description, subtask.description)
-            self.assertEqual(loaded_subtask.specialist_type, subtask.specialist_type)
-            self.assertEqual(loaded_subtask.dependencies, subtask.dependencies)
-            self.assertEqual(loaded_subtask.estimated_effort, subtask.estimated_effort)
-            self.assertEqual(loaded_subtask.status, subtask.status)
-            self.assertEqual(loaded_subtask.results, subtask.results)
-            self.assertEqual(loaded_subtask.artifacts, subtask.artifacts)
+        # Check that the loaded task matches the original
+        self.assertIsNotNone(loaded_task)
+        self.assertEqual(loaded_task.task_id, parent_task.task_id)
+        self.assertEqual(loaded_task.title, parent_task.title)
+        self.assertEqual(loaded_task.description, parent_task.description)
+        self.assertEqual(loaded_task.complexity, parent_task.complexity)
+        self.assertEqual(loaded_task.context, parent_task.context)
+        
+        # Load child tasks and verify hierarchy
+        loaded_children = self.persistence.get_child_tasks(parent_task.task_id)
+        self.assertEqual(len(loaded_children), len(child_tasks))
+        for i, child_task in enumerate(child_tasks):
+            loaded_child = next((c for c in loaded_children if c.task_id == child_task.task_id), None)
+            self.assertIsNotNone(loaded_child)
+            self.assertEqual(loaded_child.parent_task_id, child_task.parent_task_id)
+            self.assertEqual(loaded_child.title, child_task.title)
+            self.assertEqual(loaded_child.description, child_task.description)
+            self.assertEqual(loaded_child.specialist_type, child_task.specialist_type)
+            self.assertEqual(loaded_child.estimated_effort, child_task.estimated_effort)
+            self.assertEqual(loaded_child.status, child_task.status)
+            self.assertEqual(loaded_child.results, child_task.results)
     
-    def test_update_subtask(self):
-        """Test updating a subtask."""
-        # Create a task breakdown
-        breakdown = self._create_test_task_breakdown()
+    def test_update_task(self):
+        """Test updating a task."""
+        # Create hierarchical tasks
+        parent_task, child_tasks = self._create_test_task_hierarchy()
         
-        # Save the task breakdown
-        self.persistence.save_task_breakdown(breakdown)
+        # Save tasks
+        self.persistence.save_task(parent_task)
+        for child in child_tasks:
+            self.persistence.save_task(child)
         
-        # Update a subtask
-        subtask = breakdown.subtasks[0]
-        subtask.title = "Updated Title"
-        subtask.description = "Updated Description"
-        subtask.status = TaskStatus.COMPLETED
-        subtask.results = "Completed successfully"
-        subtask.artifacts = ["artifact1.txt", "artifact2.txt"]
-        subtask.completed_at = datetime.now()
+        # Update a child task
+        child_task = child_tasks[0]
+        child_task.title = "Updated Title"
+        child_task.description = "Updated Description"
+        child_task.status = TaskStatus.COMPLETED
+        child_task.results = "Completed successfully"
+        child_task.completed_at = datetime.now()
         
-        # Save the updated subtask
-        self.persistence.update_subtask(subtask, breakdown.parent_task_id)
+        # Add artifacts to the task
+        child_task.artifacts.append(TaskArtifact(
+            artifact_id=f"{child_task.task_id}_artifact_1",
+            task_id=child_task.task_id,
+            artifact_type=ArtifactType.GENERAL,
+            artifact_name="Test Artifact",
+            content="Test artifact content"
+        ))
         
-        # Load the task breakdown
-        loaded_breakdown = self.persistence.load_task_breakdown(breakdown.parent_task_id)
+        # Save the updated task
+        self.persistence.update_task(child_task)
         
-        # Check that the subtask was updated
-        loaded_subtask = next(st for st in loaded_breakdown.subtasks if st.task_id == subtask.task_id)
-        self.assertEqual(loaded_subtask.title, subtask.title)
-        self.assertEqual(loaded_subtask.description, subtask.description)
-        self.assertEqual(loaded_subtask.status, subtask.status)
-        self.assertEqual(loaded_subtask.results, subtask.results)
-        self.assertEqual(loaded_subtask.artifacts, subtask.artifacts)
-        self.assertIsNotNone(loaded_subtask.completed_at)
+        # Load the updated task
+        loaded_task = self.persistence.load_task(child_task.task_id)
+        
+        # Check that the task was updated
+        self.assertEqual(loaded_task.title, child_task.title)
+        self.assertEqual(loaded_task.description, child_task.description)
+        self.assertEqual(loaded_task.status, child_task.status)
+        self.assertEqual(loaded_task.results, child_task.results)
+        self.assertIsNotNone(loaded_task.completed_at)
     
     def test_get_all_active_tasks(self):
         """Test getting all active tasks."""
-        # Create and save multiple task breakdowns
-        breakdown1 = self._create_test_task_breakdown("task1")
-        breakdown2 = self._create_test_task_breakdown("task2")
+        # Create and save multiple tasks
+        task1 = self._create_test_task("task1")
+        task2 = self._create_test_task("task2")
         
-        self.persistence.save_task_breakdown(breakdown1)
-        self.persistence.save_task_breakdown(breakdown2)
+        self.persistence.save_task(task1)
+        self.persistence.save_task(task2)
         
         # Get all active tasks
         active_tasks = self.persistence.get_all_active_tasks()
         
         # Check that both tasks are in the list
         self.assertEqual(len(active_tasks), 2)
-        self.assertIn(breakdown1.parent_task_id, active_tasks)
-        self.assertIn(breakdown2.parent_task_id, active_tasks)
+        self.assertIn(task1.task_id, active_tasks)
+        self.assertIn(task2.task_id, active_tasks)
     
-    def _create_test_task_breakdown(self, task_id_prefix="test"):
-        """Create a test task breakdown."""
-        # Create subtasks
-        subtasks = [
-            SubTask(
+    def _create_test_task_hierarchy(self, task_id_prefix="test"):
+        """Create a test hierarchical task structure."""
+        # Create parent task
+        parent_task = Task(
+            task_id=f"{task_id_prefix}_parent",
+            title="Parent Task",
+            description="Test parent task for hierarchy",
+            task_type=TaskType.BREAKDOWN,
+            hierarchy_path=f"/{task_id_prefix}_parent",
+            hierarchy_level=0,
+            complexity=ComplexityLevel.MODERATE,
+            context={"test_context": "Test context data"},
+            status=TaskStatus.ACTIVE
+        )
+        
+        # Create child tasks
+        child_tasks = [
+            Task(
                 task_id=f"{task_id_prefix}_subtask1",
+                parent_task_id=parent_task.task_id,
                 title="Subtask 1",
                 description="Description for subtask 1",
-                specialist_type=SpecialistType.ARCHITECT,
-                dependencies=[],
+                task_type=TaskType.STANDARD,
+                hierarchy_path=f"/{task_id_prefix}_parent/{task_id_prefix}_subtask1",
+                hierarchy_level=1,
+                position_in_parent=0,
+                specialist_type="architect",
                 estimated_effort="1 hour",
                 status=TaskStatus.PENDING
             ),
-            SubTask(
+            Task(
                 task_id=f"{task_id_prefix}_subtask2",
+                parent_task_id=parent_task.task_id,
                 title="Subtask 2",
                 description="Description for subtask 2",
-                specialist_type=SpecialistType.IMPLEMENTER,
-                dependencies=[f"{task_id_prefix}_subtask1"],
+                task_type=TaskType.STANDARD,
+                hierarchy_path=f"/{task_id_prefix}_parent/{task_id_prefix}_subtask2",
+                hierarchy_level=1,
+                position_in_parent=1,
+                specialist_type="implementer",
                 estimated_effort="2 hours",
                 status=TaskStatus.PENDING
             )
         ]
         
-        # Create task breakdown
-        return TaskBreakdown(
-            parent_task_id=f"{task_id_prefix}_parent",
-            description="Test task breakdown",
+        # Add dependencies
+        child_tasks[1].add_dependency(child_tasks[0].task_id)
+        
+        return parent_task, child_tasks
+    
+    def _create_test_task(self, task_id_prefix="test"):
+        """Create a single test task."""
+        return Task(
+            task_id=f"{task_id_prefix}_single",
+            title=f"Test Task {task_id_prefix}",
+            description=f"Test task description for {task_id_prefix}",
+            task_type=TaskType.STANDARD,
+            hierarchy_path=f"/{task_id_prefix}_single",
+            hierarchy_level=0,
             complexity=ComplexityLevel.MODERATE,
-            subtasks=subtasks,
-            context="Test context"
+            status=TaskStatus.ACTIVE
         )
 
 

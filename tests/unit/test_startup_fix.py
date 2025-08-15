@@ -15,11 +15,11 @@ def test_state_manager_cleanup():
     """Test that StateManager can now call cleanup_stale_locks without errors."""
     try:
         # Import the state manager
-        from mcp_task_orchestrator.orchestrator.state import StateManager
+        from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
         
         logger.info("Testing StateManager cleanup integration...")
         
-        # Create a state manager (this should trigger the cleanup call)
+        # Create a state manager
         # We'll catch any AttributeError that would occur if cleanup_stale_locks is missing
         try:
             # This will call _cleanup_stale_locks() which calls persistence.cleanup_stale_locks()

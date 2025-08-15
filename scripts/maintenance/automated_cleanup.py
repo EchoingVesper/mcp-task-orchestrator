@@ -47,7 +47,7 @@ class AutomatedMaintenance:
             if os.path.exists(build_dir):
                 if not self.dry_run:
                     shutil.rmtree(build_dir)
-                self.log_action(f"Removed build directory", build_dir)
+                self.log_action("Removed build directory", build_dir)
                 artifacts_cleaned = True
         
         # Remove egg-info directories
@@ -55,7 +55,7 @@ class AutomatedMaintenance:
             if item.endswith('.egg-info') and os.path.isdir(item):
                 if not self.dry_run:
                     shutil.rmtree(item)
-                self.log_action(f"Removed egg-info directory", item)
+                self.log_action("Removed egg-info directory", item)
                 artifacts_cleaned = True
         
         # Clean Python cache files
@@ -64,7 +64,7 @@ class AutomatedMaintenance:
             if 'venv' not in str(cache_dir):  # Preserve venv cache
                 if not self.dry_run:
                     shutil.rmtree(cache_dir)
-                self.log_action(f"Removed cache directory", str(cache_dir))
+                self.log_action("Removed cache directory", str(cache_dir))
                 artifacts_cleaned = True
         
         # Clean pytest cache
@@ -73,7 +73,7 @@ class AutomatedMaintenance:
             if 'venv' not in str(cache_dir):
                 if not self.dry_run:
                     shutil.rmtree(cache_dir)
-                self.log_action(f"Removed pytest cache", str(cache_dir))
+                self.log_action("Removed pytest cache", str(cache_dir))
                 artifacts_cleaned = True
         
         if not artifacts_cleaned:

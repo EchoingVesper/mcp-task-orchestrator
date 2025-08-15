@@ -77,7 +77,6 @@ def run_integration_tests():
         if stderr:
             print(f"Error: {stderr[:200]}...")
         return False
-        success = (run_unit_tests() and run_performance_tests())
     else:
         # Default: run all tests
         success = run_all_tests()

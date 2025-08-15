@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+"""
+Test script for the task orchestrator task execution.
+
+This script creates a simple task and attempts to execute a task
+to verify that the orchestrator_execute_task function works correctly.
+"""
+
+import asyncio
+import json
+import uuid
+import logging
+import sys
+from pathlib import Path
+from datetime import datetime
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+
+# Import after configuring logging
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
+from mcp_task_orchestrator.persistence import PersistenceManager
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
+from mcp_task_orchestrator.orchestrator.task_orchestration_service import TaskOrchestrator
+
+
+async def test_task_execution():
+    """Test the task execution mechanism."""
+    print("\n=== Testing task execution mechanism ===\n")
+    
+    # Initialize managers
+    base_dir = Path(__file__).parent
+    persistence = PersistenceManager(base_dir)
+    state_manager = StateManager(base_dir=base_dir)
+    specialist_manager = SpecialistManager()
+    orchestrator = TaskOrchestrator(state_manager, specialist_manager)
+    
+    # Create a test task
+    parent_task_id = f"test_task_{uuid.uuid4().hex[:8]}"
+    
+    # Create tasks
+    tasks = [
+        Task(
+            task_id=f"architect_{uuid.uuid4().hex[:6]}",
+            title="Design Test Architecture",
+            description="Design a simple test architecture",
+            specialist_type=SpecialistType.ARCHITECT,
+            dependencies=[],
+            estimated_effort="10 minutes"
+        ),
+        Task(
+            task_id=f"implementer_{uuid.uuid4().hex[:6]}",
+            title="Implement Test Feature",
+            description="Implement a simple test feature",
+            specialist_type=SpecialistType.IMPLEMENTER,
+            dependencies=[],
+            estimated_effort="15 minutes"
+        )
+    ]
+    
+    # Create task breakdown
+    breakdown = Task(
+        parent_task_id=parent_task_id,
+        description="Test task for task execution",
+        complexity=ComplexityLevel.SIMPLE,
+        tasks=tasks,
+        context="Testing task execution"
+    )
+    
+    # Save task breakdown
+    print(f"Creating task {parent_task_id}...")
+    await state_manager.store_task_breakdown(breakdown)
+    
+    # Verify that the task was saved
+    active_tasks = persistence.get_all_active_tasks()
+    print(f"Active tasks: {active_tasks}")
+    
+    if parent_task_id in active_tasks:
+        print("✅ Task was successfully saved to persistent storage")
+    else:
+        print("❌ Task was not saved to persistent storage")
+        return
+    
+    # Try to execute the first task
+    task_id = tasks[0].task_id
+    print(f"\nExecuting task {task_id}...")
+    
+    try:
+        # Set a timeout for the execution
+        specialist_context = await asyncio.wait_for(
+            orchestrator.get_specialist_context(task_id),
+            timeout=10  # 10 seconds timeout
+        )
+        
+        print("✅ Subtask execution successful")
+        print(f"Specialist context length: {len(specialist_context)}")
+        print(f"Context preview: {specialist_context[:100]}...")
+        
+        # Verify that the task status was updated
+        task = await state_manager.get_task(task_id)
+        print(f"Subtask status: {task.status}")
+        
+        if task.status == TaskStatus.ACTIVE:
+            print("✅ Subtask status was correctly updated to ACTIVE")
+        else:
+            print(f"❌ Subtask status was not updated correctly: {task.status}")
+        
+        # Complete the task
+        print("\nCompleting task...")
+        completion_result = await asyncio.wait_for(
+            orchestrator.complete_task(
+                task_id,
+                "Test results for task execution",
+                ["test_artifact.md"],
+                "continue"
+            ),
+            timeout=10  # 10 seconds timeout
+        )
+        
+        print("✅ Subtask completion successful")
+        print(f"Completion result: {json.dumps(completion_result, indent=2)}")
+        
+        # Verify that the task status was updated
+        task = await state_manager.get_task(task_id)
+        print(f"Subtask status after completion: {task.status}")
+        
+        if task.status == TaskStatus.COMPLETED:
+            print("✅ Subtask status was correctly updated to COMPLETED")
+        else:
+            print(f"❌ Subtask status was not updated correctly: {task.status}")
+        
+    except asyncio.TimeoutError:
+        print("❌ Subtask execution timed out")
+        
+        # Check if the task is locked
+        lock_file = persistence.get_lock_file_path(f"task_{parent_task_id}")
+        if lock_file.exists():
+            print(f"⚠️ Lock file exists: {lock_file}")
+            
+            # Try to clean up the lock
+            cleaned = persistence._check_and_cleanup_stale_lock(f"task_{parent_task_id}", force=True)
+            print(f"Lock cleanup {'successful' if cleaned else 'failed'}")
+        
+    except Exception as e:
+        print(f"❌ Error during task execution: {str(e)}")
+    
+    print("\nSubtask execution test completed.")
+
+async def main():
+    """Main entry point."""
+    await test_task_execution()
+
+if __name__ == "__main__":
+    asyncio.run(main())

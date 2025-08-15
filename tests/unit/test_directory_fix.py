@@ -42,7 +42,7 @@ def test_path_resolution():
             assert artifact_mgr.artifacts_dir == expected_artifacts_dir, f"Artifact manager using wrong directory: {artifact_mgr.artifacts_dir}"
             
             # Test 3: StateManager
-            from mcp_task_orchestrator.orchestrator.state import StateManager
+            from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
             state_mgr = StateManager()
             expected_state_base = Path(temp_dir)
             

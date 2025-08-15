@@ -19,6 +19,10 @@ CLIENT_PATHS = {
         "config_path": Path.home() / ".config" / "Claude" / "claude_desktop_config.json",
         "display_name": "Claude Desktop"
     },
+    "claude_code": {
+        "config_path": Path.home() / ".claude.json",
+        "display_name": "Claude Code"
+    },
     "windsurf": {
         "config_path": Path.home() / ".windsurf" / "settings.json",
         "display_name": "Windsurf"
@@ -95,6 +99,14 @@ def is_client_configured(client_id, config_path):
         
         if client_id == "claude_desktop":
             return "task-orchestrator" in config.get("mcpServers", {})
+        elif client_id == "claude_code":
+            # Claude Code uses a different structure - check if task-orchestrator exists in any project
+            if "projects" not in config:
+                return False
+            for project_path, project_config in config.get("projects", {}).items():
+                if "task-orchestrator" in project_config.get("mcpServers", {}):
+                    return True
+            return False
         elif client_id in ["windsurf", "cursor", "vscode"]:
             # Check for MCP server configuration in these clients
             # Implementation depends on the specific format of each client
@@ -173,6 +185,37 @@ def configure_client(client_id, server_path, server_name="Task Orchestrator"):
             config["mcpServers"][server_id] = {
                 "command": "python3",
                 "args": [str(Path(server_path).resolve())],
+                "env": {}
+            }
+        elif client_id == "claude_code":
+            # Claude Code configuration - add to current working directory project
+            current_dir = str(Path.cwd().resolve())
+            
+            # Initialize projects if not exists
+            if "projects" not in config:
+                config["projects"] = {}
+            
+            # Initialize current project if not exists
+            if current_dir not in config["projects"]:
+                config["projects"][current_dir] = {
+                    "allowedTools": [],
+                    "history": [],
+                    "mcpContextUris": [],
+                    "mcpServers": {},
+                    "enabledMcpjsonServers": [],
+                    "disabledMcpjsonServers": [],
+                    "hasTrustDialogAccepted": False,
+                    "projectOnboardingSeenCount": 0,
+                    "hasClaudeMdExternalIncludesApproved": False,
+                    "hasClaudeMdExternalIncludesWarningShown": False
+                }
+            
+            # Add task-orchestrator server to current project
+            server_id = "task-orchestrator"
+            config["projects"][current_dir]["mcpServers"][server_id] = {
+                "type": "stdio",
+                "command": str(Path(server_path).parent / "python3"),
+                "args": ["-m", "mcp_task_orchestrator.server"],
                 "env": {}
             }
         elif client_id == "windsurf":

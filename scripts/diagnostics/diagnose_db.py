@@ -85,12 +85,12 @@ def diagnose_database():
             
             print(f"Task {task_id}: {data_type} -> {artifacts[:50]}{'...' if len(str(artifacts)) > 50 else ''}")
         
-        print(f"\n=== DATA TYPE SUMMARY ===")
+        print("\n=== DATA TYPE SUMMARY ===")
         for dtype, count in data_type_counts.items():
             print(f"{dtype}: {count} records")
         
         if problem_records:
-            print(f"\n=== PROBLEM RECORDS (STRING ARTIFACTS) ===")
+            print("\n=== PROBLEM RECORDS (STRING ARTIFACTS) ===")
             for task_id, artifacts in problem_records:
                 print(f"Task {task_id}: {artifacts}")
         

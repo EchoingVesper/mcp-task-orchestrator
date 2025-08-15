@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Change to project directory
 import os
-os.chdir(r"E:\My Work\Programming\MCP Servers\mcp-task-orchestrator")
+os.chdir(r"E:\dev\mcp-servers\mcp-task-orchestrator")
 
 print("🔍 Checking database schema...")
 
@@ -21,7 +21,7 @@ if 'subtasks' in tables:
     # Check subtasks table schema
     cursor.execute("PRAGMA table_info(subtasks)")
     columns = cursor.fetchall()
-    print(f"\n📊 Current subtasks table schema:")
+    print("\n📊 Current subtasks table schema:")
     actual_columns = {}
     for col in columns:
         actual_columns[col[1]] = col[2]

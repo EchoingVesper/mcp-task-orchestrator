@@ -41,7 +41,7 @@ def test_correct_database_path():
                 sample_subtask = session.query(SubTaskModel).first()
                 
                 print(f"Testing lookup for task ID: {sample_subtask.task_id}")
-                print(f"Expected parent ID: {sample_subtask.parent_task_id}")
+                print(f"Expected parent ID: {sample_subtask.task_id}")
                 
                 # Test the new direct lookup method
                 start_time = time.time()
@@ -51,7 +51,7 @@ def test_correct_database_path():
                 print(f"Direct lookup completed in {elapsed:.4f}s")
                 print(f"Result: {result}")
                 
-                if result == sample_subtask.parent_task_id:
+                if result == sample_subtask.task_id:
                     print("SUCCESS: Direct lookup works correctly!")
                     return True
                 else:
@@ -65,20 +65,21 @@ def test_correct_database_path():
                 # a different state. Let's verify our implementation works by creating
                 # a simple test case.
                 
-                from mcp_task_orchestrator.orchestrator.models import (
-                    TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
-                )
+                # Import Clean Architecture v2.0 models
+                from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+                from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+                from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
                 from datetime import datetime
                 
                 # Create a test task breakdown
-                test_breakdown = TaskBreakdown(
+                test_breakdown = Task(
                     parent_task_id="test_parent_123",
                     description="Test task for performance verification",
                     complexity=ComplexityLevel.MODERATE,
                     context="Testing the performance fix",
                     created_at=datetime.now(),
                     subtasks=[
-                        SubTask(
+                        Task(
                             task_id="test_subtask_456",
                             title="Test Subtask",
                             description="A test subtask for performance testing",

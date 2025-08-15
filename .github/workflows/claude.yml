@@ -1,4 +1,4 @@
-name: Claude Code
+name: Claude Code Integration
 
 on:
   issue_comment:
@@ -19,41 +19,159 @@ jobs:
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      pull-requests: read
-      issues: read
+      contents: write
+      pull-requests: write
+      issues: write
       id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0  # Full history for better context
 
-      - name: Run Claude Code
+      - name: Run Claude Code with MCP Task Orchestrator Integration
         id: claude
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           
-          # Optional: Specify model (defaults to Claude Sonnet 4, uncomment for Claude Opus 4)
-          # model: "claude-opus-4-20250514"
+          # Use Claude Sonnet 4 (latest model)
+          model: "claude-sonnet-4-20250514"
           
-          # Optional: Customize the trigger phrase (default: @claude)
-          # trigger_phrase: "/claude"
+          # Custom trigger phrases for different use cases
+          trigger_phrase: "@claude"
           
-          # Optional: Trigger when specific user is assigned to an issue
-          # assignee_trigger: "claude-bot"
+          # Allow Claude to run project-specific tools and commands
+          allowed_tools: |
+            Bash(python -m pytest*),
+            Bash(python -m tools.validation.*),
+            Bash(python scripts/*),
+            Bash(ruff*),
+            Bash(mypy*),
+            Bash(markdownlint*),
+            Bash(pip install*),
+            Bash(uv*),
+            Bash(git*),
+            Bash(python -m mcp_task_orchestrator.*),
+            Read,Write,Edit,MultiEdit,Glob,Grep
           
-          # Optional: Allow Claude to run specific commands
-          # allowed_tools: "Bash(npm install),Bash(npm run build),Bash(npm run test:*),Bash(npm run lint:*)"
+          # Project-specific instructions for MCP Task Orchestrator
+          custom_instructions: |
+            # MCP Task Orchestrator Project Guidelines
+            
+            ## Project Context
+            This is the MCP Task Orchestrator - a sophisticated task management system for LLM agents built on Clean Architecture principles with Domain-Driven Design.
+            
+            ## Core Project Rules (CRITICAL)
+            - **ALWAYS USE THE TASK ORCHESTRATOR** to aid in any task within this project
+            - **IF ANY ORCHESTRATOR TOOL FAILS**, prioritize fixing the broken component before continuing
+            - When functionality breaks, fix it and use the orchestrator's restart functionality to reboot
+            
+            ## Architecture Guidelines
+            - Follow Clean Architecture: Domain → Application → Infrastructure → Presentation
+            - Use dependency injection (ServiceContainer) for all components
+            - All database operations must use context managers for resource cleanup
+            - Security-first: All input validation uses Pydantic with extra='forbid'
+            - MCP protocol compliance: Use stderr for logging, never stdout
+            
+            ## Development Standards
+            - **File Size Limits**: Never create files longer than 500 lines (300-400 recommended)
+            - **Python Style**: Use ruff for formatting/linting, not black/flake8
+            - **Testing**: All features must have comprehensive tests (aim for 85%+ coverage)
+            - **Documentation**: Follow markdown standards with proper heading hierarchy
+            
+            ## Required Commands and Tools
+            ```bash
+            # Testing and validation
+            python -m pytest tests/ -v
+            python -m tools.validation.pipeline_orchestrator --run-full
+            
+            # Code quality
+            ruff check . --fix
+            ruff format .
+            mypy mcp_task_orchestrator/
+            
+            # Package management
+            uv add package-name  # NEVER edit pyproject.toml directly
+            uv sync
+            
+            # Build and install
+            pip install -e ".[dev]"
+            python setup.py sdist bdist_wheel
+            ```
+            
+            ## Security Requirements
+            - All API endpoints must use authentication/authorization
+            - Input validation with Pydantic models using extra='forbid'
+            - Path traversal prevention in all file operations
+            - Error sanitization to prevent information disclosure
+            - XSS prevention in all text outputs
+            
+            ## MCP Protocol Standards
+            - Use proper JSON-RPC error codes (-32602, -32601, -32603)
+            - Implement resource cleanup to prevent warnings
+            - Follow MCP naming conventions for tools
+            - Maintain protocol compliance in all handlers
+            
+            ## Multi-Stage Validation Pipeline
+            The project uses a 5-stage validation pipeline:
+            1. Stage 1: Syntax and basic validation
+            2. Stage 2: Unit test validation with coverage
+            3. Stage 3: Integration testing (MCP, database)
+            4. Stage 4: Security and performance testing
+            5. Stage 5: Production readiness validation
+            
+            Always run the full pipeline for significant changes:
+            ```bash
+            python -m tools.validation.pipeline_orchestrator --run-full
+            ```
+            
+            ## Documentation Standards
+            - Use proper markdown hierarchy (H1 → H2 → H3, no skipping)
+            - Specify language for all code blocks
+            - End files with single newline
+            - Use descriptive commit messages (feat/fix/docs/refactor)
+            
+            ## Project Structure
+            ```
+            mcp_task_orchestrator/
+            ├── domain/           # Business logic and entities
+            ├── application/      # Use cases and services
+            ├── infrastructure/   # External concerns (DB, MCP, monitoring)
+            └── presentation/     # MCP server and CLI interfaces
+            
+            tests/
+            ├── unit/            # Unit tests
+            ├── integration/     # Integration tests  
+            ├── security/        # Security test suite
+            └── validation_gates/ # Validation pipeline tests
+            
+            tools/validation/    # Multi-stage validation pipeline
+            scripts/             # Utility scripts organized by purpose
+            docs/                # Comprehensive documentation
+            ```
+            
+            ## Common Debugging Commands
+            ```bash
+            # Health check and diagnostics
+            python tools/diagnostics/health_check.py
+            python tools/diagnostics/performance_monitor.py --monitor
+            
+            # Test specific areas
+            pytest tests/security/ -v
+            pytest tests/integration/ -v
+            pytest -m "not slow"
+            
+            # Check validation results
+            cat validation_results/pipeline_report.json
+            ```
+            
+            Remember: This project emphasizes quality, security, and maintainability. When in doubt, run the validation pipeline and check the comprehensive documentation in CLAUDE.md and CLAUDE-detailed.md.
           
-          # Optional: Add custom instructions for Claude to customize its behavior for your project
-          # custom_instructions: |
-          #   Follow our coding standards
-          #   Ensure all new code has tests
-          #   Use TypeScript for new files
-          
-          # Optional: Custom environment variables for Claude
-          # claude_env: |
-          #   NODE_ENV: test
+          # Environment variables for the MCP Task Orchestrator
+          claude_env: |
+            MCP_TASK_ORCHESTRATOR_USE_DI=true
+            PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+            PYTHONPATH=.
+            UV_PYTHON_INSTALL_DIR=/opt/uv/python
 

@@ -1,0 +1,170 @@
+security_rules:
+  input_validation:
+    sql_injection:
+      enabled: true
+      patterns:
+        - "SELECT.*FROM.*WHERE.*=.*%s"
+        - "INSERT.*INTO.*VALUES.*%s"
+        - "UPDATE.*SET.*=.*%s"
+        - "DELETE.*FROM.*WHERE.*=.*%s"
+    xss_prevention:
+      enabled: true
+      patterns:
+        - "<script"
+        - "javascript:"
+        - "onclick="
+        - "onerror="
+    path_traversal:
+      enabled: true
+      patterns:
+        - "\\.\\./\\.\\."
+        - "..\\\\..\\\\."
+        - "%2e%2e%2f"
+        - "%2e%2e%5c"
+
+authentication:
+  password_requirements:
+    min_length: 12
+    require_uppercase: true
+    require_lowercase: true
+    require_numbers: true
+    require_special_chars: true
+    forbidden_patterns:
+      - "password"
+      - "123456"
+      - "admin"
+      - "root"
+  session_management:
+    session_timeout_minutes: 30
+    secure_cookies: true
+    httponly_cookies: true
+    csrf_protection: true
+
+encryption:
+  algorithms:
+    symmetric:
+      approved:
+        - "AES-256-GCM"
+        - "ChaCha20-Poly1305"
+      forbidden:
+        - "DES"
+        - "3DES"
+        - "RC4"
+    asymmetric:
+      approved:
+        - "RSA-2048"
+        - "RSA-4096"
+        - "ECDSA-P256"
+        - "ECDSA-P384"
+      forbidden:
+        - "RSA-1024"
+        - "DSA"
+  tls:
+    min_version: "1.2"
+    preferred_version: "1.3"
+    cipher_suites:
+      - "TLS_AES_256_GCM_SHA384"
+      - "TLS_CHACHA20_POLY1305_SHA256"
+      - "ECDHE-RSA-AES256-GCM-SHA384"
+
+data_protection:
+  sensitive_data_patterns:
+    api_keys:
+      - "api[_-]?key"
+      - "apikey"
+      - "api[_-]?secret"
+    passwords:
+      - "password"
+      - "passwd"
+      - "pwd"
+    tokens:
+      - "token"
+      - "jwt"
+      - "bearer"
+    database_credentials:
+      - "db[_-]?user"
+      - "db[_-]?pass"
+      - "database[_-]?url"
+  encryption_required:
+    - "password"
+    - "secret"
+    - "private_key"
+    - "api_key"
+
+code_security:
+  dangerous_functions:
+    python:
+      - "eval"
+      - "exec"
+      - "compile"
+      - "__import__"
+      - "getattr"
+      - "setattr"
+      - "delattr"
+    file_operations:
+      - "open.*'w'"
+      - "os.system"
+      - "subprocess.call"
+      - "subprocess.run"
+  safe_alternatives:
+    eval: "ast.literal_eval"
+    exec: "structured data parsing"
+    os.system: "subprocess.run with shell=False"
+
+dependency_security:
+  vulnerability_sources:
+    - "https://osv.dev/"
+    - "https://github.com/advisories"
+    - "https://snyk.io/vuln/"
+  scan_frequency: "daily"
+  auto_update_policy:
+    patch_versions: true
+    minor_versions: false
+    major_versions: false
+  exclusions:
+    test_dependencies: true
+    development_dependencies: false
+
+logging_security:
+  log_sensitive_data: false
+  sanitize_patterns:
+    - "password=([^&\\s]+)"
+    - "token=([^&\\s]+)"
+    - "key=([^&\\s]+)"
+    - "secret=([^&\\s]+)"
+  log_levels:
+    production: "INFO"
+    development: "DEBUG"
+    testing: "WARNING"
+
+network_security:
+  allowed_protocols:
+    - "https"
+    - "wss"
+  forbidden_protocols:
+    - "http"
+    - "ftp"
+    - "telnet"
+  firewall_rules:
+    ingress:
+      - port: 443
+        protocol: "tcp"
+        source: "0.0.0.0/0"
+    egress:
+      - port: 443
+        protocol: "tcp"
+        destination: "0.0.0.0/0"
+
+compliance:
+  standards:
+    - "OWASP Top 10"
+    - "CWE Top 25"
+    - "NIST Cybersecurity Framework"
+  audit_frequency: "quarterly"
+  documentation_required: true
+
+incident_response:
+  contact_email: "security@example.com"
+  escalation_procedures: true
+  forensic_logging: true
+  backup_retention_days: 90

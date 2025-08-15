@@ -14,12 +14,16 @@ import logging
 
 # Import base repository and common items from the new modular structure
 from .repository.base import (
-    GenericTaskRepository, CycleDetectedError, 
+    CycleDetectedError, 
     asynccontextmanager, AsyncSession,
     select, delete, update, and_, or_, func,
     SQLAlchemyError, IntegrityError, text,
-    selectinload, joinedload
+    selectinload, joinedload,
+    TaskRepository
 )
+
+# Import the abstract repository interface for type hints
+from ..domain.repositories.task_repository import TaskRepository as AbstractTaskRepository
 
 # Import converter functions 
 from .repository.converters import (
@@ -29,8 +33,10 @@ from .repository.converters import (
 
 # Import models that are used throughout
 from ..orchestrator.generic_models import (
-    GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
-    TaskTemplate, TemplateParameter,
+    Task as GenericTask, TaskAttribute, TaskDependency, TaskEvent, TaskArtifact,
+    TaskTemplate, TemplateParameter
+)
+from ..domain.value_objects.enums import (
     TaskType, TaskStatus, LifecycleStage, DependencyType, DependencyStatus,
     EventType, EventCategory, AttributeType, ArtifactType
 )
@@ -40,7 +46,7 @@ logger = logging.getLogger(__name__)
 
 # Extend the base repository with all the methods
 # (This is temporary during refactoring - methods will be moved to appropriate modules)
-class GenericTaskRepository(GenericTaskRepository):
+class GenericTaskRepository(TaskRepository):
     
     # ============================================
     # Task CRUD Operations (delegated to crud_operations)
@@ -204,6 +210,51 @@ class GenericTaskRepository(GenericTaskRepository):
         from .repository.query_builder import search_by_attribute
         return await search_by_attribute(self, attribute_name, attribute_value, indexed_only)
     
+    async def get_parent_task_id(self, task_id: str) -> Optional[str]:
+        """
+        Retrieve parent task ID for a given task using async SQLAlchemy.
+        
+        Args:
+            task_id: Task identifier to get parent for
+            
+        Returns:
+            Optional[str]: Parent task ID or None if task has no parent
+            
+        Raises:
+            InfrastructureError: If database query fails
+        """
+        try:
+            async with self.get_session() as session:
+                # Parameterized query to prevent SQL injection
+                query = text("""
+                    SELECT parent_task_id 
+                    FROM generic_tasks 
+                    WHERE task_id = :task_id
+                """)
+                
+                result = await session.execute(query, {"task_id": task_id})
+                parent_task_id = result.scalar_one_or_none()
+                
+                logger.debug(f"Retrieved parent task ID for {task_id}: {parent_task_id}")
+                return parent_task_id
+                
+        except SQLAlchemyError as e:
+            logger.error(f"Database error retrieving parent task ID for {task_id}: {e}")
+            from ..domain.exceptions.base_exceptions import InfrastructureError
+            raise InfrastructureError(
+                component="GenericTaskRepository", 
+                failure_reason=f"Database query failed: {str(e)}",
+                is_recoverable=True
+            )
+        except Exception as e:
+            logger.error(f"Unexpected error retrieving parent task ID for {task_id}: {e}")
+            from ..domain.exceptions.base_exceptions import InfrastructureError
+            raise InfrastructureError(
+                component="GenericTaskRepository",
+                failure_reason=f"Unexpected database error: {str(e)}",
+                is_recoverable=False
+            )
+    
     # ============================================
     # Template Operations
     # ============================================
@@ -270,6 +321,93 @@ class GenericTaskRepository(GenericTaskRepository):
         return await load_children(self, session, parent_id)
     
     
+    # ============================================
+    # Abstract method implementations (database-backed)
+    # ============================================
+    
+    def __init__(self, db_url: Optional[str] = None):
+        """Initialize repository with database connection."""
+        from ..infrastructure.database.connection_manager import DatabaseConnectionManager
+        from ..infrastructure.database.sqlite.sqlite_task_repository import SQLiteTaskRepository
+        
+        if db_url is None:
+            # Default to memory database for testing, or workspace database
+            import os
+            workspace_dir = os.getcwd()
+            if os.path.exists('.task_orchestrator'):
+                db_url = f"sqlite:///{workspace_dir}/.task_orchestrator/tasks.db"
+            else:
+                db_url = "sqlite:///:memory:"
+        
+        # Initialize the underlying SQLite repository
+        connection_manager = DatabaseConnectionManager(db_url)
+        self._sqlite_repo = SQLiteTaskRepository(connection_manager)
+        
+        # Call parent init for async functionality
+        super().__init__(db_url)
+    
+    def create_task(self, task_data: Dict[str, Any]) -> str:
+        """Create a new task using SQLite backend."""
+        return self._sqlite_repo.create_task(task_data)
+
+    def get_task(self, task_id: str) -> Optional[Dict[str, Any]]:
+        """Get a task by ID using SQLite backend."""
+        return self._sqlite_repo.get_task(task_id)
+
+    def update_task(self, task_id: str, updates: Dict[str, Any]) -> bool:
+        """Update an existing task using SQLite backend."""
+        return self._sqlite_repo.update_task(task_id, updates)
+
+    def delete_task(self, task_id: str) -> bool:
+        """Delete a task using SQLite backend.""" 
+        return self._sqlite_repo.delete_task(task_id)
+
+    def list_tasks(self, 
+                   session_id: Optional[str] = None,
+                   parent_task_id: Optional[str] = None,
+                   status: Optional[str] = None,
+                   limit: Optional[int] = None,
+                   offset: Optional[int] = None) -> List[Dict[str, Any]]:
+        """List tasks with optional filtering using SQLite backend."""
+        return self._sqlite_repo.list_tasks(session_id, parent_task_id, status, limit, offset)
+
+    def get_subtasks(self, parent_task_id: str) -> List[Dict[str, Any]]:
+        """Get all subtasks of a parent task using SQLite backend."""
+        return self._sqlite_repo.list_tasks(parent_task_id=parent_task_id)
+
+    def update_task_status(self, task_id: str, status: str) -> bool:
+        """Update the status of a task using SQLite backend."""
+        return self._sqlite_repo.update_task(task_id, {'status': status})
+
+    def add_task_artifact(self, task_id: str, artifact: Dict[str, Any]) -> bool:
+        """Add an artifact to a task using SQLite backend."""
+        return self._sqlite_repo.add_task_artifact(task_id, artifact)
+
+    def get_task_artifacts(self, task_id: str) -> List[Dict[str, Any]]:
+        """Get all artifacts for a task using SQLite backend."""
+        return self._sqlite_repo.get_task_artifacts(task_id)
+
+    def search_tasks(self, query: str, fields: Optional[List[str]] = None) -> List[Dict[str, Any]]:
+        """Search tasks by text query using SQLite backend."""
+        return self._sqlite_repo.search_tasks(query, fields)
+
+    def get_task_dependencies(self, task_id: str) -> List[str]:
+        """Get task IDs that this task depends on using SQLite backend."""
+        return self._sqlite_repo.get_task_dependencies(task_id)
+
+    def add_task_dependency(self, task_id: str, dependency_id: str) -> bool:
+        """Add a dependency between tasks using SQLite backend."""
+        return self._sqlite_repo.add_task_dependency(task_id, dependency_id)
+
+    def cleanup_old_tasks(self, older_than: datetime, 
+                         exclude_sessions: Optional[List[str]] = None) -> int:
+        """Clean up tasks older than a specified date using SQLite backend."""
+        return self._sqlite_repo.cleanup_old_tasks(older_than, exclude_sessions)
+
+    def get_task_metrics(self, session_id: Optional[str] = None) -> Dict[str, Any]:
+        """Get metrics about tasks using SQLite backend."""
+        return self._sqlite_repo.get_task_metrics(session_id)
+
     async def dispose(self):
         """Clean up database connections."""
         if hasattr(self, 'async_engine'):

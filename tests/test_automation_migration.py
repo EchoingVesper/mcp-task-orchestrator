@@ -56,7 +56,7 @@ def test_migration():
                 INSERT INTO subtasks (id, task_id, title, description, specialist_type)
                 VALUES 
                     ('test_1', 'task_1', 'Test Subtask 1', 'Description 1', 'implementer'),
-                    ('test_2', 'task_2', 'Test Subtask 2', 'Description 2', 'tester')
+                   
             """))
             conn.commit()
         

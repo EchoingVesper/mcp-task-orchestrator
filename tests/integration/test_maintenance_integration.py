@@ -15,12 +15,17 @@ import json
 
 from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
 from mcp_task_orchestrator.db.models import Base
-from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+from mcp_task_orchestrator.orchestrator.task_orchestration_service import TaskOrchestrator
 from mcp_task_orchestrator.orchestrator.maintenance import MaintenanceCoordinator
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
 from mcp_task_orchestrator.orchestrator.task_lifecycle import TaskLifecycleManager
 from mcp_task_orchestrator.orchestrator.streaming_artifacts import StreamingArtifactManager
 from mcp_task_orchestrator.orchestrator.artifacts import ArtifactManager
-from mcp_task_orchestrator.orchestrator.models import TaskStatus, SpecialistType
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
@@ -40,18 +45,21 @@ class TestMaintenanceIntegration:
         Base.metadata.create_all(engine)
         
         # Initialize components
-        state_manager = DatabasePersistenceManager(str(db_path))
+        db_state_manager = DatabasePersistenceManager(str(db_path))
+        state_manager = StateManager(db_state_manager)
+        specialist_manager = SpecialistManager()
         artifact_manager = ArtifactManager(temp_dir)
         streaming_manager = StreamingArtifactManager(temp_dir)
         
         # Create orchestrator
         orchestrator = TaskOrchestrator(
             state_manager=state_manager,
-            artifact_manager=artifact_manager
+            specialist_manager=specialist_manager,
+            project_dir=str(temp_dir)
         )
         
         # Create maintenance components
-        maintenance_coordinator = MaintenanceCoordinator(state_manager, orchestrator)
+        maintenance_coordinator = MaintenanceCoordinator(db_state_manager, orchestrator)
         lifecycle_manager = TaskLifecycleManager(state_manager, artifact_manager)
         
         yield {
@@ -80,6 +88,7 @@ class TestMaintenanceIntegration:
         # Step 1: Create and plan a complex task
         parent_task = await orchestrator.plan_task(
             description="Build a web application with user authentication",
+            complexity="complex",
             subtasks_json=json.dumps([
                 {
                     "title": "Design database schema",
@@ -105,19 +114,19 @@ class TestMaintenanceIntegration:
         )
         
         # Verify task was created
-        assert parent_task["success"] is True
-        parent_id = parent_task["task_id"]
+        assert parent_task is not None
+        parent_id = parent_task.task_id
         
         # Step 2: Execute subtasks with streaming artifacts
-        subtasks = parent_task["subtasks"]
+        subtasks = parent_task.children
         
         # Execute first subtask (Design)
         design_task = subtasks[0]
-        design_result = await orchestrator.execute_subtask(design_task["id"])
+        design_result = await orchestrator.execute_subtask(design_task.task_id)
         
         # Create streaming artifact for design
         design_session = await streaming.create_streaming_session(
-            task_id=design_task["id"],
+            task_id=design_task.task_id,
             summary="Database schema design",
             artifact_type="design"
         )
@@ -458,7 +467,7 @@ class TestMaintenanceIntegration:
         end_time = datetime.utcnow()
         duration = (end_time - start_time).total_seconds()
         
-        # Verify performance (should complete within reasonable time)
+        # Verify performance
         assert duration < 30  # 30 seconds for 50 tasks
         assert scan_result["scan_results"]["tasks_scanned"] == task_count
     

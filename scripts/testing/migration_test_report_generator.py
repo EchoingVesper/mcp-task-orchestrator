@@ -320,7 +320,7 @@ class MigrationTestReportGenerator:
                 
                 # Test migration execution
                 result = migration_system.execute_auto_migration()
-                self.write_report_line(f"Migration execution result:")
+                self.write_report_line("Migration execution result:")
                 self.write_report_line(f"  Success: {result.success}")
                 self.write_report_line(f"  Migration needed: {result.migration_needed}")
                 self.write_report_line(f"  Operations executed: {result.operations_executed}")
@@ -388,7 +388,7 @@ class MigrationTestReportGenerator:
             
             # Test schema difference detection
             differences = migration_manager.detect_schema_differences()
-            self.write_report_line(f"Schema differences detected:")
+            self.write_report_line("Schema differences detected:")
             self.write_report_line(f"  Missing tables: {len(differences.missing_tables)}")
             self.write_report_line(f"  Extra tables: {len(differences.extra_tables)}")
             self.write_report_line(f"  Migration needed: {differences.requires_migration}")
@@ -435,7 +435,7 @@ class MigrationTestReportGenerator:
             
             # Test schema comparison
             result = comparator.compare_schemas()
-            self.write_report_line(f"Schema comparison result:")
+            self.write_report_line("Schema comparison result:")
             self.write_report_line(f"  Migration complexity: {result.migration_complexity}")
             self.write_report_line(f"  Estimated downtime: {result.estimated_downtime}s")
             self.write_report_line(f"  Tables needing creation: {len(result.tables_needing_creation)}")
@@ -691,7 +691,7 @@ class MigrationTestReportGenerator:
         
         success_rate = (passed_tests / total_tests) * 100 if total_tests > 0 else 0
         
-        self.write_report_line(f"Overall Test Results:")
+        self.write_report_line("Overall Test Results:")
         self.write_report_line(f"  Total Test Categories: {total_tests}")
         self.write_report_line(f"  Success Rate: {success_rate:.1f}%")
         self.write_report_line("")
@@ -775,7 +775,7 @@ def main():
         generator = MigrationTestReportGenerator()
         report_file = generator.generate_comprehensive_report()
         
-        print(f"\n✅ Test report generated successfully!")
+        print("\n✅ Test report generated successfully!")
         print(f"📁 Report file: {report_file}")
         
         # Print brief summary

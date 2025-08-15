@@ -1,0 +1,185 @@
+name: 📋 Template Compliance Issue
+description: Report template compliance issues or systematic organization problems
+title: "[TEMPLATE]: "
+labels: ["template-compliance", "japanese-standards", "documentation"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📋 Template Compliance Issue Report
+        
+        This template is for reporting issues with documentation template compliance, status tag usage, or systematic organization problems that don't follow Japanese development standards.
+
+  - type: dropdown
+    id: compliance-type
+    attributes:
+      label: Type of Compliance Issue
+      description: What type of template compliance issue are you reporting?
+      options:
+        - Status tag missing or incorrect (PRPs without [STATUS] tags)
+        - Inconsistent heading hierarchy (H1 → H2 → H3 violations)
+        - Template structure violations (missing required sections)
+        - File organization issues (files in wrong directories)
+        - Naming convention violations (unclear or inconsistent names)
+        - Archive organization problems (lifecycle management issues)
+        - Root directory cleanliness (too many files in root)
+        - Multiple compliance issues
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: specific-files
+    attributes:
+      label: Specific Files or Directories
+      description: List the specific files, directories, or areas with compliance issues
+      placeholder: |
+        Example:
+        - PRPs/authentication-improvement.md (missing status tag)
+        - docs/users/guide.md (heading hierarchy skips from H1 to H3)
+        - scripts/random-script.py (should be in scripts/utilities/)
+        - Several .tmp files in root directory
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current Non-Compliant State
+      description: Describe exactly what is wrong with the current state
+      placeholder: |
+        Example:
+        - PRPs/authentication-improvement.md has no status tag ([DRAFT], [IN-PROGRESS], etc.)
+        - The file starts with "## Introduction" instead of "# Authentication Improvement"
+        - Required sections like "## Acceptance Criteria" are missing
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-compliant-state
+    attributes:
+      label: Expected Compliant State
+      description: Describe what the compliant state should look like
+      placeholder: |
+        Example:
+        - File should be renamed to PRPs/[DRAFT]authentication-improvement.md
+        - Should start with "# Authentication Improvement PRP"
+        - Should include required sections: Overview, Implementation, Acceptance Criteria
+        - Should follow proper H1 → H2 → H3 heading hierarchy
+    validations:
+      required: true
+
+  - type: dropdown
+    id: japanese-standard-violated
+    attributes:
+      label: Japanese Development Standard Violated
+      description: Which Japanese development principle is being violated?
+      options:
+        - 整理整頓 (Seiriseiton) - Organization and cleanliness violated
+        - 体系的アプローチ (Systematic Approach) - Inconsistent methodology
+        - ライフサイクル管理 (Lifecycle Management) - Poor maintenance
+        - 丁寧な保守 (Respectful Maintenance) - Careless organization
+        - 全体的品質 (Holistic Quality) - Overall quality degradation
+        - Multiple principles violated
+      default: 1
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: quality-gates-affected
+    attributes:
+      label: Quality Gates Affected
+      description: Which automated quality gates are failing due to this issue?
+      options:
+        - label: Markdownlint (formatting and structure issues)
+        - label: Template Compliance Validation (missing sections or status tags)
+        - label: Japanese Standards Validation (organizational principle violations)
+        - label: Root Directory Cleanliness (files in wrong locations)
+        - label: Test Artifact Lifecycle (test files improperly organized)
+        - label: Systematic Organization (poor logical grouping)
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity Level
+      description: How severe is this compliance issue?
+      options:
+        - Critical (breaks automated validation or CI/CD pipeline)
+        - High (significantly impacts documentation quality or user experience)
+        - Medium (violates standards but doesn't break functionality)
+        - Low (minor consistency issue)
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on Documentation Ecosystem
+      description: Describe how this compliance issue affects the overall documentation quality
+      placeholder: |
+        Example:
+        - Makes it hard to find documentation in the right lifecycle state
+        - Breaks the systematic approach users expect
+        - Clutters the root directory and reduces project cleanliness
+        - Sets a bad example for future contributions
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix
+      description: If you have suggestions for fixing this compliance issue, please describe them
+      placeholder: |
+        Example:
+        - Rename file to include [DRAFT] status tag
+        - Move files to appropriate subdirectories
+        - Add missing required sections
+        - Fix heading hierarchy
+        - Archive old files to docs/archives/
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: automated-fix
+    attributes:
+      label: Automated Fix Potential
+      description: Could this issue be fixed by automated tools?
+      options:
+        - label: Could be fixed by automated cleanup script
+        - label: Could be detected by enhanced quality gates
+        - label: Could be prevented by pre-commit hooks
+        - label: Requires manual intervention and review
+        - label: Should become part of template validation
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        
+        ## 🔄 Template Compliance Automation
+        
+        The project includes automated template compliance validation:
+        
+        ### Current Quality Gates:
+        - **Japanese Standards Validation**: Checks organizational principles
+        - **Template Compliance Validation**: Verifies structure and status tags
+        - **Root Directory Cleanliness**: Ensures proper file organization
+        - **Test Artifact Lifecycle**: Validates test file management
+        
+        ### Automated Tools:
+        - **documentation-lifecycle-management.yml**: Comprehensive validation workflow
+        - **project-cleanliness-validation.yml**: Organization and cleanliness checks
+        - **quality_automation.py**: Integrated quality validation script
+        
+        ## 🛠️ How This Issue Will Be Processed:
+        
+        1. **Validation**: Issue will be validated against current quality gates
+        2. **Classification**: Assigned to appropriate Japanese development standard  
+        3. **Automation Check**: Evaluated for automated fix potential
+        4. **Implementation**: Fixed manually or via automated tools
+        5. **Prevention**: Enhanced validation added if needed
+        
+        Your compliance issue report helps maintain the high quality standards of this project!

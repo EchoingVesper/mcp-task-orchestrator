@@ -43,7 +43,7 @@ def check_main_database():
                     sample_subtask = session.query(SubTaskModel).first()
                     if sample_subtask:
                         print(f"Sample subtask - ID: {sample_subtask.task_id}")
-                        print(f"Sample parent ID: {sample_subtask.parent_task_id}")
+                        print(f"Sample parent ID: {sample_subtask.task_id}")
                         
                         # Test the new direct lookup method
                         start_time = time.time()
@@ -51,10 +51,10 @@ def check_main_database():
                         elapsed = time.time() - start_time
                         
                         print(f"Direct lookup completed in {elapsed:.4f}s")
-                        print(f"Expected: {sample_subtask.parent_task_id}")
+                        print(f"Expected: {sample_subtask.task_id}")
                         print(f"Got: {result}")
                         
-                        if result == sample_subtask.parent_task_id:
+                        if result == sample_subtask.task_id:
                             print("✅ SUCCESS: Direct lookup works correctly!")
                             print(f"✅ Performance: {elapsed:.4f}s")
                             return elapsed < 0.1  # Should be very fast

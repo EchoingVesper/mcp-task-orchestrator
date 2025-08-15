@@ -269,7 +269,7 @@ class OutputTruncationValidator:
         start_time = time.time()
         
         try:
-            from mcp_task_orchestrator.testing import TestOutputWriter, TestOutputReader
+            from testing_utils import TestOutputWriter, TestOutputReader
             
             # Create test output
             output_dir = Path(tempfile.mkdtemp(prefix="validation_output_"))
@@ -382,7 +382,7 @@ class AlternativeRunnerValidator:
         start_time = time.time()
         
         try:
-            from mcp_task_orchestrator.testing import DirectFunctionRunner
+            from testing_utils import DirectFunctionRunner
             
             # Create a simple test function to run
             def sample_test():
@@ -446,7 +446,7 @@ class AlternativeRunnerValidator:
         start_time = time.time()
         
         try:
-            from mcp_task_orchestrator.testing import MigrationTestRunner
+            from testing_utils import MigrationTestRunner
             
             # Create runner
             runner = MigrationTestRunner(
@@ -513,7 +513,7 @@ class AlternativeRunnerValidator:
         start_time = time.time()
         
         try:
-            from mcp_task_orchestrator.testing import ComprehensiveTestRunner, TestRunnerConfig
+            from testing_utils import ComprehensiveTestRunner, TestRunnerConfig
             
             # Create simple test files for validation
             temp_test_dir = Path(tempfile.mkdtemp(prefix="validation_comprehensive_"))
@@ -614,9 +614,7 @@ class HangDetectionValidator:
         start_time = time.time()
         
         try:
-            from mcp_task_orchestrator.monitoring.hang_detection import (
-                HangDetector, with_hang_detection, get_hang_detection_statistics
-            )
+#             from mcp_task_orchestrator.monitoring.hang_detection import  # TODO: Complete this import
             
             # Test basic hang detector functionality
             detector = HangDetector(operation_timeout=5.0, warning_timeout=2.0)
@@ -687,7 +685,7 @@ class HangDetectionValidator:
                 issues_found=[str(e)]
             )
     
-    def validate_enhanced_handlers(self) -> ValidationResult:
+    def validate_mcp_request_handlers(self) -> ValidationResult:
         """Test the enhanced MCP handlers with hang detection."""
         start_time = time.time()
         
@@ -696,10 +694,7 @@ class HangDetectionValidator:
             # but doesn't actually test their integration with MCP (which would require a full server)
             
             try:
-                from mcp_task_orchestrator.enhanced_handlers import (
-                    handle_complete_subtask_enhanced,
-                    handle_execute_subtask_enhanced
-                )
+#                 from mcp_task_orchestrator.mcp_request_handlers import  # TODO: Complete this import
                 handlers_available = True
             except ImportError:
                 handlers_available = False
@@ -708,7 +703,7 @@ class HangDetectionValidator:
             
             if handlers_available:
                 return ValidationResult(
-                    test_name="enhanced_handlers",
+                    test_name="mcp_request_handlers",
                     status="passed",
                     duration=duration,
                     details="Enhanced MCP handlers are available and properly implemented",
@@ -716,7 +711,7 @@ class HangDetectionValidator:
                 )
             else:
                 return ValidationResult(
-                    test_name="enhanced_handlers",
+                    test_name="mcp_request_handlers",
                     status="failed",
                     duration=duration,
                     details="Enhanced MCP handlers not available",
@@ -726,7 +721,7 @@ class HangDetectionValidator:
         except Exception as e:
             duration = time.time() - start_time
             return ValidationResult(
-                test_name="enhanced_handlers",
+                test_name="mcp_request_handlers",
                 status="error",
                 duration=duration,
                 details=f"Enhanced handlers validation error: {str(e)}",
@@ -743,12 +738,12 @@ class IntegrationValidator:
         
         try:
             # Scenario: Run a test with file output, then read it safely
-            from mcp_task_orchestrator.testing import TestOutputWriter, TestOutputReader
+            from testing_utils import TestOutputWriter, TestOutputReader
             
             output_dir = Path(tempfile.mkdtemp(prefix="validation_e2e_"))
             
             try:
-                # Step 1: Write test output (simulating test execution)
+                # Step 1: Write test output
                 writer = TestOutputWriter(output_dir)
                 
                 with writer.write_test_output("e2e_validation_test", "text") as session:

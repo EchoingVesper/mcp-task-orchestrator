@@ -1,0 +1,321 @@
+name: Documentation Quality Gates
+
+on:
+  push:
+    branches: [main, develop]
+    paths: 
+      - 'docs/**'
+      - 'PRPs/**'
+      - '*.md'
+      - '.markdownlint.json'
+      - '.vale.ini'
+      - 'scripts/quality_automation.py'
+      - 'scripts/fix_markdown_lint.py'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'docs/**'
+      - 'PRPs/**'
+      - '*.md'
+      - '.markdownlint.json'
+      - '.vale.ini'
+      - 'scripts/quality_automation.py'
+      - 'scripts/fix_markdown_lint.py'
+
+jobs:
+  # Enhanced Documentation Quality with Multi-Stage Integration
+  documentation-quality:
+    runs-on: ubuntu-latest
+    name: Enhanced Documentation Quality
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Setup Node.js for markdownlint
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'  # Updated to Node 20 LTS
+        
+    - name: Install documentation tools
+      run: |
+        # Install markdownlint
+        npm install -g markdownlint-cli2
+        
+        # Install Vale
+        wget https://github.com/errata-ai/vale/releases/latest/download/vale_Linux_64-bit.tar.gz
+        tar -xzf vale_Linux_64-bit.tar.gz
+        sudo mv vale /usr/local/bin/
+        vale --version
+        
+        # Install Python dependencies for quality automation
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt || echo "⚠️ Some requirements failed to install"
+        fi
+        
+        # Install project dependencies
+        if [ -f setup.py ] || [ -f pyproject.toml ]; then
+          pip install -e ".[dev]" || pip install -e . || echo "⚠️ Project installation failed"
+        fi
+        
+    - name: Setup Vale styles and configuration
+      run: |
+        # Setup Vale styles
+        if [ -f .vale.ini ]; then
+          vale sync || echo "⚠️ Vale sync completed with warnings"
+        else
+          echo "⚠️ No Vale configuration found"
+        fi
+        
+    - name: Run enhanced documentation quality checks
+      run: |
+        echo "📚 Running enhanced documentation quality checks..."
+        
+        # Ensure output directories exist
+        mkdir -p validation_results quality_reports
+        
+        # Check if quality automation script exists
+        if [ -f "scripts/quality_automation.py" ]; then
+          # Run quality checks and fail on errors
+          python scripts/quality_automation.py --check all --report validation_results/documentation_quality_report.json
+          QUALITY_EXIT_CODE=$?
+          
+          # If checks failed, exit with error
+          if [ $QUALITY_EXIT_CODE -ne 0 ]; then
+            echo "❌ Documentation quality checks failed"
+            exit $QUALITY_EXIT_CODE
+          fi
+        else
+          echo "⚠️ Quality automation script not found - running manual checks"
+          
+          # Manual markdownlint check - fail on errors
+          if command -v markdownlint-cli2 &> /dev/null; then
+            markdownlint-cli2 "docs/**/*.md" "*.md"
+            if [ $? -ne 0 ]; then
+              echo "❌ Markdownlint found errors"
+              exit 1
+            fi
+          fi
+          
+          # Manual Vale check - fail on errors
+          if command -v vale &> /dev/null && [ -f .vale.ini ]; then
+            vale docs/
+            if [ $? -ne 0 ]; then
+              echo "❌ Vale found errors"
+              exit 1
+            fi
+          fi
+        fi
+        
+        echo "✅ Documentation quality checks passed"
+        
+    - name: Run documentation validation stage from multi-stage pipeline
+      run: |
+        echo "🔍 Running documentation validation from multi-stage pipeline..."
+        if [ -f "tools/validation/stage_1_syntax.py" ]; then
+          python -m tools.validation.stage_1_syntax --mode documentation || echo "⚠️ Documentation syntax validation completed with issues"
+        fi
+        
+    - name: Run Japanese standards and template compliance checks
+      run: |
+        echo "🗾 Running integrated Japanese standards validation..."
+        
+        # Check if this is part of the comprehensive documentation lifecycle
+        # If documentation-lifecycle-management workflow exists, ensure coordination
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          echo "📋 PR detected - running template compliance preview..."
+          
+          # Quick template compliance check
+          python - << 'EOF'
+          import os
+          from pathlib import Path
+          
+          # Check for status tags in changed files
+          prp_files = list(Path('PRPs').glob('**/*.md')) if Path('PRPs').exists() else []
+          status_tagged = [f for f in prp_files if any(tag in f.name for tag in ['[IN-PROGRESS]', '[DRAFT]', '[COMPLETED]', '[CURRENT]'])]
+          
+          compliance_rate = len(status_tagged) / max(len(prp_files), 1) if prp_files else 1.0
+          
+          print(f"📊 Status tag compliance: {compliance_rate:.1%}")
+          print(f"📝 PRPs with status tags: {len(status_tagged)}/{len(prp_files)}")
+          
+          # Set environment variable for summary
+          with open(os.environ['GITHUB_ENV'], 'a') as f:
+              f.write(f"STATUS_TAG_COMPLIANCE={compliance_rate:.1%}\n")
+              f.write(f"TAGGED_PRPS={len(status_tagged)}\n")
+              f.write(f"TOTAL_PRPS={len(prp_files)}\n")
+          EOF
+        fi
+        
+    - name: Upload enhanced quality reports
+      uses: actions/upload-artifact@v4  # Updated to v4
+      if: always()
+      with:
+        name: documentation-quality-reports-${{ github.run_id }}
+        path: |
+          validation_results/
+          quality_report.json
+        retention-days: 30
+        if-no-files-found: warn  # Don't fail if reports are missing
+        
+    - name: Comment PR with enhanced results
+      if: github.event_name == 'pull_request' && always()
+      uses: actions/github-script@v7  # Updated to v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // Try to read enhanced quality reports
+          let report = {};
+          let reportFound = false;
+          
+          // First try the enhanced validation results
+          try {
+            const reportData = fs.readFileSync('validation_results/documentation_quality_report.json', 'utf8');
+            report = JSON.parse(reportData);
+            reportFound = true;
+          } catch (error) {
+            // Fallback to legacy quality report
+            try {
+              const reportData = fs.readFileSync('quality_report.json', 'utf8');
+              report = JSON.parse(reportData);
+              reportFound = true;
+            } catch (fallbackError) {
+              console.log('No quality reports found');
+            }
+          }
+          
+          if (!reportFound) {
+            const comment = `## ⚠️ Documentation Quality Report
+            
+            **Status**: Report generation failed
+            
+            The documentation quality check completed but no report was generated.
+            Please check the workflow logs for details.
+            
+            📋 Raw workflow logs are available in the Actions tab.
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+            return;
+          }
+          
+          // Format enhanced comment
+          const summary = report.summary || {};
+          const passed = summary.passed_gates || 0;
+          const total = summary.total_gates || 0;
+          const errors = summary.total_errors || 0;
+          const warnings = summary.total_warnings || 0;
+          const validationStage = report.validation_stage || {};
+          
+          const emoji = passed === total ? '✅' : '❌';
+          
+          // Get Japanese standards compliance from environment
+          const statusTagCompliance = process.env.STATUS_TAG_COMPLIANCE || 'N/A';
+          const taggedPrps = process.env.TAGGED_PRPS || '0';
+          const totalPrps = process.env.TOTAL_PRPS || '0';
+          
+          const comment = `## ${emoji} Enhanced Documentation Quality Report
+          
+          **Quality Gates**: ${passed}/${total} passed
+          **Issues Found**: ${errors} errors, ${warnings} warnings
+          
+          ### Japanese Development Standards Integration:
+          - **Status Tag Compliance**: ${statusTagCompliance}
+          - **Tagged PRPs**: ${taggedPrps}/${totalPrps} files follow systematic naming
+          
+          ### Quality Gate Results:
+          ${Object.entries(report.detailed_results || {}).map(([gate, result]) => {
+            const status = result.passed ? '✅' : '❌';
+            const errorCount = (result.errors || []).length;
+            const warningCount = (result.warnings || []).length;
+            return `- ${status} **${gate.replace('_', ' ').toUpperCase()}**: ${errorCount} errors, ${warningCount} warnings`;
+          }).join('\n')}
+          
+          ${validationStage.stage_name ? `
+          ### Multi-Stage Pipeline Integration:
+          - **Validation Stage**: ${validationStage.stage_name}
+          - **Stage Status**: ${validationStage.passed ? '✅ Passed' : '❌ Failed'}
+          - **Stage Issues**: ${(validationStage.issues || []).length}
+          ` : ''}
+          
+          ### Quality Score:
+          📊 **Overall Score**: ${report.quality_score || 'N/A'}/100
+          
+          ${errors > 0 ? '\n⚠️ **Action Required**: Please fix the errors before merging.' : ''}
+          ${warnings > 0 ? '\n💡 **Recommendations**: Consider addressing the warnings for improved documentation quality.' : ''}
+          ${passed === total && errors === 0 ? '\n🎉 **Excellent!** All quality gates passed with no errors.' : ''}
+          
+          📋 **Detailed Reports**: Available in workflow artifacts
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  # Fast Markdown Validation for Push Events
+  quick-markdown-check:
+    runs-on: ubuntu-latest
+    name: Quick Markdown Validation
+    if: github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'  # Updated to Node 20 LTS
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install tools
+      run: |
+        # Install modern markdownlint
+        npm install -g markdownlint-cli2
+        
+        # Install Python for auto-fix scripts
+        python -m pip install --upgrade pip
+        
+    - name: Run quick markdownlint check
+      id: markdownlint
+      run: |
+        echo "🔍 Running quick markdown validation..."
+        
+        if [ -f .markdownlint.json ]; then
+          echo "Using project markdownlint configuration"
+          markdownlint-cli2 "docs/**/*.md" "*.md" --config .markdownlint.json
+          LINT_EXIT_CODE=$?
+        else
+          echo "Using default markdownlint configuration"
+          markdownlint-cli2 "docs/**/*.md" "*.md"
+          LINT_EXIT_CODE=$?
+        fi
+        
+        if [ $LINT_EXIT_CODE -ne 0 ]; then
+          echo "❌ Markdownlint found errors that must be fixed manually"
+          echo "Run 'markdownlint-cli2 \"docs/**/*.md\" \"*.md\"' locally to see all issues"
+          exit 1
+        fi
+        
+        echo "✅ All markdown files pass linting"

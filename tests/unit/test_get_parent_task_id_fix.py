@@ -22,10 +22,11 @@ async def test_get_parent_task_id_fix():
         os.environ["MCP_TASK_ORCHESTRATOR_DB_PATH"] = db_path
         os.environ["MCP_TASK_ORCHESTRATOR_BASE_DIR"] = base_dir
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
-        from mcp_task_orchestrator.orchestrator.models import (
-            TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
-        )
+        from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+        # Import Clean Architecture v2.0 models
+        from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+        from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+        from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
         
         # Initialize StateManager with explicit paths
         state_manager = StateManager(db_path=db_path, base_dir=base_dir)
@@ -98,7 +99,7 @@ async def test_get_parent_task_id_fix():
             )
             print("SUCCESS: Empty string handled gracefully")
             
-            # Test with None (should be caught by type checking)
+            # Test with None
             # This would normally raise a TypeError in real usage
             
         except Exception as e:
@@ -129,9 +130,9 @@ async def test_integration_with_core():
         os.environ["MCP_TASK_ORCHESTRATOR_DB_PATH"] = db_path
         os.environ["MCP_TASK_ORCHESTRATOR_BASE_DIR"] = base_dir
         
-        from mcp_task_orchestrator.orchestrator.state import StateManager
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
-        from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
+        from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+        from mcp_task_orchestrator.orchestrator.task_orchestration_service import TaskOrchestrator
+        from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
         
         # Initialize components
         state_manager = StateManager(db_path=db_path, base_dir=base_dir)

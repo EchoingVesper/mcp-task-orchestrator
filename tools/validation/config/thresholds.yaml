@@ -1,0 +1,92 @@
+coverage:
+  minimum_overall: 90
+  minimum_critical_path: 99
+  minimum_new_code: 95
+  exclude_patterns:
+    - "*/test_*"
+    - "*/tests/*"
+    - "*/__pycache__/*"
+    - "*/migrations/*"
+    - "*/archives/*"
+
+complexity:
+  cyclomatic_max: 10
+  cognitive_max: 15
+  nesting_depth_max: 4
+  function_length_max: 50
+  class_length_max: 100
+
+performance:
+  response_time_ms:
+    api_endpoints: 100
+    database_queries: 50
+    file_operations: 200
+  memory_usage_mb:
+    baseline: 500
+    peak_acceptable: 800
+    leak_threshold: 50
+  cpu_usage_percent:
+    average_max: 70
+    peak_max: 95
+
+security:
+  vulnerability_levels:
+    critical: 0
+    high: 0
+    medium: 5
+    low: 20
+  dependency_age_days:
+    critical_max: 365
+    warning_max: 730
+  password_policies:
+    min_length: 12
+    require_special_chars: true
+    require_numbers: true
+
+code_quality:
+  ruff:
+    score_minimum: 9.5
+    exclude_rules: []
+    max_line_length: 100
+  mypy:
+    compliance_minimum: 95
+    strict_mode: true
+    ignore_missing_imports: false
+  imports:
+    max_unused: 0
+    max_circular_dependencies: 0
+    
+testing:
+  unit_tests:
+    pass_rate_minimum: 100
+    execution_time_max_seconds: 60
+    isolation_required: true
+  integration_tests:
+    pass_rate_minimum: 100
+    execution_time_max_seconds: 300
+    database_cleanup_required: true
+  
+documentation:
+  completeness_minimum: 95
+  api_documentation_required: true
+  architecture_docs_required: true
+  user_guides_required: true
+
+deployment:
+  environment_compatibility:
+    python_versions:
+      - "3.8"
+      - "3.9"
+      - "3.10"
+      - "3.11"
+      - "3.12"
+    operating_systems:
+      - "linux"
+      - "macos"
+      - "windows"
+  configuration_validation:
+    required_env_vars: []
+    optional_env_vars: []
+    config_files_required:
+      - "pyproject.toml"
+      - ".gitignore"

@@ -15,7 +15,7 @@ build/
 
 # Virtual environments
 venv/
-venv_*/
+.venv*/
 env/
 ENV/
 test_env/
@@ -60,6 +60,10 @@ logs/
 backup_obsolete_files/
 data/backups/*.bak*
 backups/
+archives/
+.claude/commands-backup-*/
+.migration-temp/
+# PRPs/completed/ - Intentionally tracked for historical reference
 
 # IDE specific files
 .idea/
@@ -67,12 +71,24 @@ backups/
 *.swp
 *.swo
 .DS_Store
+.cursor/
+.windsurf/
+.continue/
 
 # Local configuration
 .local/
 local_settings.py
-.claude/
 .tools/
+
+# Claude Code - Include commands and settings in version control
+# Exclude only temporary files and user-specific state
+.claude/logs/
+.claude/temp/
+.claude/cache/
+.claude/session/
+.claude/.mcp-session-*
+.claude/*-session.md
+.claude/settings.local.json
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -88,9 +104,6 @@ site/
 # Development artifacts
 *.tmp
 *.temp
-.pytest_cache/
-htmlcov/
-.coverage.*
 .benchmark_results/
 .temp_cleanup/
 
@@ -118,14 +131,42 @@ dmypy.json
 files-created-this-session.md
 
 # Claude Code specific patterns
-temp/
 .claude-temp/
 .claude-session/
 *-claude-session.md
 claude-work-session-*.md
 .claude-cache/
+.mcp.json
 
 # Temporary development artifacts
+temp/
 dev-temp/
 scratch/
 .working/
+
+# PRP-specific files (temporary/cache only - PRPs themselves should be committed)
+PRPs/*.tmp
+PRPs/.cache/
+.prp-session/
+
+# Reference entries
+reference/
+reference/*
+
+# Temporary files from development (Phase 4 Cleanup Prevention)
+fix_*.py
+system_health*.json
+security_test_suite*.*
+test-*hooks*.sh
+validation_*.json
+test_mcp_compatibility.py
+*_test_report_*.json
+
+# Scripts testing temporary directory (except README)
+scripts/testing/temporary/*.py
+scripts/testing/temporary/*.sh
+scripts/testing/temporary/*.json
+scripts/testing/temporary/*.log
+
+# Note: This project doesn't use Supabase - entries removed
+# Note: Duplicate database and venv entries cleaned up above

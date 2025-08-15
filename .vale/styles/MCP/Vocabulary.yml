@@ -1,0 +1,71 @@
+extends: substitution
+message: "Consider using '%s' instead of '%s'"
+level: suggestion
+swap:
+  # Technical terms - correct usage
+  orchestrator: Orchestrator
+  mcp: MCP
+  ai: AI
+  api: API
+  cli: CLI
+  json: JSON
+  yaml: YAML
+  sql: SQL
+  
+  # Project-specific terms
+  artifact storage: Artifact Storage
+  task breakdown: Task Breakdown
+  specialist assignment: Specialist Assignment
+  orchestration session: Orchestration Session
+  work item: Work Item
+  
+  # Architecture terms
+  clean architecture: Clean Architecture
+  domain driven design: Domain-Driven Design
+  dependency injection: Dependency Injection
+  repository pattern: Repository Pattern
+
+# Accepted project vocabulary
+accept:
+  - MCP
+  - Orchestrator
+  - SQLite
+  - PyPI
+  - GitHub
+  - API
+  - CLI
+  - JSON
+  - YAML
+  - WSL
+  - ADR
+  - DDD
+  - DTO
+  - IoC
+  - SOLID
+  - UUID
+  - regex
+  - async
+  - await
+  - pytest
+  - mypy
+  - isort
+  - markdownlint
+  - linting
+  - refactoring
+  - lifecycle
+  - workflow
+  - subprocess
+  - middleware
+  - filesystem
+  - timestamp
+  - healthcare
+  - DevOps
+  - MLOps
+  - backend
+  - frontend
+  - fullstack
+  - microservice
+  - monolith
+  - scalability
+  - observability
+  - telemetry

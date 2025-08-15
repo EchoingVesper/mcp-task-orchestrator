@@ -13,7 +13,7 @@ import yaml
 import asyncio
 import json
 
-from mcp_task_orchestrator.orchestrator.role_loader import create_example_roles_file, get_roles
+# create_example_roles_file moved to role management service, get_roles
 
 
 async def simulate_mcp_request(project_dir):
@@ -32,7 +32,7 @@ async def simulate_mcp_request(project_dir):
         if success:
             print(f"Created example roles file at: {file_path}")
         else:
-            print(f"Failed to create example roles file")
+            print("Failed to create example roles file")
     else:
         print(f"Example roles file already exists at: {example_file}")
     

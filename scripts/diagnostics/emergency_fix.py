@@ -10,7 +10,7 @@ from pathlib import Path
 
 def main():
     # Ensure we're in the project directory
-    project_dir = Path(r"E:\My Work\Programming\MCP Servers\mcp-task-orchestrator")
+    project_dir = Path(r"E:\dev\mcp-servers\mcp-task-orchestrator")
     os.chdir(project_dir)
     
     print("🔧 Emergency Database Schema Repair")
@@ -57,10 +57,10 @@ def main():
             conn.commit()
             print(f"\n✅ Applied {fixes_applied} schema fixes successfully!")
         else:
-            print(f"\n✅ No schema fixes needed - all columns present!")
+            print("\n✅ No schema fixes needed - all columns present!")
         
         # Test the fixed schema
-        print(f"\n🧪 Testing orchestrator functionality...")
+        print("\n🧪 Testing orchestrator functionality...")
         
         # Import and test the persistence manager
         sys.path.insert(0, str(project_dir))
@@ -72,24 +72,24 @@ def main():
         print(f"✅ Persistence manager works - found {len(active_tasks)} active tasks")
         
         # Test the core orchestrator
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+        from .orchestrator.task_orchestration_service import TaskOrchestrator
         orchestrator = TaskOrchestrator()
-        print(f"✅ Task orchestrator initialized successfully")
+        print("✅ Task orchestrator initialized successfully")
         
         # Clean up
         persistence.dispose()
         
-        print(f"\n🎉 EMERGENCY REPAIR SUCCESSFUL!")
-        print(f"\n📋 Next Steps:")
-        print(f"1. Restart Claude Desktop to clear any cached tool states")
-        print(f"2. Test the orchestration tools: orchestrator_initialize_session")
-        print(f"3. If working, proceed with Phase 2: orchestrated migration system")
+        print("\n🎉 EMERGENCY REPAIR SUCCESSFUL!")
+        print("\n📋 Next Steps:")
+        print("1. Restart Claude Desktop to clear any cached tool states")
+        print("2. Test the orchestration tools: orchestrator_initialize_session")
+        print("3. If working, proceed with Phase 2: orchestrated migration system")
         
         return True
         
     except Exception as e:
         print(f"❌ Error during repair: {e}")
-        print(f"Additional troubleshooting may be needed")
+        print("Additional troubleshooting may be needed")
         return False
     finally:
         conn.close()

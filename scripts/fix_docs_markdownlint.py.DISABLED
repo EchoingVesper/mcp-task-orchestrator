@@ -1,0 +1,523 @@
+#!/usr/bin/env python3
+"""
+Comprehensive Markdown Lint Error Fixer
+
+A robust solution for fixing markdownlint errors while preserving content integrity.
+Processes 232 markdown files to fix 8000+ errors systematically.
+"""
+
+import argparse
+import sys
+import time
+from pathlib import Path
+from typing import List, Optional
+
+# Add the markdown_fixer package to path
+sys.path.insert(0, str(Path(__file__).parent))
+
+from markdown_fixer import (
+    BackupManager,
+    MarkdownParser,
+    RuleFixer,
+    MarkdownValidator,
+    ProgressTracker,
+    RecoveryManager
+)
+from markdown_fixer.progress_tracker import FileResult
+
+
+class MarkdownFixOrchestrator:
+    """Orchestrates the markdown fixing process."""
+    
+    def __init__(self, 
+                 backup_dir: Optional[Path] = None,
+                 config_path: Optional[Path] = None,
+                 verbose: bool = True):
+        """
+        Initialize orchestrator.
+        
+        Args:
+            backup_dir: Directory for backups
+            config_path: Path to markdownlint config
+            verbose: Whether to print verbose output
+        """
+        self.backup_manager = BackupManager(backup_dir)
+        self.validator = MarkdownValidator(config_path)
+        self.rule_fixer = RuleFixer()
+        self.recovery_manager = RecoveryManager(backup_dir)
+        self.verbose = verbose
+        
+    def validate_environment(self) -> bool:
+        """
+        Validate that environment is ready for processing.
+        
+        Returns:
+            True if environment is valid
+        """
+        if self.verbose:
+            print("🔍 Validating environment...")
+        
+        # Check markdownlint availability
+        if not self.validator.is_markdownlint_available():
+            print("❌ markdownlint is not available. Install with: npm install -g markdownlint-cli")
+            return False
+        
+        # Check Python version
+        if sys.version_info < (3, 8):
+            print("❌ Python 3.8 or higher is required")
+            return False
+        
+        # Check write permissions
+        docs_dir = Path("docs")
+        if not docs_dir.exists():
+            print("❌ docs/ directory does not exist")
+            return False
+        
+        if not docs_dir.is_dir():
+            print("❌ docs/ is not a directory")
+            return False
+        
+        # Test write permissions
+        try:
+            test_file = docs_dir / ".write_test"
+            test_file.write_text("test")
+            test_file.unlink()
+        except Exception:
+            print("❌ docs/ directory is not writable")
+            return False
+        
+        if self.verbose:
+            print("✅ Environment validation passed")
+        
+        return True
+    
+    def find_markdown_files(self, 
+                          path: Path = None, 
+                          exclude_patterns: List[str] = None) -> List[Path]:
+        """
+        Find all markdown files to process.
+        
+        Args:
+            path: Directory to search (default: docs/)
+            exclude_patterns: Patterns to exclude
+            
+        Returns:
+            List of markdown file paths
+        """
+        path = path or Path("docs")
+        exclude_patterns = exclude_patterns or ["**/archives/**"]
+        
+        # Find all markdown files
+        md_files = []
+        for pattern in ['*.md', '**/*.md']:
+            md_files.extend(path.glob(pattern))
+        
+        # Filter out excluded files
+        filtered_files = []
+        for file_path in md_files:
+            excluded = False
+            for exclude_pattern in exclude_patterns:
+                if file_path.match(exclude_pattern):
+                    excluded = True
+                    break
+            if not excluded:
+                filtered_files.append(file_path)
+        
+        return sorted(filtered_files)
+    
+    def process_file(self, file_path: Path, dry_run: bool = False) -> FileResult:
+        """
+        Process a single markdown file.
+        
+        Args:
+            file_path: Path to file to process
+            dry_run: If True, don't actually modify files
+            
+        Returns:
+            FileResult with processing details
+        """
+        start_time = time.time()
+        
+        try:
+            # Validate file exists
+            if not file_path.exists():
+                return FileResult(
+                    file_path=file_path,
+                    success=False,
+                    errors_before=0,
+                    errors_after=0,
+                    processing_time=0,
+                    error_message="File not found"
+                )
+            
+            # Get initial error count
+            initial_errors = self.validator.validate_file(file_path)
+            errors_before = len(initial_errors)
+            
+            if errors_before == 0:
+                # No errors to fix
+                return FileResult(
+                    file_path=file_path,
+                    success=True,
+                    errors_before=0,
+                    errors_after=0,
+                    processing_time=time.time() - start_time
+                )
+            
+            # Read file content
+            content = file_path.read_text(encoding='utf-8')
+            original_content = content
+            
+            # Apply fixes
+            fixed_content = self.rule_fixer.apply_all_fixes(content)
+            
+            if not dry_run and fixed_content != original_content:
+                # Create backup before modifying
+                backup_path = self.backup_manager.create_backup(file_path)
+                
+                # Write fixed content
+                file_path.write_text(fixed_content, encoding='utf-8')
+                
+                # Validate fixes
+                final_errors = self.validator.validate_file(file_path)
+                errors_after = len(final_errors)
+                
+                return FileResult(
+                    file_path=file_path,
+                    success=True,
+                    errors_before=errors_before,
+                    errors_after=errors_after,
+                    processing_time=time.time() - start_time,
+                    backup_created=True
+                )
+            else:
+                # Dry run or no changes needed
+                return FileResult(
+                    file_path=file_path,
+                    success=True,
+                    errors_before=errors_before,
+                    errors_after=errors_before if dry_run else 0,
+                    processing_time=time.time() - start_time
+                )
+                
+        except Exception as e:
+            return FileResult(
+                file_path=file_path,
+                success=False,
+                errors_before=0,
+                errors_after=0,
+                processing_time=time.time() - start_time,
+                error_message=str(e)
+            )
+    
+    def process_files(self, 
+                     file_paths: List[Path], 
+                     dry_run: bool = False,
+                     create_recovery_point: bool = True) -> List[FileResult]:
+        """
+        Process multiple markdown files.
+        
+        Args:
+            file_paths: List of file paths to process
+            dry_run: If True, don't actually modify files
+            create_recovery_point: If True, create recovery point before processing
+            
+        Returns:
+            List of FileResult objects
+        """
+        if not file_paths:
+            if self.verbose:
+                print("No files to process")
+            return []
+        
+        # Create recovery point before processing
+        if create_recovery_point and not dry_run:
+            recovery_point = self.recovery_manager.create_recovery_point(
+                "Before markdown fixing"
+            )
+            if self.verbose:
+                print(f"📁 Created recovery point: {recovery_point}")
+        
+        # Initialize progress tracker
+        progress = ProgressTracker(len(file_paths), verbose=self.verbose)
+        progress.start()
+        
+        results = []
+        
+        try:
+            for file_path in file_paths:
+                result = self.process_file(file_path, dry_run=dry_run)
+                results.append(result)
+                progress.update(result)
+                
+        except KeyboardInterrupt:
+            if self.verbose:
+                print("\n⚠️  Processing interrupted by user")
+            progress.finish()
+            return results
+        
+        progress.finish()
+        return results
+    
+    def generate_report(self, results: List[FileResult], output_path: Path = None) -> None:
+        """
+        Generate detailed report of processing results.
+        
+        Args:
+            results: List of processing results
+            output_path: Path to save report (optional)
+        """
+        if not results:
+            return
+        
+        # Calculate statistics
+        total_files = len(results)
+        successful = sum(1 for r in results if r.success)
+        failed = total_files - successful
+        total_errors_fixed = sum(r.errors_before - r.errors_after for r in results if r.success)
+        
+        # Generate report content
+        report_lines = [
+            "# Markdown Lint Fixing Report",
+            "",
+            f"**Generated:** {time.strftime('%Y-%m-%d %H:%M:%S')}",
+            "",
+            "## Summary",
+            "",
+            f"- **Total files:** {total_files}",
+            f"- **Successful:** {successful}",
+            f"- **Failed:** {failed}",
+            f"- **Total errors fixed:** {total_errors_fixed}",
+            "",
+        ]
+        
+        if failed > 0:
+            report_lines.extend([
+                "## Failed Files",
+                "",
+            ])
+            for result in results:
+                if not result.success:
+                    report_lines.append(f"- `{result.file_path}`: {result.error_message}")
+            report_lines.append("")
+        
+        # Top files by errors fixed
+        top_fixes = sorted(
+            [r for r in results if r.success and r.errors_before > 0],
+            key=lambda r: r.errors_before - r.errors_after,
+            reverse=True
+        )[:10]
+        
+        if top_fixes:
+            report_lines.extend([
+                "## Top Files by Errors Fixed",
+                "",
+            ])
+            for result in top_fixes:
+                errors_fixed = result.errors_before - result.errors_after
+                report_lines.append(f"- `{result.file_path}`: {errors_fixed} errors fixed")
+            report_lines.append("")
+        
+        report_content = "\n".join(report_lines)
+        
+        # Print report
+        if self.verbose:
+            print("\n" + "="*60)
+            print(report_content)
+        
+        # Save report if requested
+        if output_path:
+            output_path.write_text(report_content, encoding='utf-8')
+            if self.verbose:
+                print(f"\n📝 Report saved to: {output_path}")
+
+
+def main():
+    """Main entry point."""
+    parser = argparse.ArgumentParser(
+        description="Fix markdownlint errors in documentation files",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Dry run to see what would be fixed
+  python fix_docs_markdownlint.py --dry-run
+  
+  # Fix all files with backup
+  python fix_docs_markdownlint.py --backup
+  
+  # Fix specific directory
+  python fix_docs_markdownlint.py --path docs/users/ --backup
+  
+  # Emergency restore all files
+  python fix_docs_markdownlint.py --emergency-restore
+        """
+    )
+    
+    parser.add_argument(
+        '--path', 
+        type=Path, 
+        default=Path('docs'),
+        help='Directory to process (default: docs/)'
+    )
+    
+    parser.add_argument(
+        '--exclude',
+        nargs='*',
+        default=['**/archives/**'],
+        help='Patterns to exclude (default: **/archives/**)'
+    )
+    
+    parser.add_argument(
+        '--file',
+        type=Path,
+        help='Process single file instead of directory'
+    )
+    
+    parser.add_argument(
+        '--dry-run',
+        action='store_true',
+        help='Show what would be fixed without making changes'
+    )
+    
+    parser.add_argument(
+        '--backup',
+        action='store_true',
+        help='Create backups before modifying files'
+    )
+    
+    parser.add_argument(
+        '--backup-dir',
+        type=Path,
+        default=Path('backups'),
+        help='Directory for backups (default: backups/)'
+    )
+    
+    parser.add_argument(
+        '--config',
+        type=Path,
+        default=Path('.markdownlint.json'),
+        help='Path to markdownlint config (default: .markdownlint.json)'
+    )
+    
+    parser.add_argument(
+        '--report',
+        type=Path,
+        help='Save detailed report to file'
+    )
+    
+    parser.add_argument(
+        '--verbose',
+        action='store_true',
+        default=True,
+        help='Print detailed progress (default: True)'
+    )
+    
+    parser.add_argument(
+        '--quiet',
+        action='store_true',
+        help='Suppress verbose output'
+    )
+    
+    # Emergency operations
+    parser.add_argument(
+        '--emergency-restore',
+        action='store_true',
+        help='Emergency restore all files from backups'
+    )
+    
+    parser.add_argument(
+        '--list-recovery-points',
+        action='store_true',
+        help='List available recovery points'
+    )
+    
+    parser.add_argument(
+        '--restore-recovery-point',
+        type=Path,
+        help='Restore from specific recovery point'
+    )
+    
+    args = parser.parse_args()
+    
+    # Handle quiet mode
+    verbose = args.verbose and not args.quiet
+    
+    # Initialize orchestrator
+    orchestrator = MarkdownFixOrchestrator(
+        backup_dir=args.backup_dir if args.backup else None,
+        config_path=args.config,
+        verbose=verbose
+    )
+    
+    # Handle emergency operations
+    if args.emergency_restore:
+        if verbose:
+            print("🚨 Emergency restore requested")
+        results = orchestrator.recovery_manager.emergency_restore_all()
+        success_count = sum(results.values())
+        total_count = len(results)
+        if verbose:
+            print(f"✅ Restored {success_count} of {total_count} files")
+        return 0 if success_count == total_count else 1
+    
+    if args.list_recovery_points:
+        recovery_points = orchestrator.recovery_manager.list_recovery_points()
+        if recovery_points:
+            print("Available recovery points:")
+            for rp in recovery_points:
+                print(f"  {rp['timestamp']}: {rp['description']} ({len(rp['files'])} files)")
+        else:
+            print("No recovery points found")
+        return 0
+    
+    if args.restore_recovery_point:
+        if verbose:
+            print(f"Restoring from recovery point: {args.restore_recovery_point}")
+        results = orchestrator.recovery_manager.restore_from_recovery_point(args.restore_recovery_point)
+        success_count = sum(results.values())
+        total_count = len(results)
+        if verbose:
+            print(f"✅ Restored {success_count} of {total_count} files")
+        return 0 if success_count == total_count else 1
+    
+    # Validate environment
+    if not orchestrator.validate_environment():
+        return 1
+    
+    # Find files to process
+    if args.file:
+        file_paths = [args.file] if args.file.exists() else []
+    else:
+        file_paths = orchestrator.find_markdown_files(args.path, args.exclude)
+    
+    if not file_paths:
+        if verbose:
+            print("No markdown files found to process")
+        return 0
+    
+    if verbose:
+        print(f"Found {len(file_paths)} markdown files to process")
+        if args.dry_run:
+            print("🔍 Running in dry-run mode (no changes will be made)")
+    
+    # Process files
+    results = orchestrator.process_files(
+        file_paths, 
+        dry_run=args.dry_run,
+        create_recovery_point=args.backup and not args.dry_run
+    )
+    
+    # Generate report
+    if args.report or verbose:
+        orchestrator.generate_report(results, args.report)
+    
+    # Return success/failure based on results
+    if results:
+        failed_count = sum(1 for r in results if not r.success)
+        return 0 if failed_count == 0 else 1
+    
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

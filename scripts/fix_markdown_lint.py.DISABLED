@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""
+Script to automatically fix common markdownlint issues across all .md files.
+This handles the most frequent issues we've identified.
+"""
+
+import os
+import re
+import glob
+from pathlib import Path
+
+
+def fix_markdown_file(filepath):
+    """Fix common markdownlint issues in a single file."""
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    original_content = content
+    
+    # MD047: Ensure single trailing newline
+    content = content.rstrip() + '\n'
+    
+    # MD022: Add blank lines around headings
+    content = re.sub(r'(\n)(#{1,6}\s+.+)(\n)(?!\n)', r'\1\n\2\3\n', content)
+    content = re.sub(r'(?<!\n\n)(#{1,6}\s+.+)(\n)', r'\n\1\2', content)
+    
+    # MD031: Add blank lines around fenced code blocks
+    content = re.sub(r'(?<!\n\n)(```[\s\S]*?```)(?!\n\n)', r'\n\1\n', content)
+    
+    # MD032: Add blank lines around lists
+    # Before lists
+    content = re.sub(r'(?<!\n\n)(\n- .+)', r'\n\1', content)
+    content = re.sub(r'(?<!\n\n)(\n\d+\. .+)', r'\n\1', content)
+    # After lists (more complex - need to detect end of list)
+    
+    # MD007: Fix list indentation (remove extra spaces at start of top-level items)
+    content = re.sub(r'\n   - ', r'\n- ', content)
+    content = re.sub(r'\n   \d+\. ', r'\n1. ', content)
+    
+    # MD040: Add 'text' language to unlabeled code blocks
+    content = re.sub(r'\n```\n', r'\n```text\n', content)
+    
+    # Clean up excessive blank lines (max 2 consecutive)
+    content = re.sub(r'\n{3,}', r'\n\n', content)
+    
+    # Only write if content changed
+    if content != original_content:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+        return True
+    return False
+
+
+def main():
+    """Fix markdownlint issues in all .md files."""
+    # Find all .md files
+    md_files = []
+    for pattern in ['*.md', '**/*.md']:
+        md_files.extend(glob.glob(pattern, recursive=True))
+    
+    # Remove duplicates and sort
+    md_files = sorted(set(md_files))
+    
+    print(f"Found {len(md_files)} markdown files")
+    
+    fixed_count = 0
+    for filepath in md_files:
+        try:
+            if fix_markdown_file(filepath):
+                print(f"Fixed: {filepath}")
+                fixed_count += 1
+            else:
+                print(f"No changes: {filepath}")
+        except Exception as e:
+            print(f"Error processing {filepath}: {e}")
+    
+    print(f"\nCompleted! Fixed {fixed_count} files out of {len(md_files)} total.")
+    print("\nNext steps:")
+    print("1. Run 'markdownlint .' to check remaining issues")
+    print("2. Manually review any complex formatting issues")
+    print("3. Test that content is still readable and correctly formatted")
+
+
+if __name__ == "__main__":
+    main()

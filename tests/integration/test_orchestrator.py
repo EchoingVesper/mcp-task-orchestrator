@@ -26,13 +26,14 @@ logging.basicConfig(
 logger = logging.getLogger("test_orchestrator")
 
 # Import after configuring logging
-from mcp_task_orchestrator.orchestrator.models import (
-    TaskBreakdown, SubTask, TaskStatus, SpecialistType, ComplexityLevel
-)
+# Import Clean Architecture v2.0 models
+from mcp_task_orchestrator.domain.entities.task import Task, TaskStatus, TaskType
+from mcp_task_orchestrator.domain.value_objects.complexity_level import ComplexityLevel
+from mcp_task_orchestrator.domain.value_objects.specialist_type import SpecialistType
 from mcp_task_orchestrator.persistence import PersistenceManager
-from mcp_task_orchestrator.orchestrator.state import StateManager
-from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
-from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
+from mcp_task_orchestrator.orchestrator.task_orchestration_service import TaskOrchestrator
 
 async def cleanup_stale_locks():
     """Clean up any stale lock files."""
@@ -71,7 +72,7 @@ async def test_task_orchestrator():
     
     try:
         # Rest of the test logic will remain the same...
-        # (I'll preserve the existing test logic and just add cleanup at the end)
+        #
         
         # Initialize orchestrator
         orchestrator = TaskOrchestrator(
@@ -81,12 +82,12 @@ async def test_task_orchestrator():
         )
         
         # Create a test task
-        task_breakdown = TaskBreakdown(
+        task_breakdown = Task(
             title="Test Task for Orchestrator",
             description="A test task to verify orchestrator functionality",
             complexity=ComplexityLevel.MODERATE,
             subtasks=[
-                SubTask(
+                Task(
                     task_id="test_subtask_001",
                     title="Test Subtask",
                     description="A test subtask",
@@ -102,7 +103,7 @@ async def test_task_orchestrator():
         logger.info(f"✅ Task planned successfully with ID: {parent_task_id}")
         
         # Test subtask execution
-        subtask_id = task_breakdown.subtasks[0].task_id
+        subtask_id = task_breakdown.children[0].task_id
         logger.info(f"Testing execute_subtask for {subtask_id}...")
         execution_context = await orchestrator.execute_subtask(subtask_id)
         logger.info("✅ Subtask execution context provided")
@@ -160,7 +161,7 @@ async def test_task_orchestrator():
     
     # Create subtasks
     subtasks = [
-        SubTask(
+        Task(
             task_id=f"architect_{uuid.uuid4().hex[:6]}",
             title="Design Test Architecture",
             description="Design a simple test architecture",
@@ -168,7 +169,7 @@ async def test_task_orchestrator():
             dependencies=[],
             estimated_effort="10 minutes"
         ),
-        SubTask(
+        Task(
             task_id=f"implementer_{uuid.uuid4().hex[:6]}",
             title="Implement Test Feature",
             description="Implement a simple test feature",
@@ -179,7 +180,7 @@ async def test_task_orchestrator():
     ]
     
     # Create task breakdown
-    breakdown = TaskBreakdown(
+    breakdown = Task(
         parent_task_id=parent_task_id,
         description="Test task for orchestrator",
         complexity=ComplexityLevel.SIMPLE,

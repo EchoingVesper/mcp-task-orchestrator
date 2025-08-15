@@ -415,7 +415,7 @@ class DecisionManager:
         narrative_parts.append(f"During this subtask, {len(decisions)} architectural decisions were made.")
         
         if summary["key_decisions"]:
-            narrative_parts.append(f"\nKey high-impact decisions:")
+            narrative_parts.append("\nKey high-impact decisions:")
             for decision in summary["key_decisions"]:
                 narrative_parts.append(f"- {decision['title']}: {decision['decision']}")
         
@@ -425,7 +425,7 @@ class DecisionManager:
                 narrative_parts.append(f" and {len(summary['affected_files']) - 5} others")
         
         if summary["outstanding_risks"]:
-            narrative_parts.append(f"\nOutstanding risks to monitor:")
+            narrative_parts.append("\nOutstanding risks to monitor:")
             for risk in summary["outstanding_risks"][:3]:  # Show top 3 risks
                 narrative_parts.append(f"- {risk['risk']} (from {risk['decision_title']})")
         

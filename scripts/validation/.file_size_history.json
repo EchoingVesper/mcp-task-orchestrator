@@ -1,0 +1,40 @@
+{
+  "2025-07-08T03:57:26.695457": [
+    {
+      "file_path": "/tmp/validation_test_3j81sjym/no_metadata.md",
+      "size_bytes": 106,
+      "size_lines": 5,
+      "size_mb": 0.0001010894775390625,
+      "last_modified": "2025-07-08T03:57:25.428640",
+      "content_hash": "bd3e146e10fe55124ad3aa09cb5d51f0",
+      "warning_level": "none"
+    },
+    {
+      "file_path": "/tmp/validation_test_3j81sjym/broken_refs.md",
+      "size_bytes": 536,
+      "size_lines": 19,
+      "size_mb": 0.00051116943359375,
+      "last_modified": "2025-07-08T03:57:25.428640",
+      "content_hash": "cc5e0b41cd29ecaef0730ea373161822",
+      "warning_level": "none"
+    },
+    {
+      "file_path": "/tmp/validation_test_3j81sjym/invalid_feature.md",
+      "size_bytes": 1483,
+      "size_lines": 16,
+      "size_mb": 0.0014142990112304688,
+      "last_modified": "2025-07-08T03:57:25.428640",
+      "content_hash": "bfd54e391af3c2f1feee64d010b03432",
+      "warning_level": "none"
+    },
+    {
+      "file_path": "/tmp/validation_test_3j81sjym/valid_feature.md",
+      "size_bytes": 1368,
+      "size_lines": 74,
+      "size_mb": 0.00130462646484375,
+      "last_modified": "2025-07-08T03:57:25.428640",
+      "content_hash": "96c192b08c1502f574795a9e07030558",
+      "warning_level": "none"
+    }
+  ]
+}

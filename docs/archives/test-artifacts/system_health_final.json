@@ -1,0 +1,195 @@
+{
+  "timestamp": "2025-08-02T07:11:51.407005",
+  "report_type": "comprehensive_system_analysis",
+  "health_checks": {
+    "overall_healthy": false,
+    "results": {
+      "database_connectivity": {
+        "healthy": false,
+        "message": "No task repository configured",
+        "duration_ms": 0.017,
+        "details": {}
+      },
+      "task_repository": {
+        "healthy": false,
+        "message": "Task repository not available",
+        "duration_ms": 0.007,
+        "details": {}
+      },
+      "state_repository": {
+        "healthy": false,
+        "message": "State repository not available",
+        "duration_ms": 0.003,
+        "details": {}
+      },
+      "memory_usage": {
+        "healthy": true,
+        "message": "Memory usage: 0.2%",
+        "duration_ms": 0.378,
+        "details": {
+          "memory_percent": 0.23000547049299302,
+          "memory_rss_mb": 36.70703125,
+          "memory_vms_mb": 46.25390625
+        }
+      },
+      "disk_space": {
+        "healthy": true,
+        "message": "Free disk space: 17.9%",
+        "duration_ms": 0.292,
+        "details": {
+          "free_percent": 17.94498526590143,
+          "free_gb": 334.31787872314453,
+          "total_gb": 1863.0156211853027
+        }
+      }
+    }
+  },
+  "diagnostics": {
+    "system_info": {
+      "status": "pass",
+      "category": "system",
+      "message": "System information collected",
+      "recommendations": [],
+      "details": {
+        "python_version": "3.12.3 (main, Jun 18 2025, 17:59:45) [GCC 13.3.0]",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "working_directory": "/mnt/e/dev/mcp-servers/mcp-task-orchestrator",
+        "process_id": 12170,
+        "memory_usage_mb": 36.70703125,
+        "cpu_count": 12,
+        "disk_free_gb": 334.31787872314453,
+        "environment_vars": {
+          "SHELL": "/bin/bash",
+          "COREPACK_ENABLE_AUTO_PIN": "0",
+          "WSL2_GUI_APPS_ENABLED": "1",
+          "WSL_DISTRO_NAME": "Ubuntu",
+          "NAME": "Valhalla",
+          "PWD": "/mnt/e/dev/mcp-servers/mcp-task-orchestrator",
+          "LOGNAME": "aya",
+          "CLAUDECODE": "1",
+          "HOME": "/home/aya",
+          "LANG": "C.UTF-8",
+          "WSL_INTEROP": "/run/WSL/2344_interop",
+          "LS_COLORS": "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:",
+          "WAYLAND_DISPLAY": "wayland-0",
+          "LESSCLOSE": "/usr/bin/lesspipe %s %s",
+          "TERM": "xterm-256color",
+          "LESSOPEN": "| /usr/bin/lesspipe %s",
+          "USER": "aya",
+          "DISPLAY": ":0",
+          "SHLVL": "2",
+          "GIT_EDITOR": "true",
+          "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "delta",
+          "XDG_RUNTIME_DIR": "/run/user/1000/",
+          "CLAUDE_CODE_ENTRYPOINT": "cli",
+          "WSLENV": "",
+          "XDG_DATA_DIRS": "/usr/local/share:/usr/share:/var/lib/snapd/desktop",
+          "PATH": "/home/aya/.local/bin:/home/aya/.npm-global/bin:/home/aya/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files/Common Files/Oracle/Java/javapath:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/:/mnt/c/Program Files/CMake/bin:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/WINDOWS/system32/config/systemprofile/.cargo/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA app/NvDLISR:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/Users/Fiona/AppData/Local/Programs/MiKTeX/miktex/bin/x64:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/Users/Fiona/AppData/Local/nvm:/mnt/c/nvm4w/nodejs:/mnt/c/Program Files/GitHub CLI/:/mnt/c/Windows/System32/cmd.exe:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/PowerShell/7/:/mnt/c/msys64/mingw64/bin:/mnt/c/Users/Fiona/scoop/shims:/mnt/c/Users/Fiona/.cargo/bin:/mnt/c/Users/Fiona/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Fiona/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/Fiona/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/Fiona/AppData/Local/Programs/Ollama:/mnt/c/Users/Fiona/.dotnet/tools:/mnt/c/users/fiona/.local/bin:/mnt/c/Users/Fiona/AppData/Local/Muse Hub/lib:/mnt/c/Users/Fiona/AppData/Roaming/npm:/mnt/c/Users/Fiona/.cache/lm-studio/bin:/mnt/c/Users/Fiona/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Fiona/AppData/Local/Programs/MiKTeX/miktex/bin/x64/:/mnt/c/Users/Fiona/AppData/Local/Pandoc/:/mnt/c/Users/Fiona/AppData/Local/Programs/Windsurf/bin:/mnt/c/Users/Fiona/AppData/Local/nvm:/mnt/c/nvm4w/nodejs:/mnt/c/Users/Fiona/.dotnet/tools:/mnt/c/Users/Fiona/AppData/Local/Programs/cursor/resources/app/bin:/mnt/c/Users/Fiona/.vscode/extensions/ms-python.debugpy-2025.8.0-win32-x64/bundled/scripts/noConfigScripts:/mnt/c/Users/Fiona/AppData/Roaming/Code/User/globalStorage/github.copilot-chat/debugCommand:/snap/bin",
+          "DBUS_SESSION_BUS_ADDRESS": "unix:path=/run/user/1000/bus",
+          "HOSTTYPE": "x86_64",
+          "PULSE_SERVER": "unix:/mnt/wslg/PulseServer",
+          "_": "/usr/bin/python"
+        },
+        "installed_packages": []
+      }
+    },
+    "database_integrity": {
+      "status": "pass",
+      "category": "database",
+      "message": "Checked 2 database files",
+      "recommendations": [],
+      "details": {
+        "database_files": [
+          ".task_orchestrator/orchestrator.db",
+          ".task_orchestrator/task_orchestrator.db"
+        ]
+      }
+    },
+    "file_permissions": {
+      "status": "pass",
+      "category": "security",
+      "message": "Checked permissions for 2 paths",
+      "recommendations": [],
+      "details": {
+        "checked_paths": [
+          ".",
+          ".task_orchestrator"
+        ],
+        "issues": []
+      }
+    },
+    "configuration_validation": {
+      "status": "pass",
+      "category": "configuration",
+      "message": "Validated 1 configuration files",
+      "recommendations": [],
+      "details": {
+        "config_files": [
+          "pyproject.toml"
+        ],
+        "issues": []
+      }
+    },
+    "dependency_check": {
+      "status": "pass",
+      "category": "dependencies",
+      "message": "Checked dependencies - 4 available",
+      "recommendations": [],
+      "details": {
+        "available": {
+          "psutil": "7.0.0",
+          "yaml": "6.0.1",
+          "pydantic": "2.11.7",
+          "mcp": "unknown"
+        },
+        "missing_core": [],
+        "missing_optional": []
+      }
+    },
+    "error_analysis": {
+      "status": "error",
+      "category": "errors",
+      "message": "Error analysis failed: 'dict' object has no attribute 'get_health_status'",
+      "recommendations": [
+        "Check error tracking system"
+      ],
+      "details": {
+        "error": "'dict' object has no attribute 'get_health_status'"
+      }
+    },
+    "performance_analysis": {
+      "status": "info",
+      "category": "performance",
+      "message": "System monitor not available",
+      "recommendations": [
+        "Enable system monitoring for performance analysis"
+      ],
+      "details": {}
+    },
+    "resource_utilization": {
+      "status": "info",
+      "category": "resources",
+      "message": "System monitor not available for resource analysis",
+      "recommendations": [
+        "Enable system monitoring"
+      ],
+      "details": {}
+    }
+  },
+  "system_monitoring": {
+    "status": {
+      "monitoring_active": false,
+      "collection_interval": 30,
+      "alert_rules_count": 4,
+      "active_alerts": 0
+    },
+    "metrics": {
+      "uptime_seconds": 3e-05,
+      "total_metrics": 0,
+      "collection_start": "2025-08-02T07:12:05.594590",
+      "last_minute": {},
+      "last_hour": {},
+      "all_time": {}
+    }
+  }
+}

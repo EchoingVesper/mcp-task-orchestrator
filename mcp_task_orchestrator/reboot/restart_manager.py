@@ -19,7 +19,7 @@ from typing import Dict, List, Optional, Any, Callable
 from dataclasses import dataclass
 
 from .state_serializer import StateSerializer, ServerStateSnapshot, RestartReason
-from ..orchestrator.models import TaskBreakdown, SubTask, TaskStatus
+from ..domain.entities.task import Task, TaskType, TaskStatus
 
 logger = logging.getLogger("mcp_task_orchestrator.server.restart_manager")
 
@@ -321,7 +321,7 @@ class StateRestorer:
             
             for task_data in active_tasks:
                 try:
-                    # Convert task data back to TaskBreakdown object
+                    # Convert task data back to Task object
                     task_breakdown = self._dict_to_task_breakdown(task_data)
                     
                     # Store the task in state manager
@@ -367,12 +367,12 @@ class StateRestorer:
             logger.error(f"Failed to restore client sessions: {e}")
             return False
 
-    def _dict_to_task_breakdown(self, task_data: Dict[str, Any]) -> TaskBreakdown:
-        """Convert dictionary data back to TaskBreakdown object."""
+    def _dict_to_task_breakdown(self, task_data: Dict[str, Any]) -> Task:
+        """Convert dictionary data back to Task object."""
         # Create subtasks
         subtasks = []
         for st_data in task_data.get('subtasks', []):
-            subtask = SubTask(
+            subtask = Task(
                 task_id=st_data['task_id'],
                 title=st_data['title'],
                 description=st_data['description'],
@@ -386,7 +386,7 @@ class StateRestorer:
             subtasks.append(subtask)
         
         # Create task breakdown
-        task_breakdown = TaskBreakdown(
+        task_breakdown = Task(
             parent_task_id=task_data['task_id'],
             description=task_data['description'],
             complexity=task_data.get('complexity', 'moderate'),

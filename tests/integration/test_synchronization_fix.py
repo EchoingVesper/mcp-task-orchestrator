@@ -24,9 +24,9 @@ logging.basicConfig(
 logger = logging.getLogger("synchronization_test")
 
 # Import the fixed components
-from mcp_task_orchestrator.orchestrator.state import StateManager
-from mcp_task_orchestrator.orchestrator.specialists import SpecialistManager
-from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+from mcp_task_orchestrator.orchestrator.orchestration_state_manager import StateManager
+from mcp_task_orchestrator.orchestrator.specialist_management_service import SpecialistManager
+from mcp_task_orchestrator.orchestrator.task_orchestration_service import TaskOrchestrator
 
 
 async def test_basic_operations():
@@ -189,7 +189,7 @@ async def main():
     
     for test_name, result in results.items():
         status = "✅ PASS" if result["success"] else "❌ FAIL"
-        logger.info(f"{status:8} {test_name:30} ({result['elapsed']:.2f}s)")
+        logger.info(f"{status:8} {test_name:30}")
     
     logger.info(f"\nResults: {passed}/{total} tests passed")
     logger.info(f"Total time: {total_elapsed:.2f}s")

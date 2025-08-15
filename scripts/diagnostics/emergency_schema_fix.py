@@ -51,7 +51,7 @@ def analyze_schema_mismatch():
             
         # Check subtasks table schema
         actual_schema = check_table_schema(cursor, 'subtasks')
-        print(f"📊 Current subtasks table schema:")
+        print("📊 Current subtasks table schema:")
         for col, dtype in actual_schema.items():
             print(f"  - {col}: {dtype}")
         
@@ -76,7 +76,7 @@ def analyze_schema_mismatch():
             'quality_gate_level': 'STRING'
         }
         
-        print(f"\n🎯 Expected columns:")
+        print("\n🎯 Expected columns:")
         for col, dtype in expected_columns.items():
             print(f"  - {col}: {dtype}")
         
@@ -87,11 +87,11 @@ def analyze_schema_mismatch():
                 missing_columns.append(col)
         
         if missing_columns:
-            print(f"\n❌ Missing columns in subtasks table:")
+            print("\n❌ Missing columns in subtasks table:")
             for col in missing_columns:
                 print(f"  - {col}: {expected_columns[col]}")
             
-            print(f"\n🔧 Generating repair SQL...")
+            print("\n🔧 Generating repair SQL...")
             repair_sql = []
             
             for col in missing_columns:
@@ -110,7 +110,7 @@ def analyze_schema_mismatch():
                 sql = f"ALTER TABLE subtasks ADD COLUMN {col} {dtype}{default_value};"
                 repair_sql.append(sql)
             
-            print(f"\n📝 Repair SQL commands:")
+            print("\n📝 Repair SQL commands:")
             for sql in repair_sql:
                 print(f"  {sql}")
             
@@ -131,14 +131,14 @@ def apply_schema_fixes(repair_sql):
         conn = sqlite3.connect("task_orchestrator.db")
         cursor = conn.cursor()
         
-        print(f"\n🔧 Applying schema fixes...")
+        print("\n🔧 Applying schema fixes...")
         
         for sql in repair_sql:
             print(f"  Executing: {sql}")
             cursor.execute(sql)
         
         conn.commit()
-        print(f"✅ Schema fixes applied successfully!")
+        print("✅ Schema fixes applied successfully!")
         return True
         
     except Exception as e:
@@ -150,11 +150,11 @@ def apply_schema_fixes(repair_sql):
 def test_orchestrator_tools():
     """Test if the orchestrator tools are working after the fix."""
     try:
-        print(f"\n🧪 Testing orchestrator functionality...")
+        print("\n🧪 Testing orchestrator functionality...")
         
         # Try importing the core modules
         from mcp_task_orchestrator.db.persistence import DatabasePersistenceManager
-        from mcp_task_orchestrator.orchestrator.core import TaskOrchestrator
+        from .orchestrator.task_orchestration_service import TaskOrchestrator
         
         # Try creating a persistence manager
         persistence = DatabasePersistenceManager()
@@ -165,7 +165,7 @@ def test_orchestrator_tools():
         
         persistence.dispose()
         
-        print(f"✅ Orchestrator tools appear to be working!")
+        print("✅ Orchestrator tools appear to be working!")
         return True
         
     except Exception as e:
@@ -192,7 +192,7 @@ def main():
         # We have repair SQL to apply
         repair_sql = repair_result
         
-        print(f"\n❓ Apply these schema fixes? (y/n): ", end="")
+        print("\n❓ Apply these schema fixes? (y/n): ", end="")
         response = input().lower().strip()
         
         if response == 'y' or response == 'yes':

@@ -1,223 +1,494 @@
-# Documentation Development - Claude Code Guide
 
-<critical_file_size_warning>
-⚠️ **CRITICAL: FILE SIZE LIMITS FOR CLAUDE CODE STABILITY** ⚠️
+# Documentation Architecture Guide
 
-**Maximum File Size**: 500 lines (300-400 lines recommended)
-**Risk**: Files exceeding 500 lines can cause Claude Code to crash
+**[CURRENT]** Comprehensive documentation system for MCP Task Orchestrator
 
-**Documentation Files in THIS Directory Exceeding Limits**:
-- `examples/generic-task-usage-guide.md` (1172 lines) - CRITICAL
-- `prompts/features/proposed/[RESEARCH]_mcp_tools_suite_expansion.md` (1065 lines) - CRITICAL
-- `prompts/features/proposed/[RESEARCH]_bidirectional_persistence_system.md` (877 lines) - HIGH RISK
-- `examples/migration-examples.md` (853 lines) - HIGH RISK
-- `API_REFERENCE.md` (838 lines) - HIGH RISK
-- Multiple other files 500-800 lines
+⚠️ **File Size Compliant**: This file is kept under 450 lines for Claude Code stability
 
-**Documentation Refactoring Guidelines**:
-1. Split large guides into topic-focused sections
-2. Create subdirectories for multi-part documentation
-3. Use index files for navigation
-4. Keep individual doc files under 400 lines
-5. Consider separate files for code examples
-</critical_file_size_warning>
+#
+# Overview
 
-<documentation_context_analysis>
-You are working within the multi-audience documentation system. Before proceeding with documentation work:
+The MCP Task Orchestrator implements a sophisticated, multi-layered documentation architecture designed to serve three distinct audiences while maintaining architectural consistency and cross-referential integrity.
 
-1. **Identify Target Audience**: Human users, LLM agents, or technical developers?
-2. **Determine Documentation Type**: User guides, API docs, architecture decisions, or troubleshooting?
-3. **Check Content Requirements**: Character limits for LLM docs, format standards, cross-references?
-4. **Validate Current Structure**: How does this fit with existing documentation architecture?
-5. **Consider Integration**: How will this documentation be discovered and used?
-</documentation_context_analysis>
+#
+## Documentation Philosophy
 
-Documentation-specific guidance for the MCP Task Orchestrator project's comprehensive documentation system.
+- **Multi-Audience Design**: Serves human users, LLM agents, and technical developers
 
-## Documentation Strategy Framework
+- **Architecture Alignment**: Documentation structure mirrors the Clean Architecture implementation
 
-<documentation_decision_framework>
-**Choose Documentation Approach Based on Purpose**:
+- **Modular System**: Distributed CLAUDE.md ecosystem with standardized templates
 
-**Human-Readable Documentation** (`user-guide/`):
-- **When**: End-user facing content, tutorials, getting started guides
-- **Style**: Clear structure, progressive disclosure, practical examples
-- **Length**: No strict limits, optimize for clarity and completeness
-- **Format**: Descriptive headings, visual aids, step-by-step workflows
+- **Cross-Reference Network**: Comprehensive linking system for efficient navigation
 
-**LLM-Optimized Documentation** (`llm-agents/`):
-- **When**: AI assistant integration, Claude Code contexts, tool documentation
-- **Style**: Dense information, maximum utility per character
-- **Length**: 1200-2000 characters per file (strict requirement)
-- **Format**: Structured sections, consistent formatting, tool integration focus
+- **Compliance First**: All files respect Claude Code's 500-line limit for stability
 
-**Architecture Documentation** (`architecture/`):
-- **When**: Design decisions, technical specifications, system design
-- **Style**: Decision records with context, alternatives, and consequences
-- **Length**: Comprehensive but focused, document the "why" not just "what"
-- **Format**: Problem/solution/rationale structure
+#
+# Dual-Audience Architecture
 
-**Decision Process**:
-1. **Identify Primary Users**: Who will consume this documentation?
-2. **Determine Access Pattern**: How will users discover and use this content?
-3. **Assess Update Frequency**: How often will this need maintenance?
-4. **Consider Integration Needs**: Does this link to other documentation?
-</documentation_decision_framework>
+#
+## Primary Audience Separation
 
-## Documentation Architecture
+#
+### `docs/users/` - Human-Oriented Documentation
 
-**Multi-Audience Design**: This project serves both human users and LLM agents with specialized documentation.
+**Target Audience**: End users, integrators, system administrators
 
-### Audience-Specific Areas
-- `user-guide/` - Human-readable guides and tutorials
-- `llm-agents/` - AI-optimized documentation (1200-2000 chars)
-- `architecture/` - System design and decision records
-- `testing/` - Testing documentation and best practices
-- `troubleshooting/` - Issue resolution guides
-- `prompts/features/` - Feature lifecycle management
+**Content Focus**:
 
-## Documentation Context Commands
+- Installation and setup guides
 
-### Core Documentation Tasks
+- Usage patterns and examples
+
+- Troubleshooting and diagnostics
+
+- Real-world implementation scenarios
+
+- Quick-start and getting-started content
+
+**Organization Pattern**:
+
 ```bash
-# Comprehensive documentation status
-cat INDEX.md
+docs/users/
+├── quick-start/          
+# Immediate onboarding
+├── guides/               
+# Comprehensive usage guides
+├── reference/            
+# API and command reference
+└── troubleshooting/      
+# Problem resolution
+```text
 
-# Test documentation completeness
-python ../tests/test_example_file_creation.py
+#
+### `docs/developers/` - Technical Implementation Documentation
 
-# Validate cross-references
-grep -r "docs/" . --include="*.md" | head -20
+**Target Audience**: Contributors, maintainers, system architects
 
-# Check documentation consistency
-python ../scripts/diagnostics/check_status.py
-```
+**Content Focus**:
 
-### Content Validation
-```bash
-# Check all markdown files for broken links
-find . -name "*.md" -exec echo "=== {} ===" \; -exec head -5 {} \;
+- Clean Architecture implementation details
 
-# Documentation structure analysis
-tree -I "__pycache__|*.pyc" -L 3
+- Contribution guidelines and workflows
 
-# Content length validation for LLM docs
-find llm-agents/ -name "*.md" -exec wc -c {} \;
-```
+- Technical architecture decisions
 
-## Writing Guidelines
+- Development patterns and practices
 
-### Human-Readable Documentation (`user-guide/`)
-- **Clear structure**: Use descriptive headings and logical flow
-- **Practical examples**: Include real-world usage scenarios
-- **Progressive disclosure**: Start simple, build complexity
-- **Visual aids**: Use code blocks, tables, and diagrams where helpful
+- Internal system design documentation
 
-### LLM-Optimized Documentation (`llm-agents/`)
-- **Character limits**: 1200-2000 characters per file
-- **Dense information**: Maximum utility per character
-- **Clear structure**: Well-defined sections with consistent formatting
-- **Tool integration**: Optimized for Claude Code and other MCP tools
+**Organization Pattern**:
+```text
+bash
+docs/developers/
+├── architecture/         
+# System design and patterns
+├── contributing/         
+# Development workflows
+├── planning/             
+# Future development and roadmaps
+└── integration/          
+# System integration guides
 
-### Architecture Documentation (`architecture/`)
-- **Decision records**: Document why, not just what
-- **Context preservation**: Include problem statement and alternatives
-- **Future considerations**: Note potential changes and impacts
-- **Diagrams**: Use text-based diagrams when possible
+```text
 
-## Documentation Patterns
+#
+# CLAUDE.md Ecosystem
 
-### Feature Documentation Workflow
-1. **Research** → Analysis in `prompts/features/proposed/`
-2. **Specification** → Detailed specs in `prompts/features/approved/`
-3. **Implementation** → Progress tracking in `prompts/features/in-progress/`
-4. **Documentation** → User guides and API docs
-5. **Validation** → Testing and cross-reference verification
+#
+## Distributed CLAUDE.md System
 
-### Content Update Process
-```bash
-# 1. Update relevant documentation
-# 2. Run documentation validation
-python ../tests/validation_suite.py
+The project maintains 6 specialized CLAUDE.md files, each serving specific development contexts:
 
-# 3. Check cross-references
-grep -r "$(basename $PWD)" ../README.md ../CLAUDE.md
+#
+### Core Files
 
-# 4. Test with orchestrator
-cd ..
-python simple_test_runner.py
-```
+1. **`/CLAUDE.md`** (219 lines) - Essential quick-reference and navigation hub
 
-## Documentation Testing
+2. **`/CLAUDE-detailed.md`** (389 lines) - Comprehensive architecture and development practices
 
-### Automated Validation
-- **Content testing**: `test_example_file_creation.py` validates documentation completeness
-- **Cross-reference checking**: Automated link validation
-- **Format validation**: Markdown syntax and structure checks
-- **Length validation**: Character count verification for LLM docs
+#
+### Context-Specific Files
 
-### Manual Quality Checks
-- **Accuracy**: Verify all commands and examples work
-- **Clarity**: Ensure concepts are clearly explained
-- **Completeness**: Check coverage of all features and use cases
-- **Consistency**: Maintain consistent style and terminology
+3. **`docs/developers/architecture/CLAUDE.md`** (186 lines) - Architecture documentation context
 
-## Integration with Development
+4. **`mcp_task_orchestrator/CLAUDE.md`** (91 lines) - Core package implementation guide
 
-### Documentation-Driven Development
-- **Feature specs first**: Document features before implementation
-- **API documentation**: Maintain alongside code changes
-- **Testing documentation**: Update procedures with new test patterns
-- **Troubleshooting**: Document known issues and solutions
+5. **`tests/CLAUDE.md`** (124 lines) - Testing infrastructure and validation
 
-### Orchestrator Integration
-- **Multi-specialist approach**: Use documenter, reviewer, and tester specialists
-- **Artifact storage**: Leverage artifact system for complex documentation projects
-- **Context continuity**: Use directory-specific guidance for focused work
+6. **`scripts/CLAUDE.md`** (79 lines) - Automation and utility scripts
 
-## Best Practices
+7. **`PRPs/CLAUDE.md`** (138 lines) - PRP framework and development workflows
 
-### Content Organization
-- **Logical hierarchy**: Organize content by user workflow
-- **Cross-references**: Link related concepts and procedures
-- **Maintenance**: Regular review and update cycles
-- **Version control**: Track changes with descriptive commit messages
+#
+## CLAUDE.md Design Principles
 
-### Quality Standards
-- **Technical accuracy**: All examples must be tested and working
-- **Accessibility**: Clear language and good information architecture
-- **Maintainability**: Structured for easy updates and extensions
-- **User-focused**: Written from the user's perspective and needs
+#
+### Template-Driven Consistency
 
-## Common Documentation Tasks
+All CLAUDE.md files follow standardized templates ensuring:
 
-### Creating New Documentation
-```bash
-# Check existing structure
-cat INDEX.md
+- Consistent structure and navigation patterns
 
-# Create new document with proper header
-echo "# New Document Title" > new-doc.md
-echo "" >> new-doc.md
-echo "Brief description..." >> new-doc.md
+- Standardized status tracking ([CURRENT], [NEEDS-UPDATE], [DEPRECATED])
 
-# Update index and cross-references
-# Add to INDEX.md navigation
-# Update related documents with links
-```
+- Uniform cross-reference systems
 
+- Architecture layer identification
+
+- Maintenance procedure documentation
+
+#
+### Claude Code Compliance
+
+- **File Size Limit**: All files under 500 lines (target 300-400 lines)
+
+- **Modular Design**: Complex content split across multiple files
+
+- **Cross-Reference Network**: Comprehensive linking prevents information silos
+
+- **Quick Navigation**: Essential information accessible within 2-3 clicks
+
+#
+# Clean Architecture Integration
+
+#
+## Documentation Layers Mirror Software Layers
+
+The documentation architecture directly reflects the 4-layer Clean Architecture:
+
+#
+### Domain Layer Documentation
+
+- Business logic and domain concepts in `docs/developers/architecture/`
+
+- Entity and value object documentation
+
+- Domain service explanations and usage patterns
+
+#
+### Application Layer Documentation
+
+- Use case workflows and orchestration patterns
+
+- DTO documentation and API contracts
+
+- Service integration guides
+
+#
+### Infrastructure Layer Documentation
+
+- Database implementation details
+
+- MCP protocol adapters and handlers
+
+- Monitoring and diagnostic system documentation
+
+#
+### Presentation Layer Documentation
+
+- MCP server configuration and usage
+
+- CLI interface documentation
+
+- Client integration guides
+
+#
+## Architectural Decision Documentation
+
+Following the Architecture Decision Record (ADR) pattern:
+
+- Decision rationale and context
+
+- Alternatives considered
+
+- Implementation consequences
+
+- Maintenance implications
+
+#
+# Modular Documentation Patterns
+
+#
+## Red Hat Modular Documentation Approach
+
+Implemented using industry-standard modular documentation principles:
+
+#
+### Content Types
+
+1. **Concept Documentation**: Explains what something is and why it matters
+
+2. **Procedure Documentation**: Step-by-step task completion guides
+
+3. **Reference Documentation**: API specifications and command references
+
+4. **Troubleshooting Documentation**: Problem diagnosis and resolution
+
+#
+### Reusable Modules
+
+- **Snippet Includes**: Common command patterns and code examples
+
+- **Template Systems**: Standardized CLAUDE.md and documentation templates
+
+- **Cross-Reference Modules**: Consistent navigation and linking patterns
+
+- **Validation Modules**: Shared compliance and quality assurance content
+
+#
+## Information Architecture
+
+#
+### Progressive Disclosure
+
+Documentation organized from general to specific:
+
+1. **Overview Level**: High-level concepts and navigation
+
+2. **Guide Level**: Detailed implementation guidance
+
+3. **Reference Level**: Comprehensive technical specifications
+
+4. **Troubleshooting Level**: Problem-specific resolution guidance
+
+#
+### Context-Aware Navigation
+
+- **Breadcrumb Systems**: Clear hierarchical navigation
+
+- **Related Content**: Contextually relevant cross-references
+
+- **Task-Oriented Linking**: Navigation optimized for specific workflows
+
+- **Audience-Specific Paths**: Different entry points for different user types
+
+#
+# Status Tag System
+
+#
+## Documentation Lifecycle Management
+
+All documentation uses standardized status tags:
+
+#
+### Status Classifications
+
+- **[CURRENT]**: Up-to-date and actively maintained
+
+- **[NEEDS-UPDATE]**: Requires revision due to system changes
+
+- **[DEPRECATED]**: Legacy content maintained for reference
+
+- **[DRAFT]**: Work-in-progress content
+
+- **[ARCHIVED]**: Historical content moved to archives
+
+#
+### Maintenance Workflows
+
+- **Regular Review Cycles**: Quarterly status validation
+
+- **Change-Driven Updates**: Documentation updates triggered by code changes
+
+- **Community Feedback Integration**: User-reported documentation issues
+
+- **Automated Validation**: Scripts validate documentation consistency
+
+#
+# Navigation Enhancement System
+
+#
+## Cross-Reference Network
+
+#
+### Systematic Linking Architecture
+
+Every CLAUDE.md file maintains bidirectional references:
+
+- **Hierarchical Links**: Parent-child documentation relationships
+
+- **Contextual Links**: Related content in different directories
+
+- **Workflow Links**: Task-oriented navigation paths
+
+- **Reference Links**: Quick access to specifications and APIs
+
+#
+### Navigation Patterns
+
+```text
+markdown
+
+## Cross-References
+
+#
+## Related CLAUDE.md Files
+
+- **Main Guide**: [CLAUDE.md](../CLAUDE.md) - Essential quick-reference
+
+- **Detailed Guide**: [CLAUDE-detailed.md](../CLAUDE-detailed.md) - Comprehensive architecture
+
+- **Documentation Architecture**: [docs/CLAUDE.md](../docs/CLAUDE.md) - Complete documentation system
+
+#
+## Related Documentation
+
+- [Specific Technical Documentation]
+
+- [Workflow-Specific Guides]
+
+- [API References]
+
+```text
+
+#
+# Maintenance and Automation
+
+#
+## Automated Validation System
+
+#
+### Documentation Compliance Checking
+
+```text
+bash
+
+# Validate all CLAUDE.md files
+
+python scripts/validation/validate_claude_md.py
+
+# Check cross-reference accuracy
+
+python scripts/validation/check_cross_references.py
+
+# Validate file size compliance
+
+python scripts/validation/check_file_sizes.py
+
+# Status tag validation
+
+python scripts/validation/check_status_tags.py
+```text
+
+#
+### Quality Assurance Automation
+
+- **Markdownlint Integration**: Automated markdown quality checking
+
+- **Link Validation**: Broken link detection and reporting
+
+- **Template Compliance**: Validation against standardized templates
+
+- **Content Freshness**: Detection of outdated content based on system changes
+
+#
+## Update Procedures
+
+#
+### Documentation Update Workflows
+
+1. **Code Change Integration**: Documentation updates triggered by code changes
+
+2. **Template Evolution**: System-wide template updates with version control
+
+3. **Cross-Reference Maintenance**: Automated link validation and correction
+
+4. **Status Tag Management**: Regular review and status tag updates
+
+#
+### Maintenance Responsibilities
+
+- **Core Team**: Overall architecture and template maintenance
+
+- **Contributors**: Context-specific CLAUDE.md updates
+
+- **Automated Systems**: Compliance validation and link checking
+
+- **Community**: Feedback and improvement suggestions
+
+#
+# Usage Guidelines
+
+#
+## For Contributors
+
+#
+### Creating New CLAUDE.md Files
+
+1. Use appropriate template from `docs/templates/`
+
+2. Follow file size guidelines (under 400 lines)
+
+3. Implement proper cross-reference network
+
+4. Validate against template compliance requirements
+
+5. Update navigation systems in related files
+
+#
 ### Updating Existing Documentation
-```bash
-# Check current content
-head -20 existing-doc.md
 
-# Verify impact of changes
-grep -r "existing-doc" . --include="*.md"
+1. Check current status tag and update if necessary
 
-# Update cross-references after changes
-# Test all examples and commands
-```
+2. Maintain cross-reference accuracy
+
+3. Follow established architectural patterns
+
+4. Validate against quality standards
+
+5. Update maintenance notes
+
+#
+## For Users
+
+#
+### Efficient Documentation Navigation
+
+1. **Start with Main CLAUDE.md**: Essential commands and quick navigation
+
+2. **Use Context-Specific Guides**: Directory-specific CLAUDE.md files for detailed guidance
+
+3. **Follow Cross-References**: Leverage linking system for related content
+
+4. **Check Status Tags**: Ensure you're using current documentation
+
+#
+### Getting Help
+
+- **Quick Reference**: Main CLAUDE.md for immediate needs
+
+- **Comprehensive Guidance**: CLAUDE-detailed.md for complete implementation details
+
+- **Context-Specific Help**: Directory-specific CLAUDE.md files
+
+- **Troubleshooting**: Dedicated troubleshooting documentation in docs/users/
+
+#
+# Future Evolution
+
+#
+## Planned Enhancements
+
+- **Interactive Documentation**: Enhanced navigation with dynamic cross-references
+
+- **Search Integration**: Full-text search across all documentation
+
+- **Version Control Integration**: Documentation versioning aligned with code releases
+
+- **Community Contribution Tools**: Enhanced tools for community-driven documentation improvements
+
+#
+## Architectural Roadmap
+
+- **Microservice Documentation**: Support for distributed system documentation
+
+- **API Documentation Generation**: Automated API documentation from code
+
+- **Testing Documentation Integration**: Enhanced integration between code and documentation testing
+
+- **Internationalization Support**: Multi-language documentation architecture
 
 ---
 
-**Specialized Documentation**: This directory contains comprehensive, multi-audience documentation. Use orchestrator specialists for complex documentation projects.
+📋 **This documentation architecture guide provides the foundation for the complete CLAUDE.md ecosystem. See [CLAUDE.md](../CLAUDE.md) for essential commands and individual directory CLAUDE.md files for context-specific guidance.**
