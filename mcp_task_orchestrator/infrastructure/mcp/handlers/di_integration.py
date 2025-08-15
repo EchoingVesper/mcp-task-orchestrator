@@ -136,6 +136,188 @@ class CleanArchTaskUseCase:
             logger.error(f"Failed to query tasks: {str(e)}")
             raise OrchestrationError(f"Task query failed: {str(e)}")
     
+    async def delete_task(self, task_id: str, force: bool = False, archive_instead: bool = True) -> Dict[str, Any]:
+        """Delete a task with dependency checking and archive logic."""
+        try:
+            # Check if task exists
+            existing_task = self.task_repository.get_task(task_id)
+            if not existing_task:
+                raise OrchestrationError(f"Task {task_id} not found")
+            
+            # Find tasks that depend on this task (if not forcing deletion)
+            if not force:
+                dependent_tasks = await self._find_dependent_tasks(task_id)
+                if dependent_tasks:
+                    dependent_ids = [task["id"] for task in dependent_tasks]
+                    raise OrchestrationError(
+                        f"Cannot delete task {task_id}: {len(dependent_tasks)} dependent tasks found: {dependent_ids}. "
+                        f"Use force=True to delete anyway."
+                    )
+            
+            action_taken = "archived" if archive_instead else "deleted"
+            
+            if archive_instead:
+                # Archive the task by updating status and adding archived timestamp
+                archive_updates = {
+                    "status": "archived",
+                    "updated_at": datetime.utcnow().isoformat(),
+                    "archived_at": datetime.utcnow().isoformat()
+                }
+                success = self.task_repository.update_task(task_id, archive_updates)
+                if not success:
+                    raise OrchestrationError(f"Failed to archive task {task_id}")
+            else:
+                # Actually delete the task
+                success = self.task_repository.delete_task(task_id)
+                if not success:
+                    raise OrchestrationError(f"Failed to delete task {task_id}")
+            
+            logger.info(f"Task {task_id} {action_taken} successfully")
+            
+            return {
+                "task_id": task_id,
+                "action_taken": action_taken,
+                "success": True,
+                "message": f"Task {task_id} {action_taken} successfully",
+                "forced": force,
+                "archive_instead": archive_instead,
+                "timestamp": datetime.utcnow().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to delete task {task_id}: {str(e)}")
+            raise OrchestrationError(f"Task deletion failed: {str(e)}")
+    
+    async def cancel_task(self, task_id: str, reason: str = "", preserve_work: bool = True) -> Dict[str, Any]:
+        """Cancel a task with state management and artifact preservation."""
+        try:
+            # Check if task exists
+            existing_task = self.task_repository.get_task(task_id)
+            if not existing_task:
+                raise OrchestrationError(f"Task {task_id} not found")
+            
+            current_status = existing_task.get("status", "")
+            
+            # Check if task is cancellable
+            if current_status in ["completed", "cancelled", "archived"]:
+                raise OrchestrationError(
+                    f"Cannot cancel task {task_id}: task is already {current_status}"
+                )
+            
+            # Preserve work artifacts if requested
+            artifacts_preserved = 0
+            if preserve_work:
+                try:
+                    # Get existing artifacts
+                    artifacts = self.task_repository.get_task_artifacts(task_id)
+                    artifacts_preserved = len(artifacts)
+                    
+                    # Add cancellation artifact with reason
+                    cancellation_artifact = {
+                        "type": "cancellation_record",
+                        "reason": reason or "No reason provided",
+                        "preserved_work_count": artifacts_preserved,
+                        "cancelled_at": datetime.utcnow().isoformat(),
+                        "original_status": current_status
+                    }
+                    self.task_repository.add_task_artifact(task_id, cancellation_artifact)
+                    
+                except Exception as artifact_error:
+                    logger.warning(f"Failed to preserve artifacts for task {task_id}: {artifact_error}")
+            
+            # Update task status to cancelled
+            cancellation_updates = {
+                "status": "cancelled",
+                "updated_at": datetime.utcnow().isoformat(),
+                "cancelled_at": datetime.utcnow().isoformat()
+            }
+            
+            # Add cancellation reason to metadata
+            existing_metadata = json.loads(existing_task.get("metadata", "{}"))
+            existing_metadata["cancellation"] = {
+                "reason": reason or "No reason provided",
+                "cancelled_at": datetime.utcnow().isoformat(),
+                "original_status": current_status,
+                "work_preserved": preserve_work,
+                "artifacts_preserved": artifacts_preserved
+            }
+            cancellation_updates["metadata"] = json.dumps(existing_metadata)
+            
+            success = self.task_repository.update_task(task_id, cancellation_updates)
+            if not success:
+                raise OrchestrationError(f"Failed to cancel task {task_id}")
+            
+            # Update dependent tasks (mark them as ready if this was a blocking dependency)
+            await self._update_dependent_tasks_on_cancellation(task_id)
+            
+            logger.info(f"Task {task_id} cancelled successfully. Reason: {reason}")
+            
+            return {
+                "task_id": task_id,
+                "status": "cancelled",
+                "success": True,
+                "message": f"Task {task_id} cancelled successfully",
+                "reason": reason or "No reason provided",
+                "original_status": current_status,
+                "work_preserved": preserve_work,
+                "artifacts_preserved": artifacts_preserved,
+                "cancelled_at": datetime.utcnow().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Failed to cancel task {task_id}: {str(e)}")
+            raise OrchestrationError(f"Task cancellation failed: {str(e)}")
+    
+    async def _find_dependent_tasks(self, task_id: str) -> List[Dict[str, Any]]:
+        """Find tasks that depend on the given task."""
+        try:
+            # Query all tasks to check their dependencies
+            # This is a simplified implementation - in a full system you'd have a proper dependency table
+            all_tasks = await self.task_repository.query_tasks({})
+            dependent_tasks = []
+            
+            for task in all_tasks:
+                # Check if this task has the target task as a dependency
+                task_deps = self.task_repository.get_task_dependencies(task["id"])
+                if task_id in task_deps:
+                    dependent_tasks.append(task)
+            
+            return dependent_tasks
+            
+        except Exception as e:
+            logger.warning(f"Failed to find dependent tasks for {task_id}: {e}")
+            return []
+    
+    async def _update_dependent_tasks_on_cancellation(self, cancelled_task_id: str):
+        """Update tasks that depended on the cancelled task."""
+        try:
+            dependent_tasks = await self._find_dependent_tasks(cancelled_task_id)
+            
+            for task in dependent_tasks:
+                # For now, just add a note about the cancelled dependency
+                # In a full implementation, you might update dependency status or make the task ready
+                existing_metadata = json.loads(task.get("metadata", "{}"))
+                
+                if "dependency_issues" not in existing_metadata:
+                    existing_metadata["dependency_issues"] = []
+                
+                existing_metadata["dependency_issues"].append({
+                    "cancelled_dependency": cancelled_task_id,
+                    "noted_at": datetime.utcnow().isoformat(),
+                    "impact": "dependency_cancelled"
+                })
+                
+                update_data = {
+                    "metadata": json.dumps(existing_metadata),
+                    "updated_at": datetime.utcnow().isoformat()
+                }
+                
+                self.task_repository.update_task(task["id"], update_data)
+                logger.info(f"Updated task {task['id']} due to cancelled dependency {cancelled_task_id}")
+                
+        except Exception as e:
+            logger.warning(f"Failed to update dependent tasks for cancelled task {cancelled_task_id}: {e}")
+
     def _format_task_response(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
         """Format task data for response."""
         # Handle metadata that could be either a string or dict
