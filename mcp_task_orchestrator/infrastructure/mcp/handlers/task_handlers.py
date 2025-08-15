@@ -56,7 +56,12 @@ async def handle_create_generic_task(args: Dict[str, Any]) -> List[types.TextCon
     created_task = await use_case.create_task(args)
     
     # Convert task to dict for response
-    task_dict = created_task.dict()
+    # Handle both dict and object responses from use case
+    if isinstance(created_task, dict):
+        task_dict = created_task
+    else:
+        # Legacy object-based response
+        task_dict = created_task.dict()
     
     # Convert datetime objects to ISO strings for JSON serialization
     for field in ["created_at", "updated_at", "due_date", "started_at", "completed_at", "deleted_at"]:
@@ -101,7 +106,12 @@ async def handle_update_task(args: Dict[str, Any]) -> List[types.TextContent]:
     updated_task = await use_case.update_task(task_id, update_data)
     
     # Convert task to dict for response
-    task_dict = updated_task.dict()
+    # Handle both dict and object responses from use case
+    if isinstance(updated_task, dict):
+        task_dict = updated_task
+    else:
+        # Legacy object-based response  
+        task_dict = updated_task.dict()
     
     # Convert datetime objects to ISO strings for JSON serialization
     for field in ["created_at", "updated_at", "due_date", "started_at", "completed_at", "deleted_at"]:
@@ -248,10 +258,24 @@ async def handle_query_tasks(args: Dict[str, Any]) -> List[types.TextContent]:
         # Query tasks using use case
         query_result = await use_case.query_tasks(args)
         
+        # Handle different return formats from use case
+        if isinstance(query_result, list):
+            # Use case returns list of tasks directly
+            tasks_list = query_result
+            total_count = len(tasks_list)
+        else:
+            # Use case returns structured result with tasks key
+            tasks_list = query_result.get("tasks", [])
+            total_count = query_result.get("total_count", len(tasks_list))
+        
         # Convert task objects to dictionaries for JSON serialization
         tasks_dict = []
-        for task in query_result["tasks"]:
-            task_dict = task.dict()
+        for task in tasks_list:
+            # Handle both dict and object responses
+            if isinstance(task, dict):
+                task_dict = task
+            else:
+                task_dict = task.dict()
             
             # Convert datetime objects to ISO strings
             for field in ["created_at", "updated_at", "due_date", "started_at", "completed_at", "deleted_at"]:
@@ -277,13 +301,13 @@ async def handle_query_tasks(args: Dict[str, Any]) -> List[types.TextContent]:
         
         response = {
             "status": "success",
-            "message": f"Found {query_result['total_count']} tasks matching query criteria",
+            "message": f"Found {total_count} tasks matching query criteria",
             "query_summary": {
-                "filters_applied": query_result.get("filters_applied", []),
+                "filters_applied": query_result.get("filters_applied", []) if isinstance(query_result, dict) else [],
                 "pagination": {
-                    "total_count": query_result.get("total_count", 0),
-                    "page_count": query_result.get("page_count", 0),
-                    "has_more": query_result.get("has_more", False)
+                    "total_count": total_count,
+                    "page_count": query_result.get("page_count", 1) if isinstance(query_result, dict) else 1,
+                    "has_more": query_result.get("has_more", False) if isinstance(query_result, dict) else False
                 }
             },
             "tasks": tasks_dict,

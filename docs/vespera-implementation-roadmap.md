@@ -1,22 +1,27 @@
 # Vespera Scriptorium Implementation Roadmap
 
 **Timeline**: 8-12 weeks for complete transformation from MCP Task Orchestrator to "IDE for Ideas"  
-**Methodology**: Agile development with executive dysfunction-aware planning (flexible milestones, buffer zones, momentum preservation)  
+**Methodology**: Agile development with executive dysfunction-aware planning (flexible milestones, buffer zones,
+momentum preservation)  
 **Validation**: Continuous accessibility testing and user experience validation
 
 ## Executive Summary
 
-Transform MCP Task Orchestrator into Vespera Scriptorium through systematic implementation of document-centric workflows, creative writing support, knowledge management, and professional productivity tools while maintaining the executive dysfunction accessibility that makes the platform valuable.
+Transform MCP Task Orchestrator into Vespera Scriptorium through systematic implementation of document-centric
+workflows, creative writing support, knowledge management, and professional productivity tools while maintaining the
+executive dysfunction accessibility that makes the platform valuable.
 
 ## Implementation Philosophy
 
 ### Executive Dysfunction-Aware Development
+
 - **Buffer Time**: 25% buffer built into all estimates
 - **Incremental Delivery**: Each week delivers usable functionality
 - **Momentum Preservation**: Development practices that maintain team flow
 - **Flexible Milestones**: Adapt to real-world constraints without losing progress
 
 ### Integration Strategy
+
 - **Foundation First**: Extend existing clean architecture
 - **Backward Compatibility**: All existing functionality remains available
 - **Progressive Enhancement**: New features enhance rather than replace
@@ -35,7 +40,8 @@ Transform MCP Task Orchestrator into Vespera Scriptorium through systematic impl
 - [ ] Design document lifecycle state machine
 
 **Deliverables**:
-```
+
+```directory
 mcp_task_orchestrator/domain/entities/
 ├── document_models.py        # Core document entities
 ├── creative_models.py        # Story, Character, Scene entities  
@@ -86,7 +92,8 @@ mcp_task_orchestrator/domain/value_objects/
 - [ ] Add full-text search capabilities
 
 **Deliverables**:
-```
+
+```directory
 mcp_task_orchestrator/db/
 ├── document_schema.sql           # Document table definitions
 ├── document_migration.py         # Schema migration system
@@ -137,7 +144,8 @@ mcp_task_orchestrator/infrastructure/database/sqlite/
 - [ ] Add document workflow orchestration
 
 **Deliverables**:
-```
+
+```directory
 mcp_task_orchestrator/infrastructure/mcp/
 ├── document_tools.py             # Document management MCP tools
 ├── creative_tools.py             # Creative workflow tools
@@ -195,7 +203,8 @@ vespera_ui/                       # New web interface
 - [ ] Writing progress tracking with momentum preservation
 
 **Deliverables**:
-```
+
+```directory
 vespera_ui/creative/
 ├── StoryPlanning/
 │   ├── PlotStructure.vue         # Plot outline and beat sheets
@@ -250,7 +259,8 @@ vespera_ui/creative/
 - [ ] Cross-project reference and inspiration library
 
 **Deliverables**:
-```
+
+```directory
 mcp_task_orchestrator/domain/entities/
 ├── worldbuilding_models.py       # World, Setting, Timeline entities
 └── research_integration.py       # Research-to-writing workflow
@@ -309,7 +319,8 @@ vespera_ui/creative/
 - [ ] Creative project management and coordination
 
 **Deliverables**:
-```
+
+```directory
 vespera_ui/creative/
 ├── Collaboration/
 │   ├── MultiAuthor.vue          # Collaborative writing tools
@@ -367,7 +378,8 @@ vespera_ui/creative/
 - [ ] Cross-document reference and citation system
 
 **Deliverables**:
-```
+
+```directory
 vespera_ui/knowledge/
 ├── WikiManagement/
 │   ├── WikiCreation.vue         # Wiki setup and configuration
@@ -427,7 +439,8 @@ vespera_ui/knowledge/
 - [ ] Integration with external research databases and tools
 
 **Deliverables**:
-```
+
+```directory
 vespera_ui/research/
 ├── ProjectManagement/
 │   ├── ResearchProject.vue      # Research project setup and tracking
@@ -492,7 +505,8 @@ vespera_ui/research/
 - [ ] Intelligent content recommendations and connections
 
 **Deliverables**:
-```
+
+```directory
 mcp_task_orchestrator/infrastructure/ai/
 ├── semantic_analysis.py         # Semantic analysis engine
 ├── topic_modeling.py            # Topic extraction and clustering
@@ -560,7 +574,8 @@ vespera_ui/discovery/
 - [ ] Multi-stakeholder collaboration workflows
 
 **Deliverables**:
-```
+
+```directory
 vespera_ui/professional/
 ├── Reports/
 │   ├── ReportBuilder.vue        # Professional report construction
@@ -626,7 +641,8 @@ vespera_ui/professional/
 - [ ] Performance optimization for large-scale collaborative use
 
 **Deliverables**:
-```
+
+```directory
 mcp_task_orchestrator/infrastructure/collaboration/
 ├── realtime_engine.py           # Real-time collaboration engine
 ├── conflict_resolution.py       # Advanced conflict resolution
@@ -697,7 +713,8 @@ vespera_ui/collaboration/
 - [ ] Performance optimization and security validation
 
 **Deliverables**:
-```
+
+```directory
 docs/vespera-scriptorium/
 ├── user-guides/
 │   ├── getting-started.md       # Quick start guide
@@ -754,24 +771,28 @@ docs/vespera-scriptorium/
 ## Success Metrics and Validation
 
 ### Accessibility Success Criteria
+
 - [ ] **Cognitive Load**: All features work with minimal cognitive burden
 - [ ] **Momentum Preservation**: Interruption recovery works across all workflows
 - [ ] **Pressure-Lid-Vent**: System supports users across all cognitive capacity levels
 - [ ] **Universal Design**: Features benefit all users, not just those with executive dysfunction
 
 ### Functional Success Criteria
+
 - [ ] **Document Lifecycle**: Complete document management from creation to publication
 - [ ] **Creative Workflows**: Full creative writing project support from idea to finished work
 - [ ] **Knowledge Management**: Professional-grade knowledge organization and discovery
 - [ ] **Professional Tools**: Business-ready document production and collaboration
 
 ### Technical Success Criteria  
+
 - [ ] **Performance**: System responsive with 1000+ documents and 100+ concurrent users
 - [ ] **Reliability**: 99.9% uptime with graceful degradation for failures
 - [ ] **Security**: Enterprise-grade security with privacy protection
 - [ ] **Scalability**: Architecture supports growth to enterprise scale
 
 ### User Experience Success Criteria
+
 - [ ] **Onboarding**: New users productive within first session
 - [ ] **Feature Discovery**: Users naturally discover relevant features
 - [ ] **Workflow Integration**: Seamless transitions between different types of work
@@ -780,6 +801,7 @@ docs/vespera-scriptorium/
 ## Risk Mitigation and Contingency Planning
 
 ### Technical Risks
+
 **Risk**: Performance degradation with complex documents  
 **Mitigation**: Incremental loading, caching strategies, performance monitoring  
 **Contingency**: Feature complexity reduction, progressive enhancement
@@ -789,6 +811,7 @@ docs/vespera-scriptorium/
 **Contingency**: Simplified collaboration model, asynchronous workflows
 
 ### User Experience Risks
+
 **Risk**: Feature complexity overwhelming users  
 **Mitigation**: Progressive disclosure, executive dysfunction testing, simplification options  
 **Contingency**: Feature hiding, guided workflows, emergency simplification mode
@@ -798,6 +821,7 @@ docs/vespera-scriptorium/
 **Contingency**: Feature rollback capabilities, accessibility-first fallbacks
 
 ### Project Risks
+
 **Risk**: Timeline overrun due to complexity  
 **Mitigation**: 25% buffer time, flexible milestone adjustment, incremental delivery  
 **Contingency**: Feature scope reduction, extended timeline, phased delivery
@@ -809,18 +833,21 @@ docs/vespera-scriptorium/
 ## Post-Implementation Maintenance
 
 ### Ongoing Development
+
 - Monthly feature enhancements based on user feedback
 - Quarterly accessibility audits and improvements
 - Semi-annual performance optimization cycles
 - Annual major feature additions
 
 ### Community and Ecosystem
+
 - Open source community development
 - Plugin and extension ecosystem
 - User community support and documentation
 - Academic and research partnerships
 
 ### Long-term Vision
+
 - Multi-platform native applications (desktop, mobile)
 - Advanced AI integration for content assistance
 - Enterprise collaboration features
@@ -828,4 +855,6 @@ docs/vespera-scriptorium/
 
 ---
 
-*This roadmap transforms MCP Task Orchestrator into Vespera Scriptorium through systematic, accessibility-first development that maintains the platform's core strength - supporting users with executive dysfunction - while expanding capabilities to become a comprehensive "IDE for Ideas."*
+*This roadmap transforms MCP Task Orchestrator into Vespera Scriptorium through systematic, accessibility-first
+development that maintains the platform's core strength - supporting users with executive dysfunction - while expanding
+capabilities to become a comprehensive "IDE for Ideas."*
