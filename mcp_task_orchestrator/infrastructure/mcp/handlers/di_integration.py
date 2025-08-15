@@ -152,42 +152,56 @@ class CleanArchTaskUseCase(ErrorHandlingMixin):
             raise OrchestrationError(f"Task query failed: {str(e)}")
     
     async def delete_task(self, task_id: str, force: bool = False, archive_instead: bool = True) -> Dict[str, Any]:
-        """Delete or archive a task with dependency checking."""
+        """Delete or archive a task with dependency checking (unified implementation)."""
         try:
-            # Validate task exists
+            # Validate task exists (using compatibility layer validation)
             task = self.task_repository.get_task(task_id)
             self.validate_task_exists(task_id, task)
             
             # Check dependencies if not force
             dependent_tasks = []
             if not force:
-                dependent_tasks = await self._get_dependent_tasks(task_id)
+                dependent_tasks = await self._find_dependent_tasks(task_id)
                 if dependent_tasks:
                     from .compatibility.error_handlers import DependencyError
-                    raise DependencyError(task_id, dependent_tasks)
+                    dependent_ids = [task["id"] for task in dependent_tasks]
+                    raise DependencyError(task_id, dependent_ids)
             
-            # Archive or delete based on flag
+            action_taken = "archived" if archive_instead else "deleted"
+            
             if archive_instead:
-                action = await self._archive_task(task_id)
-                action_taken = "archived"
+                # Archive the task by updating status and adding archived timestamp
+                updates = {
+                    "status": "archived",
+                    "updated_at": datetime.utcnow().isoformat(),
+                    "archived_at": datetime.utcnow().isoformat()
+                }
+                success = self.task_repository.update_task(task_id, updates)
+                if not success:
+                    raise OrchestrationError(f"Failed to archive task {task_id}")
             else:
-                action = await self._delete_task(task_id)
-                action_taken = "deleted"
+                # Actually delete the task
+                success = self.task_repository.delete_task(task_id)
+                if not success:
+                    raise OrchestrationError(f"Failed to delete task {task_id}")
             
-            # Format response
+            logger.info(f"Task {task_id} {action_taken} successfully")
+            
+            # Format response using compatibility layer
             return self.formatter.format_delete_response(task_id, action_taken, {
-                "dependent_tasks": dependent_tasks,
+                "dependent_tasks": [t["id"] for t in dependent_tasks],
                 "force_applied": force,
-                "archive_mode": archive_instead
+                "archive_mode": archive_instead,
+                "timestamp": datetime.utcnow().isoformat()
             })
             
         except Exception as e:
             self.handle_error(e, "delete_task", {"task_id": task_id})
     
     async def cancel_task(self, task_id: str, reason: str = "", preserve_work: bool = True) -> Dict[str, Any]:
-        """Cancel an in-progress task with graceful state management."""
+        """Cancel an in-progress task with graceful state management (unified implementation)."""
         try:
-            # Validate task exists
+            # Validate task exists (using compatibility layer validation)
             task = self.task_repository.get_task(task_id)
             self.validate_task_exists(task_id, task)
             
@@ -197,72 +211,119 @@ class CleanArchTaskUseCase(ErrorHandlingMixin):
             self.validate_task_state(task_id, current_status, cancellable_statuses)
             
             # Preserve work artifacts if requested
-            artifact_count = 0
-            if preserve_work and current_status == "in_progress":
-                artifact_count = await self._preserve_work_artifacts(task_id)
+            artifacts_preserved = 0
+            if preserve_work:
+                try:
+                    # Get existing artifacts if repository supports it
+                    if hasattr(self.task_repository, 'get_task_artifacts'):
+                        artifacts = self.task_repository.get_task_artifacts(task_id)
+                        artifacts_preserved = len(artifacts)
+                    
+                    # Add cancellation artifact with reason
+                    cancellation_artifact = {
+                        "type": "cancellation_record",
+                        "reason": reason or "No reason provided",
+                        "preserved_work_count": artifacts_preserved,
+                        "cancelled_at": datetime.utcnow().isoformat(),
+                        "original_status": current_status
+                    }
+                    
+                    if hasattr(self.task_repository, 'add_task_artifact'):
+                        self.task_repository.add_task_artifact(task_id, cancellation_artifact)
+                    
+                except Exception as artifact_error:
+                    logger.warning(f"Failed to preserve artifacts for task {task_id}: {artifact_error}")
             
             # Update task status to cancelled
-            updates = {
+            cancellation_updates = {
                 "status": "cancelled",
-                "cancelled_at": datetime.utcnow().isoformat(),
-                "updated_at": datetime.utcnow().isoformat()
+                "updated_at": datetime.utcnow().isoformat(),
+                "cancelled_at": datetime.utcnow().isoformat()
             }
             
-            success = self.task_repository.update_task(task_id, updates)
+            # Add cancellation reason to metadata
+            existing_metadata = json.loads(task.get("metadata", "{}"))
+            existing_metadata["cancellation"] = {
+                "reason": reason or "No reason provided",
+                "cancelled_at": datetime.utcnow().isoformat(),
+                "original_status": current_status,
+                "work_preserved": preserve_work,
+                "artifacts_preserved": artifacts_preserved
+            }
+            cancellation_updates["metadata"] = json.dumps(existing_metadata)
+            
+            success = self.task_repository.update_task(task_id, cancellation_updates)
             if not success:
                 from .compatibility.error_handlers import DatabaseError
                 raise DatabaseError("cancel_task")
             
             # Update dependent tasks
-            dependent_tasks = await self._update_dependent_tasks_for_cancellation(task_id)
+            await self._update_dependent_tasks_on_cancellation(task_id)
             
-            # Format response
+            logger.info(f"Task {task_id} cancelled successfully. Reason: {reason}")
+            
+            # Format response using compatibility layer
             return self.formatter.format_cancel_response(task_id, {
                 "previous_status": current_status,
-                "reason": reason,
+                "reason": reason or "No reason provided",
                 "work_preserved": preserve_work,
-                "artifact_count": artifact_count,
-                "dependent_tasks_updated": dependent_tasks,
-                "cancelled_at": updates["cancelled_at"]
+                "artifact_count": artifacts_preserved,
+                "dependent_tasks_updated": [],
+                "cancelled_at": cancellation_updates["cancelled_at"]
             })
             
         except Exception as e:
             self.handle_error(e, "cancel_task", {"task_id": task_id, "reason": reason})
     
-    async def _get_dependent_tasks(self, task_id: str) -> List[str]:
-        """Get list of tasks that depend on this task."""
-        # For now, return empty list - would need to implement dependency tracking
-        return []
+    async def _find_dependent_tasks(self, task_id: str) -> List[Dict[str, Any]]:
+        """Find tasks that depend on the given task."""
+        try:
+            # Query all tasks to check their dependencies
+            all_tasks = await self.task_repository.query_tasks({})
+            dependent_tasks = []
+            
+            for task in all_tasks:
+                # Check if this task has the target task as a dependency
+                if hasattr(self.task_repository, 'get_task_dependencies'):
+                    task_deps = self.task_repository.get_task_dependencies(task["id"])
+                    if task_id in task_deps:
+                        dependent_tasks.append(task)
+            
+            return dependent_tasks
+            
+        except Exception as e:
+            logger.warning(f"Failed to find dependent tasks for {task_id}: {e}")
+            return []
     
-    async def _archive_task(self, task_id: str) -> Dict[str, Any]:
-        """Archive task by setting status to archived."""
-        updates = {
-            "status": "archived",
-            "updated_at": datetime.utcnow().isoformat()
-        }
-        success = self.task_repository.update_task(task_id, updates)
-        return {"archived": success}
-    
-    async def _delete_task(self, task_id: str) -> Dict[str, Any]:
-        """Permanently delete task from repository."""
-        # For now, just mark as deleted - would need actual deletion logic
-        updates = {
-            "status": "deleted",
-            "updated_at": datetime.utcnow().isoformat()
-        }
-        success = self.task_repository.update_task(task_id, updates)
-        return {"deleted": success}
-    
-    async def _preserve_work_artifacts(self, task_id: str) -> int:
-        """Preserve work artifacts for cancelled task."""
-        # For now, return 0 - would need to implement artifact preservation
-        return 0
-    
-    async def _update_dependent_tasks_for_cancellation(self, task_id: str) -> List[str]:
-        """Update tasks that depend on the cancelled task."""
-        # For now, return empty list - would need dependency tracking
-        return []
-    
+    async def _update_dependent_tasks_on_cancellation(self, cancelled_task_id: str):
+        """Update tasks that depended on the cancelled task."""
+        try:
+            dependent_tasks = await self._find_dependent_tasks(cancelled_task_id)
+            
+            for task in dependent_tasks:
+                # Add a note about the cancelled dependency
+                existing_metadata = json.loads(task.get("metadata", "{}"))
+                
+                if "dependency_issues" not in existing_metadata:
+                    existing_metadata["dependency_issues"] = []
+                
+                existing_metadata["dependency_issues"].append({
+                    "cancelled_dependency": cancelled_task_id,
+                    "noted_at": datetime.utcnow().isoformat(),
+                    "impact": "dependency_cancelled"
+                })
+                
+                update_data = {
+                    "metadata": json.dumps(existing_metadata),
+                    "updated_at": datetime.utcnow().isoformat()
+                }
+                
+                self.task_repository.update_task(task["id"], update_data)
+                logger.info(f"Updated task {task['id']} due to cancelled dependency {cancelled_task_id}")
+                
+        except Exception as e:
+            logger.warning(f"Failed to update dependent tasks for cancelled task {cancelled_task_id}: {e}")
+
     def _format_task_for_response(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
         """Format task data for response."""
         # Handle metadata that could be either a string or dict
