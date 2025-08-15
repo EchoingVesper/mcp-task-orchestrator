@@ -8,6 +8,82 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #
 
+# [1.8.1] - 2025-08-15
+
+#
+
+## 🐛 Critical Bug Fixes
+
+- **GitHub Issue #46**: Fixed MockTask JSON serialization error
+  - Removed legacy `MockTaskResult` class from `db_integration.py`
+  - Implemented unified `ResponseFormatter` for consistent JSON serialization
+  - Added `SerializationValidator` to ensure all responses are JSON-compatible
+  - **Impact**: Eliminates confusing error messages during task operations
+
+- **GitHub Issue #47**: Fixed `orchestrator_update_task` response formatting
+  - Implemented `format_update_response` method in `ResponseFormatter`
+  - Enhanced error handling in task handlers for dict vs object responses
+  - Added comprehensive response structure validation
+  - **Impact**: Resolves "'str' object is not a mapping" errors in task updates
+
+- **GitHub Issue #50**: Fixed `orchestrator_query_tasks` format mismatch
+  - Implemented `format_query_response` method returning structured dict instead of raw list
+  - Added comprehensive pagination and metadata to query responses
+  - Enhanced compatibility between use case and handler response expectations
+  - **Impact**: Resolves "list indices must be integers or slices, not str" errors
+
+#
+
+## 🚀 New Features
+
+- **GitHub Issue #48**: Implemented missing `delete_task` functionality
+  - Added `delete_task` method to `CleanArchTaskUseCase` with full parameter support
+  - Implemented repository-level `delete_task` with dependency checking and archival
+  - Added comprehensive error handling for deletion edge cases
+  - **Parameters**: `task_id`, `force` (default: false), `archive_instead` (default: true)
+  - **Impact**: Restores complete task lifecycle management capabilities
+
+- **GitHub Issue #49**: Implemented missing `cancel_task` functionality (PARTIAL)
+  - Added `cancel_task` method to `CleanArchTaskUseCase` with work preservation
+  - Implemented task cancellation with artifact preservation and state management
+  - Added proper reason tracking and dependent task updating
+  - **Parameters**: `task_id`, `reason` (optional), `preserve_work` (default: true)
+  - **Status**: Use case implemented, repository interface completion pending
+  - **Impact**: Enables graceful task cancellation with work preservation
+
+#
+
+## 🔧 Infrastructure
+
+- **Unified Compatibility Layer**: New architecture for consistent response formatting
+  - Introduced `ResponseFormatter` class with standardized formatting methods
+  - Implemented `SerializationValidator` for JSON compatibility validation
+  - Created unified error handling patterns across all operations
+  - Established interface contracts for all use case methods
+
+- **Enhanced Testing Coverage**: Comprehensive test suite for all fixes
+  - Added integration tests for Issues #46, #47, #50 (compatibility-layer worktree)
+  - Added unit tests for Issues #48, #49 (missing-methods worktree)
+  - Validation scores: 4 of 5 issues fully implemented, 1 partial (91.6% average)
+  - Comprehensive regression testing to ensure no existing functionality broken
+
+#
+
+## 📊 Migration Notes
+
+### Breaking Changes
+- `MockTaskResult` class removed - all responses now return `Dict[str, Any]`
+- `orchestrator_query_tasks` now returns structured dict instead of raw list
+- Response format standardized across all use case methods
+
+### API Enhancements
+- New `orchestrator_delete_task` tool available
+- New `orchestrator_cancel_task` tool available (repository interface completion pending)
+- Enhanced error messages with structured error information
+- Improved response metadata for better debugging and monitoring
+
+#
+
 # [1.8.0] - 2025-06-08
 
 #

@@ -211,11 +211,31 @@ Safely delete a task and handle its dependencies.
 - `archive_instead` (default: true): Archive task instead of permanent deletion
 
 **Returns:**
-- Deletion status
-- Affected dependencies
+- `success` (boolean): Whether the deletion operation succeeded
+- `task_id` (string): ID of the task that was processed
+- `action` (string): Action taken ("deleted" or "archived")
+- `dependent_tasks` (array): List of dependent task IDs that were affected
+- `metadata` (object): Additional deletion metadata including timestamps
+
+**Example:**
+```python
+# Archive a task (default behavior)
+result = orchestrator_delete_task(task_id="task_123")
+# Returns: {"success": true, "task_id": "task_123", "action": "archived", ...}
+
+# Force delete with dependencies
+result = orchestrator_delete_task(
+    task_id="task_456", 
+    force=True, 
+    archive_instead=False
+)
+# Returns: {"success": true, "task_id": "task_456", "action": "deleted", "force_applied": true, ...}
+```
 
 #### `orchestrator_cancel_task`
 Cancel an in-progress task gracefully.
+
+**Status**: PARTIAL IMPLEMENTATION - Use case complete, repository interface completion pending
 
 **Parameters:**
 - `task_id` (required): ID of task to cancel
@@ -223,8 +243,33 @@ Cancel an in-progress task gracefully.
 - `preserve_work` (default: true): Whether to preserve work artifacts
 
 **Returns:**
-- Cancellation status
-- Preserved artifact information
+- `success` (boolean): Whether the cancellation operation succeeded
+- `task_id` (string): ID of the task that was cancelled
+- `previous_status` (string): Status of the task before cancellation
+- `reason` (string): Reason provided for cancellation
+- `work_preserved` (boolean): Whether work artifacts were preserved
+- `artifact_count` (number): Number of artifacts preserved/discarded
+- `dependent_tasks_updated` (array): List of dependent tasks that were updated
+- `cancelled_at` (string): ISO timestamp of cancellation
+- `cancellation_metadata` (object): Additional cancellation context
+
+**Example:**
+```python
+# Cancel with work preservation (default)
+result = orchestrator_cancel_task(
+    task_id="task_789", 
+    reason="Resource constraints"
+)
+# Returns: {"success": true, "task_id": "task_789", "work_preserved": true, ...}
+
+# Cancel without preserving work
+result = orchestrator_cancel_task(
+    task_id="task_101",
+    reason="Requirements changed", 
+    preserve_work=False
+)
+# Returns: {"success": true, "task_id": "task_101", "work_preserved": false, "discarded_artifacts": 5, ...}
+```
 
 #### `orchestrator_synthesize_results`
 Combine completed subtasks into a final comprehensive result.
