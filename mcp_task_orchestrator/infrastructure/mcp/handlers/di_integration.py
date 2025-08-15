@@ -17,16 +17,23 @@ from ....domain.value_objects.specialist_type import SpecialistType
 from ....domain.exceptions import OrchestrationError
 from ....infrastructure.di import get_container
 
+# Import compatibility layer components
+from .compatibility.response_formatter import ResponseFormatter
+from .compatibility.error_handlers import ErrorHandlingMixin, TaskNotFoundError, TaskStateError
+from .compatibility.serialization import SerializationValidator
+
 logger = logging.getLogger(__name__)
 
 
-class CleanArchTaskUseCase:
+class CleanArchTaskUseCase(ErrorHandlingMixin):
     """Clean Architecture task use case using DI container."""
     
     def __init__(self):
         """Initialize with DI container."""
+        super().__init__()
         self.container = get_container()
         self.task_repository = self.container.get_service(TaskRepository)
+        self.formatter = ResponseFormatter()
     
     async def create_task(self, task_data: Dict[str, Any]) -> Any:
         """Create a task using Clean Architecture."""
@@ -62,18 +69,11 @@ class CleanArchTaskUseCase:
             
             logger.info(f"Successfully created task {result_id} via Clean Architecture")
             
-            # Return simple dict - no MockTask objects needed
-            return {
-                "task_id": result_id,
-                "title": task_data.get("title", ""),
-                "description": task_data.get("description", ""),
-                "status": "pending",
-                "task_type": task_data.get("task_type", "standard"),
-                "complexity": task_data.get("complexity", "moderate"),
-                "specialist_type": task_data.get("specialist_type", "generic"),
-                "created_at": clean_task_data["created_at"],
-                "message": f"Task created successfully with ID: {result_id}"
-            }
+            # Get the created task for proper formatting
+            created_task = self.task_repository.get_task(result_id)
+            task_dict = self._format_task_for_response(created_task)
+            
+            return self.formatter.format_create_response(task_dict)
             
         except Exception as e:
             logger.error(f"Failed to create task via Clean Architecture: {str(e)}")
@@ -117,26 +117,153 @@ class CleanArchTaskUseCase:
             
             # Return updated task
             updated_task = self.task_repository.get_task(task_id)
-            return self._format_task_response(updated_task)
+            task_dict = self._format_task_for_response(updated_task)
+            changes_applied = list(updates.keys())
+            return self.formatter.format_update_response(task_dict, changes_applied)
             
         except Exception as e:
             logger.error(f"Failed to update task {task_id}: {str(e)}")
             raise OrchestrationError(f"Task update failed: {str(e)}")
     
-    async def query_tasks(self, filters: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+    async def query_tasks(self, filters: Dict[str, Any] = None) -> Dict[str, Any]:
         """Query tasks using Clean Architecture."""
         try:
             # Apply filters
             filters = filters or {}
             tasks = await self.task_repository.query_tasks(filters)
             
-            return [self._format_task_response(task) for task in tasks]
+            # Format tasks for response
+            formatted_tasks = [self._format_task_for_response(task) for task in tasks]
+            
+            # Create query context for formatter
+            query_context = {
+                "filters_applied": list(filters.keys()) if filters else [],
+                "page_count": 1,
+                "current_page": 1,
+                "page_size": len(formatted_tasks),
+                "has_more": False,
+                "metadata": {}
+            }
+            
+            return self.formatter.format_query_response(formatted_tasks, query_context)
             
         except Exception as e:
             logger.error(f"Failed to query tasks: {str(e)}")
             raise OrchestrationError(f"Task query failed: {str(e)}")
     
-    def _format_task_response(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def delete_task(self, task_id: str, force: bool = False, archive_instead: bool = True) -> Dict[str, Any]:
+        """Delete or archive a task with dependency checking."""
+        try:
+            # Validate task exists
+            task = self.task_repository.get_task(task_id)
+            self.validate_task_exists(task_id, task)
+            
+            # Check dependencies if not force
+            dependent_tasks = []
+            if not force:
+                dependent_tasks = await self._get_dependent_tasks(task_id)
+                if dependent_tasks:
+                    from .compatibility.error_handlers import DependencyError
+                    raise DependencyError(task_id, dependent_tasks)
+            
+            # Archive or delete based on flag
+            if archive_instead:
+                action = await self._archive_task(task_id)
+                action_taken = "archived"
+            else:
+                action = await self._delete_task(task_id)
+                action_taken = "deleted"
+            
+            # Format response
+            return self.formatter.format_delete_response(task_id, action_taken, {
+                "dependent_tasks": dependent_tasks,
+                "force_applied": force,
+                "archive_mode": archive_instead
+            })
+            
+        except Exception as e:
+            self.handle_error(e, "delete_task", {"task_id": task_id})
+    
+    async def cancel_task(self, task_id: str, reason: str = "", preserve_work: bool = True) -> Dict[str, Any]:
+        """Cancel an in-progress task with graceful state management."""
+        try:
+            # Validate task exists
+            task = self.task_repository.get_task(task_id)
+            self.validate_task_exists(task_id, task)
+            
+            # Check if task is cancellable
+            current_status = task["status"]
+            cancellable_statuses = ["pending", "in_progress", "active"]
+            self.validate_task_state(task_id, current_status, cancellable_statuses)
+            
+            # Preserve work artifacts if requested
+            artifact_count = 0
+            if preserve_work and current_status == "in_progress":
+                artifact_count = await self._preserve_work_artifacts(task_id)
+            
+            # Update task status to cancelled
+            updates = {
+                "status": "cancelled",
+                "cancelled_at": datetime.utcnow().isoformat(),
+                "updated_at": datetime.utcnow().isoformat()
+            }
+            
+            success = self.task_repository.update_task(task_id, updates)
+            if not success:
+                from .compatibility.error_handlers import DatabaseError
+                raise DatabaseError("cancel_task")
+            
+            # Update dependent tasks
+            dependent_tasks = await self._update_dependent_tasks_for_cancellation(task_id)
+            
+            # Format response
+            return self.formatter.format_cancel_response(task_id, {
+                "previous_status": current_status,
+                "reason": reason,
+                "work_preserved": preserve_work,
+                "artifact_count": artifact_count,
+                "dependent_tasks_updated": dependent_tasks,
+                "cancelled_at": updates["cancelled_at"]
+            })
+            
+        except Exception as e:
+            self.handle_error(e, "cancel_task", {"task_id": task_id, "reason": reason})
+    
+    async def _get_dependent_tasks(self, task_id: str) -> List[str]:
+        """Get list of tasks that depend on this task."""
+        # For now, return empty list - would need to implement dependency tracking
+        return []
+    
+    async def _archive_task(self, task_id: str) -> Dict[str, Any]:
+        """Archive task by setting status to archived."""
+        updates = {
+            "status": "archived",
+            "updated_at": datetime.utcnow().isoformat()
+        }
+        success = self.task_repository.update_task(task_id, updates)
+        return {"archived": success}
+    
+    async def _delete_task(self, task_id: str) -> Dict[str, Any]:
+        """Permanently delete task from repository."""
+        # For now, just mark as deleted - would need actual deletion logic
+        updates = {
+            "status": "deleted",
+            "updated_at": datetime.utcnow().isoformat()
+        }
+        success = self.task_repository.update_task(task_id, updates)
+        return {"deleted": success}
+    
+    async def _preserve_work_artifacts(self, task_id: str) -> int:
+        """Preserve work artifacts for cancelled task."""
+        # For now, return 0 - would need to implement artifact preservation
+        return 0
+    
+    async def _update_dependent_tasks_for_cancellation(self, task_id: str) -> List[str]:
+        """Update tasks that depend on the cancelled task."""
+        # For now, return empty list - would need dependency tracking
+        return []
+    
+    def _format_task_for_response(self, task_data: Dict[str, Any]) -> Dict[str, Any]:
         """Format task data for response."""
         # Handle metadata that could be either a string or dict
         metadata_raw = task_data.get("metadata", {})

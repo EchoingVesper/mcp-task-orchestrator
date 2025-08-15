@@ -19,6 +19,9 @@ from ....orchestrator.task_orchestration_service import TaskOrchestrator
 from ....orchestrator.orchestration_state_manager import StateManager
 from ....orchestrator.specialist_management_service import SpecialistManager
 
+# Import compatibility layer components
+from .compatibility.response_formatter import ResponseFormatter
+
 # Import security framework for path validation
 from ...security.validators import (
     validate_file_path,
@@ -80,44 +83,7 @@ class ArtifactService:
             metadata=metadata
         )
 
-# Compatibility wrapper
-class MockTaskResult:
-    """Wrapper to make real Task objects compatible with mock interface."""
-    
-    def __init__(self, task: Task):
-        self._task = task
-        self.id = task.task_id
-        self.title = task.title
-        self.description = task.description
-        self.status = task.status.value if hasattr(task.status, 'value') else str(task.status)
-        self.lifecycle_stage = "initialized"
-        self.complexity = task.complexity.value if hasattr(task.complexity, 'value') else str(task.complexity)
-        self.specialist_type = getattr(task, 'specialist_type', 'generic')
-        self.task_type = task.task_type.value if hasattr(task.task_type, 'value') else str(task.task_type)
-        self.created_at = task.created_at
-        self.updated_at = task.updated_at
-        self.due_date = getattr(task, 'due_date', None)
-        self.started_at = getattr(task, 'started_at', None)
-        self.completed_at = getattr(task, 'completed_at', None)
-        self.deleted_at = getattr(task, 'deleted_at', None)
-    
-    def dict(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "status": self.status,
-            "lifecycle_stage": self.lifecycle_stage,
-            "complexity": self.complexity,
-            "specialist_type": self.specialist_type,
-            "task_type": self.task_type,
-            "created_at": self.created_at,
-            "updated_at": self.updated_at,
-            "due_date": self.due_date,
-            "started_at": self.started_at,
-            "completed_at": self.completed_at,
-            "deleted_at": self.deleted_at
-        }
+# MockTaskResult class removed - replaced with direct dict responses using ResponseFormatter
 
 # Real implementations using existing orchestrator system
 class RealTaskUseCase:
@@ -127,6 +93,7 @@ class RealTaskUseCase:
         self.state_manager = StateManager()
         self.specialist_manager = SpecialistManager()
         self.orchestrator = TaskOrchestrator(self.state_manager, self.specialist_manager)
+        self.formatter = ResponseFormatter()
     
     async def create_task(self, task_data):
         """Create a real task using the orchestrator system."""
@@ -158,16 +125,18 @@ class RealTaskUseCase:
             # Return the first (and only) subtask
             if breakdown.children:
                 task = breakdown.children[0]
-                return MockTaskResult(task)  # Wrapper for compatibility
+                task_dict = self._task_to_dict(task)
+                return self.formatter.format_create_response(task_dict)
             else:
                 # Fallback - return the main task
-                return MockTaskResult(breakdown)
+                task_dict = self._task_to_dict(breakdown)
+                return self.formatter.format_create_response(task_dict)
             
         except Exception as e:
             logger.error(f"Failed to create real task: {str(e)}")
             raise OrchestrationError(f"Task creation failed: {str(e)}")
     
-    async def update_task(self, task_id: str, update_data: Dict[str, Any]) -> MockTaskResult:
+    async def update_task(self, task_id: str, update_data: Dict[str, Any]) -> Dict[str, Any]:
         """Update an existing task using the state manager."""
         try:
             # Get the existing task first
@@ -193,7 +162,9 @@ class RealTaskUseCase:
             await self.state_manager.update_subtask(updated_task)
             
             logger.info(f"Successfully updated task {task_id}")
-            return MockTaskResult(updated_task)
+            task_dict = self._task_to_dict(updated_task)
+            changes_applied = list(update_data.keys()) if isinstance(update_data, dict) else ["update"]
+            return self.formatter.format_update_response(task_dict, changes_applied)
             
         except Exception as e:
             logger.error(f"Failed to update task {task_id}: {str(e)}")
@@ -408,6 +379,21 @@ class RealTaskUseCase:
                 "message": f"Task query failed: {str(e)}",
                 "error": str(e)
             }
+    
+    def _task_to_dict(self, task: Task) -> Dict[str, Any]:
+        """Convert Task object to dictionary for ResponseFormatter."""
+        return {
+            "id": task.task_id,
+            "title": task.title,
+            "description": task.description,
+            "status": task.status.value if hasattr(task.status, 'value') else str(task.status),
+            "type": task.task_type.value if hasattr(task.task_type, 'value') else str(task.task_type),
+            "complexity": task.complexity.value if hasattr(task.complexity, 'value') else str(task.complexity),
+            "specialist_type": task.context.get("specialist", "generic"),
+            "created_at": task.created_at.isoformat() if task.created_at else None,
+            "updated_at": task.updated_at.isoformat() if task.updated_at else None,
+            "metadata": task.context or {}
+        }
 
 class RealExecuteTaskUseCase:
     """Real execute task use case using SpecialistManager integration."""
