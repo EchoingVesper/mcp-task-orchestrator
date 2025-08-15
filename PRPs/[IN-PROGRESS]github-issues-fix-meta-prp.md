@@ -22,35 +22,42 @@ orchestrator_integration:
 
 ## Executive Summary
 
-This meta-PRP coordinates the fixing of 5 critical GitHub issues (#46-50) related to the Clean Architecture migration. These issues involve JSON serialization errors, missing method implementations, and response format mismatches in the MCP Task Orchestrator.
+This meta-PRP coordinates the fixing of 5 critical GitHub issues (#46-50) related to the Clean Architecture migration.
+These issues involve JSON serialization errors, missing method implementations, and response format mismatches in the
+MCP Task Orchestrator.
 
 ## Issue Analysis
 
 ### Issue #46: MockTask JSON Serialization Error
+
 - **Type**: Cosmetic/Low Priority
 - **Impact**: Error messages despite functionality working
 - **Root Cause**: MockTask remnants in serialization chain
 - **Complexity**: Simple
 
 ### Issue #47: orchestrator_update_task Response Formatting
+
 - **Type**: Medium Priority Bug
 - **Impact**: Confusing error messages, functionality works
 - **Root Cause**: Handler expects .dict() method, use case returns dict
 - **Complexity**: Moderate
 
 ### Issue #48: Missing delete_task Implementation
+
 - **Type**: High Priority Bug
 - **Impact**: Core functionality broken
 - **Root Cause**: Method not implemented in CleanArchTaskUseCase
 - **Complexity**: Moderate
 
 ### Issue #49: Missing cancel_task Implementation
+
 - **Type**: High Priority Bug
 - **Impact**: Core functionality broken
 - **Root Cause**: Method not implemented in CleanArchTaskUseCase
 - **Complexity**: Moderate
 
 ### Issue #50: orchestrator_query_tasks Format Mismatch
+
 - **Type**: High Priority Bug
 - **Impact**: Query functionality broken
 - **Root Cause**: List/Dict format mismatch between use case and handler
@@ -155,7 +162,8 @@ worktrees/
 ## Executive Dysfunction Support Features
 
 ### Pre-Created Structure
-```
+
+```directory
 PRPs/github-issues-fix-meta-prp/
 ├── 00-coordination/               # Central hub
 │   ├── README.md                 # Navigation guide
@@ -182,6 +190,7 @@ PRPs/github-issues-fix-meta-prp/
 ```
 
 ### Auto-Preservation Strategy
+
 - WIP commits every 30 minutes in each worktree
 - Automatic task status updates via orchestrator
 - Progress tracking at multiple granularities
@@ -190,12 +199,14 @@ PRPs/github-issues-fix-meta-prp/
 ## Risk Mitigation
 
 ### Identified Risks
+
 1. **Inter-dependency conflicts**: Issues may share code paths
 2. **Regression potential**: Fixes might break working functionality
 3. **Migration inconsistency**: Different approaches in different handlers
 4. **Testing gaps**: Insufficient test coverage for edge cases
 
 ### Mitigation Strategies
+
 1. **Isolated worktrees**: Prevent merge conflicts during development
 2. **Comprehensive testing**: Unit + integration tests for each fix
 3. **Unified compatibility layer**: Consistent approach across all handlers
@@ -204,6 +215,7 @@ PRPs/github-issues-fix-meta-prp/
 ## Success Criteria
 
 ### Technical Requirements
+
 - [ ] All 5 issues resolved and verified
 - [ ] No regression in existing functionality
 - [ ] All tests passing (unit + integration)
@@ -211,6 +223,7 @@ PRPs/github-issues-fix-meta-prp/
 - [ ] No new technical debt introduced
 
 ### Process Requirements
+
 - [ ] Orchestrator session maintained throughout
 - [ ] All work stored in orchestrator artifacts
 - [ ] Git worktree strategy successfully applied
@@ -218,6 +231,7 @@ PRPs/github-issues-fix-meta-prp/
 - [ ] Executive dysfunction support features utilized
 
 ### Quality Gates
+
 - [ ] Code review by security agent
 - [ ] Performance validation (no degradation)
 - [ ] Documentation complete and accurate
@@ -227,6 +241,7 @@ PRPs/github-issues-fix-meta-prp/
 ## Orchestrator Task Breakdown
 
 ### Main Coordination Task
+
 ```yaml
 main_task:
   id: "GITHUB_ISSUES_FIX_MAIN"
@@ -239,6 +254,7 @@ main_task:
 ```
 
 ### Sub-Task Hierarchy
+
 ```yaml
 research_tasks:
   - id: "RESEARCH_ISSUE_46"
@@ -328,6 +344,7 @@ completion_tasks:
 ## Monitoring and Progress Tracking
 
 ### Key Metrics
+
 - Tasks completed: 0/20
 - Issues resolved: 0/5
 - Tests passing: TBD
@@ -335,6 +352,7 @@ completion_tasks:
 - Time elapsed: 0 hours
 
 ### Progress Checkpoints
+
 1. Research phase complete
 2. Architecture design approved
 3. Implementation 50% complete
@@ -362,12 +380,14 @@ completion_tasks:
 ## References
 
 ### Enhanced Context
+
 - `CLAUDE.md` - Project-specific orchestrator requirements
 - `PRPs/templates/meta_prp_structure.md` - Meta-PRP template
 - `PRPs/ai_docs/context-engineering-guide.md` - Multi-agent patterns
 - `PRPs/ai_docs/mcp-protocol-patterns.md` - MCP coordination
 
 ### GitHub Issues
+
 - [Issue #46](https://github.com/EchoingVesper/mcp-task-orchestrator/issues/46) - MockTask JSON Serialization
 - [Issue #47](https://github.com/EchoingVesper/mcp-task-orchestrator/issues/47) - update_task Response Format
 - [Issue #48](https://github.com/EchoingVesper/mcp-task-orchestrator/issues/48) - delete_task Implementation
